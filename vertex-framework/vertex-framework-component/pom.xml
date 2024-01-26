@@ -46,7 +46,6 @@
             <groupId>com.onezol</groupId>
             <artifactId>vertex-framework-common</artifactId>
             <version>${application.version}</version>
-            <scope>compile</scope>
         </dependency>
     </dependencies>
 
