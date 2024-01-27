@@ -1,6 +1,7 @@
 package com.onezol.vertex.framework.common.util;
 
 import com.onezol.vertex.framework.common.constant.enums.BizHttpStatus;
+import com.onezol.vertex.framework.common.exception.BusinessException;
 import com.onezol.vertex.framework.common.model.pojo.ResponseModel;
 import lombok.Data;
 
@@ -39,4 +40,9 @@ public class ResponseHelper implements Serializable {
     public static <T> ResponseModel<T> buildFailureResponse(BizHttpStatus bizHttpStatus) {
         return new ResponseModel<>(bizHttpStatus.getCode(), false, bizHttpStatus.getValue(), null);
     }
+
+    public static <T> ResponseModel<T> buildFailureResponse(BusinessException exception) {
+        return new ResponseModel<>(exception.getCode(), false, exception.getMessage(), null);
+    }
+
 }

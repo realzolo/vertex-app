@@ -21,10 +21,8 @@ public class ApplicationController {
     private String applicationName;
 
     @Operation(summary = "应用信息", description = "应用信息")
-    @RestrictAccess
     @GetMapping
     public String information() {
-
         return """
                 <pre style="font-weight: bold; color: #333; font-size: 14px; line-height: 24px;">
                     Application: %s

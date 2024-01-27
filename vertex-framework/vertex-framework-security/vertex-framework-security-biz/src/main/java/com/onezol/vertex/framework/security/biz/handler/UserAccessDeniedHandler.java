@@ -1,5 +1,7 @@
 package com.onezol.vertex.framework.security.biz.handler;
 
+import com.onezol.vertex.framework.common.model.pojo.ResponseModel;
+import com.onezol.vertex.framework.common.util.ResponseHelper;
 import com.onezol.vertex.framework.common.util.ServletUtils;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,8 +19,9 @@ import java.io.IOException;
 public class UserAccessDeniedHandler implements AccessDeniedHandler {
 
     @Override
-    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
-        ServletUtils.writeJSON(response, new AccessDeniedException("访问受限, 您的权限不足"));
+    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) {
+        ResponseModel<Object> responseModel = ResponseHelper.buildFailureResponse(new com.onezol.vertex.framework.security.api.exception.AccessDeniedException("访问受限, 您的权限不足"));
+        ServletUtils.writeJSON(response, responseModel);
     }
 
 }

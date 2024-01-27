@@ -20,7 +20,7 @@ public class JsonUtils {
      * @param object 要转换的对象
      * @return 对象的JSON表示形式
      */
-    public static String toJson(Object object) {
+    public static String toJsonString(Object object) {
         return JSON.toJSONString(object, JSONWriter.Feature.WriteMapNullValue);
     }
 
@@ -62,7 +62,7 @@ public class JsonUtils {
      * @param map Map对象
      * @return JSON字符串
      */
-    public static String mapToJson(Map<String, Object> map) {
+    public static String mapToJsonString(Map<String, Object> map) {
         return JSON.toJSONString(map);
     }
 

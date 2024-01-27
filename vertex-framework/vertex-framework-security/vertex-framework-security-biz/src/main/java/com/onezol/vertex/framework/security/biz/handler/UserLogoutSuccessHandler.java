@@ -40,7 +40,7 @@ public class UserLogoutSuccessHandler implements LogoutSuccessHandler {
         SecurityContextHolder.clearContext();
 
         // 注销成功, 返回成功信息
-        String json = JsonUtils.toJson(ResponseHelper.buildSuccessfulResponse("注销成功"));
+        String json = JsonUtils.toJsonString(ResponseHelper.buildSuccessfulResponse("注销成功"));
         ServletUtils.writeJSON(response, json);
     }
 }

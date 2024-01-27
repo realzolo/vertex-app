@@ -1,9 +1,13 @@
 package com.onezol.vertex.framework.common.util;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -12,7 +16,10 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 
+@Slf4j
 public class ServletUtils {
     /**
      * 获取当前request
@@ -70,12 +77,36 @@ public class ServletUtils {
     }
 
     /**
+     * 获取Request Param
+     */
+    public static Map<String, String> getRequestParam(HttpServletRequest request) {
+        Map<String, String> paramMap = new HashMap<>();
+        Map<String, String[]> parameterMap = request.getParameterMap();
+        for (Map.Entry<String, String[]> entry : parameterMap.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue()[0];  // 只获取第一个值
+            paramMap.put(key, value);
+        }
+        return paramMap;
+    }
+
+    /**
+     * 获取Request Body
+     */
+    public static Map<String, Object> getRequestBody(HttpServletRequest request) throws IOException {
+        String requestBody = StreamUtils.copyToString(request.getInputStream(), StandardCharsets.UTF_8);
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.readValue(requestBody, new TypeReference<>() {
+        });
+    }
+
+    /**
      * 响应数据
      *
      * @param response response
      */
     public static void write(HttpServletResponse response, String mediaType, Object data) {
-        String content = JsonUtils.toJson(data);
+        String content = JsonUtils.toJsonString(data);
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType(mediaType);
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
