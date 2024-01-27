@@ -3,21 +3,18 @@ package com.onezol.vertex.framework.common.util;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
-@Component
 public class JwtUtils {
     /**
-     * JWT 密钥
+     * 默认getSecret()
      */
-    private static String secretKey;
+    public static final String DEFAULT_SECRET_KEY = "";
     /**
-     * JWT 过期时间, 单位: 秒
+     * 默认过期时间(秒)
      */
-    private static Integer expirationTime;
+    public static final Integer DEFAULT_EXPIRATION_TIME = 3600;
 
     /**
      * 生成 JWT
@@ -27,13 +24,13 @@ public class JwtUtils {
      */
     public static String generateToken(String subject) {
         Date now = new Date();
-        Date expiration = new Date(now.getTime() + expirationTime * 1000);
+        Date expiration = new Date(now.getTime() + getExpireTime() * 1000);
 
         return Jwts.builder()
                 .setSubject(subject)
                 .setIssuedAt(now)
                 .setExpiration(expiration)
-                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .signWith(SignatureAlgorithm.HS256, getSecret())
                 .compact();
     }
 
@@ -45,7 +42,7 @@ public class JwtUtils {
      */
     public static boolean validateToken(String token) {
         try {
-            Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
+            Jwts.parser().setSigningKey(getSecret()).parseClaimsJws(token);
             return true;
         } catch (Exception e) {
             // JWT 验证失败
@@ -61,7 +58,7 @@ public class JwtUtils {
      */
     public static String getSubjectFromToken(String token) {
         try {
-            Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
+            Claims claims = Jwts.parser().setSigningKey(getSecret()).parseClaimsJws(token).getBody();
             return claims.getSubject();
         } catch (Exception e) {
             // JWT 解析失败或无效
@@ -77,20 +74,27 @@ public class JwtUtils {
      */
     public static Claims getClaimsFromToken(String token) {
         try {
-            return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
+            return Jwts.parser().setSigningKey(getSecret()).parseClaimsJws(token).getBody();
         } catch (Exception e) {
             // JWT 解析失败或无效
             return null;
         }
     }
 
-    @Value("${jwt.secret-key:C61270901C4A455A89A0196CBCED9803}")
-    public void setSecret(String secretKey) {
-        JwtUtils.secretKey = secretKey;
+    public static String getSecret() {
+        String secretKey = SpringUtils.getRequiredProperty("application.jwt.secret-key");
+        if (StringUtils.isEmpty(secretKey)) {
+            return DEFAULT_SECRET_KEY;
+        }
+        return secretKey;
     }
 
-    @Value("${jwt.expiration-time:3600}")
-    public void setExpire(Integer expirationTime) {
-        JwtUtils.expirationTime = expirationTime;
+    public static Integer getExpireTime() {
+        String expirationTime = SpringUtils.getRequiredProperty("application.jwt.expiration-time");
+        if (StringUtils.isEmpty(expirationTime)) {
+            return DEFAULT_EXPIRATION_TIME;
+        }
+        return Integer.parseInt(expirationTime);
     }
+
 }

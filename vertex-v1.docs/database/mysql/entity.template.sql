@@ -12,4 +12,4 @@ CREATE TABLE template_table
     deleted     bit         default b'0' COMMENT '是否删除'
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
-  AUTO_INCREMENT = 10001 COMMENT ='模板表';
+  AUTO_INCREMENT = 10000 COMMENT ='模板表';

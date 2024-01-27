@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
 /**
  * API 错误日志
  */
-@Schema(name = "ApiExceptionLogEntity", description = "API 错误日志")
+@Schema(name = "ApiExceptionLogEntity", description = "API错误日志")
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName(value = "vx_api_exception_log")

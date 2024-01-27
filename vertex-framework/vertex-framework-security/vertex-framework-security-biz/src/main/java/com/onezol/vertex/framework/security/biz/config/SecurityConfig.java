@@ -57,11 +57,6 @@ public class SecurityConfig {
         Set<String> mvcMatchers = ControllerPathUtils.convertPathToMvcMatcher(restrictPathSet);
         String[] restrictPaths = mvcMatchers.toArray(new String[0]);
 
-        // 静态资源
-        String[] staticResources = new String[]{
-                "/**.html", "/**.css", "/**.js",
-        };
-
         return http
                 // 禁用 httpBasic
                 .httpBasic(AbstractHttpConfigurer::disable)
@@ -78,8 +73,6 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                                 // 限制访问路径
                                 .requestMatchers(restrictPaths).authenticated()
-                                // 放行静态资源
-                                .requestMatchers(staticResources).permitAll()
                                 // 其他请求放行
                                 .anyRequest().permitAll()
                 )
@@ -103,8 +96,7 @@ public class SecurityConfig {
                 )
                 .build();
     }
-//    vertex-framework-component
-//    vertex-framework-support
+
     @Bean
     public AuthenticationManager authenticationManagerBean(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();

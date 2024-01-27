@@ -10,7 +10,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName("vx_agency")
-@Schema(name = "Agency", description = "$!{table.comment}")
+@Schema(name = "AgencyEntity", description = "$!{table.comment}")
 public class AgencyEntity extends BaseEntity {
 
     @Schema(description = "组织编码")
@@ -32,6 +32,10 @@ public class AgencyEntity extends BaseEntity {
     @Schema(description = "组织级别")
     @TableField("level")
     private Integer level;
+
+    @Schema(description = "搜索路径")
+    @TableField("search_path")
+    private String searchPath;
 
     @Schema(description = "排序号")
     @TableField("sort")

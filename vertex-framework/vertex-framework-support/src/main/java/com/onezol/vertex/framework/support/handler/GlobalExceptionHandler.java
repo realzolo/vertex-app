@@ -5,29 +5,46 @@ import com.onezol.vertex.framework.common.exception.BusinessException;
 import com.onezol.vertex.framework.common.model.entity.ApiExceptionLogEntity;
 import com.onezol.vertex.framework.common.model.pojo.ResponseModel;
 import com.onezol.vertex.framework.common.util.JsonUtils;
-import com.onezol.vertex.framework.common.util.ResponseHelper;
+import com.onezol.vertex.framework.common.helper.ResponseHelper;
 import com.onezol.vertex.framework.common.util.ServletUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.util.Assert;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     /**
+     * MethodArgumentNotValidException 处理请求参数格式错误<br>
+     * tips: 使用 @Validated 注解时, 参数校验失败会抛出此异常
+     */
+    @ExceptionHandler(value = MethodArgumentNotValidException.class)
+    public ResponseModel<?> handleMethodArgumentNotValidException(HttpServletRequest req, MethodArgumentNotValidException ex) {
+        String message = "参数异常, 请检查请求参数";
+        FieldError fieldError = ex.getBindingResult().getFieldError();
+        if (Objects.nonNull(fieldError)) {
+            message = fieldError.getDefaultMessage();
+        }
+        return ResponseHelper.buildFailedResponse(BizHttpStatus.BAD_REQUEST, message);
+    }
+
+    /**
      * BusinessException 处理业务异常
      */
     @ExceptionHandler(value = BusinessException.class)
     public ResponseModel<?> handleBusinessException(HttpServletRequest req, BusinessException ex) {
-        return ResponseHelper.buildFailureResponse(ex.getCode(), ex.getMessage());
+        return ResponseHelper.buildFailedResponse(ex.getCode(), ex.getMessage());
     }
 
     /**
@@ -36,7 +53,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = Exception.class)
     public ResponseModel<?> handleException(HttpServletRequest req, Exception ex) {
         log.error("[DefaultExceptionHandler]", ex);
-        return ResponseHelper.buildFailureResponse(BizHttpStatus.INTERNAL_SERVER_ERROR.getCode(), ex.getMessage());
+        return ResponseHelper.buildFailedResponse(BizHttpStatus.INTERNAL_SERVER_ERROR.getCode(), ex.getMessage());
     }
 
     /**

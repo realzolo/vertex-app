@@ -3,7 +3,7 @@ package com.onezol.vertex.framework.security.biz.fillter;
 import com.onezol.vertex.framework.common.constant.RedisKey;
 import com.onezol.vertex.framework.common.util.JwtUtils;
 import com.onezol.vertex.framework.common.util.StringUtils;
-import com.onezol.vertex.framework.security.api.model.pojo.LoggedAgencyUser;
+import com.onezol.vertex.framework.security.api.model.pojo.LoginUser;
 import com.onezol.vertex.framework.support.cache.RedisCache;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
@@ -70,8 +70,8 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             // 从Redis中获取用户信息, 并验证用户信息是否存在
             String subject = JwtUtils.getSubjectFromToken(token);
             String redisKey = RedisKey.ONLINE_USER + subject;
-            LoggedAgencyUser loggedAgencyUser = redisCache.getCacheObject(redisKey);
-            if (Objects.isNull(loggedAgencyUser)) {
+            LoginUser loginUser = redisCache.getCacheObject(redisKey);
+            if (Objects.isNull(loginUser)) {
                 filterChain.doFilter(request, response);
                 return;
             }
@@ -89,7 +89,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             }
 
             // 将用户信息存入SecurityContext中, 以便后续使用
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loggedAgencyUser, null, loggedAgencyUser.getAuthorities());
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginUser, null, loginUser.getAuthorities());
             authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         }

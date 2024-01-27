@@ -6,14 +6,12 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
-import java.io.Serializable;
-
 import static com.onezol.vertex.framework.common.constant.DefaultPage.DEFAULT_PAGE_NO;
 import static com.onezol.vertex.framework.common.constant.DefaultPage.DEFAULT_PAGE_SIZE;
 
 @Schema(description = "分页参数")
 @Data
-public class PageParam implements Serializable {
+public class PageParam implements Payload {
 
     @Schema(description = "页码，从 1 开始", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
     @NotNull(message = "页码不能为空")

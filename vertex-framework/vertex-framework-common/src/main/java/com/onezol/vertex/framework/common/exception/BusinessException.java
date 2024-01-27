@@ -11,8 +11,8 @@ import lombok.EqualsAndHashCode;
  */
 
 @Schema(description = "业务异常")
-@EqualsAndHashCode(callSuper = true)
 @Data
+@EqualsAndHashCode(callSuper = true)
 public abstract class BusinessException extends RuntimeException {
 
     @Schema(description = "异常状态码", requiredMode = Schema.RequiredMode.REQUIRED)
@@ -40,4 +40,5 @@ public abstract class BusinessException extends RuntimeException {
         this.code = bizHttpStatus.getCode();
         this.message = message;
     }
+
 }
