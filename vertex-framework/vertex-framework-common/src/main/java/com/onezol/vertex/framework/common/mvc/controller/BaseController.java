@@ -5,8 +5,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 import java.util.Objects;
 
-import static com.onezol.vertex.framework.common.constant.Constants.DEFAULT_PAGE_SIZE;
-import static com.onezol.vertex.framework.common.constant.Constants.MAX_PAGE_SIZE;
+import static com.onezol.vertex.framework.common.constant.DefaultPage.DEFAULT_PAGE_SIZE;
+import static com.onezol.vertex.framework.common.constant.DefaultPage.MAX_PAGE_SIZE;
+
 
 /**
  * 基础Controller
@@ -27,7 +28,7 @@ public abstract class BaseController<T> {
             pageNo = 1;
         }
         if (Objects.isNull(pageSize)) {
-            pageSize = Integer.valueOf(DEFAULT_PAGE_SIZE).intValue();
+            pageSize = DEFAULT_PAGE_SIZE;
         }
         pageSize = Math.min(pageSize, MAX_PAGE_SIZE);
 

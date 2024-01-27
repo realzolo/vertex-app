@@ -1,4 +1,4 @@
-package com.onezol.vertex.framework.common.config;
+package com.onezol.vertex.framework.support.config;
 
 import com.onezol.vertex.framework.common.util.ThreadUtils;
 import org.springframework.beans.factory.annotation.Value;

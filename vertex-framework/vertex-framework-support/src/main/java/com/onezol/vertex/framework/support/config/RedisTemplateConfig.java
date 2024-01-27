@@ -1,4 +1,4 @@
-package com.onezol.vertex.framework.common.config;
+package com.onezol.vertex.framework.support.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

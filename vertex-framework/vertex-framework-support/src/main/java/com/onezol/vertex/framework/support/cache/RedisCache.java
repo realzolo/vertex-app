@@ -1,4 +1,4 @@
-package com.onezol.vertex.framework.common.cache;
+package com.onezol.vertex.framework.support.cache;
 
 import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Component;

@@ -1,4 +1,4 @@
-package com.onezol.vertex.framework.common.config;
+package com.onezol.vertex.framework.support.config;
 
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;

@@ -41,6 +41,6 @@ public class UserLogoutSuccessHandler implements LogoutSuccessHandler {
 
         // 注销成功, 返回成功信息
         String json = JsonUtils.toJson(ResponseHelper.buildSuccessfulResponse("注销成功"));
-        ResponseUtils.write(response, json);
+        ServletUtils.writeJSON(response, json);
     }
 }

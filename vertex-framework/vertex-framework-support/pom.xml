@@ -9,7 +9,7 @@
         <version>1.0.0</version>
     </parent>
 
-    <artifactId>vertex-framework-component</artifactId>
+    <artifactId>vertex-framework-support</artifactId>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -18,20 +18,31 @@
     </properties>
 
     <dependencies>
+        <!-- MySQL -->
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+        </dependency>
+        <!-- PostgresSQL -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+        </dependency>
+        <!-- Redis -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+        <!-- Druid -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+        </dependency>
+
         <!-- Vertex Framework Dependencies -->
         <dependency>
             <groupId>com.onezol</groupId>
             <artifactId>vertex-framework-common</artifactId>
-            <version>${application.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.onezol</groupId>
-            <artifactId>vertex-framework-support</artifactId>
-            <version>${application.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.onezol</groupId>
-            <artifactId>vertex-framework-security-api</artifactId>
             <version>${application.version}</version>
         </dependency>
     </dependencies>

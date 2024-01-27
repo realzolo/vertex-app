@@ -1,4 +1,4 @@
-package com.onezol.vertex.framework.common.config;
+package com.onezol.vertex.framework.support.config;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONReader;

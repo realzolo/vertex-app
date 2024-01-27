@@ -3,8 +3,8 @@ package com.onezol.vertex.framework.security.biz.config;
 import com.onezol.vertex.framework.common.util.ControllerPathUtils;
 import com.onezol.vertex.framework.security.api.annotation.RestrictAccess;
 import com.onezol.vertex.framework.security.biz.fillter.JwtAuthenticationTokenFilter;
-import com.onezol.vertex.framework.security.biz.handler.AuthenticationEntryPointIHandler;
 import com.onezol.vertex.framework.security.biz.handler.UserAccessDeniedHandler;
+import com.onezol.vertex.framework.security.biz.handler.UserAuthenticationHandler;
 import com.onezol.vertex.framework.security.biz.handler.UserLogoutSuccessHandler;
 import jakarta.annotation.PostConstruct;
 import org.springframework.context.annotation.Bean;
@@ -32,7 +32,7 @@ public class SecurityConfig {
     /**
      * 认证入口点处理器(认证失败处理器)
      */
-    private final AuthenticationEntryPointIHandler authenticationEntryPointIHandler;
+    private final UserAuthenticationHandler userAuthenticationHandler;
     /**
      * 拒绝访问处理类(权限不足)
      */
@@ -43,9 +43,9 @@ public class SecurityConfig {
      */
     private final UserLogoutSuccessHandler userLogoutSuccessHandler;
 
-    public SecurityConfig(JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter, AuthenticationEntryPointIHandler authenticationEntryPointIHandler, UserAccessDeniedHandler userAccessDeniedHandler, UserLogoutSuccessHandler userLogoutSuccessHandler) {
+    public SecurityConfig(JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter, UserAuthenticationHandler userAuthenticationHandler, UserAccessDeniedHandler userAccessDeniedHandler, UserLogoutSuccessHandler userLogoutSuccessHandler) {
         this.jwtAuthenticationTokenFilter = jwtAuthenticationTokenFilter;
-        this.authenticationEntryPointIHandler = authenticationEntryPointIHandler;
+        this.userAuthenticationHandler = userAuthenticationHandler;
         this.userAccessDeniedHandler = userAccessDeniedHandler;
         this.userLogoutSuccessHandler = userLogoutSuccessHandler;
     }
@@ -89,7 +89,7 @@ public class SecurityConfig {
                 .exceptionHandling(httpSecurityExceptionHandlingConfigurer ->
                         httpSecurityExceptionHandlingConfigurer
                                 // 认证入口点处理器
-                                .authenticationEntryPoint(authenticationEntryPointIHandler)
+                                .authenticationEntryPoint(userAuthenticationHandler)
                                 // 权限不足处理器
                                 .accessDeniedHandler(userAccessDeniedHandler)
                 )
@@ -103,7 +103,8 @@ public class SecurityConfig {
                 )
                 .build();
     }
-
+//    vertex-framework-component
+//    vertex-framework-support
     @Bean
     public AuthenticationManager authenticationManagerBean(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();

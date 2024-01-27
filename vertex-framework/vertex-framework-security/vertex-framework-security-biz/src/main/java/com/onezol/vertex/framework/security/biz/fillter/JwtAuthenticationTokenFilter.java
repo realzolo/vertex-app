@@ -1,10 +1,10 @@
 package com.onezol.vertex.framework.security.biz.fillter;
 
-import com.onezol.vertex.framework.common.cache.RedisCache;
 import com.onezol.vertex.framework.common.constant.RedisKey;
 import com.onezol.vertex.framework.common.util.JwtUtils;
 import com.onezol.vertex.framework.common.util.StringUtils;
 import com.onezol.vertex.framework.security.api.model.pojo.LoggedAgencyUser;
+import com.onezol.vertex.framework.support.cache.RedisCache;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -34,6 +34,7 @@ import static com.onezol.vertex.framework.common.constant.Constants.AUTHORIZATIO
 @Slf4j
 @Component
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
+
     private final RedisCache redisCache;
     /**
      * token过期时间: 默认1小时 （单位秒）
@@ -123,4 +124,5 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         // 进行JWT续期操作(重新生成一个)
         return JwtUtils.generateToken(subject);
     }
+
 }
