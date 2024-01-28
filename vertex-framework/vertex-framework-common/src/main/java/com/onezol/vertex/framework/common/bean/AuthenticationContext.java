@@ -1,7 +1,6 @@
 package com.onezol.vertex.framework.common.bean;
 
 import com.onezol.vertex.framework.common.model.pojo.AuthUserModel;
-import lombok.experimental.UtilityClass;
 
 public class AuthenticationContext {
 

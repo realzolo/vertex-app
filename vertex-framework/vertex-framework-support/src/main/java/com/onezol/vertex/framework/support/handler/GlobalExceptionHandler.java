@@ -6,7 +6,7 @@ import com.onezol.vertex.framework.common.bean.AuthenticationContext;
 import com.onezol.vertex.framework.common.constant.enums.BizHttpStatus;
 import com.onezol.vertex.framework.common.exception.BusinessException;
 import com.onezol.vertex.framework.common.helper.ResponseHelper;
-import com.onezol.vertex.framework.common.model.entity.ApiExceptionLogEntity;
+import com.onezol.vertex.framework.common.model.entity.ExceptionLogEntity;
 import com.onezol.vertex.framework.common.model.pojo.AuthUserModel;
 import com.onezol.vertex.framework.common.model.pojo.ResponseModel;
 import com.onezol.vertex.framework.common.util.JsonUtils;
@@ -86,15 +86,15 @@ public class GlobalExceptionHandler {
      */
     private void createExceptionLog(HttpServletRequest req, Exception ex) {
         try {
-            ApiExceptionLogEntity entity = this.newExceptionLog(req, ex);
+            ExceptionLogEntity entity = this.newExceptionLog(req, ex);
             Db.save(entity);
         } catch (Exception exception) {
             log.error("[createExceptionLog]", exception);
         }
     }
 
-    private ApiExceptionLogEntity newExceptionLog(HttpServletRequest request, Throwable ex) throws IOException {
-        ApiExceptionLogEntity exLog = new ApiExceptionLogEntity();
+    private ExceptionLogEntity newExceptionLog(HttpServletRequest request, Throwable ex) throws IOException {
+        ExceptionLogEntity exLog = new ExceptionLogEntity();
         // 处理用户信息
         AuthUserModel authUserModel = AuthenticationContext.get();
         Long userId = Objects.nonNull(authUserModel) ? authUserModel.getUserId() : null;

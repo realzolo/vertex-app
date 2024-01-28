@@ -17,19 +17,34 @@ import java.util.concurrent.ThreadPoolExecutor;
 @Configuration
 @SuppressWarnings("all")
 public class ThreadPoolConfig {
-    // 核心线程池大小
+
+    /**
+     * 核心线程池大小
+     */
     private final int corePoolSize = 50;
-    // 最大可创建的线程数
+
+    /**
+     * 最大可创建的线程数
+     */
     private final int maxPoolSize = 200;
-    // 队列最大长度
+
+    /**
+     * 队列最大长度
+     */
     private final int queueCapacity = 1000;
-    // 线程池维护线程所允许的空闲时间
+
+    /**
+     * 线程池维护线程所允许的空闲时间
+     */
     private final int keepAliveSeconds = 300;
 
     @Value("${spring.application.name:vertex-admin-app}")
     private String applicationName;
 
-    @Bean(name = "threadPoolTaskExecutor")  // 公共线程池
+    /**
+     * 公共线程池
+     */
+    @Bean(name = "commonThreadPoolTaskExecutor")
     public ThreadPoolTaskExecutor threadPoolTaskExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setThreadNamePrefix(applicationName + "-thread-pool-");
@@ -43,7 +58,7 @@ public class ThreadPoolConfig {
     }
 
     /**
-     * 执行周期性或定时任务
+     * 异步任务线程池, 支持定时任务、延迟执行等
      */
     @Bean(name = "scheduledExecutorService")
     public ScheduledExecutorService scheduledExecutorService() {
@@ -55,4 +70,5 @@ public class ThreadPoolConfig {
             }
         };
     }
+
 }

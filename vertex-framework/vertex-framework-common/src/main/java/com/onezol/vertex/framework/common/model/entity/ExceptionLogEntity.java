@@ -9,11 +9,11 @@ import lombok.EqualsAndHashCode;
 /**
  * API 错误日志
  */
-@Schema(name = "ApiExceptionLogEntity", description = "API错误日志")
+@Schema(name = "ExceptionLogEntity", description = "API错误日志")
 @Data
 @EqualsAndHashCode(callSuper = true)
-@TableName(value = "vx_api_exception_log")
-public class ApiExceptionLogEntity extends BaseEntity {
+@TableName(value = "vx_exception_log")
+public class ExceptionLogEntity extends BaseEntity {
 
     @Schema(description = "用户ID")
     @TableField(value = "user_id")

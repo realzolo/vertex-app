@@ -110,7 +110,6 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
         // 保存用户信息
         this.save(entity);
 
-
         // 构建返回结果
         User user = BeanUtils.toBean(entity, User.class);
         String token = JwtUtils.generateToken(CodecUtils.encodeBase64(user.getCode() + "@" + user.getUsername()));

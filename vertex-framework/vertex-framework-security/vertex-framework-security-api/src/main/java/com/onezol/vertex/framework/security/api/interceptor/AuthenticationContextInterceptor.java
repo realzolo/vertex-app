@@ -4,8 +4,6 @@ package com.onezol.vertex.framework.security.api.interceptor;
 import com.onezol.vertex.framework.common.bean.AuthenticationContext;
 import com.onezol.vertex.framework.common.model.pojo.AuthUserModel;
 import com.onezol.vertex.framework.common.util.BeanUtils;
-import com.onezol.vertex.framework.common.util.ControllerPathUtils;
-import com.onezol.vertex.framework.security.api.annotation.RestrictAccess;
 import com.onezol.vertex.framework.security.api.model.dto.User;
 import com.onezol.vertex.framework.security.api.model.pojo.LoginUser;
 import lombok.NonNull;
@@ -15,8 +13,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.context.request.WebRequestInterceptor;
-
-import java.util.Set;
 
 /**
  * 认证上下文拦截器<br>
