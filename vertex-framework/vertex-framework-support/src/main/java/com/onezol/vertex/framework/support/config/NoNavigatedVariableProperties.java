@@ -1,4 +1,4 @@
-package com.onezol.vertex.framework.security.biz.config;
+package com.onezol.vertex.framework.support.config;
 
 import org.springframework.beans.factory.annotation.Value;
 

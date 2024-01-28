@@ -1,4 +1,4 @@
-CREATE TABLE template_table
+CREATE TABLE IF NOT EXISTS template_table
 (
     id          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
     -- 自定义字段开始 --

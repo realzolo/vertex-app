@@ -1,4 +1,4 @@
-CREATE TABLE vx_user
+CREATE TABLE IF NOT EXISTS vx_user
 (
     id           BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
     -- 自定义字段开始 --
@@ -27,7 +27,7 @@ CREATE TABLE vx_user
   DEFAULT CHARSET = utf8mb4
   AUTO_INCREMENT = 10001 COMMENT ='用户';
 
-CREATE TABLE vx_agency
+CREATE TABLE IF NOT EXISTS vx_agency
 (
     id          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
     -- 自定义字段开始 --
@@ -50,7 +50,7 @@ CREATE TABLE vx_agency
   DEFAULT CHARSET = utf8mb4
   AUTO_INCREMENT = 10000 COMMENT ='组织机构';
 
-CREATE TABLE vx_api_exception_log
+CREATE TABLE IF NOT EXISTS vx_api_exception_log
 (
     id                           BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
     -- 自定义字段开始 --

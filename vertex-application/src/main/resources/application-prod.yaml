@@ -38,4 +38,4 @@ application:
 logging:
   level:
     root: info
-    com.onezol.vertex: debug
+    com.onezol.vertex: info
