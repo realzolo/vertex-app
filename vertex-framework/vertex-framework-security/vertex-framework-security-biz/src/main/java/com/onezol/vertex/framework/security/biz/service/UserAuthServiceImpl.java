@@ -6,17 +6,16 @@ import com.onezol.vertex.framework.common.constant.enums.UserGender;
 import com.onezol.vertex.framework.common.exception.RuntimeBizException;
 import com.onezol.vertex.framework.common.helper.CodeGenerationHelper;
 import com.onezol.vertex.framework.common.mvc.service.BaseServiceImpl;
-import com.onezol.vertex.framework.common.util.BeanUtils;
-import com.onezol.vertex.framework.common.util.CodecUtils;
-import com.onezol.vertex.framework.common.util.JwtUtils;
-import com.onezol.vertex.framework.common.util.StringUtils;
+import com.onezol.vertex.framework.common.util.*;
 import com.onezol.vertex.framework.security.api.mapper.UserMapper;
 import com.onezol.vertex.framework.security.api.model.dto.User;
 import com.onezol.vertex.framework.security.api.model.entity.UserEntity;
 import com.onezol.vertex.framework.security.api.model.payload.UserRegistrationPayload;
 import com.onezol.vertex.framework.security.api.model.pojo.LoginUser;
 import com.onezol.vertex.framework.security.api.model.vo.UserAuthenticationVO;
+import com.onezol.vertex.framework.security.api.service.OnlineUserService;
 import com.onezol.vertex.framework.security.api.service.UserAuthService;
+import eu.bitwalker.useragentutils.UserAgent;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AccountExpiredException;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Service
@@ -35,13 +35,16 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
 
     private final AuthenticationManager authenticationManager;
 
+    private final OnlineUserService onlineUserService;
+
     private final PasswordEncoder passwordEncoder;
 
     @Value("${spring.jwt.expiration-time:3600}")
     private Integer expirationTime;
 
-    public UserAuthServiceImpl(AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder) {
+    public UserAuthServiceImpl(AuthenticationManager authenticationManager, OnlineUserService onlineUserService, PasswordEncoder passwordEncoder) {
         this.authenticationManager = authenticationManager;
+        this.onlineUserService = onlineUserService;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -184,25 +187,18 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
      * @return 登录成功后的处理结果
      */
     private UserAuthenticationVO afterLoginSuccess(final LoginUser userIdentity) {
-        // 记录用户登录信息
-//        this.recordLoginDetails(userIdentity);
+        // 设置用户登录信息
+        this.setLoginUserDetails(userIdentity);
 
         // 生成token
         String subject = userIdentity.getKey();
         String token = JwtUtils.generateToken(subject);
 
         // 将用户信息放入缓存
-//        onlineUserService.addOnlineUser(userIdentity, expirationTime);
+        onlineUserService.addOnlineUser(userIdentity, expirationTime);
 
         // 返回结果
         User user = userIdentity.getUser();
-//        return new HashMap<>() {{
-//            this.put("user", user);
-//            this.put("jwt", new HashMap<String, Object>() {{
-//                this.put("token", token);
-//                this.put("expire", expirationTime);
-//            }});
-//        }};
         return UserAuthenticationVO.builder()
                 .user(user)
                 .jwt(
@@ -222,7 +218,7 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
     private UserEntity newBlankUser() {
         UserEntity entity = new UserEntity();
         entity.setCode(CodeGenerationHelper.generateCode(BizCode.USER_CODE));
-        entity.setAgencyCode(10000L);
+        entity.setAgencyCode(10001L);
         entity.setUsername("");
         entity.setPassword("");
         entity.setNickname("普通用户");
@@ -235,6 +231,26 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
         entity.setEmail("");
         entity.setPwdExpDate(LocalDate.now().plusMonths(3));
         return entity;
+    }
+
+    /**
+     * 设置用户登录信息
+     *
+     * @param user 用户信息
+     */
+    private void setLoginUserDetails(final LoginUser user) {
+        LocalDateTime loginTime = LocalDateTime.now();
+        String ip = NetworkUtils.getHostIp();
+        String location = NetworkUtils.getAddressByIP(ip);
+        UserAgent userAgent = ServletUtils.getUserAgent();
+        String browser = userAgent.getBrowser().getName();
+        String os = userAgent.getOperatingSystem().getName();
+
+        user.setLoginTime(loginTime);
+        user.setIp(ip);
+        user.setLocation(location);
+        user.setBrowser(browser);
+        user.setOs(os);
     }
 
 }

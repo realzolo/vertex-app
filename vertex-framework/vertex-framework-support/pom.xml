@@ -55,6 +55,11 @@
             <artifactId>vertex-framework-common</artifactId>
             <version>${application.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.onezol</groupId>
+            <artifactId>vertex-framework-security-api</artifactId>
+            <version>${application.version}</version>
+        </dependency>
     </dependencies>
 
 </project>

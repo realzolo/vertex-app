@@ -40,8 +40,7 @@ public class LocalDateTimeUtils {
         return LocalDateTime.of(year, mouth, day, 0, 0, 0);
     }
 
-    public static LocalDateTime[] buildBetweenTime(int year1, int mouth1, int day1,
-                                                   int year2, int mouth2, int day2) {
+    public static LocalDateTime[] buildBetweenTime(int year1, int mouth1, int day1, int year2, int mouth2, int day2) {
         return new LocalDateTime[]{buildTime(year1, mouth1, day1), buildTime(year2, mouth2, day2)};
     }
 
@@ -100,6 +99,56 @@ public class LocalDateTimeUtils {
      */
     public static LocalDateTime endOfMonth(LocalDateTime date) {
         return date.with(TemporalAdjusters.lastDayOfMonth()).with(LocalTime.MAX);
+    }
+
+
+    /**
+     * 计算时间差
+     *
+     * @param startTime 开始时间
+     * @param endTime   结束时间
+     * @return 时间差
+     */
+    public static String timeDifference(LocalDateTime startTime, LocalDateTime endTime) {
+        long between = java.time.Duration.between(startTime, endTime).toMillis();
+        long day = between / (24 * 60 * 60 * 1000);
+        long hour = (between / (60 * 60 * 1000) - day * 24);
+        long min = ((between / (60 * 1000)) - day * 24 * 60 - hour * 60);
+        long s = (between / 1000 - day * 24 * 60 * 60 - hour * 60 * 60 - min * 60);
+        return day + "天" + hour + "小时" + min + "分" + s + "秒";
+    }
+
+    /**
+     * 计算短时间差(去除0值)
+     *
+     * @param startTime 开始时间
+     * @param endTime   结束时间
+     * @return 时间差
+     */
+    public static String shortTimeDifference(LocalDateTime startTime, LocalDateTime endTime) {
+        String difference = LocalDateTimeUtils.timeDifference(startTime, endTime);
+        String[] split = difference.split("天");
+        String day = split[0];
+        String[] split1 = split[1].split("小时");
+        String hour = split1[0];
+        String[] split2 = split1[1].split("分");
+        String min = split2[0];
+        String[] split3 = split2[1].split("秒");
+        String s = split3[0];
+        StringBuilder sb = new StringBuilder();
+        if (!"0".equals(day)) {
+            sb.append(day).append("天");
+        }
+        if (!"0".equals(hour)) {
+            sb.append(hour).append("小时");
+        }
+        if (!"0".equals(min)) {
+            sb.append(min).append("分");
+        }
+        if (!"0".equals(s)) {
+            sb.append(s).append("秒");
+        }
+        return sb.toString();
     }
 
 }

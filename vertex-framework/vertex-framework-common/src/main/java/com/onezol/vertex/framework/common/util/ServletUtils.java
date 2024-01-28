@@ -2,6 +2,7 @@ package com.onezol.vertex.framework.common.util;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import eu.bitwalker.useragentutils.UserAgent;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -16,6 +17,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -60,10 +62,10 @@ public class ServletUtils {
      *
      * @return ua
      */
-    public static String getUserAgent() {
+    public static UserAgent getUserAgent() {
         HttpServletRequest request = getRequest();
         String ua = request.getHeader("User-Agent");
-        return ua != null ? ua : "";
+        return UserAgent.parseUserAgentString(ua);
     }
 
     /**
@@ -95,6 +97,9 @@ public class ServletUtils {
      */
     public static Map<String, Object> getRequestBody(HttpServletRequest request) throws IOException {
         String requestBody = StreamUtils.copyToString(request.getInputStream(), StandardCharsets.UTF_8);
+        if (requestBody.isBlank()) {
+            return Collections.emptyMap();
+        }
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readValue(requestBody, new TypeReference<>() {
         });

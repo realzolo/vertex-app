@@ -69,7 +69,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
             // 从Redis中获取用户信息, 并验证用户信息是否存在
             String subject = JwtUtils.getSubjectFromToken(token);
-            String redisKey = RedisKey.ONLINE_USER + subject;
+            String redisKey = RedisKey.USER + subject;
             LoginUser loginUser = redisCache.getCacheObject(redisKey);
             if (Objects.isNull(loginUser)) {
                 filterChain.doFilter(request, response);

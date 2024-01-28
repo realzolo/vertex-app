@@ -120,7 +120,7 @@ public class LoginUser implements UserDetails {
     }
 
     public String getKey() {
-        return CodecUtils.encodeBase64(agencyUser.getCode() + "@" + agencyUser.getUsername());
+        return agencyUser.getCode() + "@" + agencyUser.getUsername();
     }
 
     public void setRoles(Set<String> roles) {

@@ -7,8 +7,8 @@ public record RedisKey() {
     /**
      * 用户信息前缀
      */
-    public static String ONLINE_USERID_SET = "online_userid_set";
-    public static String ONLINE_USER = "online_userinfo:";
+    public static String USERID_SET = "uid_set";
+    public static String USER = "user:";
 
     /**
      * 字典

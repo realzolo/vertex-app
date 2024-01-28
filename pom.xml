@@ -33,6 +33,7 @@
         <druid.version>1.2.20</druid.version>
         <jaxb-api.version>2.3.1</jaxb-api.version>
         <liquibase.version>4.25.1</liquibase.version>
+        <user-agent-utils.version>1.21</user-agent-utils.version>
     </properties>
 
     <dependencies>
@@ -103,6 +104,12 @@
                 <groupId>org.liquibase</groupId>
                 <artifactId>liquibase-core</artifactId>
                 <version>${liquibase.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/eu.bitwalker/UserAgentUtils -->
+            <dependency>
+                <groupId>eu.bitwalker</groupId>
+                <artifactId>UserAgentUtils</artifactId>
+                <version>${user-agent-utils.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

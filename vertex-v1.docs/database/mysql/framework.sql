@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS vx_api_exception_log
     exception_file_name          VARCHAR(255) default '' COMMENT '异常发生的类文件',
     exception_method_name        VARCHAR(255) default '' COMMENT '异常发生的方法名',
     exception_line_number        INT UNSIGNED COMMENT '异常发生的方法所在行',
-    exception_stack_trace        VARCHAR(255) default '' COMMENT '异常的栈轨迹异常的栈轨迹',
+    exception_stack_trace        TEXT COMMENT '异常的栈轨迹异常的栈轨迹',
     exception_root_cause_message VARCHAR(255) default '' COMMENT '异常导致的根消息',
     exception_message            VARCHAR(255) default '' COMMENT '异常导致的消息',
     -- 自定义字段结束 --

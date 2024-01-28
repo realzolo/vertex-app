@@ -1,12 +1,18 @@
 package com.onezol.vertex.framework.support.handler;
 
+import com.alibaba.fastjson2.JSON;
+import com.baomidou.mybatisplus.extension.toolkit.Db;
+import com.onezol.vertex.framework.common.bean.AuthenticationContext;
 import com.onezol.vertex.framework.common.constant.enums.BizHttpStatus;
 import com.onezol.vertex.framework.common.exception.BusinessException;
+import com.onezol.vertex.framework.common.helper.ResponseHelper;
 import com.onezol.vertex.framework.common.model.entity.ApiExceptionLogEntity;
+import com.onezol.vertex.framework.common.model.pojo.AuthUserModel;
 import com.onezol.vertex.framework.common.model.pojo.ResponseModel;
 import com.onezol.vertex.framework.common.util.JsonUtils;
-import com.onezol.vertex.framework.common.helper.ResponseHelper;
 import com.onezol.vertex.framework.common.util.ServletUtils;
+import com.onezol.vertex.framework.support.manager.async.AsyncTaskManager;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -15,6 +21,9 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.NoHandlerFoundException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
@@ -39,6 +48,16 @@ public class GlobalExceptionHandler {
         return ResponseHelper.buildFailedResponse(BizHttpStatus.BAD_REQUEST, message);
     }
 
+
+    /**
+     * NoResourceFoundException 找不到资源异常<br/>
+     * NoHandlerFoundException 找不到处理器异常
+     */
+    @ExceptionHandler(value = {NoResourceFoundException.class, NoHandlerFoundException.class})
+    public ResponseModel<?> handleNoResourceFoundException(HttpServletRequest req, ServletException ex) {
+        return ResponseHelper.buildFailedResponse(BizHttpStatus.NOT_FOUND, ex.getMessage());
+    }
+
     /**
      * BusinessException 处理业务异常
      */
@@ -52,6 +71,9 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value = Exception.class)
     public ResponseModel<?> handleException(HttpServletRequest req, Exception ex) {
+        // API异常日志持久化
+        AsyncTaskManager.getInstance().execute(() -> this.createExceptionLog(req, ex));
+
         log.error("[DefaultExceptionHandler]", ex);
         return ResponseHelper.buildFailedResponse(BizHttpStatus.INTERNAL_SERVER_ERROR.getCode(), ex.getMessage());
     }
@@ -63,18 +85,20 @@ public class GlobalExceptionHandler {
      * @param ex  Exception
      */
     private void createExceptionLog(HttpServletRequest req, Exception ex) {
-        ApiExceptionLogEntity errorLog = new ApiExceptionLogEntity();
         try {
-            initExceptionLog(errorLog, req, ex);
-//            apiErrorLogFrameworkService.createApiErrorLog(errorLog);
-        } catch (Throwable th) {
-//            log.error("[createExceptionLog][url({}) log({}) 发生异常]", req.getRequestURI(), JsonUtils.toJsonString(errorLog), th);
+            ApiExceptionLogEntity entity = this.newExceptionLog(req, ex);
+            Db.save(entity);
+        } catch (Exception exception) {
+            log.error("[createExceptionLog]", exception);
         }
     }
 
-    private void initExceptionLog(ApiExceptionLogEntity exLog, HttpServletRequest request, Throwable ex) throws IOException {
+    private ApiExceptionLogEntity newExceptionLog(HttpServletRequest request, Throwable ex) throws IOException {
+        ApiExceptionLogEntity exLog = new ApiExceptionLogEntity();
         // 处理用户信息
-//        exLog.setUserId(WebFrameworkUtils.getLoginUserId(request));
+        AuthUserModel authUserModel = AuthenticationContext.get();
+        Long userId = Objects.nonNull(authUserModel) ? authUserModel.getUserId() : null;
+        exLog.setUserId(userId);
         // 设置异常字段
         exLog.setExceptionName(ex.getClass().getName());
         exLog.setExceptionMessage(ExceptionUtils.getMessage(ex));
@@ -93,8 +117,8 @@ public class GlobalExceptionHandler {
         Map<String, Object> requestBody = ServletUtils.getRequestBody(request);
         // 如果requestBody的value存在MultipartFile类型的值，将其替换为文件名
         for (Map.Entry<String, Object> entry : requestBody.entrySet()) {
-            if (entry.getValue() instanceof org.springframework.web.multipart.MultipartFile) {
-                requestBody.put(entry.getKey(), ((org.springframework.web.multipart.MultipartFile) entry.getValue()).getOriginalFilename());
+            if (entry.getValue() instanceof MultipartFile multipartFile) {
+                requestBody.put(entry.getKey(), multipartFile.getOriginalFilename());
             }
         }
         Map<String, Object> requestPayload = new LinkedHashMap<>(2) {{
@@ -103,8 +127,10 @@ public class GlobalExceptionHandler {
         }};
         exLog.setRequestParams(JsonUtils.toJsonString(requestPayload));
         exLog.setRequestMethod(request.getMethod());
-        exLog.setUserAgent(ServletUtils.getUserAgent());
+        exLog.setUserAgent(JSON.toJSONString(ServletUtils.getUserAgent()));
         exLog.setUserIp(ServletUtils.getClientIP());
+
+        return exLog;
     }
 
 }
