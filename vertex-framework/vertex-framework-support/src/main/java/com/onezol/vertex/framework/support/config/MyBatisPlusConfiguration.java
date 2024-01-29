@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Configuration
-public class MyBatisPlusConfig implements MetaObjectHandler {
+public class MyBatisPlusConfiguration implements MetaObjectHandler {
     @Value("${spring.datasource.url}")
     private String url;
 

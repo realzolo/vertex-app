@@ -16,7 +16,7 @@ import java.util.concurrent.ThreadPoolExecutor;
  **/
 @Configuration
 @SuppressWarnings("all")
-public class ThreadPoolConfig {
+public class ThreadPoolConfiguration {
 
     /**
      * 核心线程池大小

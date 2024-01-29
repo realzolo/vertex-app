@@ -1,54 +1,30 @@
+# Dev Environment Configurations
 spring:
   # 数据源配置
   datasource:
     url: jdbc:mysql://db.onezol.com:3306/vertex?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8
     username: vertex
     password: XrZZNKcDJhwEbaYF
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    type: com.alibaba.druid.pool.DruidDataSource
-    druid:
-      initial-size: 5
-      min-idle: 5
-      max-active: 20
-      max-wait: 60000
   # Redis配置
   data:
     redis:
       host: redis.onezol.com
       port: 6379
       password: 123456
-      database: 0
-      timeout: 10000
-      lettuce:
-        pool:
-          max-active: 8
-          max-wait: -1
-          max-idle: 8
-          min-idle: 0
-  # Liquibase配置
-  liquibase:
-    enabled: true
-    change-log: classpath:changelog/mysql/changelog-application.xml
-    database-change-log-table: xv_database_changelog
-    database-change-log-lock-table: vx_database_changelog_lock
   # 邮件配置
   mail:
     host: smtp.exmail.qq.com
     port: 465
     username: mail@onezol.com
     password: JYGtUgkah6x89BLc
-    default-encoding: UTF-8
-    properties:
-      mail:
-        smtp:
-          socketFactory:
-            class: javax.net.ssl.SSLSocketFactory
 
+# 应用配置
 application:
   jwt:
     secret-key: C61270901C4A455A89A0196CBCED9803
     expiration-time: 3600  # token有效期, 1小时
 
+# 日志配置
 logging:
   level:
     root: info

@@ -1,5 +1,7 @@
 package com.onezol.vertex.framework.common.constant.enums;
 
+import org.springframework.http.HttpStatus;
+
 /**
  * 业务 HTTP 状态码
  */
@@ -8,7 +10,7 @@ public enum BizHttpStatus implements Enum {
      * 操作或请求成功<br>
      * 当操作或请求成功完成时使用
      */
-    SUCCESS("操作成功", 200),
+    SUCCESS(HttpStatus.OK.getReasonPhrase(), 200),
     /**
      * 请求参数错误或输入无效<br>
      * 当请求中包含无效参数、缺少必需的参数或参数格式不正确时，可以使用此异常来指示参数错误。
