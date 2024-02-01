@@ -1,7 +1,7 @@
 // https://umijs.org/config/
 import {defineConfig} from '@umijs/max';
 import {join} from 'path';
-import defaultSettings from './defaultSettings';
+import defaultSettings from './setting';
 import proxy from './proxy';
 import routes from './routes';
 

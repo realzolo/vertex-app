@@ -1,6 +1,8 @@
 # Base Environment Configurations
 server:
   port: 10240
+  servlet:
+    context-path: /vertex
 spring:
   application:
     name: vertex-application
@@ -40,7 +42,11 @@ spring:
           max-active: 8
           max-wait: -1
           max-idle: 8
-          min-idle: 0
+          min-idle: 2
+        cluster:
+          refresh:
+            adaptive: true
+            period: 3000
   liquibase:
     enabled: true
     change-log: classpath:changelog/mysql/changelog-application.xml

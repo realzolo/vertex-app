@@ -4,7 +4,7 @@ import com.onezol.vertex.framework.common.model.pojo.AuthUserModel;
 
 public class AuthenticationContext {
 
-    private static final ThreadLocal<AuthUserModel> AUTHENTICATION_THREAD_LOCAL = new ThreadLocal<>();
+    private static final ThreadLocal<AuthUserModel> AUTHENTICATION_THREAD_LOCAL = new InheritableThreadLocal<>();
 
     private AuthenticationContext() {
     }

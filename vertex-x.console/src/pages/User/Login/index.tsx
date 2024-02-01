@@ -17,7 +17,7 @@ import {
 } from '@ant-design/pro-components';
 import { history, useModel, Helmet } from '@umijs/max';
 import { Alert, message, Tabs } from 'antd';
-import Settings from '../../../../config/defaultSettings';
+import Setting from '../../../../config/setting';
 import React, { useState } from 'react';
 import { flushSync } from 'react-dom';
 import { createStyles } from 'antd-style';
@@ -129,7 +129,7 @@ const Login: React.FC = () => {
     <div className={styles.container}>
       <Helmet>
         <title>
-          {'登录'}- {Settings.title}
+          {'登录'}- {Setting.title}
         </title>
       </Helmet>
       <Lang />

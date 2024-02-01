@@ -1,9 +1,10 @@
 package com.onezol.vertex.framework.security.biz.controller;
 
 import com.onezol.vertex.framework.common.constant.enums.BizHttpStatus;
-import com.onezol.vertex.framework.common.model.pojo.ResponseModel;
 import com.onezol.vertex.framework.common.helper.ResponseHelper;
+import com.onezol.vertex.framework.common.model.pojo.ResponseModel;
 import com.onezol.vertex.framework.common.util.StringUtils;
+import com.onezol.vertex.framework.security.api.annotation.RestrictAccess;
 import com.onezol.vertex.framework.security.api.model.payload.UserLoginPayload;
 import com.onezol.vertex.framework.security.api.model.payload.UserRegistrationPayload;
 import com.onezol.vertex.framework.security.api.model.vo.UserAuthenticationVO;
@@ -19,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Objects;
 
-@Tag(name = "用户授权控制器")
+@Tag(name = "用户授权")
 @Validated
 @RestController
 @RequestMapping("/auth")
@@ -50,6 +51,14 @@ public class UserAuthController {
         return Objects.nonNull(userAuthenticationVO) ?
                 ResponseHelper.buildSuccessfulResponse(userAuthenticationVO) :
                 ResponseHelper.buildFailedResponse(BizHttpStatus.BAD_REQUEST, "请使用用户名或邮箱登录");
+    }
+
+    @Operation(summary = "用户登出", description = "用户登出")
+    @RestrictAccess
+    @PostMapping("/logout")
+    public ResponseModel<Void> logout() {
+        userAuthService.logout();
+        return ResponseHelper.buildSuccessfulResponse();
     }
 
 }

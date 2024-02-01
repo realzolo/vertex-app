@@ -1,9 +1,12 @@
 package com.onezol.vertex.framework.common.model.pojo;
 
+import com.onezol.vertex.framework.common.util.NetworkUtils;
+import com.onezol.vertex.framework.common.util.ServletUtils;
 import eu.bitwalker.useragentutils.UserAgent;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
 
+import java.io.IOException;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,19 +23,29 @@ public class SharedHttpServletRequest {
 
     private final Map<String, String[]> parameters;
 
+    private final Map<String, Object> body;
+
     private final Map<String, String> headers;
 
     private final Map<String, Object> sessionAttributes;
 
     private final UserAgent userAgent;
 
+    private final String remoteAddr;
+
     public SharedHttpServletRequest(HttpServletRequest request) {
         this.method = request.getMethod();
         this.requestURI = request.getRequestURI();
         this.parameters = request.getParameterMap();
+        try {
+            this.body = ServletUtils.getRequestBody(request);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         this.headers = this.extractHeaders(request);
         this.sessionAttributes = this.extractSessionAttributes(request);
         this.userAgent = UserAgent.parseUserAgentString(request.getHeader("User-Agent"));
+        this.remoteAddr = NetworkUtils.getIpAddr(request);
     }
 
     public static SharedHttpServletRequest of(HttpServletRequest request) {

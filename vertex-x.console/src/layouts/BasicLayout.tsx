@@ -1,41 +1,35 @@
-import React, {ReactNode, useEffect} from 'react';
-import {AvatarProps, MenuProps, Modal, Typography} from 'antd';
-import {LogoutOutlined} from "@ant-design/icons";
-import {type RunTimeLayoutConfig, useLocation} from "@umijs/max";
-import {AvatarDropdown, AvatarName, Footer, Question} from "@/components";
-import {InitialStateType} from "@@/plugin-initialState/@@initialState";
-import {history} from "@@/core/history";
+import React, { ReactNode } from 'react';
+import { App as AntdApp, AvatarProps, ConfigProvider } from 'antd';
+import { type RunTimeLayoutConfig } from "@umijs/max";
+import { AvatarDropdown, AvatarName, Footer, Question } from "@/components";
+import { InitialStateType } from "@@/plugin-initialState/@@initialState";
 import NProgress from "nprogress";
+import zhCN from "antd/locale/zh_CN";
+import { isLoginPage } from "@/utils/pathUtils";
+import { handleUnauthorized } from "@/utils/securityUtils";
 
-const {Paragraph} = Typography;
-
+const antdConfig = {
+  locale: zhCN,
+  theme: {
+    token: {}
+  },
+  prefixCls: 'vertex-app',
+  iconPrefixCls: 'vertex-app',
+}
 
 const Layout: RunTimeLayoutConfig = ({initialState, setInitialState}) => {
-  const location = useLocation();
-
-  useEffect(() => {
-    if (location.pathname !== "/") {
-    }
-  }, []);
-
-
   return {
-    title: 'Vertex App',
-    layout: 'mix',
-    logo: 'https://img.alicdn.com/tfs/TB1YHEpwUT1gK0jSZFhXXaAtVXa-28-27.svg',
-    contentStyle: {
-      // height: 'calc(100vh - 56px)',
-    },
-    onPageChange: () => onPageChange(initialState),
-    actionsRender: () => actionsRender(initialState),
-    childrenRender,
+    ...initialState?.settings,
+    contentStyle: {},
+    childrenRender: (dom) => childrenRender(dom),
     avatarProps: avatarProps(initialState),
     waterMarkProps: waterMarkProps(initialState),
     appList: appListConfig(),
-    menuFooterRender: () => menuFooterRender(),
     bgLayoutImgList: bgLayoutImgList(),
+    onPageChange: () => onPageChange(initialState),
+    actionsRender: () => actionsRender(initialState),
+    menuFooterRender: () => menuFooterRender(),
     footerRender: () => <Footer/>,
-    ...initialState?.settings
   };
 };
 
@@ -44,7 +38,7 @@ const Layout: RunTimeLayoutConfig = ({initialState, setInitialState}) => {
  */
 const waterMarkProps = (initialState: InitialStateType) => {
   return {
-    content: initialState?.currentUser?.name || 'Vertex App',
+    content: initialState?.userinfo?.nickname || 'Vertex App',
   }
 }
 
@@ -62,46 +56,13 @@ const actionsRender = (initialState: InitialStateType) => {
  */
 const avatarProps = (initialState: InitialStateType) => {
   return {
-    src: initialState?.currentUser?.avatar,
+    src: initialState?.userinfo?.avatar,
     title: <AvatarName/>,
     render: (_: AvatarProps, avatarChildren: ReactNode) => {
       return <AvatarDropdown>{avatarChildren}</AvatarDropdown>;
     },
   }
 }
-
-/**
- * 头像位置下拉菜单
- */
-const dropdownMenus: MenuProps['items'] = [
-  {
-    key: 'logout',
-    icon: <LogoutOutlined/>,
-    label: '退出登录',
-  },
-];
-
-/** 头像位置下拉菜单点击事件 */
-const onClickDropdownMenu: MenuProps['onClick'] = async ({key}) => {
-  switch (key) {
-    case 'logout':
-      logout();
-      break;
-  }
-}
-
-/** 退出登录 */
-const logout = () => {
-  Modal.confirm({
-    title: '退出登录',
-    content: '确定退出登录吗？',
-    onOk: async () => {
-      localStorage.removeItem('token');
-      localStorage.removeItem('userinfo');
-      window.location.href = '/';
-    }
-  });
-};
 
 /** Menu Footer 配置 */
 const menuFooterRender = () => {
@@ -160,11 +121,9 @@ const bgLayoutImgList = () => {
  */
 const onPageChange = (initialState: InitialStateType) => {
   NProgress.done();
-  const loginPath = '/user/login';
-  const {location} = history;
   // 如果没有登录，重定向到 login
-  if (!initialState?.currentUser && location.pathname !== loginPath) {
-    history.push(loginPath);
+  if (!initialState?.userinfo && !isLoginPage()) {
+    handleUnauthorized();
   }
 }
 
@@ -173,10 +132,12 @@ const onPageChange = (initialState: InitialStateType) => {
  */
 const childrenRender = (children: JSX.Element) => {
   NProgress.start();
-  // setTimeout(() => {
-  // }, 3000)
   return (
-    <>{children}</>
+    <ConfigProvider {...antdConfig} >
+      <AntdApp>
+        {children}
+      </AntdApp>
+    </ConfigProvider>
   )
 }
 

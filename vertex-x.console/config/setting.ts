@@ -3,19 +3,19 @@ import { ProLayoutProps } from '@ant-design/pro-components';
 /**
  * @name
  */
-const Settings: ProLayoutProps & {
+const Setting: ProLayoutProps & {
   pwa?: boolean;
   logo?: string;
 } = {
+  title: 'Vertex App',
+  layout: 'mix',
   navTheme: 'light',
   colorPrimary: '#1677FF',
-  layout: 'mix',
   contentWidth: 'Fluid',
   siderMenuType: 'sub',
   fixedHeader: true,
   fixSiderbar: true,
   colorWeak: false,
-  title: 'Ant Design Pro',
   pwa: true,
   logo: 'https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg',
   iconfontUrl: '',
@@ -25,4 +25,4 @@ const Settings: ProLayoutProps & {
   },
 };
 
-export default Settings;
+export default Setting;

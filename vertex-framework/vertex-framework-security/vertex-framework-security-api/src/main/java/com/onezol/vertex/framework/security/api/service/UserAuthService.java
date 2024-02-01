@@ -42,4 +42,8 @@ public interface UserAuthService extends BaseService<UserEntity> {
      */
     UserAuthenticationVO loginByEmail(String email, String verifyCode);
 
+    /**
+     * 用户登出
+     */
+    void logout();
 }

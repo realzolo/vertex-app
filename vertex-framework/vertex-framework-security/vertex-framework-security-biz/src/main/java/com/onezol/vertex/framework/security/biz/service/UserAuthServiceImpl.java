@@ -1,10 +1,13 @@
 package com.onezol.vertex.framework.security.biz.service;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.onezol.vertex.framework.common.bean.AuthenticationContext;
+import com.onezol.vertex.framework.common.constant.RedisKey;
 import com.onezol.vertex.framework.common.constant.enums.BizCode;
 import com.onezol.vertex.framework.common.constant.enums.UserGender;
 import com.onezol.vertex.framework.common.exception.RuntimeBizException;
 import com.onezol.vertex.framework.common.helper.CodeGenerationHelper;
+import com.onezol.vertex.framework.common.model.pojo.AuthUserModel;
 import com.onezol.vertex.framework.common.mvc.service.BaseServiceImpl;
 import com.onezol.vertex.framework.common.util.*;
 import com.onezol.vertex.framework.security.api.mapper.UserMapper;
@@ -15,9 +18,9 @@ import com.onezol.vertex.framework.security.api.model.pojo.LoginUser;
 import com.onezol.vertex.framework.security.api.model.vo.UserAuthenticationVO;
 import com.onezol.vertex.framework.security.api.service.OnlineUserService;
 import com.onezol.vertex.framework.security.api.service.UserAuthService;
+import com.onezol.vertex.framework.support.cache.RedisCache;
 import eu.bitwalker.useragentutils.UserAgent;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.AccountExpiredException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -39,13 +42,16 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
 
     private final PasswordEncoder passwordEncoder;
 
+    private final RedisCache redisCache;
+
     @Value("${spring.jwt.expiration-time:3600}")
     private Integer expirationTime;
 
-    public UserAuthServiceImpl(AuthenticationManager authenticationManager, OnlineUserService onlineUserService, PasswordEncoder passwordEncoder) {
+    public UserAuthServiceImpl(AuthenticationManager authenticationManager, OnlineUserService onlineUserService, PasswordEncoder passwordEncoder, RedisCache redisCache) {
         this.authenticationManager = authenticationManager;
         this.onlineUserService = onlineUserService;
         this.passwordEncoder = passwordEncoder;
+        this.redisCache = redisCache;
     }
 
     /**
@@ -180,6 +186,16 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
     }
 
     /**
+     * 用户登出
+     */
+    @Override
+    public void logout() {
+        AuthUserModel authUserModel = AuthenticationContext.get();
+        String key = RedisKey.USER + authUserModel.getUserCode() + "@" + authUserModel.getUsername();
+        redisCache.deleteObject(key);
+    }
+
+    /**
      * 登录成功后的处理
      *
      * @param userIdentity 用户身份信息
@@ -220,7 +236,7 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
         entity.setAgencyCode(10001L);
         entity.setUsername("");
         entity.setPassword("");
-        entity.setNickname("普通用户");
+        entity.setNickname("");
         entity.setName("张三");
         entity.setIntroduction("");
         entity.setAvatar("");

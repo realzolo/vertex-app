@@ -9,8 +9,8 @@ import com.onezol.vertex.framework.common.helper.ResponseHelper;
 import com.onezol.vertex.framework.common.model.entity.ExceptionLogEntity;
 import com.onezol.vertex.framework.common.model.pojo.AuthUserModel;
 import com.onezol.vertex.framework.common.model.pojo.ResponseModel;
+import com.onezol.vertex.framework.common.model.pojo.SharedHttpServletRequest;
 import com.onezol.vertex.framework.common.util.JsonUtils;
-import com.onezol.vertex.framework.common.util.ServletUtils;
 import com.onezol.vertex.framework.support.manager.async.AsyncTaskManager;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,7 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
-import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -48,14 +48,22 @@ public class GlobalExceptionHandler {
         return ResponseHelper.buildFailedResponse(BizHttpStatus.BAD_REQUEST, message);
     }
 
-
     /**
      * NoResourceFoundException 找不到资源异常<br/>
      * NoHandlerFoundException 找不到处理器异常
      */
     @ExceptionHandler(value = {NoResourceFoundException.class, NoHandlerFoundException.class})
     public ResponseModel<?> handleNoResourceFoundException(HttpServletRequest req, ServletException ex) {
-        return ResponseHelper.buildFailedResponse(BizHttpStatus.NOT_FOUND, ex.getMessage());
+        String uri = req.getRequestURI();
+        return ResponseHelper.buildFailedResponse(BizHttpStatus.NOT_FOUND, "请求资源不存在: " + uri);
+    }
+
+    /**
+     * NullPointerException 空指针异常
+     */
+    @ExceptionHandler(value = NullPointerException.class)
+    public ResponseModel<?> handleNullPointerException(HttpServletRequest req, NullPointerException ex) {
+        return ResponseHelper.buildFailedResponse(BizHttpStatus.INTERNAL_SERVER_ERROR, "系统内部错误，请联系管理员！");
     }
 
     /**
@@ -72,7 +80,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = Exception.class)
     public ResponseModel<?> handleException(HttpServletRequest req, Exception ex) {
         // API异常日志持久化
-        AsyncTaskManager.getInstance().execute(() -> this.createExceptionLog(req, ex));
+        SharedHttpServletRequest request = SharedHttpServletRequest.of(req);
+        AsyncTaskManager.getInstance().execute(() -> this.createExceptionLog(request, ex));
 
         log.error("[DefaultExceptionHandler]", ex);
         return ResponseHelper.buildFailedResponse(BizHttpStatus.INTERNAL_SERVER_ERROR.getCode(), ex.getMessage());
@@ -84,7 +93,7 @@ public class GlobalExceptionHandler {
      * @param req HttpServletRequest
      * @param ex  Exception
      */
-    private void createExceptionLog(HttpServletRequest req, Exception ex) {
+    private void createExceptionLog(SharedHttpServletRequest req, Exception ex) {
         try {
             ExceptionLogEntity entity = this.newExceptionLog(req, ex);
             Db.save(entity);
@@ -93,12 +102,19 @@ public class GlobalExceptionHandler {
         }
     }
 
-    private ExceptionLogEntity newExceptionLog(HttpServletRequest request, Throwable ex) throws IOException {
+    private ExceptionLogEntity newExceptionLog(SharedHttpServletRequest request, Throwable ex) {
         ExceptionLogEntity exLog = new ExceptionLogEntity();
         // 处理用户信息
         AuthUserModel authUserModel = AuthenticationContext.get();
-        Long userId = Objects.nonNull(authUserModel) ? authUserModel.getUserId() : null;
-        exLog.setUserId(userId);
+        if (Objects.nonNull(authUserModel)) {
+            exLog.setUserId(authUserModel.getUserId());
+            exLog.setCreator(authUserModel.getUserCode());
+            exLog.setCreateTime(LocalDateTime.now());
+            exLog.setUpdater(authUserModel.getUserCode());
+            exLog.setUpdateTime(LocalDateTime.now());
+            exLog.setUserAgent(JSON.toJSONString(request.getUserAgent()));
+            exLog.setUserIp(request.getRemoteAddr());
+        }
         // 设置异常字段
         exLog.setExceptionName(ex.getClass().getName());
         exLog.setExceptionMessage(ExceptionUtils.getMessage(ex));
@@ -113,24 +129,33 @@ public class GlobalExceptionHandler {
         exLog.setExceptionLineNumber(stackTraceElement.getLineNumber());
         // 设置其它字段
         exLog.setRequestUrl(request.getRequestURI());
-        Map<String, String> requestParam = ServletUtils.getRequestParam(request);
-        Map<String, Object> requestBody = ServletUtils.getRequestBody(request);
-        // 如果requestBody的value存在MultipartFile类型的值，将其替换为文件名
-        for (Map.Entry<String, Object> entry : requestBody.entrySet()) {
-            if (entry.getValue() instanceof MultipartFile multipartFile) {
-                requestBody.put(entry.getKey(), multipartFile.getOriginalFilename());
-            }
-        }
-        Map<String, Object> requestPayload = new LinkedHashMap<>(2) {{
-            this.put("query", requestParam);
-            this.put("body", requestBody);
-        }};
+        Map<String, Object> requestPayload = this.getRequestPayload(request);
         exLog.setRequestParams(JsonUtils.toJsonString(requestPayload));
         exLog.setRequestMethod(request.getMethod());
-        exLog.setUserAgent(JSON.toJSONString(ServletUtils.getUserAgent()));
-        exLog.setUserIp(ServletUtils.getClientIP());
 
         return exLog;
+    }
+
+
+    /**
+     * 获取请求参数
+     *
+     * @param request 请求
+     * @return 请求参数
+     */
+    private Map<String, Object> getRequestPayload(SharedHttpServletRequest request) {
+        Map<String, String[]> parameters = request.getParameters();
+        Map<String, Object> body = request.getBody();
+        // 如果requestBody的value存在MultipartFile类型的值，将其替换为文件名
+        for (Map.Entry<String, Object> entry : body.entrySet()) {
+            if (entry.getValue() instanceof MultipartFile multipartFile) {
+                body.put(entry.getKey(), multipartFile.getOriginalFilename());
+            }
+        }
+        return new LinkedHashMap<>(2) {{
+            this.put("query", parameters);
+            this.put("body", body);
+        }};
     }
 
 }
