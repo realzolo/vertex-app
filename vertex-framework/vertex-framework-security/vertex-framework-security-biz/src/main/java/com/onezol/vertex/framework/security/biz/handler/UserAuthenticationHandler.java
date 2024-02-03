@@ -25,7 +25,7 @@ public class UserAuthenticationHandler implements AuthenticationEntryPoint {
      */
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) {
-        ResponseModel<Object> responseModel = ResponseHelper.buildFailedResponse(new com.onezol.vertex.framework.security.api.exception.AuthenticationException("当前请求需要用户认证，请登录后重试"));
+        ResponseModel<Object> responseModel = ResponseHelper.buildFailedResponse(new com.onezol.vertex.framework.security.api.exception.AuthenticationException("无法验证用户身份，请登录后重试"));
         ServletUtils.writeJSON(response, responseModel);
     }
 

@@ -10,15 +10,19 @@ import lombok.NonNull;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.context.request.WebRequestInterceptor;
+
+import static com.onezol.vertex.framework.common.constant.FilterInterceptorOrderNumber.AUTHENTICATION_CONTEXT_INTERCEPTOR_ORDER;
 
 /**
  * 认证上下文拦截器<br>
  * 用于将当前登录用户信息放入上下文中
  */
-@Order(0)
+@Component
+@Order(AUTHENTICATION_CONTEXT_INTERCEPTOR_ORDER)
 public class AuthenticationContextInterceptor implements WebRequestInterceptor {
 
     @Override

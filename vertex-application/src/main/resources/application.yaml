@@ -62,3 +62,12 @@ spring:
 mybatis-plus:
   global-config:
     banner: off
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*' # '*' or 'env,health,info,metrics,trace,beans,httptrace,threaddump'
+  endpoint:
+    health:
+      show-details: always

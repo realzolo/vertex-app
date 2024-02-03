@@ -65,7 +65,9 @@ public class ControllerPathUtils {
     public static Set<String> getControllerPaths(Class<? extends Annotation> clazz) {
         Set<String> controllerPaths = new HashSet<>();
 
-        RequestMappingHandlerMapping handlerMapping = SpringUtils.getBean(RequestMappingHandlerMapping.class);
+        // RequestMappingHandlerMapping handlerMapping = SpringUtils.getBean(RequestMappingHandlerMapping.class);
+        // 👆👉 根据beanName获取，解决引入spring-boot-starter-actuator后根据beanType获取多个bean报错的问题
+        RequestMappingHandlerMapping handlerMapping = SpringUtils.getBean("requestMappingHandlerMapping");
         Map<RequestMappingInfo, HandlerMethod> handlerMethods = handlerMapping.getHandlerMethods();
 
         for (RequestMappingInfo mappingInfo : handlerMethods.keySet()) {

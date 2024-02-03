@@ -6,7 +6,6 @@ import com.onezol.vertex.framework.security.biz.fillter.JwtAuthenticationTokenFi
 import com.onezol.vertex.framework.security.biz.handler.UserAccessDeniedHandler;
 import com.onezol.vertex.framework.security.biz.handler.UserAuthenticationHandler;
 import com.onezol.vertex.framework.security.biz.handler.UserLogoutSuccessHandler;
-import jakarta.annotation.PostConstruct;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -24,7 +23,7 @@ import java.util.Set;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig {
+public class SecurityConfiguration {
     /**
      * JWT认证过滤器
      */
@@ -43,7 +42,7 @@ public class SecurityConfig {
      */
     private final UserLogoutSuccessHandler userLogoutSuccessHandler;
 
-    public SecurityConfig(JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter, UserAuthenticationHandler userAuthenticationHandler, UserAccessDeniedHandler userAccessDeniedHandler, UserLogoutSuccessHandler userLogoutSuccessHandler) {
+    public SecurityConfiguration(JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter, UserAuthenticationHandler userAuthenticationHandler, UserAccessDeniedHandler userAccessDeniedHandler, UserLogoutSuccessHandler userLogoutSuccessHandler) {
         this.jwtAuthenticationTokenFilter = jwtAuthenticationTokenFilter;
         this.userAuthenticationHandler = userAuthenticationHandler;
         this.userAccessDeniedHandler = userAccessDeniedHandler;

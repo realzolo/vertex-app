@@ -15,23 +15,28 @@ export default [
     icon: 'smile',
     component: './Welcome'
   },
-  // {
-  //   name: '管理页面',
-  //   path: '/admin',
-  //   icon: 'crown',
-  //   access: '',
-  //   routes: [
-  //     {
-  //       path: '/admin',
-  //       redirect: '/admin/sub-page'
-  //     },
-  //     {
-  //       name: '子页面',
-  //       path: '/admin/sub-page',
-  //       component: './Admin'
-  //     },
-  //   ],
-  // },
+  {
+    name: '系统监控',
+    path: '/monitor',
+    icon: 'crown',
+    routes: [
+      {
+        name: '应用监控',
+        path: '/monitor/application',
+        component: './monitor/application'
+      },
+      {
+        name: '缓存监控',
+        path: '/monitor/cache',
+        component: './monitor/cache'
+      },
+      {
+        name: '数据库监控',
+        path: '/monitor/database',
+        component: './monitor/database'
+      },
+    ],
+  },
   {
     name: '表单样例',
     path: '/list',
@@ -40,7 +45,7 @@ export default [
   },
   {
     path: '*',
-    layout: false,
+    layout: true,
     component: './404'
   },
 ];

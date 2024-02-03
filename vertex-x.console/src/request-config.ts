@@ -95,6 +95,7 @@ const errorHandler = (response: any) => {
   if (response.config.skipErrorHandler) return;
 
   // HTTP异常处理
+  // TODO FIXME: 请求失败没有响应时无触发errorHandler
   if (response.status !== 200) {
     switch (response?.status) {
       case 401:
