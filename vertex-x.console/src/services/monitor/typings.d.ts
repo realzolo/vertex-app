@@ -1,14 +1,19 @@
-declare namespace Model.Monitor {
+declare namespace M.Monitor {
   type TimePoint = {
+    type: string;
     time: string;
     value: number;
   }
 }
 
-declare namespace Request.Security {
+declare namespace Rt.Security {
 
 }
 
-declare namespace Response.Security {
-
+declare namespace Rs.Monitor {
+  interface RedisInfo {
+    commandStats: Record<string, string>[],
+    dbSize: number,
+    info: Record<string, string | number>,
+  }
 }

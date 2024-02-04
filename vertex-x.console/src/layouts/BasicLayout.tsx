@@ -23,7 +23,7 @@ const Layout: RunTimeLayoutConfig = ({initialState, setInitialState}) => {
     contentStyle: {},
     childrenRender: (dom) => childrenRender(dom),
     avatarProps: avatarProps(initialState),
-    waterMarkProps: waterMarkProps(initialState),
+    // waterMarkProps: waterMarkProps(initialState),
     appList: appListConfig(),
     bgLayoutImgList: bgLayoutImgList(),
     onPageChange: () => onPageChange(initialState),

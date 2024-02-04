@@ -8,7 +8,7 @@ const RealtimeInformation = () => {
   return (
     <div className={styles.wrapper}>
       <div className={styles['left-wrapper']}>
-        <Space direction="vertical">
+        <Space direction="vertical" style={{width: '100%'}}>
           <Process/>
           <GarbageCollection/>
           <HeapMemory/>
