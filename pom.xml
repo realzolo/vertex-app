@@ -10,7 +10,7 @@
     </parent>
 
     <groupId>com.onezol</groupId>
-    <artifactId>vertex</artifactId>
+    <artifactId>vertex-app</artifactId>
     <version>1.0.0</version>
     <packaging>pom</packaging>
 

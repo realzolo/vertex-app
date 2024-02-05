@@ -1,34 +1,32 @@
-import { GithubOutlined } from '@ant-design/icons';
-import { DefaultFooter } from '@ant-design/pro-components';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import styles from './index.less';
+import { getAppVersion } from "@/services/application/app.api";
 
-const Footer: React.FC = () => {
+const DEV_START_YEAR = 2023;
+
+const Footer = () => {
+  const [yearRange, setYearRange] = useState("");
+  const [version, setVersion] = useState("V1.0.0");
+
+  useEffect(() => {
+    getAppVersion().then((res) => {
+      setVersion(res.data);
+    });
+  }, []);
+
+  useEffect(() => {
+    const currentYear = new Date().getFullYear();
+    if (currentYear > DEV_START_YEAR) {
+      setYearRange(`${DEV_START_YEAR}-${currentYear}`);
+    } else {
+      setYearRange(`${DEV_START_YEAR}`);
+    }
+  }, []);
+
   return (
-    <DefaultFooter
-      style={{
-        background: 'none',
-      }}
-      links={[
-        {
-          key: 'Ant Design Pro',
-          title: 'Ant Design Pro',
-          href: 'https://pro.ant.design',
-          blankTarget: true,
-        },
-        {
-          key: 'github',
-          title: <GithubOutlined />,
-          href: 'https://github.com/ant-design/ant-design-pro',
-          blankTarget: true,
-        },
-        {
-          key: 'Ant Design',
-          title: 'Ant Design',
-          href: 'https://ant.design',
-          blankTarget: true,
-        },
-      ]}
-    />
+    <footer className={styles.wrapper}>
+      <a href="https://github.com/realzolo/vertex-app">Copyright © {yearRange} VERTEX.APP {version ?? '@' + version}</a>
+    </footer>
   );
 };
 

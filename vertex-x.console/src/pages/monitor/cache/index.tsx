@@ -42,6 +42,8 @@ const CacheMonitorPage = () => {
     <PageContainer loading={loading}>
       <BasicInfoCard data={{...info, dbSize}}/>
       <CommentCountChart data={commandStats}/>
+      <BasicInfoCard data={{...info, dbSize}}/>
+      <CommentCountChart data={commandStats}/>
     </PageContainer>
   )
 

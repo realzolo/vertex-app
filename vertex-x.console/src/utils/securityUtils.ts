@@ -20,29 +20,29 @@ export const clearUserInfo = () => {
  */
 let isUnauthorizedModalShow = false;
 export const handleUnauthorized = () => {
-  // // 登录页无需处理
-  // if (isLoginPage()) return;
-  //
-  // // 存在token, 但是请求失败, 说明token过期
-  // if (localStorage.getItem('token')) {
-  //   if (isUnauthorizedModalShow) return;
-  //   isUnauthorizedModalShow = true;
-  //   Modal.warning({
-  //     title: '提示',
-  //     content: '您的身份已过期，请重新登录。',
-  //     okText: '重新登录',
-  //     centered: true,
-  //     keyboard: false,
-  //     onOk: () => {
-  //       isUnauthorizedModalShow = false;
-  //       clearUserInfo();
-  //       window.location.href = '/login?redirect=' + encodeURIComponent(window.location.pathname);
-  //     }
-  //   });
-  //   return;
-  // }
-  //
-  // // 不存在token, 说明未登录
-  // clearUserInfo();
-  // window.location.href = '/login';
+  // 登录页无需处理
+  if (isLoginPage()) return;
+
+  // 存在token, 但是请求失败, 说明token过期
+  if (localStorage.getItem('token')) {
+    if (isUnauthorizedModalShow) return;
+    isUnauthorizedModalShow = true;
+    Modal.warning({
+      title: '提示',
+      content: '您的身份已过期，请重新登录。',
+      okText: '重新登录',
+      centered: true,
+      keyboard: false,
+      onOk: () => {
+        isUnauthorizedModalShow = false;
+        clearUserInfo();
+        window.location.href = '/login?redirect=' + encodeURIComponent(window.location.pathname);
+      }
+    });
+    return;
+  }
+
+  // 不存在token, 说明未登录
+  clearUserInfo();
+  window.location.href = '/login';
 }

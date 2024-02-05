@@ -1,16 +1,49 @@
-// 此处为全局样式，不要在此处添加业务样式
-// 此处为全局样式，不要在此处添加业务样式
-// 此处为全局样式，不要在此处添加业务样式
 @import 'reset.less';
+@import 'variable.less';
 @import 'nprogress/nprogress.css';
 
-/** layout侧边栏样式覆盖 */
-.ant-layout-sider {
-  background: #FFFFFF !important;
+//----------------------------------------------------------------------------------------------------------------------
+//                            ⚠️⚠️⚠️ 此处为全局样式，不要在此处添加具体组件样式 ⚠️⚠️⚠️
+//----------------------------------------------------------------------------------------------------------------------
+
+#root {
+  height: 100%;
 }
 
 .ant-pro-layout {
   height: 100%;
+
+  .ant-layout-header {
+    .ant-pro-global-header-logo {
+      img {
+        height: 36px;
+      }
+    }
+
+    .ant-pro-global-header-right-content {
+      .ant-pro-global-header-header-actions-avatar {
+        .ant-dropdown-trigger {
+          span[class=anticon] {
+            color: @vertex-app-text-color;
+          }
+        }
+      }
+    }
+  }
+
+  .ant-layout-sider {
+    background: #FFFFFF !important;
+
+    .ant-menu-item,
+    .ant-menu-submenu {
+      color: @vertex-app-menu-item-color;
+
+      &.ant-menu-item-selected,
+      &.ant-menu-submenu-selected {
+        color: @vertex-app-selected-menu-item-color;
+      }
+    }
+  }
 }
 
 .vertex-app-pro-page-container {
@@ -21,6 +54,12 @@
         cursor: not-allowed;
         color: gray;
       }
+    }
+  }
+
+  .vertex-app-descriptions {
+    .vertex-app-descriptions-item-label {
+      color: @vertex-app-label-color;
     }
   }
 }

@@ -1,11 +1,11 @@
 package com.onezol.vertex.framework.support.config;
 
-import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.BlockAttackInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
+import com.baomidou.mybatisplus.extension.toolkit.JdbcUtils;
 import com.onezol.vertex.framework.common.bean.AuthenticationContext;
 import com.onezol.vertex.framework.common.model.pojo.AuthUserModel;
 import org.apache.ibatis.reflection.MetaObject;
@@ -18,8 +18,9 @@ import java.util.Objects;
 
 @Configuration
 public class MyBatisPlusConfiguration implements MetaObjectHandler {
+
     @Value("${spring.datasource.url}")
-    private String url;
+    private String dataSourceUrl;
 
     @Override
     public void insertFill(MetaObject metaObject) {
@@ -43,7 +44,7 @@ public class MyBatisPlusConfiguration implements MetaObjectHandler {
         MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
 
         // 分页插件
-        interceptor.addInnerInterceptor(new PaginationInnerInterceptor(this.getDbType()));
+        interceptor.addInnerInterceptor(new PaginationInnerInterceptor(JdbcUtils.getDbType(dataSourceUrl)));
         // 乐观锁插件
         interceptor.addInnerInterceptor(new OptimisticLockerInnerInterceptor());
         // 防全表更新与删除插件
@@ -52,18 +53,4 @@ public class MyBatisPlusConfiguration implements MetaObjectHandler {
         return interceptor;
     }
 
-    /**
-     * 获取数据库类型
-     *
-     * @return DbType
-     */
-    private DbType getDbType() {
-        if (url.contains("mysql")) {
-            return DbType.MYSQL;
-        } else if (url.contains("postgresql")) {
-            return DbType.POSTGRE_SQL;
-        } else {
-            throw new RuntimeException("不支持的数据库类型");
-        }
-    }
 }

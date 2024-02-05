@@ -1,7 +1,6 @@
 ﻿import type { RequestOptions } from '@@/plugin-request/request';
-import type { RequestConfig } from '@umijs/max';
-import { message as AntdMessage } from "antd";
 import { handleUnauthorized } from "@/utils/securityUtils";
+import { antdMessage } from "@/utils/commonUtils";
 
 /**
  * 业务异常类型
@@ -128,7 +127,7 @@ const errorHandler = (response: any) => {
         antdMessage('error', message);
         break;
       case BizHttpStatusType.UNAUTHORIZED:
-        // handleUnauthorized();
+        handleUnauthorized();
         antdMessage('error', message);
         break;
       case BizHttpStatusType.FORBIDDEN:
@@ -171,10 +170,6 @@ const errorHandler = (response: any) => {
         antdMessage('error', message);
     }
   }
-}
-
-const antdMessage = (method: 'warning' | 'error', message: string) => {
-  AntdMessage[method](message).then();
 }
 
 export default {

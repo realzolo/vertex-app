@@ -11,7 +11,7 @@ declare namespace Rt.Security {
 }
 
 declare namespace Rs.Monitor {
-  interface RedisInfo {
+  type RedisInfo = {
     commandStats: Record<string, string>[],
     dbSize: number,
     info: Record<string, string | number>,

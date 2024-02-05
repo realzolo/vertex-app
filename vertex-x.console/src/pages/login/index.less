@@ -1,9 +1,7 @@
 .wrapper {
+  user-select: none;
   height: 100%;
 
-  :global(.vertex-admin-pro-form-login-page) {
-    background-repeat: no-repeat;
-  }
 
   .actions {
     display: flex;
@@ -11,4 +9,19 @@
     align-items: center;
     flex-direction: column;
   }
+}
+
+:global(.ant-pro-form-login-page) {
+  background-repeat: no-repeat;
+}
+
+:global(.ant-pro-form-login-page .ant-pro-form-login-page-container .ant-pro-form-login-page-header .ant-pro-form-login-page-logo) {
+  margin-inline-end: 10px;
+}
+
+:global(.ant-pro-form-login-page .ant-pro-form-login-page-container .ant-pro-form-login-page-header .ant-pro-form-login-page-logo img) {
+  height: 44px;
+}
+:global(.ant-pro-form-login-page .ant-pro-form-login-page-container .ant-tabs-top >.ant-tabs-nav::before) {
+  border-bottom: 1px solid rgba(5, 5, 5, 0.06);
 }

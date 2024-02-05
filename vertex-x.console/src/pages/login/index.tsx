@@ -2,7 +2,7 @@ import type { CSSProperties } from 'react';
 import { useRef, useState } from 'react';
 import type { ProFormInstance } from '@ant-design/pro-components';
 import { LoginFormPage, ProFormCaptcha, ProFormCheckbox, ProFormText, } from '@ant-design/pro-components';
-import { Alert, App, Button, Divider,message, Space, Tabs, TabsProps } from 'antd';
+import { Alert, Divider, message, Space, Tabs, TabsProps } from 'antd';
 import {
   AlipayOutlined,
   LockOutlined,
@@ -12,9 +12,9 @@ import {
   WeiboOutlined,
 } from '@ant-design/icons';
 import { useModel } from '@@/plugin-model';
-import { login } from "@/services/security/user.api";
-import backgroundImage from './assets/auth_bg.jpg';
-import logoImage from './assets/logo.png';
+import { login } from '@/services/security/user.api';
+import backgroundImage from './assets/background.jpg';
+import logoImage from '../../../public/icons/icon-192x192.png';
 import styles from './index.less';
 
 type LoginType = 'account' | 'email';
@@ -24,16 +24,6 @@ const iconStyles: CSSProperties = {
   fontSize: '18px',
   verticalAlign: 'middle',
   cursor: 'pointer',
-};
-const activityStyles: CSSProperties = {
-  boxShadow: '0 2px 20px rgba(0, 0, 0, 0.1)',
-  color: 'rgba(0, 0, 0, 0.8)',
-  borderRadius: 12,
-  backgroundColor: '#fff',
-  backgroundImage: `url(./assets/card-bg.svg)`,
-  backgroundRepeat: 'no-repeat',
-  backgroundPosition: 'center',
-  backgroundSize: 'contain',
 };
 
 const loginTabs: TabsProps['items'] = [
@@ -97,7 +87,7 @@ const LoginPage = () => {
       return;
     }
 
-    location.href = "/overview";
+    location.href = '/overview';
   }
 
   /** 登录失败后的操作 */
@@ -112,10 +102,11 @@ const LoginPage = () => {
       <LoginFormPage
         backgroundImageUrl={backgroundImage}
         logo={logoImage}
-        title={settings?.title || ''}
+        className={styles['login-form']}
+        title='Vertex App'
         onFinish={onSubmit}
         formRef={formRef}
-        subTitle={""}
+        subTitle={''}
         message={
           loginMsg && (
             <Alert
@@ -127,24 +118,6 @@ const LoginPage = () => {
             />
           )
         }
-        activityConfig={{
-          style: activityStyles,
-          title: "Vertex App",
-          subTitle: "",
-          action: (
-            <Button
-              size='large'
-              type='primary'
-              style={{
-                borderRadius: 20,
-                width: 120,
-              }}
-              onClick={() => location.href = '../../../..'}
-            >
-              GitHub
-            </Button>
-          ),
-        }}
         actions={
           <div className={styles.actions}>
             <Divider plain>
