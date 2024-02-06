@@ -1,4 +1,4 @@
-package com.onezol.vertex.framework.support.properties;
+package com.onezol.vertex.framework.support.config.properties;
 
 import org.springframework.beans.factory.annotation.Value;
 

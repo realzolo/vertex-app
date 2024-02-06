@@ -11,7 +11,9 @@ import { handleUnauthorized } from "@/utils/securityUtils";
 const antdConfig = {
   locale: zhCN,
   theme: {
-    token: {}
+    token: {
+      fontFamily: 'Helvetica Neue,Helvetica,PingFang SC,Hiragino Sans GB,Microsoft YaHei,\\5fae\\8f6f\\96c5\\9ed1,Arial,sans-serif',
+    }
   },
   prefixCls: 'vertex-app',
   iconPrefixCls: 'vertex-app',

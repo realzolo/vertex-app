@@ -40,6 +40,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     public ResponseModel<?> handleMethodArgumentNotValidException(HttpServletRequest req, MethodArgumentNotValidException ex) {
+        log.error(ex.getMessage(), ex);
         String message = "参数异常, 请检查请求参数";
         FieldError fieldError = ex.getBindingResult().getFieldError();
         if (Objects.nonNull(fieldError)) {
@@ -54,6 +55,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value = {NoResourceFoundException.class, NoHandlerFoundException.class})
     public ResponseModel<?> handleNoResourceFoundException(HttpServletRequest req, ServletException ex) {
+        log.error(ex.getMessage(), ex);
         String uri = req.getRequestURI();
         return ResponseHelper.buildFailedResponse(BizHttpStatus.NOT_FOUND, "请求资源不存在: " + uri);
     }
@@ -63,6 +65,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value = NullPointerException.class)
     public ResponseModel<?> handleNullPointerException(HttpServletRequest req, NullPointerException ex) {
+        log.error(ex.getMessage(), ex);
         return ResponseHelper.buildFailedResponse(BizHttpStatus.INTERNAL_SERVER_ERROR, "系统内部错误，请联系管理员！");
     }
 
@@ -79,11 +82,10 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value = Exception.class)
     public ResponseModel<?> handleException(HttpServletRequest req, Exception ex) {
+        log.error(ex.getMessage(), ex);
         // API异常日志持久化
         SharedHttpServletRequest request = SharedHttpServletRequest.of(req);
         AsyncTaskManager.getInstance().execute(() -> this.createExceptionLog(request, ex));
-
-        log.error("[DefaultExceptionHandler]", ex);
         return ResponseHelper.buildFailedResponse(BizHttpStatus.INTERNAL_SERVER_ERROR.getCode(), ex.getMessage());
     }
 

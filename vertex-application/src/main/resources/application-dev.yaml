@@ -1,4 +1,4 @@
-# Dev Environment Configurations
+# Develop Environment Configurations
 spring:
   # 数据源配置
   datasource:

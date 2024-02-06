@@ -16,6 +16,12 @@ export default [
     component: './Welcome'
   },
   {
+    name: '文件存储',
+    path: '/file-storage',
+    icon: 'smile',
+    component: './storage'
+  },
+  {
     name: '系统监控',
     path: '/monitor',
     icon: 'crown',

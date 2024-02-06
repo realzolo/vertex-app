@@ -6,6 +6,7 @@ import { ProLayoutProps } from '@ant-design/pro-components';
 const Setting: ProLayoutProps & {
   pwa?: boolean;
   logo?: string;
+  token: {[key: string]: string};
 } = {
   title: 'VERTEX.APP',
   layout: 'mix',
