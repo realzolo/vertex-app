@@ -1,9 +1,17 @@
 package com.onezol.vertex.framework.support.config;
 
 import com.onezol.vertex.framework.security.api.interceptor.AuthenticationContextInterceptor;
+import org.springframework.boot.web.server.ConfigurableWebServerFactory;
+import org.springframework.boot.web.server.ErrorPage;
+import org.springframework.boot.web.server.WebServerFactoryCustomizer;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Configuration
 public class WebMvcConfiguration implements WebMvcConfigurer {
@@ -13,6 +21,20 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
         registry.addWebRequestInterceptor(new AuthenticationContextInterceptor())
                 .addPathPatterns("/**")
                 .excludePathPatterns("/auth/register", "/auth/login");
+    }
+
+    /**
+     * 配置错误页面 <br/>
+     * 集成React前端项目时，前端路由会导致后端404错误，这里配置404错误页面跳转到index.html
+     */
+    @Bean
+    public WebServerFactoryCustomizer<ConfigurableWebServerFactory> webServerFactoryCustomizer() {
+        return factory -> {
+            ErrorPage error404Page = new ErrorPage(HttpStatus.NOT_FOUND, "/index.html");
+            Set<ErrorPage> errorPages = new HashSet<>();
+            errorPages.add(error404Page);
+            factory.setErrorPages(errorPages);
+        };
     }
 
 }

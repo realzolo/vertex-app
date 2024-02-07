@@ -88,27 +88,27 @@ const FileListPage = () => {
       valueType: 'text',
       // @ts-ignore
       width: '20%',
-      render: (text, record) => (
-        <Text>
-          {record.originalFilename}
-        </Text>
-      ),
+      // render: (text, record) => (
+      //   <Text>
+      //     {record.originalFilename}
+      //   </Text>
+      // ),
     },
     {
       title: '大小',
       dataIndex: 'size',
-      render: (text, record) => (
-        <span>{bytesToSize(record.size)}</span>
-      ),
+      // render: (text, record) => (
+      //   <span>{bytesToSize(record.size)}</span>
+      // ),
       hideInSearch: true,
       hideInForm: true,
     },
     {
       title: '类型',
       dataIndex: 'type',
-      render: (text, record) => (
-        <span>{FILE_TYPE_MAP[record.type as FileType] || '其它'}</span>
-      ),
+      // render: (text, record) => (
+      //   <span>{FILE_TYPE_MAP[record.type as FileType] || '其它'}</span>
+      // ),
     },
     {
       title: '后缀',
@@ -151,8 +151,8 @@ const FileListPage = () => {
         actionRef={actionRef}
         toolBarRender={() => [
         ]}
-        request={fetchData}
-        columns={columns}
+        // request={fetchData}
+        // columns={columns}
         rowSelection={{
           onChange: (_, selectedRows) => setSelectedRows(selectedRows),
         }}

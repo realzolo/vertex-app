@@ -11,9 +11,17 @@ export default defineConfig({
    * hash 模式, 让 build 之后的产物包含 hash 后缀。通常用于增量发布和避免浏览器加载缓存。
    * @doc https://umijs.org/docs/api/config#hash
    */
-  hash: true,
+  hash: false,
 
-  // vite: {},
+  /**
+   * 路由的前缀，通常用于部署到非根目录。
+   */
+  base: '/console',
+
+  /**
+   * 打包产物输出目录
+   */
+  outputPath: '../vertex-application/src/main/resources/static',
 
   /**
    * 路由配置

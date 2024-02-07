@@ -12,7 +12,7 @@ const antdConfig = {
   locale: zhCN,
   theme: {
     token: {
-      fontFamily: 'Helvetica Neue,Helvetica,PingFang SC,Hiragino Sans GB,Microsoft YaHei,\\5fae\\8f6f\\96c5\\9ed1,Arial,sans-serif',
+      fontFamily: 'Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, \'微软雅黑\', Arial, sans-serif',
     }
   },
   prefixCls: 'vertex-app',

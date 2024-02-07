@@ -36,7 +36,7 @@ enum BizHttpStatusType {
  * 基础请求配置
  */
 const basicRequestConfig = {
-  baseURL: '/api',
+  baseURL: process.env.NODE_ENV === 'development' ? '/api' : '',
   timeout: 30000,
   timeoutErrorMessage: '请求超时，请稍后重试。',
 }

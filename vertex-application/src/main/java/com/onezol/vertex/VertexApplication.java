@@ -22,9 +22,9 @@ public class VertexApplication {
         String port = env.getProperty("server.port", "8080");
         String path = env.getProperty("server.servlet.context-path", "");
 
-        logger.info(String.format("""
-                Vertex Application is running! Swagger文档: http://%s:%s%s/doc.html
-                """, ip, port, path));
+        logger.info("""
+                Vertex Application is running! 控制台首页: http://{ip}:{port} Swagger文档: http://{ip}:{port}/doc.html 
+                """.replaceAll("\\{ip}", ip).replaceAll("\\{port}", port));
     }
 
 }

@@ -36,7 +36,7 @@ export const handleUnauthorized = () => {
       onOk: () => {
         isUnauthorizedModalShow = false;
         clearUserInfo();
-        window.location.href = '/login?redirect=' + encodeURIComponent(window.location.pathname);
+        window.location.href = '/console/login?redirect=' + encodeURIComponent(window.location.pathname);
       }
     });
     return;

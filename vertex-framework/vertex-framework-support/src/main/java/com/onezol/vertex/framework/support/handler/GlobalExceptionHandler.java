@@ -12,7 +12,6 @@ import com.onezol.vertex.framework.common.model.pojo.ResponseModel;
 import com.onezol.vertex.framework.common.model.pojo.SharedHttpServletRequest;
 import com.onezol.vertex.framework.common.util.JsonUtils;
 import com.onezol.vertex.framework.support.manager.async.AsyncTaskManager;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -22,7 +21,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.time.LocalDateTime;
@@ -50,14 +48,12 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * NoResourceFoundException 找不到资源异常<br/>
-     * NoHandlerFoundException 找不到处理器异常
+     * NoResourceFoundException 处理资源未找到异常<br/>
+     * 此处不做处理，直接抛出异常(因为存在兜底的异常处理器{@link #handleException}, 为避免被其处理导致静态资源404, 所以此处直接抛出)
      */
-    @ExceptionHandler(value = {NoResourceFoundException.class, NoHandlerFoundException.class})
-    public ResponseModel<?> handleNoResourceFoundException(HttpServletRequest req, ServletException ex) {
-        log.error(ex.getMessage(), ex);
-        String uri = req.getRequestURI();
-        return ResponseHelper.buildFailedResponse(BizHttpStatus.NOT_FOUND, "请求资源不存在: " + uri);
+    @ExceptionHandler(value = NoResourceFoundException.class)
+    public Object handleNoResourceFoundException(HttpServletRequest req, NoResourceFoundException ex) throws NoResourceFoundException {
+        throw ex;
     }
 
     /**

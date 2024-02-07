@@ -10,5 +10,5 @@
  */
 export const isLoginPage = () => {
   const pathname = window.location.pathname;
-  return /^\/login(\?redirect=.*)?$|^\/$/.test(pathname);
+  return /^\/console\/login(\?redirect=.*)?$|^\/$/.test(pathname);
 };

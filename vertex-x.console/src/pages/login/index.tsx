@@ -87,7 +87,7 @@ const LoginPage = () => {
       return;
     }
 
-    location.href = '/overview';
+    location.href = '/console/overview';
   }
 
   /** 登录失败后的操作 */

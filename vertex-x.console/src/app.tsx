@@ -8,7 +8,7 @@ import { queryCurrentUser } from "@/services/security/user.api";
 import '@/styles/index.less';
 import { isLoginPage } from "@/utils/pathUtils";
 
-const loginPath = '/login';
+const loginPath = '/console/login';
 
 /**
  * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state

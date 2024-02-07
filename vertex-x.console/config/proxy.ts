@@ -9,7 +9,7 @@ export default {
   dev: {
     '/api/': {
       // 要代理的地址
-      target: 'http://127.0.0.1:10240/vertex',
+      target: 'http://127.0.0.1:10240',
       changeOrigin: true,
       pathRewrite: {
         '^/api': '',

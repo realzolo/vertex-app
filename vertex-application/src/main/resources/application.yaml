@@ -4,8 +4,6 @@ application:
 
 server:
   port: 10240
-  servlet:
-    context-path: /vertex
 spring:
   application:
     name: vertex-application
