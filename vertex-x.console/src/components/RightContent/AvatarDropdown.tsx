@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { history, useModel } from '@umijs/max';
-import { Modal, Spin } from 'antd';
+import { message, Modal, Spin } from 'antd';
 import { flushSync } from 'react-dom';
 import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
 import { createStyles } from 'antd-style';
@@ -78,6 +78,7 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({menu, children
                 redirect: pathname + search,
               }),
             });
+            message.success('退出登录成功！');
           }
         }
       }
