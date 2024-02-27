@@ -16,18 +16,4 @@
         <module>vertex-framework-security-api</module>
         <module>vertex-framework-security-biz</module>
     </modules>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-        </dependency>
-        <!-- Vertex Framework Dependencies -->
-        <dependency>
-            <groupId>com.onezol</groupId>
-            <artifactId>vertex-framework-common</artifactId>
-            <version>${application.version}</version>
-        </dependency>
-    </dependencies>
-
 </project>

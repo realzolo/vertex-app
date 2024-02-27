@@ -18,8 +18,4 @@
         <module>vertex-framework-component</module>
         <module>vertex-framework-security</module>
     </modules>
-
-    <dependencies>
-    </dependencies>
-
 </project>

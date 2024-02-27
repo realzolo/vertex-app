@@ -11,4 +11,18 @@
 
     <artifactId>vertex-framework-security-api</artifactId>
 
+    <dependencies>
+        <!-- Spring Security -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <!-- Vertex Framework Dependencies -->
+        <dependency>
+            <groupId>com.onezol</groupId>
+            <artifactId>vertex-framework-common</artifactId>
+            <version>${application.version}</version>
+        </dependency>
+    </dependencies>
+
 </project>
