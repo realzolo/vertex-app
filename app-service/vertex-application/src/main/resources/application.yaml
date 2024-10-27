@@ -46,7 +46,7 @@ spring:
           max-idle: 8
           min-idle: 2
   liquibase:
-    enabled: true
+    enabled: false
     change-log: classpath:changelog/mysql/changelog-application.xml
     database-change-log-table: xv_database_changelog
     database-change-log-lock-table: vx_database_changelog_lock

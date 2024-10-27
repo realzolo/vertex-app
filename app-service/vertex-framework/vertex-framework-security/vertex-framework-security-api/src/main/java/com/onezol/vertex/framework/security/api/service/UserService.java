@@ -4,7 +4,7 @@ import com.onezol.vertex.framework.common.mvc.service.BaseService;
 import com.onezol.vertex.framework.security.api.model.dto.User;
 import com.onezol.vertex.framework.security.api.model.entity.UserEntity;
 
-public interface UserService  extends BaseService<UserEntity> {
+public interface UserService extends BaseService<UserEntity> {
 
     /**
      * 根据用户名获取用户信息

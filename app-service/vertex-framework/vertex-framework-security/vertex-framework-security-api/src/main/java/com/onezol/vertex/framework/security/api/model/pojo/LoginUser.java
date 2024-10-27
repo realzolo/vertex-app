@@ -120,7 +120,7 @@ public class LoginUser implements UserDetails {
     }
 
     public String getKey() {
-        return orgUser.getCode() + "@" + orgUser.getUsername();
+        return orgUser.getUsername();
     }
 
     public void setRoles(Set<String> roles) {

@@ -51,8 +51,4 @@ public abstract class BaseEntity implements Entity {
     @TableField("version")
     private Integer version;
 
-    @Schema(description = "逻辑删除标志")
-    @TableField("deleted")
-    private boolean deleted = false;
-
 }

@@ -3,7 +3,9 @@ package com.onezol.vertex.framework.security.api.model.entity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.onezol.vertex.framework.common.model.entity.BaseEntity;
+import com.onezol.vertex.framework.common.model.entity.LogicalBaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -13,15 +15,7 @@ import java.time.LocalDate;
 @EqualsAndHashCode(callSuper = true)
 @TableName("vx_user")
 @Schema(name = "UserEntity", description = "$!{table.comment}")
-public class UserEntity extends BaseEntity {
-
-    @Schema(description = "用户编码")
-    @TableField("code")
-    private String code;
-
-    @Schema(description = "所属组织编码")
-    @TableField("org_code")
-    private Long orgCode;
+public class UserEntity extends LogicalBaseEntity {
 
     @Schema(description = "用户名")
     @TableField("username")

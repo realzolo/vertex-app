@@ -99,8 +99,6 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
                 Wrappers.<UserEntity>lambdaQuery()
                         .eq(UserEntity::getUsername, payload.getUsername())
                         .or()
-                        .eq(UserEntity::getCode, entity.getCode())
-                        .or()
                         .eq(UserEntity::getEmail, entity.getEmail())
         );
         if (Objects.nonNull(entityFromDB)) {
@@ -108,8 +106,6 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
                 throw new RuntimeBizException("用户名已存在");
             } else if (Objects.equals(entityFromDB.getEmail(), entity.getEmail())) {
                 throw new RuntimeBizException("邮箱已存在");
-            } else {
-                entity.setCode(CodeGenerationHelper.generateCode(BizCode.USER_CODE));
             }
         }
 
@@ -232,8 +228,6 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
      */
     private UserEntity newBlankUser() {
         UserEntity entity = new UserEntity();
-        entity.setCode(CodeGenerationHelper.generateCode(BizCode.USER_CODE));
-        entity.setOrgCode(10001L);
         entity.setUsername("");
         entity.setPassword("");
         entity.setNickname("");
