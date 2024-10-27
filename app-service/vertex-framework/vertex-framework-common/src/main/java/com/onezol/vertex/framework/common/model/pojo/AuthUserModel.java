@@ -13,7 +13,7 @@ public class AuthUserModel {
 
     private String userCode;
 
-    private Long agencyCode;
+    private Long orgCode;
 
     private String username;
 

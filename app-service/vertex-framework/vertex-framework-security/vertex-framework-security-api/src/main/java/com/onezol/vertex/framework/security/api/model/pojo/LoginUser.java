@@ -61,15 +61,15 @@ public class LoginUser implements UserDetails {
     /**
      * 用户信息
      */
-    private UserEntity agencyUser;
+    private UserEntity orgUser;
 
     /**
      * 权限列表
      */
     private Set<GrantedAuthority> authorities;
 
-    public LoginUser(UserEntity agencyUser) {
-        this.agencyUser = agencyUser;
+    public LoginUser(UserEntity orgUser) {
+        this.orgUser = orgUser;
     }
 
     @Override
@@ -84,43 +84,43 @@ public class LoginUser implements UserDetails {
     @Override
     @JSONField(serialize = false)
     public String getPassword() {
-        String password = agencyUser.getPassword();
-        agencyUser.setPassword(null);
+        String password = orgUser.getPassword();
+        orgUser.setPassword(null);
         return password;
     }
 
     @Override
     public String getUsername() {
-        return agencyUser.getUsername();
+        return orgUser.getUsername();
     }
 
     @Override
     @JSONField(serialize = false)
     public boolean isAccountNonExpired() {
-        return !Integer.valueOf(AccountStatus.EXPIRED.getCode()).equals(agencyUser.getStatus());
+        return !Integer.valueOf(AccountStatus.EXPIRED.getCode()).equals(orgUser.getStatus());
     }
 
     @Override
     @JSONField(serialize = false)
     public boolean isAccountNonLocked() {
-        return !Integer.valueOf(AccountStatus.LOCKED.getCode()).equals(agencyUser.getStatus());
+        return !Integer.valueOf(AccountStatus.LOCKED.getCode()).equals(orgUser.getStatus());
     }
 
     @Override
     @JSONField(serialize = false)
     public boolean isCredentialsNonExpired() {
-        LocalDate pwdExpDate = agencyUser.getPwdExpDate();
+        LocalDate pwdExpDate = orgUser.getPwdExpDate();
         return pwdExpDate == null || pwdExpDate.isAfter(LocalDate.now());
     }
 
     @Override
     @JSONField(serialize = false)
     public boolean isEnabled() {
-        return !Integer.valueOf(AccountStatus.DISABLED.getCode()).equals(agencyUser.getStatus());
+        return !Integer.valueOf(AccountStatus.DISABLED.getCode()).equals(orgUser.getStatus());
     }
 
     public String getKey() {
-        return agencyUser.getCode() + "@" + agencyUser.getUsername();
+        return orgUser.getCode() + "@" + orgUser.getUsername();
     }
 
     public void setRoles(Set<String> roles) {
@@ -132,7 +132,7 @@ public class LoginUser implements UserDetails {
     }
 
     public User getUser() {
-        User user = BeanUtils.toBean(agencyUser, User.class);
+        User user = BeanUtils.toBean(orgUser, User.class);
         user.setRoles(roles);
         user.setPermissions(permissions);
         return user;

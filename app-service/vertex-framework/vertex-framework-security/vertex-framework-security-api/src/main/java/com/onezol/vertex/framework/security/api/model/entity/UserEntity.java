@@ -20,8 +20,8 @@ public class UserEntity extends BaseEntity {
     private String code;
 
     @Schema(description = "所属组织编码")
-    @TableField("agency_code")
-    private Long agencyCode;
+    @TableField("org_code")
+    private Long orgCode;
 
     @Schema(description = "用户名")
     @TableField("username")

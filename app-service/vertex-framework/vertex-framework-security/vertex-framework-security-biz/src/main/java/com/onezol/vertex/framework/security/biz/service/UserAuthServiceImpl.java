@@ -233,7 +233,7 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
     private UserEntity newBlankUser() {
         UserEntity entity = new UserEntity();
         entity.setCode(CodeGenerationHelper.generateCode(BizCode.USER_CODE));
-        entity.setAgencyCode(10001L);
+        entity.setOrgCode(10001L);
         entity.setUsername("");
         entity.setPassword("");
         entity.setNickname("");

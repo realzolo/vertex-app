@@ -17,7 +17,7 @@ public class User extends BaseDTO {
     private String code;
 
     @Schema(description = "所属组织编码")
-    private Long agencyCode;
+    private Long orgCode;
 
     @Schema(description = "用户名")
     private String username;

@@ -9,9 +9,9 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-@TableName("vx_agency")
-@Schema(name = "AgencyEntity", description = "$!{table.comment}")
-public class AgencyEntity extends BaseEntity {
+@TableName("vx_organization")
+@Schema(name = "OrgEntity", description = "$!{table.comment}")
+public class OrgEntity extends BaseEntity {
 
     @Schema(description = "组织编码")
     @TableField("code")
