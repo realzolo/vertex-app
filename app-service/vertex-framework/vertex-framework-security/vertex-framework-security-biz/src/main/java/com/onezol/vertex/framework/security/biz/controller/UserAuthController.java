@@ -2,7 +2,7 @@ package com.onezol.vertex.framework.security.biz.controller;
 
 import com.onezol.vertex.framework.common.constant.enums.BizHttpStatus;
 import com.onezol.vertex.framework.common.helper.ResponseHelper;
-import com.onezol.vertex.framework.common.model.pojo.ResponseModel;
+import com.onezol.vertex.framework.common.model.GenericResponse;
 import com.onezol.vertex.framework.common.util.StringUtils;
 import com.onezol.vertex.framework.security.api.annotation.RestrictAccess;
 import com.onezol.vertex.framework.security.api.model.payload.UserLoginPayload;
@@ -34,13 +34,13 @@ public class UserAuthController {
 
     @Operation(summary = "用户注册", description = "用户注册")
     @PostMapping("/register")
-    public ResponseModel<UserAuthenticationVO> register(@RequestBody @Valid UserRegistrationPayload payload) {
+    public GenericResponse<UserAuthenticationVO> register(@RequestBody @Valid UserRegistrationPayload payload) {
         return ResponseHelper.buildSuccessfulResponse(userAuthService.register(payload));
     }
 
     @Operation(summary = "用户登录", description = "用户登录: 支持用户名、邮箱登录")
     @PostMapping("/login")
-    public ResponseModel<UserAuthenticationVO> login(@RequestBody @Valid UserLoginPayload payload) {
+    public GenericResponse<UserAuthenticationVO> login(@RequestBody @Valid UserLoginPayload payload) {
         UserAuthenticationVO userAuthenticationVO = null;
         if (StringUtils.isNotBlank(payload.getUsername())) {
             userAuthenticationVO = userAuthService.loginByUsername(payload.getUsername(), payload.getPassword(), payload.getVerifyCode());
@@ -56,7 +56,7 @@ public class UserAuthController {
     @Operation(summary = "用户登出", description = "用户登出")
     @RestrictAccess
     @PostMapping("/logout")
-    public ResponseModel<Void> logout() {
+    public GenericResponse<Void> logout() {
         userAuthService.logout();
         return ResponseHelper.buildSuccessfulResponse();
     }

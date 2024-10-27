@@ -5,7 +5,7 @@ public record DefaultPage() {
     /**
      * 默认页码
      */
-    public static int DEFAULT_PAGE_NO = 1;
+    public static int DEFAULT_PAGE_NUMBER = 1;
     /**
      * 默认页大小
      */

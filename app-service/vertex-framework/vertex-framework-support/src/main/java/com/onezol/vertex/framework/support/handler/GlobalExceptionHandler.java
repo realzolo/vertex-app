@@ -7,9 +7,9 @@ import com.onezol.vertex.framework.common.constant.enums.BizHttpStatus;
 import com.onezol.vertex.framework.common.exception.BusinessException;
 import com.onezol.vertex.framework.common.helper.ResponseHelper;
 import com.onezol.vertex.framework.common.model.entity.ExceptionLogEntity;
-import com.onezol.vertex.framework.common.model.pojo.AuthUserModel;
-import com.onezol.vertex.framework.common.model.pojo.ResponseModel;
-import com.onezol.vertex.framework.common.model.pojo.SharedHttpServletRequest;
+import com.onezol.vertex.framework.common.model.AuthUser;
+import com.onezol.vertex.framework.common.model.GenericResponse;
+import com.onezol.vertex.framework.common.model.SharedHttpServletRequest;
 import com.onezol.vertex.framework.common.util.JsonUtils;
 import com.onezol.vertex.framework.support.manager.async.AsyncTaskManager;
 import jakarta.servlet.http.HttpServletRequest;
@@ -37,7 +37,7 @@ public class GlobalExceptionHandler {
      * tips: 使用 @Validated 注解时, 参数校验失败会抛出此异常
      */
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
-    public ResponseModel<?> handleMethodArgumentNotValidException(HttpServletRequest req, MethodArgumentNotValidException ex) {
+    public GenericResponse<?> handleMethodArgumentNotValidException(HttpServletRequest req, MethodArgumentNotValidException ex) {
         log.error(ex.getMessage(), ex);
         String message = "参数异常, 请检查请求参数";
         FieldError fieldError = ex.getBindingResult().getFieldError();
@@ -60,7 +60,7 @@ public class GlobalExceptionHandler {
      * NullPointerException 空指针异常
      */
     @ExceptionHandler(value = NullPointerException.class)
-    public ResponseModel<?> handleNullPointerException(HttpServletRequest req, NullPointerException ex) {
+    public GenericResponse<?> handleNullPointerException(HttpServletRequest req, NullPointerException ex) {
         log.error(ex.getMessage(), ex);
         return ResponseHelper.buildFailedResponse(BizHttpStatus.INTERNAL_SERVER_ERROR, "系统内部错误，请联系管理员！");
     }
@@ -69,7 +69,7 @@ public class GlobalExceptionHandler {
      * BusinessException 处理业务异常
      */
     @ExceptionHandler(value = BusinessException.class)
-    public ResponseModel<?> handleBusinessException(HttpServletRequest req, BusinessException ex) {
+    public GenericResponse<?> handleBusinessException(HttpServletRequest req, BusinessException ex) {
         return ResponseHelper.buildFailedResponse(ex.getCode(), ex.getMessage());
     }
 
@@ -77,7 +77,7 @@ public class GlobalExceptionHandler {
      * Exception 兜底处理系统异常
      */
     @ExceptionHandler(value = Exception.class)
-    public ResponseModel<?> handleException(HttpServletRequest req, Exception ex) {
+    public GenericResponse<?> handleException(HttpServletRequest req, Exception ex) {
         log.error(ex.getMessage(), ex);
         // API异常日志持久化
         SharedHttpServletRequest request = SharedHttpServletRequest.of(req);
@@ -103,12 +103,12 @@ public class GlobalExceptionHandler {
     private ExceptionLogEntity newExceptionLog(SharedHttpServletRequest request, Throwable ex) {
         ExceptionLogEntity exLog = new ExceptionLogEntity();
         // 处理用户信息
-        AuthUserModel authUserModel = AuthenticationContext.get();
-        if (Objects.nonNull(authUserModel)) {
-            exLog.setUserId(authUserModel.getUserId());
-            exLog.setCreator(authUserModel.getUserCode());
+        AuthUser authUser = AuthenticationContext.get();
+        if (Objects.nonNull(authUser)) {
+            exLog.setUserId(authUser.getUserId());
+            exLog.setCreator(authUser.getUserCode());
             exLog.setCreateTime(LocalDateTime.now());
-            exLog.setUpdater(authUserModel.getUserCode());
+            exLog.setUpdater(authUser.getUserCode());
             exLog.setUpdateTime(LocalDateTime.now());
             exLog.setUserAgent(JSON.toJSONString(request.getUserAgent()));
             exLog.setUserIp(request.getRemoteAddr());

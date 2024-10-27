@@ -1,4 +1,4 @@
-package com.onezol.vertex.framework.common.model.pojo;
+package com.onezol.vertex.framework.common.model;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.onezol.vertex.framework.common.util.BeanUtils;
@@ -20,7 +20,7 @@ public class PlainPage<T> {
     private long total;
 
     @Schema(description = "当前页码", requiredMode = Schema.RequiredMode.REQUIRED)
-    private long pageNo;
+    private long pageNumber;
 
     @Schema(description = "当前页条数", requiredMode = Schema.RequiredMode.REQUIRED)
     private long pageSize;
@@ -28,21 +28,21 @@ public class PlainPage<T> {
     public PlainPage() {
         this.items = Collections.emptyList();
         this.total = 0;
-        this.pageNo = 1;
+        this.pageNumber = 1;
         this.pageSize = 0;
     }
 
     public PlainPage(Collection<T> items, long total) {
         this.items = items;
         this.total = total;
-        this.pageNo = 1;
+        this.pageNumber = 1;
         this.pageSize = items.size();
     }
 
-    public PlainPage(Collection<T> items, long total, long pageNo, long pageSize) {
+    public PlainPage(Collection<T> items, long total, long pageNumber, long pageSize) {
         this.items = items;
         this.total = total;
-        this.pageNo = pageNo;
+        this.pageNumber = pageNumber;
         this.pageSize = pageSize;
     }
 

@@ -1,7 +1,7 @@
 package com.onezol.vertex.framework.component.application;
 
 import com.onezol.vertex.framework.common.helper.ResponseHelper;
-import com.onezol.vertex.framework.common.model.pojo.ResponseModel;
+import com.onezol.vertex.framework.common.model.GenericResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,15 +26,15 @@ public class ApplicationController {
 
     @Operation(summary = "应用信息", description = "应用信息")
     @GetMapping
-    public ResponseModel<String> information() {
+    public GenericResponse<String> information() {
         String appInfo = """
                 <pre style="font-weight: bold; color: #333; font-size: 14px; line-height: 24px;">
                     Application: %s
-                                
+
                     Java Version: %s
-                                
+
                     Spring Boot Version: %s
-                                
+
                     CopyRight: xm.l 2024
                 </pre>            \s
                 """.formatted(applicationName, javaVersion, SpringBootVersion.getVersion());
@@ -43,7 +43,7 @@ public class ApplicationController {
 
     @Operation(summary = "获取版本号", description = "获取应用版本号")
     @GetMapping("/version")
-    public ResponseModel<String> version() {
+    public GenericResponse<String> version() {
         String version = String.format("V%s", applicationVersion);
         return ResponseHelper.buildSuccessfulResponse(version);
     }

@@ -1,7 +1,7 @@
 package com.onezol.vertex.framework.component.storage;
 
 import com.onezol.vertex.framework.common.helper.ResponseHelper;
-import com.onezol.vertex.framework.common.model.pojo.ResponseModel;
+import com.onezol.vertex.framework.common.model.GenericResponse;
 import com.onezol.vertex.framework.component.storage.client.FileStorageClient;
 import com.onezol.vertex.framework.component.storage.client.FileStorageClientFactory;
 import com.onezol.vertex.framework.component.storage.constant.FileStorage;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class FileStorageController {
 
     @RequestMapping("/test")
-    public ResponseModel<Object> test() {
+    public GenericResponse<Object> test() {
         FileStorageClient fileStorageClient = FileStorageClientFactory.getFileStorageClient(FileStorage.AmazonS3.getStorage());
         return ResponseHelper.buildSuccessfulResponse();
     }

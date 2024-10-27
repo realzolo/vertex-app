@@ -2,7 +2,7 @@ package com.onezol.vertex.framework.component.monitor.controller;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.onezol.vertex.framework.common.helper.ResponseHelper;
-import com.onezol.vertex.framework.common.model.pojo.ResponseModel;
+import com.onezol.vertex.framework.common.model.GenericResponse;
 import com.onezol.vertex.framework.common.util.StringUtils;
 import com.onezol.vertex.framework.security.api.annotation.RestrictAccess;
 import io.swagger.v3.oas.annotations.Operation;
@@ -37,7 +37,7 @@ public class ApplicationMonitorController {
     @Operation(summary = "获取应用信息", description = "获取应用监控信息，数据来源于Spring Boot Actuator")
     @RestrictAccess
     @GetMapping("/**")
-    public ResponseModel<JSONObject> info(HttpServletRequest request, @RequestParam(value = "tag", required = false) String tag) {
+    public GenericResponse<JSONObject> info(HttpServletRequest request, @RequestParam(value = "tag", required = false) String tag) {
         String requestURI = request.getRequestURI();
         String key = requestURI.replace(contextPath + "/monitor/application/", "");
         String url = String.format("http://127.0.0.1:%s%s/actuator/%s", port, contextPath, key);

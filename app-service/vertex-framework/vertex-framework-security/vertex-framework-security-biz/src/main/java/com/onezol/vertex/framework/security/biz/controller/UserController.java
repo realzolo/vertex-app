@@ -2,8 +2,8 @@ package com.onezol.vertex.framework.security.biz.controller;
 
 import com.onezol.vertex.framework.common.bean.AuthenticationContext;
 import com.onezol.vertex.framework.common.helper.ResponseHelper;
-import com.onezol.vertex.framework.common.model.pojo.AuthUserModel;
-import com.onezol.vertex.framework.common.model.pojo.ResponseModel;
+import com.onezol.vertex.framework.common.model.AuthUser;
+import com.onezol.vertex.framework.common.model.GenericResponse;
 import com.onezol.vertex.framework.security.api.annotation.RestrictAccess;
 import com.onezol.vertex.framework.security.api.model.dto.User;
 import com.onezol.vertex.framework.security.api.service.UserService;
@@ -29,9 +29,9 @@ public class UserController {
     @Operation(summary = "获取当前用户信息", description = "获取当前登录用户信息")
     @RestrictAccess
     @GetMapping("/me")
-    public ResponseModel<User> me() {
-        AuthUserModel authUserModel = AuthenticationContext.get();
-        String username = authUserModel.getUsername();
+    public GenericResponse<User> me() {
+        AuthUser authUser = AuthenticationContext.get();
+        String username = authUser.getUsername();
         return ResponseHelper.buildSuccessfulResponse(userService.queryUserInfo(username));
     }
 

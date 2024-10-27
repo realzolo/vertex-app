@@ -1,6 +1,6 @@
 package com.onezol.vertex.framework.common.util;
 
-import com.onezol.vertex.framework.common.model.pojo.KeyValue;
+import com.onezol.vertex.framework.common.model.KeyValue;
 
 import java.util.HashMap;
 import java.util.List;

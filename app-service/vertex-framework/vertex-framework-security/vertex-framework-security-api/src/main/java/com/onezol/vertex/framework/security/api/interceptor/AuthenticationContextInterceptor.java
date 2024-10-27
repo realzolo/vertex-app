@@ -2,7 +2,7 @@ package com.onezol.vertex.framework.security.api.interceptor;
 
 
 import com.onezol.vertex.framework.common.bean.AuthenticationContext;
-import com.onezol.vertex.framework.common.model.pojo.AuthUserModel;
+import com.onezol.vertex.framework.common.model.AuthUser;
 import com.onezol.vertex.framework.common.util.BeanUtils;
 import com.onezol.vertex.framework.security.api.model.dto.User;
 import com.onezol.vertex.framework.security.api.model.pojo.LoginUser;
@@ -32,7 +32,7 @@ public class AuthenticationContextInterceptor implements WebRequestInterceptor {
         if (principal instanceof LoginUser loginUser) {
             User user = BeanUtils.toBean(loginUser.getUser(), User.class);
 
-            AuthUserModel model = AuthUserModel.builder()
+            AuthUser model = AuthUser.builder()
                     .userId(user.getId())
                     .userCode(user.getCode())
                     .orgCode(user.getOrgCode())

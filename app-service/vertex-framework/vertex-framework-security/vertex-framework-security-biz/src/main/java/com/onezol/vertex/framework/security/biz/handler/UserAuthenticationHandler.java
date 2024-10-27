@@ -1,6 +1,6 @@
 package com.onezol.vertex.framework.security.biz.handler;
 
-import com.onezol.vertex.framework.common.model.pojo.ResponseModel;
+import com.onezol.vertex.framework.common.model.GenericResponse;
 import com.onezol.vertex.framework.common.helper.ResponseHelper;
 import com.onezol.vertex.framework.common.util.ServletUtils;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,8 +25,8 @@ public class UserAuthenticationHandler implements AuthenticationEntryPoint {
      */
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) {
-        ResponseModel<Object> responseModel = ResponseHelper.buildFailedResponse(new com.onezol.vertex.framework.security.api.exception.AuthenticationException("无法验证用户身份，请登录后重试"));
-        ServletUtils.writeJSON(response, responseModel);
+        GenericResponse<Object> genericResponse = ResponseHelper.buildFailedResponse(new com.onezol.vertex.framework.security.api.exception.AuthenticationException("无法验证用户身份，请登录后重试"));
+        ServletUtils.writeJSON(response, genericResponse);
     }
 
 }

@@ -1,4 +1,4 @@
-package com.onezol.vertex.framework.common.model.pojo;
+package com.onezol.vertex.framework.common.model;
 
 import lombok.Data;
 
@@ -9,7 +9,7 @@ import java.util.UUID;
  * 统一响应模型
  */
 @Data
-public class ResponseModel<T> implements Serializable {
+public class GenericResponse<T> implements Serializable {
 
     private int code;
 
@@ -23,7 +23,7 @@ public class ResponseModel<T> implements Serializable {
 
     private String timestamp;
 
-    public ResponseModel(int code, boolean success, String message, T data) {
+    public GenericResponse(int code, boolean success, String message, T data) {
         this.code = code;
         this.success = success;
         this.message = message;

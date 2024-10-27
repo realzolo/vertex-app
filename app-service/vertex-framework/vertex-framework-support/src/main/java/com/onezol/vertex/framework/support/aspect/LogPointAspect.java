@@ -3,7 +3,7 @@ package com.onezol.vertex.framework.support.aspect;
 import com.baomidou.mybatisplus.extension.toolkit.Db;
 import com.onezol.vertex.framework.common.annotation.LogPoint;
 import com.onezol.vertex.framework.common.model.entity.OperationLogEntity;
-import com.onezol.vertex.framework.common.model.pojo.SharedHttpServletRequest;
+import com.onezol.vertex.framework.common.model.SharedHttpServletRequest;
 import com.onezol.vertex.framework.common.util.JsonUtils;
 import com.onezol.vertex.framework.common.util.NetworkUtils;
 import com.onezol.vertex.framework.common.util.ServletUtils;

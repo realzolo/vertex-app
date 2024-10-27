@@ -3,11 +3,9 @@ package com.onezol.vertex.framework.security.biz.service;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.onezol.vertex.framework.common.bean.AuthenticationContext;
 import com.onezol.vertex.framework.common.constant.RedisKey;
-import com.onezol.vertex.framework.common.constant.enums.BizCode;
 import com.onezol.vertex.framework.common.constant.enums.UserGender;
 import com.onezol.vertex.framework.common.exception.RuntimeBizException;
-import com.onezol.vertex.framework.common.helper.CodeGenerationHelper;
-import com.onezol.vertex.framework.common.model.pojo.AuthUserModel;
+import com.onezol.vertex.framework.common.model.AuthUser;
 import com.onezol.vertex.framework.common.mvc.service.BaseServiceImpl;
 import com.onezol.vertex.framework.common.util.*;
 import com.onezol.vertex.framework.security.api.mapper.UserMapper;
@@ -186,8 +184,8 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
      */
     @Override
     public void logout() {
-        AuthUserModel authUserModel = AuthenticationContext.get();
-        String key = RedisKey.USER + authUserModel.getUserCode() + "@" + authUserModel.getUsername();
+        AuthUser authUser = AuthenticationContext.get();
+        String key = RedisKey.USER + authUser.getUserCode() + "@" + authUser.getUsername();
         redisCache.deleteObject(key);
     }
 

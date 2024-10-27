@@ -1,4 +1,4 @@
-package com.onezol.vertex.framework.common.model.pojo;
+package com.onezol.vertex.framework.common.model;
 
 import com.onezol.vertex.framework.common.util.NetworkUtils;
 import com.onezol.vertex.framework.common.util.ServletUtils;

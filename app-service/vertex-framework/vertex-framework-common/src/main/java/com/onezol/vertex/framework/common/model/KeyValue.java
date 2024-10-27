@@ -1,4 +1,4 @@
-package com.onezol.vertex.framework.common.model.pojo;
+package com.onezol.vertex.framework.common.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

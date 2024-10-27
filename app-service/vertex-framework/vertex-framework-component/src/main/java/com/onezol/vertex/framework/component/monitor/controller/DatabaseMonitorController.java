@@ -6,8 +6,8 @@ import com.alibaba.fastjson2.JSONObject;
 import com.onezol.vertex.framework.common.constant.enums.BizHttpStatus;
 import com.onezol.vertex.framework.common.exception.RuntimeBizException;
 import com.onezol.vertex.framework.common.helper.ResponseHelper;
-import com.onezol.vertex.framework.common.model.pojo.PlainPage;
-import com.onezol.vertex.framework.common.model.pojo.ResponseModel;
+import com.onezol.vertex.framework.common.model.PlainPage;
+import com.onezol.vertex.framework.common.model.GenericResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
@@ -60,7 +60,7 @@ public class DatabaseMonitorController {
 
     @Operation(summary = "查询数据", description = "获取Druid数据库连接池监控")
     @GetMapping("/{key}")
-    public ResponseModel<Object> getData(@PathVariable("key") String key) {
+    public GenericResponse<Object> getData(@PathVariable("key") String key) {
         if (!DRUID_RESOURCE_SET.contains(key) && !DRUID_PAGE_RESOURCE_SET.contains(key)) {
             throw new RuntimeBizException(BizHttpStatus.NOT_FOUND, "未找到Druid资源");
         }
@@ -77,7 +77,7 @@ public class DatabaseMonitorController {
 
     @Operation(summary = "分页查询数据", description = "分页获取Druid数据库连接池监控")
     @GetMapping("/{key}/{orderBy}/{orderType}/{page}/{perPageCount}")
-    public ResponseModel<PlainPage<Object>> getPageData(
+    public GenericResponse<PlainPage<Object>> getPageData(
             @PathVariable("key") String key,
             @PathVariable("orderBy") String orderBy,
             @PathVariable("orderType") String orderType,
