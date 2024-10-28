@@ -1,81 +1,75 @@
 <template>
-  <div class="container">
-    <div class="logo">
-      <img
-        alt="logo"
-        src="//p3-armor.byteimg.com/tos-cn-i-49unhts6dw/dfdba5317c0c20ce20e64fac803d52bc.svg~tplv-49unhts6dw-image.image"
-      />
-      <div class="logo-text">Arco Design Pro</div>
-    </div>
-    <LoginBanner />
-    <div class="content">
-      <div class="content-inner">
-        <LoginForm />
-      </div>
-      <div class="footer">
-        <Footer />
+  <div class="wrapper">
+    <div class="background"></div>
+    <div class="header"></div>
+    <div class="body">
+      <div class="login-form-wrapper">
+        <a-row class="gird-row-col">
+          <a-col :span="13">
+            <banner />
+          </a-col>
+          <a-col :span="11">
+            <login-form />
+          </a-col>
+        </a-row>
       </div>
     </div>
+    <div class="footer"></div>
   </div>
 </template>
 
 <script lang="ts" setup>
-  import Footer from '@/components/footer/index.vue';
-  import LoginBanner from './components/banner.vue';
-  import LoginForm from './components/login-form.vue';
+  import Banner from '@/views/login/components/banner.vue';
+  import LoginForm from '@/views/login/components/login-from.vue';
 </script>
 
 <style lang="less" scoped>
-  .container {
-    display: flex;
-    height: 100vh;
+  .wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
 
-    .banner {
-      width: 550px;
-      background: linear-gradient(163.85deg, #1d2129 0%, #00308f 100%);
-    }
-
-    .content {
-      position: relative;
-      display: flex;
-      flex: 1;
-      align-items: center;
-      justify-content: center;
-      padding-bottom: 40px;
-    }
-
-    .footer {
+    .background {
       position: absolute;
-      right: 0;
-      bottom: 0;
       width: 100%;
+      height: 100%;
     }
-  }
 
-  .logo {
-    position: fixed;
-    top: 24px;
-    left: 22px;
-    z-index: 1;
-    display: inline-flex;
-    align-items: center;
-
-    &-text {
-      margin-right: 4px;
-      margin-left: 4px;
-      color: var(--color-fill-1);
-      font-size: 20px;
+    .header {
+      z-index: 2;
     }
-  }
-</style>
 
-<style lang="less" scoped>
-  // responsive
-  @media (max-width: @screen-lg) {
-    .container {
-      .banner {
-        width: 25%;
+    .body {
+      position: absolute;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+
+      .login-form-wrapper {
+        width: 86%;
+        max-width: 850px;
+        height: 490px;
+        display: flex;
+        box-shadow: 0 2px 4px 2px #00000014;
+
+        .gird-row-col {
+          width: 100%;
+          height: 100%;
+
+          .arco-col {
+            width: 100%;
+            height: 100%;
+          }
+        }
       }
     }
+  }
+
+  .footer {
+    z-index: 2;
   }
 </style>
