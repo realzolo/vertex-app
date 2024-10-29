@@ -140,6 +140,16 @@ public class RedisCache {
     }
 
     /**
+     * 获得缓存列表
+     *
+     * @param key 缓存的键值
+     * @return 缓存键值对应的数据
+     */
+    public <T> List<T> getCacheList(final List<String> keys) {
+        return redisTemplate.opsForValue().multiGet(keys);
+    }
+
+    /**
      * 缓存Set
      *
      * @param key     缓存键值

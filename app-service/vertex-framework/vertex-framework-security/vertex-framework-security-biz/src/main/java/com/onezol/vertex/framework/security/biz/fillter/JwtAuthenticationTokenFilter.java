@@ -5,6 +5,7 @@ import com.onezol.vertex.framework.common.util.JwtUtils;
 import com.onezol.vertex.framework.common.util.StringUtils;
 import com.onezol.vertex.framework.security.api.model.pojo.LoginUser;
 import com.onezol.vertex.framework.support.cache.RedisCache;
+import com.onezol.vertex.framework.support.support.RedisKeyHelper;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -69,7 +70,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
             // 从Redis中获取用户信息, 并验证用户信息是否存在
             String subject = JwtUtils.getSubjectFromToken(token);
-            String redisKey = RedisKey.USER + subject;
+            String redisKey = RedisKeyHelper.buildRedisKey(RedisKey.USER_INFO, subject);
             LoginUser loginUser = redisCache.getCacheObject(redisKey);
             if (Objects.isNull(loginUser)) {
                 filterChain.doFilter(request, response);

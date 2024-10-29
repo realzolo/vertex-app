@@ -36,13 +36,12 @@ spring:
         login-password: admin
   data:
     redis:
-      database: 0
       timeout: 10000
       connect-timeout: 15000
       lettuce:
         pool:
           max-active: 8
-          max-wait: -1
+          max-wait: 4
           max-idle: 8
           min-idle: 2
   liquibase:

@@ -5,18 +5,12 @@ package com.onezol.vertex.framework.common.constant;
  */
 public record RedisKey() {
     /**
-     * 用户信息前缀
+     * 用户Token
      */
-    public static String USERID_SET = "uid_set";
-    public static String USER = "user:";
+    public static final String USER_TOKEN = "user:token:{userId}";
 
     /**
-     * 字典
+     * 用户信息
      */
-    public static String DICTIONARY = "dictionary";
-
-    /**
-     * 枚举
-     */
-    public static String ENUM = "enum";
+    public static final String USER_INFO = "user:info:{userId}";
 }

@@ -15,12 +15,12 @@ CREATE TABLE IF NOT EXISTS vx_user
     pwd_exp_date DATE         DEFAULT NULL COMMENT '密码过期时间',
     status       INT UNSIGNED DEFAULT 0 COMMENT '账号状态',
     -- 自定义字段结束 --
-    creator      VARCHAR(50)  DEFAULT '' COMMENT '创建人',
-    create_time  DATETIME COMMENT '创建时间',
-    updater      VARCHAR(50)  DEFAULT '' COMMENT '更新人',
-    update_time  DATETIME COMMENT '更新时间',
-    version      INT UNSIGNED DEFAULT 0 COMMENT '版本号',
-    deleted      BIT          DEFAULT b'0' COMMENT '是否删除',
+    creator        BIGINT           DEFAULT NULL COMMENT '创建人',
+    create_time    DATETIME         DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    updater        BIGINT           DEFAULT NULL COMMENT '更新人',
+    update_time    DATETIME         DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+    version        INT UNSIGNED     DEFAULT 0 COMMENT '版本号',
+    deleted        BIT              DEFAULT b'0' COMMENT '是否删除',
     INDEX (username),
     UNIQUE (username)
 ) ENGINE = InnoDB
@@ -31,15 +31,16 @@ CREATE TABLE IF NOT EXISTS vx_role
 (
     id          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
     -- 自定义字段开始 --
-    name        VARCHAR(25)  DEFAULT '' COMMENT '角色名称',
+    name        VARCHAR(25)  COMMENT '角色名称',
+    code        VARCHAR(25)  COMMENT '角色Code',
     sort        INT UNSIGNED DEFAULT 0 COMMENT '排序号',
     status      INT UNSIGNED DEFAULT 0 COMMENT '(0: 正常, 1: 禁用)',
     -- 自定义字段结束 --
-    creator     VARCHAR(50)  DEFAULT '' COMMENT '创建人',
-    create_time DATETIME COMMENT '创建时间',
-    updater     VARCHAR(50)  DEFAULT '' COMMENT '更新人',
-    update_time DATETIME COMMENT '更新时间',
-    version     INT UNSIGNED DEFAULT 0 COMMENT '版本号'
+    creator        BIGINT           DEFAULT NULL COMMENT '创建人',
+    create_time    DATETIME         DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    updater        BIGINT           DEFAULT NULL COMMENT '更新人',
+    update_time    DATETIME         DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+    version        INT UNSIGNED     DEFAULT 0 COMMENT '版本号'
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   AUTO_INCREMENT = 10000 COMMENT = '用户角色';
@@ -48,38 +49,56 @@ CREATE TABLE IF NOT EXISTS vx_permission
 (
     id          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
     -- 自定义字段开始 --
-    name        VARCHAR(25)  DEFAULT '' COMMENT '权限名称',
-    code        VARCHAR(25)  DEFAULT '' COMMENT '权限Code',
+    name        VARCHAR(25)  COMMENT '权限名称',
+    code        VARCHAR(25)  COMMENT '权限Code',
     sort        INT UNSIGNED DEFAULT 0 COMMENT '排序号',
     -- 自定义字段结束 --
-    creator     VARCHAR(50)  DEFAULT '' COMMENT '创建人',
-    create_time DATETIME COMMENT '创建时间',
-    updater     VARCHAR(50)  DEFAULT '' COMMENT '更新人',
-    update_time DATETIME COMMENT '更新时间',
-    version     INT UNSIGNED DEFAULT 0 COMMENT '版本号',
+    creator        BIGINT           DEFAULT NULL COMMENT '创建人',
+    create_time    DATETIME         DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    updater        BIGINT           DEFAULT NULL COMMENT '更新人',
+    update_time    DATETIME         DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+    version        INT UNSIGNED     DEFAULT 0 COMMENT '版本号',
     INDEX (code),
     UNIQUE (code)
 ) ENGINE = InnoDB
     DEFAULT CHARSET = utf8mb4
-    AUTO_INCREMENT = 10000 COMMENT = '用户权限';
+    AUTO_INCREMENT = 10000 COMMENT = '权限';
+
+CREATE TABLE IF NOT EXISTS vx_user_role
+(
+    id          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
+    -- 自定义字段开始 --
+    user_id     BIGINT          COMMENT '用户ID',
+    role_id     BIGINT          COMMENT '角色ID',
+    -- 自定义字段结束 --
+    creator        BIGINT       DEFAULT NULL COMMENT '创建人',
+    create_time    DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    updater        BIGINT       DEFAULT NULL COMMENT '更新人',
+    update_time    DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+    version        INT UNSIGNED DEFAULT 0 COMMENT '版本号',
+    INDEX (role_id),
+    UNIQUE (role_id)
+    ) ENGINE = InnoDB
+    DEFAULT CHARSET = utf8mb4
+    AUTO_INCREMENT = 10000 COMMENT = '用户-角色';
 
 CREATE TABLE IF NOT EXISTS vx_role_permission
 (
     id          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
     -- 自定义字段开始 --
-    role_id     VARCHAR(25)     DEFAULT '' COMMENT '角色ID',
+    role_id     BIGINT          COMMENT '角色ID',
     permissions VARCHAR(2000)   DEFAULT '' COMMENT '权限列表',
     -- 自定义字段结束 --
-    creator     VARCHAR(50)     DEFAULT '' COMMENT '创建人',
-    create_time DATETIME COMMENT '创建时间',
-    updater     VARCHAR(50)     DEFAULT '' COMMENT '更新人',
-    update_time DATETIME COMMENT '更新时间',
-    version     INT UNSIGNED    DEFAULT 0 COMMENT '版本号',
+    creator        BIGINT       DEFAULT NULL COMMENT '创建人',
+    create_time    DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    updater        BIGINT       DEFAULT NULL COMMENT '更新人',
+    update_time    DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+    version        INT UNSIGNED DEFAULT 0 COMMENT '版本号',
     INDEX (role_id),
     UNIQUE (role_id)
 ) ENGINE = InnoDB
     DEFAULT CHARSET = utf8mb4
-    AUTO_INCREMENT = 10000 COMMENT = '角色权限';
+    AUTO_INCREMENT = 10000 COMMENT = '角色-权限';
 
 CREATE TABLE IF NOT EXISTS vx_exception_log
 (
@@ -100,11 +119,11 @@ CREATE TABLE IF NOT EXISTS vx_exception_log
     exception_root_cause_message VARCHAR(255) DEFAULT '' COMMENT '异常导致的根消息',
     exception_message            VARCHAR(255) DEFAULT '' COMMENT '异常导致的消息',
     -- 自定义字段结束 --
-    creator                      VARCHAR(50)  DEFAULT '' COMMENT '创建人',
-    create_time                  DATETIME COMMENT '创建时间',
-    updater                      VARCHAR(50)  DEFAULT '' COMMENT '更新人',
-    update_time                  DATETIME COMMENT '更新时间',
-    version                      INT UNSIGNED DEFAULT 0 COMMENT '版本号',
+    creator        BIGINT        DEFAULT NULL COMMENT '创建人',
+    create_time    DATETIME      DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    updater        BIGINT        DEFAULT NULL COMMENT '更新人',
+    update_time    DATETIME      DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+    version        INT UNSIGNED  DEFAULT 0 COMMENT '版本号',
     INDEX (user_id)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
@@ -131,11 +150,11 @@ CREATE TABLE IF NOT EXISTS vx_operation_log
     failure_reason TEXT COMMENT '失败原因',
     time           BIGINT(20) UNSIGNED DEFAULT NULL COMMENT '耗时（毫秒）',
     -- 自定义字段结束 --
-    creator        VARCHAR(50)         DEFAULT '' COMMENT '创建人',
-    create_time    DATETIME COMMENT '创建时间',
-    updater        VARCHAR(50)         DEFAULT '' COMMENT '更新人',
-    update_time    DATETIME COMMENT '更新时间',
-    version        INT UNSIGNED        DEFAULT 0 COMMENT '版本号',
+    creator        BIGINT           DEFAULT NULL COMMENT '创建人',
+    create_time    DATETIME         DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    updater        BIGINT           DEFAULT NULL COMMENT '更新人',
+    update_time    DATETIME         DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+    version        INT UNSIGNED     DEFAULT 0 COMMENT '版本号',
     INDEX (user_id)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
@@ -151,9 +170,9 @@ CREATE TABLE IF NOT EXISTS vx_runtime_configuration
     config_value       VARCHAR(512) COMMENT '配置值',
     config_description VARCHAR(512) COMMENT '配置描述',
     -- 自定义字段结束 --
-    creator     VARCHAR(50)  DEFAULT '' COMMENT '创建人',
+    creator     BIGINT       DEFAULT NULL COMMENT '创建人',
     create_time DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    updater     VARCHAR(50)  DEFAULT '' COMMENT '更新人',
+    updater     BIGINT       DEFAULT NULL COMMENT '更新人',
     update_time DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
     version     INT UNSIGNED DEFAULT 0 COMMENT '版本号'
 ) ENGINE = InnoDB

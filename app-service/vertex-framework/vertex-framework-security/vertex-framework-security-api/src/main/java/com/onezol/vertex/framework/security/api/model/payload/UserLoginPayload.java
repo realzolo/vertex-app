@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
-@Schema(description = "用户登录参数: 用户名+密码(优先) 或 邮箱+验证码")
+@Schema(description = "用户登录参数: 用户名+密码 或 邮箱+验证码")
 @Data
 public class UserLoginPayload implements Payload {
 
@@ -21,6 +21,6 @@ public class UserLoginPayload implements Payload {
 
     @Schema(description = "验证码")
     @NotBlank(message = "验证码不能为空")
-    private String verifyCode;
+    private String captcha;
 
 }

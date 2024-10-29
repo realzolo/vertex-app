@@ -106,9 +106,9 @@ public class GlobalExceptionHandler {
         AuthUser authUser = AuthenticationContext.get();
         if (Objects.nonNull(authUser)) {
             exLog.setUserId(authUser.getUserId());
-            exLog.setCreator(authUser.getUserCode());
+            exLog.setCreator(authUser.getUserId());
             exLog.setCreateTime(LocalDateTime.now());
-            exLog.setUpdater(authUser.getUserCode());
+            exLog.setUpdater(authUser.getUserId());
             exLog.setUpdateTime(LocalDateTime.now());
             exLog.setUserAgent(JSON.toJSONString(request.getUserAgent()));
             exLog.setUserIp(request.getRemoteAddr());

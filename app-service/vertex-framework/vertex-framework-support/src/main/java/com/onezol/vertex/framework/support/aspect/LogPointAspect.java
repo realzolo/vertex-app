@@ -107,7 +107,7 @@ public class LogPointAspect {
         if (!(principal instanceof LoginUser loginUser)) {
             return;
         }
-        User user = loginUser.getUser();
+        User user = loginUser.getDetails();
         if (Objects.isNull(user)) {
             return;
         }
@@ -149,8 +149,8 @@ public class LogPointAspect {
                 .time(time)
                 .build();
 
-        entity.setCreator(user.getCode());
-        entity.setUpdater(user.getCode());
+        entity.setCreator(user.getId());
+        entity.setUpdater(user.getId());
 
         Operation operation = this.getOperation(joinPoint);
         if (Objects.nonNull(operation)) {

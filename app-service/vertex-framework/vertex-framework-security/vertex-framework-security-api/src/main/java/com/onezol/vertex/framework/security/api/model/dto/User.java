@@ -13,12 +13,6 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = true)
 public class User extends BaseDTO {
 
-    @Schema(description = "用户编码")
-    private String code;
-
-    @Schema(description = "所属组织编码")
-    private Long orgCode;
-
     @Schema(description = "用户名")
     private String username;
 

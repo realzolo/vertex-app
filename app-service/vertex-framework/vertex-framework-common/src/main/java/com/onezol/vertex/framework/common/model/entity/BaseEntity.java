@@ -26,7 +26,7 @@ public abstract class BaseEntity implements Entity {
 
     @Schema(description = "创建人ID")
     @TableField("creator")
-    private String creator;
+    private Long creator;
 
     @Schema(description = "创建时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
@@ -37,7 +37,7 @@ public abstract class BaseEntity implements Entity {
 
     @Schema(description = "更新人ID")
     @TableField("updater")
-    private String updater;
+    private Long updater;
 
     @Schema(description = "更新时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")

@@ -38,16 +38,14 @@ public class UserAuthController {
         return ResponseHelper.buildSuccessfulResponse(userAuthService.register(payload));
     }
 
-    @Operation(summary = "用户登录", description = "用户登录: 支持用户名、邮箱登录")
+    @Operation(summary = "用户登录", description = "用户登录: 根据用户名密码")
     @PostMapping("/login")
-    public GenericResponse<UserAuthenticationVO> login(@RequestBody @Valid UserLoginPayload payload) {
-        UserAuthenticationVO userAuthenticationVO = null;
-        if (StringUtils.isNotBlank(payload.getUsername())) {
-            userAuthenticationVO = userAuthService.loginByUsername(payload.getUsername(), payload.getPassword(), payload.getVerifyCode());
+    public GenericResponse<UserAuthenticationVO> loginByIdPassword(@RequestBody @Valid UserLoginPayload payload) {
+        if (StringUtils.isAnyBlank(payload.getUsername(), payload.getPassword())) {
+            return ResponseHelper.buildFailedResponse(BizHttpStatus.BAD_REQUEST, "用户名或密码不能为空");
         }
-        if (StringUtils.isNotBlank(payload.getEmail())) {
-            userAuthenticationVO = userAuthService.loginByEmail(payload.getEmail(), payload.getVerifyCode());
-        }
+        UserAuthenticationVO userAuthenticationVO = userAuthService.loginByIdPassword(payload.getUsername(), payload.getPassword(), payload.getCaptcha());
+
         return Objects.nonNull(userAuthenticationVO) ?
                 ResponseHelper.buildSuccessfulResponse(userAuthenticationVO) :
                 ResponseHelper.buildFailedResponse(BizHttpStatus.BAD_REQUEST, "请使用用户名或邮箱登录");

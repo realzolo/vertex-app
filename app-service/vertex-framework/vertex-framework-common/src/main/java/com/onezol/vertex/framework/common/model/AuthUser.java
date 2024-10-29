@@ -11,10 +11,6 @@ public class AuthUser {
 
     private Long userId;
 
-    private String userCode;
-
-    private Long orgCode;
-
     private String username;
 
     private String nickname;

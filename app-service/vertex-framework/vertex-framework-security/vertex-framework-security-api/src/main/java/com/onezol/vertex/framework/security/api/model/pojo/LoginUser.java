@@ -4,7 +4,6 @@ import com.alibaba.fastjson2.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.onezol.vertex.framework.common.constant.enums.AccountStatus;
 import com.onezol.vertex.framework.common.util.BeanUtils;
-import com.onezol.vertex.framework.common.util.CodecUtils;
 import com.onezol.vertex.framework.security.api.model.dto.User;
 import com.onezol.vertex.framework.security.api.model.entity.UserEntity;
 import lombok.Data;
@@ -61,15 +60,15 @@ public class LoginUser implements UserDetails {
     /**
      * 用户信息
      */
-    private UserEntity orgUser;
+    private UserEntity details;
 
     /**
      * 权限列表
      */
     private Set<GrantedAuthority> authorities;
 
-    public LoginUser(UserEntity orgUser) {
-        this.orgUser = orgUser;
+    public LoginUser(UserEntity userDetails) {
+        this.details = userDetails;
     }
 
     @Override
@@ -84,43 +83,39 @@ public class LoginUser implements UserDetails {
     @Override
     @JSONField(serialize = false)
     public String getPassword() {
-        String password = orgUser.getPassword();
-        orgUser.setPassword(null);
+        String password = details.getPassword();
+        details.setPassword(null);
         return password;
     }
 
     @Override
     public String getUsername() {
-        return orgUser.getUsername();
+        return details.getUsername();
     }
 
     @Override
     @JSONField(serialize = false)
     public boolean isAccountNonExpired() {
-        return !Integer.valueOf(AccountStatus.EXPIRED.getCode()).equals(orgUser.getStatus());
+        return !Integer.valueOf(AccountStatus.EXPIRED.getCode()).equals(details.getStatus());
     }
 
     @Override
     @JSONField(serialize = false)
     public boolean isAccountNonLocked() {
-        return !Integer.valueOf(AccountStatus.LOCKED.getCode()).equals(orgUser.getStatus());
+        return !Integer.valueOf(AccountStatus.LOCKED.getCode()).equals(details.getStatus());
     }
 
     @Override
     @JSONField(serialize = false)
     public boolean isCredentialsNonExpired() {
-        LocalDate pwdExpDate = orgUser.getPwdExpDate();
+        LocalDate pwdExpDate = details.getPwdExpDate();
         return pwdExpDate == null || pwdExpDate.isAfter(LocalDate.now());
     }
 
     @Override
     @JSONField(serialize = false)
     public boolean isEnabled() {
-        return !Integer.valueOf(AccountStatus.DISABLED.getCode()).equals(orgUser.getStatus());
-    }
-
-    public String getKey() {
-        return orgUser.getUsername();
+        return !Integer.valueOf(AccountStatus.DISABLED.getCode()).equals(details.getStatus());
     }
 
     public void setRoles(Set<String> roles) {
@@ -131,8 +126,8 @@ public class LoginUser implements UserDetails {
         this.permissions = Objects.isNull(permissions) ? Collections.emptySet() : permissions;
     }
 
-    public User getUser() {
-        User user = BeanUtils.toBean(orgUser, User.class);
+    public User getDetails() {
+        User user = BeanUtils.toBean(details, User.class);
         user.setRoles(roles);
         user.setPermissions(permissions);
         return user;

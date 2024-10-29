@@ -17,6 +17,10 @@ public class RoleEntity extends BaseEntity {
     @TableField("name")
     private String name;
 
+    @Schema(description = "角色Code")
+    @TableField("code")
+    private String code;
+
     @Schema(description = "排序号")
     @TableField("sort")
     private Integer sort;

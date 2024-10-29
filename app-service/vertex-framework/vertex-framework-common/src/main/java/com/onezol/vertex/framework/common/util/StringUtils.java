@@ -80,7 +80,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
      * @param regex 正则表达式
      * @return 匹配项的内容，如果未找到匹配项则返回 null
      */
-    public static String getMatch(String input, String regex) {
+    public static String getMatchedString(String input, String regex) {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(input);
 

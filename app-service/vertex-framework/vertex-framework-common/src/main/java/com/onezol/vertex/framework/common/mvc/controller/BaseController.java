@@ -19,19 +19,19 @@ public abstract class BaseController<T> {
     /**
      * 获取分页对象
      *
-     * @param pageNo   当前页
+     * @param pageNumber   当前页
      * @param pageSize 每页显示条数
      * @return 分页对象
      */
-    protected IPage<T> getPage(Integer pageNo, Integer pageSize) {
-        if (Objects.isNull(pageNo)) {
-            pageNo = 1;
+    protected IPage<T> getPage(Integer pageNumber, Integer pageSize) {
+        if (Objects.isNull(pageNumber)) {
+            pageNumber = 1;
         }
         if (Objects.isNull(pageSize)) {
             pageSize = DEFAULT_PAGE_SIZE;
         }
         pageSize = Math.min(pageSize, MAX_PAGE_SIZE);
 
-        return new Page<>(pageNo, pageSize);
+        return new Page<>(pageNumber, pageSize);
     }
 }

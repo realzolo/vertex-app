@@ -11,6 +11,7 @@ spring:
       host: redis.onezol.com
       port: 6379
       password: 123456
+      database: 10
   # 邮件配置
   mail:
     host: smtp.exmail.qq.com

@@ -17,6 +17,7 @@ import com.onezol.vertex.framework.security.api.model.vo.UserAuthenticationVO;
 import com.onezol.vertex.framework.security.api.service.OnlineUserService;
 import com.onezol.vertex.framework.security.api.service.UserAuthService;
 import com.onezol.vertex.framework.support.cache.RedisCache;
+import com.onezol.vertex.framework.support.support.RedisKeyHelper;
 import eu.bitwalker.useragentutils.UserAgent;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -30,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity> implements UserAuthService {
@@ -112,7 +114,7 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
 
         // 构建返回结果
         User user = BeanUtils.toBean(entity, User.class);
-        String token = JwtUtils.generateToken(CodecUtils.encodeBase64(user.getCode() + "@" + user.getUsername()));
+        String token = JwtUtils.generateToken(CodecUtils.encodeBase64(String.valueOf(user.getId())));
         return UserAuthenticationVO.builder()
                 .user(user)
                 .jwt(
@@ -127,26 +129,24 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
     /**
      * 用户登录
      *
-     * @param username   用户名
-     * @param password   密码
-     * @param verifyCode 验证码
+     * @param username 用户名
+     * @param password 密码
+     * @param captcha  验证码
      */
     @Override
-    public UserAuthenticationVO loginByUsername(String username, String password, String verifyCode) throws RuntimeBizException {
+    public UserAuthenticationVO loginByIdPassword(String username, String password, String captcha) throws RuntimeBizException {
         // 参数校验
         if (StringUtils.isAnyBlank(username, password)) {
             throw new RuntimeBizException("用户名或密码不能为空");
         }
 
-        // 验证码校验 TODO: Redis验证码校验
-//        if (StringUtils.isBlank(captcha) || captcha.length() != 6 || !captcha.equalsIgnoreCase(redisCache.getCacheObject("verifyCode:" + captchaKey))) {
-        if (StringUtils.isBlank(verifyCode) || verifyCode.length() != 6) {
-            throw new RuntimeBizException("验证码错误");
-        }
-
-        Authentication authentication = new UsernamePasswordAuthenticationToken(username, password);
+        // TODO: 验证码校验
+//        if (StringUtils.isBlank(captcha) || captcha.length() != 6) {
+//            throw new RuntimeBizException("验证码错误");
+//        }
 
         // 调用SpringSecurity的AuthenticationManager处理登录验证
+        Authentication authentication = new UsernamePasswordAuthenticationToken(username, password);
         try {
             authentication = authenticationManager.authenticate(authentication);
         } catch (AuthenticationException ex) {
@@ -185,29 +185,37 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
     @Override
     public void logout() {
         AuthUser authUser = AuthenticationContext.get();
-        String key = RedisKey.USER + authUser.getUserCode() + "@" + authUser.getUsername();
-        redisCache.deleteObject(key);
+        // 移除用户Token
+        String tokenKey = RedisKeyHelper.buildRedisKey(RedisKey.USER_TOKEN, String.valueOf(authUser.getUserId()));
+        redisCache.deleteObject(tokenKey);
+        // 移除用户信息
+        String infoKey = RedisKeyHelper.buildRedisKey(RedisKey.USER_INFO, String.valueOf(authUser.getUserId()));
+        redisCache.deleteObject(infoKey);
     }
 
     /**
      * 登录成功后的处理
      *
-     * @param userIdentity 用户身份信息
+     * @param loginUser 登录用户身份信息
      * @return 登录成功后的处理结果
      */
-    private UserAuthenticationVO afterLoginSuccess(final LoginUser userIdentity) {
+    private UserAuthenticationVO afterLoginSuccess(final LoginUser loginUser) {
         // 设置用户登录信息
-        this.setLoginUserDetails(userIdentity);
+        this.setLoginUserDetails(loginUser);
 
         // 生成token
-        String subject = userIdentity.getKey();
+        String subject = String.valueOf(loginUser.getDetails().getId());
         String token = JwtUtils.generateToken(subject);
 
-        // 将用户信息放入缓存
-        onlineUserService.addOnlineUser(userIdentity, expirationTime);
+        // Redis存储用户Token
+        String tokenKey = RedisKeyHelper.buildRedisKey(RedisKey.USER_TOKEN, subject);
+        redisCache.setCacheObject(tokenKey, token, expirationTime, TimeUnit.SECONDS);
+
+        // Redis存储用户信息
+        onlineUserService.addOnlineUser(loginUser);
 
         // 返回结果
-        User user = userIdentity.getUser();
+        User user = loginUser.getDetails();
         return UserAuthenticationVO.builder()
                 .user(user)
                 .jwt(

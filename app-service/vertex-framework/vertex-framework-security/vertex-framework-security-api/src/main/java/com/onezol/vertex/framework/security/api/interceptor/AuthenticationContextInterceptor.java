@@ -30,12 +30,10 @@ public class AuthenticationContextInterceptor implements WebRequestInterceptor {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Object principal = authentication.getPrincipal();
         if (principal instanceof LoginUser loginUser) {
-            User user = BeanUtils.toBean(loginUser.getUser(), User.class);
+            User user = BeanUtils.toBean(loginUser.getDetails(), User.class);
 
             AuthUser model = AuthUser.builder()
                     .userId(user.getId())
-                    .userCode(user.getCode())
-                    .orgCode(user.getOrgCode())
                     .username(user.getUsername())
                     .nickname(user.getNickname())
                     .roles(user.getRoles())

@@ -4,9 +4,9 @@ CREATE TABLE IF NOT EXISTS template_table
     -- 自定义字段开始 --
 
     -- 自定义字段结束 --
-    creator     VARCHAR(50)  DEFAULT '' COMMENT '创建人',
+    creator     BIGINT       DEFAULT NULL COMMENT '创建人',
     create_time DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    updater     VARCHAR(50)  DEFAULT '' COMMENT '更新人',
+    updater     BIGINT       DEFAULT NULL COMMENT '更新人',
     update_time DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
     version     INT UNSIGNED DEFAULT 0 COMMENT '版本号',
     deleted     BIT          DEFAULT b'0' COMMENT '是否删除'

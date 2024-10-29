@@ -29,9 +29,9 @@ public interface UserAuthService extends BaseService<UserEntity> {
      *
      * @param username   用户名
      * @param password   密码
-     * @param verifyCode 验证码
+     * @param captcha 验证码
      */
-    UserAuthenticationVO loginByUsername(String username, String password, String verifyCode);
+    UserAuthenticationVO loginByIdPassword(String username, String password, String captcha);
 
 
     /**

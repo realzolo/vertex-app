@@ -1,9 +1,14 @@
 package com.onezol.vertex.framework.security.biz.service;
 
+import com.onezol.vertex.framework.security.api.model.entity.RoleEntity;
 import com.onezol.vertex.framework.security.api.model.entity.UserEntity;
 import com.onezol.vertex.framework.security.api.model.pojo.LoginUser;
+import com.onezol.vertex.framework.security.api.service.PermissionService;
+import com.onezol.vertex.framework.security.api.service.RolePermissionService;
 import com.onezol.vertex.framework.security.api.service.UserAuthService;
+import com.onezol.vertex.framework.security.api.service.UserRoleService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,23 +16,23 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.Set;
+
 @Slf4j
 @Service
 public class SecurityUserDetailsServiceImpl implements UserDetailsService {
+
     private final UserAuthService userAuthService;
+    private final UserRoleService userRoleService;
+    private final PermissionService permissionService;
 
-    public SecurityUserDetailsServiceImpl(@Lazy UserAuthService userAuthService) {
+    @Autowired
+    public SecurityUserDetailsServiceImpl(@Lazy UserAuthService userAuthService, UserRoleService userRoleService, RolePermissionService rolePermissionService, PermissionService permissionService) {
         this.userAuthService = userAuthService;
+        this.userRoleService = userRoleService;
+        this.permissionService = permissionService;
     }
-//    private final MenuService menuService;
-//    private final RoleService roleService;
-
-//    @Autowired
-//    public SecurityUserDetailsServiceImpl(@Lazy UserAuthService userAuthService, MenuService menuService, RoleService roleService) {
-//        this.userAuthService = userAuthService;
-//        this.menuService = menuService;
-//        this.roleService = roleService;
-//    }
 
     /**
      * 根据用户名获取用户信息
@@ -43,10 +48,14 @@ public class SecurityUserDetailsServiceImpl implements UserDetailsService {
         }
 
         LoginUser user = new LoginUser(userEntity);
-//        Set<String> roles = roleService.getUserRoleKeys(userEntity.getId());
-//        Set<String> perms = menuService.getUserPermKeys(userEntity.getId());
-//        user.setRoles(roles);
-//        user.setPermissions(perms);
+        RoleEntity role = userRoleService.getUserRole(user.getDetails().getId());
+        if (role != null) {
+            user.setRoles(Collections.singleton(role.getCode()));
+
+            String permString = permissionService.getRolePermissions(role.getId());
+            String[] permissions = permString.split(",");
+            user.setPermissions(Set.of(permissions));
+        }
 
         return user;
     }
