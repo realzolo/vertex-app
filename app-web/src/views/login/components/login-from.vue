@@ -1,18 +1,23 @@
 <template>
   <div class="login-form">
-    <a-tabs default-active-key="username">
+    <a-tabs default-active-key="username" @change="handleTabChange">
       <a-tab-pane key="username" title="账号登录">
         <a-form
-          :model="form"
           size="large"
+          :model="form"
+          :rules="rules"
           :label-col-props="{ span: 0, offset: 0 }"
-          @submit="handleSubmit"
+          @submit-success="handleSubmit"
         >
           <a-form-item field="username">
             <a-input v-model="form.username" placeholder="请输入用户名" />
           </a-form-item>
           <a-form-item field="password">
-            <a-input-password placeholder="请输入密码" allow-clear />
+            <a-input-password
+              v-model="form.password"
+              allow-clear
+              placeholder="请输入密码"
+            />
           </a-form-item>
           <a-form-item field="captcha">
             <a-input v-model="form.captcha" placeholder="请输入验证码" />
@@ -31,10 +36,11 @@
           </a-form-item>
           <a-form-item>
             <a-button
-              html-type="submit"
               long
+              html-type="submit"
               type="primary"
               class="submit-button"
+              :loading="loading"
             >
               立即登录
             </a-button>
@@ -43,13 +49,14 @@
       </a-tab-pane>
       <a-tab-pane key="email" title="邮箱登录">
         <a-form
-          :model="form"
           size="large"
+          :model="form"
+          :rules="rules"
           :label-col-props="{ span: 0, offset: 0 }"
-          @submit="handleSubmit"
+          @submit-success="handleSubmit"
         >
           <a-form-item field="email">
-            <a-input v-model="form.username" placeholder="请输入电子邮箱地址" />
+            <a-input v-model="form.email" placeholder="请输入电子邮箱地址" />
           </a-form-item>
           <a-form-item field="captcha">
             <a-input v-model="form.captcha" placeholder="请输入验证码" />
@@ -59,10 +66,11 @@
           </a-form-item>
           <a-form-item>
             <a-button
-              html-type="submit"
               long
+              html-type="submit"
               type="primary"
               class="submit-button"
+              :loading="loading"
             >
               立即登录
             </a-button>
@@ -78,13 +86,13 @@
           aria-hidden="true"
           @click="thirdPartyLogin('Authenticator')"
         >
-          <use xlink:href="#vertex-a-MicrosoftAuthenticator"></use>
+          <use xlink:href="#vertex-a-MicrosoftAuthenticator" />
         </svg>
         <svg class="icon" aria-hidden="true" @click="thirdPartyLogin('Github')">
-          <use xlink:href="#vertex-github"></use>
+          <use xlink:href="#vertex-github" />
         </svg>
         <svg class="icon" aria-hidden="true" @click="thirdPartyLogin('Gitee')">
-          <use xlink:href="#vertex-gitee"></use>
+          <use xlink:href="#vertex-gitee" />
         </svg>
       </a-space>
     </div>
@@ -94,12 +102,59 @@
 <script setup lang="ts">
   import { reactive } from 'vue';
   import { Message } from '@arco-design/web-vue';
+  import useLoading from '@/hooks/loading';
 
   const form = reactive({
-    name: '',
-    post: '',
-    isRead: false,
+    username: '',
+    email: '',
+    password: '',
+    captcha: '',
   });
+
+  const { loading, setLoading } = useLoading();
+
+  const rules = {
+    username: [
+      {
+        required: true,
+        message: '请输入用户名',
+      },
+    ],
+    password: [
+      {
+        required: true,
+        message: '请输入密码',
+      },
+    ],
+    email: [
+      {
+        type: 'email',
+        required: true,
+        message: '请输入正确的电子邮箱地址',
+      },
+    ],
+    captcha: [
+      {
+        required: true,
+        message: '请输入验证码',
+      },
+    ],
+  };
+
+  /**
+   * 切换Tab时清除共用字段
+   */
+  const handleTabChange = () => {
+    form.captcha = '';
+  };
+
+  const handleSubmit = () => {
+    setLoading(true);
+
+    setTimeout(() => {
+      setLoading(false);
+    }, 3000);
+  };
 
   const thirdPartyLogin = (type: string) => {
     Message.error(`暂不支持${type}登录，请使用账号密码登录`);
@@ -156,6 +211,7 @@
             &:hover {
               background: var(--color-secondary-hover);
             }
+
             &.arco-btn-disabled {
               background: var(--color-secondary-hover);
             }
@@ -251,7 +307,11 @@
               border-radius: 4px;
               font-size: 13px;
               background-color: transparent;
-              border: 1px solid var(--color-border-3);
+              border-color: var(--color-border-3);
+
+              &.arco-input-error {
+                border-color: rgb(var(--danger-3));
+              }
 
               &:hover,
               &:focus-within {

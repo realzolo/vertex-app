@@ -20,6 +20,7 @@
       rgb(var(--primary-6)),
       rgb(var(--primary-3))
     );
+    user-select: none;
 
     img {
       width: 100%;
