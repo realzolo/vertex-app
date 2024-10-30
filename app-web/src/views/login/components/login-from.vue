@@ -1,7 +1,7 @@
 <template>
   <div class="login-form">
-    <a-tabs default-active-key="username" @change="handleTabChange">
-      <a-tab-pane key="username" title="账号登录">
+    <a-tabs default-active-key="idPassword" @change="handleTabChange">
+      <a-tab-pane key="idPassword" title="账号登录">
         <a-form
           size="large"
           :model="form"
@@ -100,10 +100,16 @@
 </template>
 
 <script setup lang="ts">
-  import { reactive } from 'vue';
+  import { reactive, ref } from 'vue';
   import { Message } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
+  import { useStorage } from '@vueuse/core';
+  import { useUserStore } from '@/store';
+  import { login as userLogin, LoginData } from '@/api/user';
 
+  const userStore = useUserStore();
+
+  const loginType = ref('idPassword');
   const form = reactive({
     username: '',
     email: '',
@@ -144,16 +150,28 @@
   /**
    * 切换Tab时清除共用字段
    */
-  const handleTabChange = () => {
+  const handleTabChange = (tabKey: string) => {
+    loginType.value = tabKey;
     form.captcha = '';
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     setLoading(true);
 
-    setTimeout(() => {
+    if (loginType.value === 'idPassword') {
+      useStorage('login-config', {
+        username: form.username,
+        password: form.password,
+      });
+    }
+    try {
+      const resp = await userLogin(loginType.value, form as LoginData);
+      console.log(resp.data.);
+    } catch (e) {
+      console.error(e);
+    } finally {
       setLoading(false);
-    }, 3000);
+    }
   };
 
   const thirdPartyLogin = (type: string) => {

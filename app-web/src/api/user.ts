@@ -1,21 +1,36 @@
-import axios from 'axios';
 import type { RouteRecordNormalized } from 'vue-router';
 import { UserState } from '@/store/modules/user/types';
+import axios, { AxiosResponse } from "axios";
 
 export interface LoginData {
   username: string;
-  password: string;
+  password?: string;
+  email?: string;
+  captcha: string;
 }
 
-export interface LoginRes {
+export interface LoginResult {
   token: string;
 }
-export function login(data: LoginData) {
-  return axios.post<LoginRes>('/api/user/login', data);
+
+type CustomAxiosResponse<T = unknown> = Omit<AxiosResponse<T>, 'data'>;
+
+export function login(
+  type: string,
+  data: LoginData
+): CustomAxiosResponse<LoginResult> {
+  switch (type) {
+    case 'idPassword':
+      return axios.post<LoginResult>('/auth/login', data);
+    // case 'email':
+    //   return axios.post<LoginRes>('/api/user/email', data);
+    default:
+      throw new Error('Invalid login type');
+  }
 }
 
 export function logout() {
-  return axios.post<LoginRes>('/api/user/logout');
+  return axios.post<LoginResult>('/api/user/logout');
 }
 
 export function getUserInfo() {

@@ -12,9 +12,12 @@ export interface HttpResponse<T = unknown> {
   timestamp: string;
 }
 
-if (import.meta.env.VITE_API_BASE_URL) {
-  axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL;
-}
+const axiosInstance = axios.create({
+  timeout: 10000,
+  baseURL: import.meta.env.VITE_API_BASE_URL
+    ? import.meta.env.VITE_API_BASE_URL
+    : '',
+});
 
 let errorHandler: (response: AxiosResponse<HttpResponse>) => void;
 
@@ -144,14 +147,16 @@ errorHandler = (response: AxiosResponse<HttpResponse>) => {
   }
 };
 
-axios.interceptors.request.use(
+axiosInstance.interceptors.request.use(
   // @ts-ignore
   requestInterceptor.onFulfilled,
   requestInterceptor.onRejected
 );
 
-axios.interceptors.response.use(
+axiosInstance.interceptors.response.use(
   // @ts-ignore
   responseInterceptor.onFulfilled,
   responseInterceptor.onRejected
 );
+
+export default axiosInstance;

@@ -2,6 +2,7 @@ export interface AnyObject {
   [key: string]: unknown;
 }
 
+// -------------------------- 以下为Arco Design Pro定义 --------------------------
 export interface Options {
   value: unknown;
   label: string;
