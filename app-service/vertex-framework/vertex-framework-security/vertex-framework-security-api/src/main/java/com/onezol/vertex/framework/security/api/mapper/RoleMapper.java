@@ -9,4 +9,5 @@ public interface RoleMapper extends BaseMapper<RoleEntity> {
 
     RoleEntity queryUserRole(long userId);
 
+    void removeUserRole(Long userId);
 }

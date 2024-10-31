@@ -134,16 +134,21 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
      * @param captcha  验证码
      */
     @Override
-    public UserAuthenticationVO loginByIdPassword(String username, String password, String captcha) throws RuntimeBizException {
+    public UserAuthenticationVO loginByIdPassword(String username, String password, String sessionId, String captcha) throws RuntimeBizException {
         // 参数校验
+        if (StringUtils.isBlank(sessionId)) {
+            throw new RuntimeBizException("会话ID不能为空");
+        }
         if (StringUtils.isAnyBlank(username, password)) {
             throw new RuntimeBizException("用户名或密码不能为空");
         }
 
-        // TODO: 验证码校验
-//        if (StringUtils.isBlank(captcha) || captcha.length() != 6) {
-//            throw new RuntimeBizException("验证码错误");
-//        }
+        // 校验验证码
+        String captchaRedisKey = RedisKeyHelper.buildRedisKey(RedisKey.CAPTCHA, sessionId);
+        String captchaInRedis = redisCache.getCacheObject(captchaRedisKey);
+        if (StringUtils.isBlank(captcha) || !captcha.equalsIgnoreCase(captchaInRedis)) {
+            throw new RuntimeBizException("验证码错误");
+        }
 
         // 调用SpringSecurity的AuthenticationManager处理登录验证
         Authentication authentication = new UsernamePasswordAuthenticationToken(username, password);
@@ -157,6 +162,8 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
                 case "LockedException" -> "账号已被锁定";
                 default -> ex.getMessage();
             };
+            // 登录失败时移除Redis中的验证码
+            redisCache.deleteObject(captchaRedisKey);
             throw new RuntimeBizException(message);
         }
 

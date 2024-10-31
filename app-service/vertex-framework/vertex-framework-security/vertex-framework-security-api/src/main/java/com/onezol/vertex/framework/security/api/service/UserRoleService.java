@@ -13,4 +13,10 @@ public interface UserRoleService extends BaseService<UserRoleEntity> {
      */
     RoleEntity getUserRole(Long userId);
 
+    /**
+     * 解绑用户角色
+     *
+     * @param userId 用户ID
+     */
+    void unbindUserRole(Long userId);
 }

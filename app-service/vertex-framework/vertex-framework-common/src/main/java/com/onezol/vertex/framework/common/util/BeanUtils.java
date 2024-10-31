@@ -1,10 +1,8 @@
 package com.onezol.vertex.framework.common.util;
 
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
 import org.modelmapper.convention.MatchingStrategies;
 
-import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -47,9 +45,7 @@ public class BeanUtils extends org.springframework.beans.BeanUtils {
             throw new IllegalArgumentException("Target type must not be null");
         }
 
-        Type targetCollectionType = new TypeToken<Collection<T>>() {
-        }.getType();
-        return modelMapper.map(source, targetCollectionType);
+        return source.stream().map(item -> modelMapper.map(item, targetType)).toList();
     }
 
 

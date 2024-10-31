@@ -116,8 +116,8 @@ CREATE TABLE IF NOT EXISTS vx_exception_log
     exception_method_name        VARCHAR(255) DEFAULT '' COMMENT '异常发生的方法名',
     exception_line_number        INT UNSIGNED COMMENT '异常发生的方法所在行',
     exception_stack_trace        TEXT COMMENT '异常的栈轨迹异常的栈轨迹',
-    exception_root_cause_message VARCHAR(255) DEFAULT '' COMMENT '异常导致的根消息',
-    exception_message            VARCHAR(255) DEFAULT '' COMMENT '异常导致的消息',
+    exception_root_cause_message TEXT DEFAULT '' COMMENT '异常导致的根消息',
+    exception_message            TEXT DEFAULT '' COMMENT '异常导致的消息',
     -- 自定义字段结束 --
     creator        BIGINT        DEFAULT NULL COMMENT '创建人',
     create_time    DATETIME      DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',

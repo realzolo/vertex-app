@@ -23,7 +23,7 @@ public abstract class BaseController<T> {
      * @param pageSize 每页显示条数
      * @return 分页对象
      */
-    protected IPage<T> getPage(Integer pageNumber, Integer pageSize) {
+    protected Page<T> getPage(Integer pageNumber, Integer pageSize) {
         if (Objects.isNull(pageNumber)) {
             pageNumber = 1;
         }

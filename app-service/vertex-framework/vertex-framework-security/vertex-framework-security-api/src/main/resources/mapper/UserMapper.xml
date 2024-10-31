@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onezol.vertex.framework.security.api.mapper.UserMapper">
+
+    <select id="queryUserPage" resultType="com.onezol.vertex.framework.security.api.model.entity.UserEntity">
+        SELECT
+            u.*
+        FROM
+            vx_user u
+        <where>
+            u.deleted = false
+            <if test="param != null">
+                <if test="param.id != null">
+                    AND u.id = #{param.id}
+                </if>
+                <if test="param.username != null and param.username != ''">
+                    AND u.username LIKE CONCAT('%', #{param.username}, '%')
+                </if>
+                <if test="param.nickname != null and param.nickname != ''">
+                    AND u.nickname LIKE CONCAT('%', #{nickname}, '%')
+                </if>
+                <if test="param.name != null and param.name != ''">
+                    AND u.name LIKE CONCAT('%', #{name}, '%')
+                </if>
+                <if test="param.gender != null">
+                    AND u.gender = #{gender}
+                </if>
+                <if test="param.email != null and param.email != ''">
+                    AND u.email LIKE CONCAT('%', #{email}, '%')
+                </if>
+                <if test="param.status != null">
+                    AND u.status = #{status}
+                </if>
+            </if>
+        </where>
+    </select>
+
+</mapper>

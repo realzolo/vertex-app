@@ -23,7 +23,7 @@ import java.util.Objects;
  * 初始化
  */
 @Slf4j
-@Component
+//@Component
 public class InitializationRunner implements ApplicationRunner {
 
     private final RoleService roleService;

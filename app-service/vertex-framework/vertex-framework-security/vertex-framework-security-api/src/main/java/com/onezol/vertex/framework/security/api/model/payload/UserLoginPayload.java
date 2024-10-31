@@ -10,16 +10,19 @@ import lombok.Data;
 @Data
 public class UserLoginPayload implements Payload {
 
-    @Schema(description = "用户名")
+    @Schema(name = "用户名")
     private String username;
 
-    @Schema(description = "密码")
+    @Schema(name = "密码")
     private String password;
 
-    @Schema(description = "邮箱")
+    @Schema(name = "邮箱")
     private String email;
 
-    @Schema(description = "验证码")
+    @Schema(name = "会话ID")
+    private String sessionId;
+
+    @Schema(name = "验证码")
     @NotBlank(message = "验证码不能为空")
     private String captcha;
 

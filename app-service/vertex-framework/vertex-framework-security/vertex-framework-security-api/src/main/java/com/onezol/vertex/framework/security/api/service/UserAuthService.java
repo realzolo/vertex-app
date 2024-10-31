@@ -5,8 +5,6 @@ import com.onezol.vertex.framework.security.api.model.entity.UserEntity;
 import com.onezol.vertex.framework.security.api.model.payload.UserRegistrationPayload;
 import com.onezol.vertex.framework.security.api.model.vo.UserAuthenticationVO;
 
-import java.util.Map;
-
 public interface UserAuthService extends BaseService<UserEntity> {
 
     /**
@@ -27,11 +25,12 @@ public interface UserAuthService extends BaseService<UserEntity> {
     /**
      * 用户登录(根据用户名)
      *
-     * @param username   用户名
-     * @param password   密码
-     * @param captcha 验证码
+     * @param username  用户名
+     * @param password  密码
+     * @param sessionId 会话ID
+     * @param captcha   验证码
      */
-    UserAuthenticationVO loginByIdPassword(String username, String password, String captcha);
+    UserAuthenticationVO loginByIdPassword(String username, String password, String sessionId, String captcha);
 
 
     /**

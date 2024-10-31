@@ -41,10 +41,13 @@ public class UserAuthController {
     @Operation(summary = "用户登录", description = "用户登录: 根据用户名密码")
     @PostMapping("/login")
     public GenericResponse<UserAuthenticationVO> loginByIdPassword(@RequestBody @Valid UserLoginPayload payload) {
+        if (StringUtils.isBlank(payload.getSessionId())) {
+            return ResponseHelper.buildFailedResponse(BizHttpStatus.BAD_REQUEST, "会话ID不能为空");
+        }
         if (StringUtils.isAnyBlank(payload.getUsername(), payload.getPassword())) {
             return ResponseHelper.buildFailedResponse(BizHttpStatus.BAD_REQUEST, "用户名或密码不能为空");
         }
-        UserAuthenticationVO userAuthenticationVO = userAuthService.loginByIdPassword(payload.getUsername(), payload.getPassword(), payload.getCaptcha());
+        UserAuthenticationVO userAuthenticationVO = userAuthService.loginByIdPassword(payload.getUsername(), payload.getPassword(), payload.getSessionId(), payload.getCaptcha());
 
         return Objects.nonNull(userAuthenticationVO) ?
                 ResponseHelper.buildSuccessfulResponse(userAuthenticationVO) :

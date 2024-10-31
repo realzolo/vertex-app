@@ -13,4 +13,9 @@ public record RedisKey() {
      * 用户信息
      */
     public static final String USER_INFO = "user:info:{userId}";
+
+    /**
+     * 验证码
+     */
+    public static final String CAPTCHA = "captcha:{uuid}";
 }
