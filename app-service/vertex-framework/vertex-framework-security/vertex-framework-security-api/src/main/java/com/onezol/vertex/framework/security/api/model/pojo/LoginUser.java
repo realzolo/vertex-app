@@ -2,7 +2,7 @@ package com.onezol.vertex.framework.security.api.model.pojo;
 
 import com.alibaba.fastjson2.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.onezol.vertex.framework.common.constant.enums.AccountStatus;
+import com.onezol.vertex.framework.common.constant.enumeration.AccountStatusEnum;
 import com.onezol.vertex.framework.common.model.LabelValue;
 import com.onezol.vertex.framework.common.util.BeanUtils;
 import com.onezol.vertex.framework.security.api.model.dto.User;
@@ -15,7 +15,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Data
 public class LoginUser implements UserDetails {
@@ -91,13 +90,13 @@ public class LoginUser implements UserDetails {
     @Override
     @JSONField(serialize = false)
     public boolean isAccountNonExpired() {
-        return !Integer.valueOf(AccountStatus.EXPIRED.getCode()).equals(details.getStatus());
+        return !AccountStatusEnum.EXPIRED.getValue().equals(details.getStatus());
     }
 
     @Override
     @JSONField(serialize = false)
     public boolean isAccountNonLocked() {
-        return !Integer.valueOf(AccountStatus.LOCKED.getCode()).equals(details.getStatus());
+        return !AccountStatusEnum.LOCKED.getValue().equals(details.getStatus());
     }
 
     @Override
@@ -110,7 +109,7 @@ public class LoginUser implements UserDetails {
     @Override
     @JSONField(serialize = false)
     public boolean isEnabled() {
-        return !Integer.valueOf(AccountStatus.DISABLED.getCode()).equals(details.getStatus());
+        return !AccountStatusEnum.DISABLED.getValue().equals(details.getStatus());
     }
 
     public void setRoles(List<LabelValue<String, String>> roles) {

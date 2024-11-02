@@ -1,7 +1,7 @@
 package com.onezol.vertex.framework.common.exception;
 
 
-import com.onezol.vertex.framework.common.constant.enums.BizHttpStatus;
+import com.onezol.vertex.framework.common.constant.enumeration.BizHttpStatusEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -16,28 +16,23 @@ import lombok.EqualsAndHashCode;
 public abstract class BusinessException extends RuntimeException {
 
     @Schema(description = "异常状态码", requiredMode = Schema.RequiredMode.REQUIRED)
-    private final int code;
+    private final Integer code;
 
     @Schema(description = "异常信息", requiredMode = Schema.RequiredMode.REQUIRED)
     private final String message;
 
-    public BusinessException() {
-        this.code = BizHttpStatus.INTERNAL_SERVER_ERROR.getCode();
-        this.message = BizHttpStatus.INTERNAL_SERVER_ERROR.getValue();
-    }
-
     public BusinessException(String message) {
-        this.code = BizHttpStatus.INTERNAL_SERVER_ERROR.getCode();
+        this.code = BizHttpStatusEnum.INTERNAL_SERVER_ERROR.getValue();
         this.message = message;
     }
 
-    public BusinessException(BizHttpStatus bizHttpStatus) {
-        this.code = bizHttpStatus.getCode();
-        this.message = bizHttpStatus.getValue();
+    public BusinessException(BizHttpStatusEnum bizHttpStatus) {
+        this.code = bizHttpStatus.getValue();
+        this.message = bizHttpStatus.getDescription();
     }
 
-    public BusinessException(BizHttpStatus bizHttpStatus, String message) {
-        this.code = bizHttpStatus.getCode();
+    public BusinessException(BizHttpStatusEnum bizHttpStatus, String message) {
+        this.code = bizHttpStatus.getValue();
         this.message = message;
     }
 

@@ -1,11 +1,11 @@
 package com.onezol.vertex.framework.security.biz.fillter;
 
-import com.onezol.vertex.framework.common.constant.RedisKey;
+import com.onezol.vertex.framework.common.constant.CacheKey;
 import com.onezol.vertex.framework.common.util.JwtUtils;
 import com.onezol.vertex.framework.common.util.StringUtils;
 import com.onezol.vertex.framework.security.api.model.pojo.LoginUser;
 import com.onezol.vertex.framework.support.cache.RedisCache;
-import com.onezol.vertex.framework.support.support.RedisKeyHelper;
+import com.onezol.vertex.framework.support.support.CacheKeyHelper;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -26,7 +26,7 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
-import static com.onezol.vertex.framework.common.constant.Constants.AUTHORIZATION_HEADER;
+import static com.onezol.vertex.framework.common.constant.GenericConstants.AUTHORIZATION_HEADER;
 
 
 /**
@@ -70,7 +70,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
             // 从Redis中获取用户信息, 并验证用户信息是否存在
             String subject = JwtUtils.getSubjectFromToken(token);
-            String redisKey = RedisKeyHelper.buildRedisKey(RedisKey.USER_INFO, subject);
+            String redisKey = CacheKeyHelper.buildCacheKey(CacheKey.USER_INFO, subject);
             LoginUser loginUser = redisCache.getCacheObject(redisKey);
             if (Objects.isNull(loginUser)) {
                 filterChain.doFilter(request, response);

@@ -11,7 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.stereotype.Component;
 
-import static com.onezol.vertex.framework.common.constant.Constants.AUTHORIZATION_HEADER;
+import static com.onezol.vertex.framework.common.constant.GenericConstants.AUTHORIZATION_HEADER;
 
 
 /**

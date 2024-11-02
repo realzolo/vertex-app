@@ -1,18 +1,22 @@
 package com.onezol.vertex.framework.common.exception;
 
-import com.onezol.vertex.framework.common.constant.enums.BizHttpStatus;
 
+import com.onezol.vertex.framework.common.constant.enumeration.BizHttpStatusEnum;
+
+/**
+ * 运行时业务异常（此异常会抛给前端）
+ */
 public class RuntimeBizException extends BusinessException {
 
     public RuntimeBizException(String message) {
         super(message);
     }
 
-    public RuntimeBizException(BizHttpStatus bizHttpStatus) {
+    public RuntimeBizException(BizHttpStatusEnum bizHttpStatus) {
         super(bizHttpStatus);
     }
 
-    public RuntimeBizException(BizHttpStatus bizHttpStatus, String message) {
+    public RuntimeBizException(BizHttpStatusEnum bizHttpStatus, String message) {
         super(bizHttpStatus, message);
     }
 

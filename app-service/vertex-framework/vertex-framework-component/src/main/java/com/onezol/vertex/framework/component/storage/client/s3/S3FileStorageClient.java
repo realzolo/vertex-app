@@ -13,8 +13,8 @@ import com.onezol.vertex.framework.component.storage.client.AbstractFileStorageC
 
 import java.io.ByteArrayInputStream;
 
-import static com.onezol.vertex.framework.common.constant.Constants.PROTOCOL_HTTP;
-import static com.onezol.vertex.framework.common.constant.Constants.PROTOCOL_HTTPS;
+import static com.onezol.vertex.framework.common.constant.GenericConstants.PROTOCOL_HTTP;
+import static com.onezol.vertex.framework.common.constant.GenericConstants.PROTOCOL_HTTPS;
 import static com.onezol.vertex.framework.component.storage.client.s3.S3FileStorageClientConfig.ENDPOINT_ALIYUN;
 import static com.onezol.vertex.framework.component.storage.client.s3.S3FileStorageClientConfig.ENDPOINT_TENCENT;
 

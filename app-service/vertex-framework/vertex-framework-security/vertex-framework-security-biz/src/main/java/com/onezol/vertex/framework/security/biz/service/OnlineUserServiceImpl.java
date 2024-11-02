@@ -1,13 +1,13 @@
 package com.onezol.vertex.framework.security.biz.service;
 
-import com.onezol.vertex.framework.common.constant.RedisKey;
+import com.onezol.vertex.framework.common.constant.CacheKey;
 import com.onezol.vertex.framework.common.util.LocalDateTimeUtils;
 import com.onezol.vertex.framework.security.api.model.dto.OnlineUser;
 import com.onezol.vertex.framework.security.api.model.dto.User;
 import com.onezol.vertex.framework.security.api.model.pojo.LoginUser;
 import com.onezol.vertex.framework.security.api.service.OnlineUserService;
 import com.onezol.vertex.framework.support.cache.RedisCache;
-import com.onezol.vertex.framework.support.support.RedisKeyHelper;
+import com.onezol.vertex.framework.support.support.CacheKeyHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -46,7 +46,7 @@ public class OnlineUserServiceImpl implements OnlineUserService {
         User user = loginUser.getDetails();
 
         // 存储用户信息
-        String infoKey = RedisKeyHelper.buildRedisKey(RedisKey.USER_INFO, String.valueOf(user.getId()));
+        String infoKey = CacheKeyHelper.buildCacheKey(CacheKey.USER_INFO, String.valueOf(user.getId()));
         redisCache.setCacheObject(infoKey, loginUser, expirationTime, TimeUnit.SECONDS);
     }
 
@@ -60,11 +60,11 @@ public class OnlineUserServiceImpl implements OnlineUserService {
         Assert.notNull(userId, "userId must not be null");
 
         // 移除用户Token
-        String tokenKey = RedisKeyHelper.buildRedisKey(RedisKey.USER_TOKEN, String.valueOf(userId));
+        String tokenKey = CacheKeyHelper.buildCacheKey(CacheKey.USER_TOKEN, String.valueOf(userId));
         redisCache.deleteObject(tokenKey);
 
         // 移除用户信息
-        String infoKey = RedisKeyHelper.buildRedisKey(RedisKey.USER_INFO, String.valueOf(userId));
+        String infoKey = CacheKeyHelper.buildCacheKey(CacheKey.USER_INFO, String.valueOf(userId));
         redisCache.deleteZSet(infoKey);
     }
 
@@ -81,7 +81,7 @@ public class OnlineUserServiceImpl implements OnlineUserService {
         int endIndex = pageNumber * pageSize - 1;
 
         // 获取在线用户ID集合
-        Collection<String> keys = redisCache.keys(RedisKeyHelper.getWildcardKey(RedisKey.USER_TOKEN));
+        Collection<String> keys = redisCache.keys(CacheKeyHelper.getWildcardKey(CacheKey.USER_TOKEN));
         if (keys == null || keys.isEmpty()) {
             return Collections.emptyList();
         }
@@ -124,7 +124,7 @@ public class OnlineUserServiceImpl implements OnlineUserService {
      */
     @Override
     public Long getOnlineUserCount() {
-        Collection<String> keys = redisCache.keys(RedisKeyHelper.getWildcardKey(RedisKey.USER_TOKEN));
+        Collection<String> keys = redisCache.keys(CacheKeyHelper.getWildcardKey(CacheKey.USER_TOKEN));
         return (long) keys.size();
     }
 

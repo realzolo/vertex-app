@@ -1,7 +1,7 @@
 package com.onezol.vertex.framework.security.api.exception;
 
 
-import com.onezol.vertex.framework.common.constant.enums.BizHttpStatus;
+import com.onezol.vertex.framework.common.constant.enumeration.BizHttpStatusEnum;
 import com.onezol.vertex.framework.common.exception.BusinessException;
 
 /**
@@ -10,11 +10,11 @@ import com.onezol.vertex.framework.common.exception.BusinessException;
 public class AuthenticationException extends BusinessException {
 
     public AuthenticationException() {
-        super(BizHttpStatus.UNAUTHORIZED, BizHttpStatus.UNAUTHORIZED.getValue());
+        super(BizHttpStatusEnum.UNAUTHORIZED);
     }
 
     public AuthenticationException(String message) {
-        super(BizHttpStatus.UNAUTHORIZED, message);
+        super(BizHttpStatusEnum.UNAUTHORIZED, message);
     }
 
 }

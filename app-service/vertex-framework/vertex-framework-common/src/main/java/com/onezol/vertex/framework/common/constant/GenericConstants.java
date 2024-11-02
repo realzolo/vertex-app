@@ -4,7 +4,7 @@ package com.onezol.vertex.framework.common.constant;
  * 常量类
  */
 @SuppressWarnings("ALL")
-public record Constants() {
+public record GenericConstants() {
 
     /**
      * http协议

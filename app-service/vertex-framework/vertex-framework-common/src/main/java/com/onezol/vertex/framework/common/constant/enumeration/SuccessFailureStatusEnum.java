@@ -14,47 +14,35 @@
  * limitations under the License.
  */
 
-package com.onezol.vertex.framework.common.constant.enums;
+package com.onezol.vertex.framework.common.constant.enumeration;
 
-import com.onezol.vertex.framework.common.constant.BaseEnum;
+import com.baomidou.mybatisplus.annotation.EnumValue;
+import com.onezol.vertex.framework.common.constant.UiConstants;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 /**
- * 数据权限枚举
- *
- * @author Charles7c
- * @since 2023/2/8 22:58
+ * 成功/失败状态枚举
  */
 @Getter
 @RequiredArgsConstructor
-public enum DataScopeEnum implements BaseEnum<Integer> {
+public enum SuccessFailureStatusEnum implements Enumeration<String> {
 
     /**
-     * 全部数据权限
+     * 成功
      */
-    ALL(1, "全部数据权限"),
+    SUCCESS("成功", "SUCCESS", UiConstants.COLOR_SUCCESS),
 
     /**
-     * 本部门及以下数据权限
+     * 失败
      */
-    DEPT_AND_CHILD(2, "本部门及以下数据权限"),
+    FAILURE("失败", "FAILURE", UiConstants.COLOR_ERROR);
 
-    /**
-     * 本部门数据权限
-     */
-    DEPT(3, "本部门数据权限"),
 
-    /**
-     * 仅本人数据权限
-     */
-    SELF(4, "仅本人数据权限"),
+    private final String name;
 
-    /**
-     * 自定义数据权限
-     */
-    CUSTOM(5, "自定义数据权限"),;
+    @EnumValue
+    private final String value;
 
-    private final Integer value;
-    private final String description;
+    private final String color;
 }

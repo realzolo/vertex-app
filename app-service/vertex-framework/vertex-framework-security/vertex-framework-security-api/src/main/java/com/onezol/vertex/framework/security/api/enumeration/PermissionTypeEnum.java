@@ -14,34 +14,40 @@
  * limitations under the License.
  */
 
-package com.onezol.vertex.framework.common.constant.enums;
+package com.onezol.vertex.framework.security.api.enumeration;
 
-import com.onezol.vertex.framework.common.constant.BaseEnum;
-import com.onezol.vertex.framework.common.constant.UiConstants;
+import com.baomidou.mybatisplus.annotation.EnumValue;
+import com.onezol.vertex.framework.common.constant.enumeration.Enumeration;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 /**
- * 成功/失败状态枚举
+ * 菜单类型枚举
  *
  * @author Charles7c
- * @since 2023/2/26 21:35
+ * @since 2023/2/15 20:12
  */
 @Getter
 @RequiredArgsConstructor
-public enum SuccessFailureStatusEnum implements BaseEnum<Integer> {
+public enum PermissionTypeEnum implements Enumeration<Integer> {
 
     /**
-     * 成功
+     * 目录
      */
-    SUCCESS(1, "成功", UiConstants.COLOR_SUCCESS),
+    DIR("目录", 1),
 
     /**
-     * 失败
+     * 菜单
      */
-    FAILURE(2, "失败", UiConstants.COLOR_ERROR),;
+    MENU("菜单", 2),
 
+    /**
+     * 按钮
+     */
+    BUTTON("按钮/权限", 3);
+
+    private final String name;
+
+    @EnumValue
     private final Integer value;
-    private final String description;
-    private final String color;
 }

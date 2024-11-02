@@ -14,37 +14,37 @@
  * limitations under the License.
  */
 
-package com.onezol.vertex.framework.common.constant.enums;
+package com.onezol.vertex.framework.common.constant.enumeration;
 
-import com.onezol.vertex.framework.common.constant.BaseEnum;
+import com.baomidou.mybatisplus.annotation.EnumValue;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 /**
  * 性别枚举
- *
- * @author Charles7c
- * @since 2022/12/29 21:59
  */
 @Getter
 @RequiredArgsConstructor
-public enum GenderEnum implements BaseEnum<Integer> {
+public enum GenderEnum implements Enumeration<Integer> {
 
     /**
      * 未知
      */
-    UNKNOWN(0, "未知"),
+    UNKNOWN("未知", 0),
 
     /**
      * 男
      */
-    MALE(1, "男"),
+    MALE("男", 1),
 
     /**
      * 女
      */
-    FEMALE(2, "女"),;
+    FEMALE("女", 2);
 
+
+    private final String name;
+
+    @EnumValue
     private final Integer value;
-    private final String description;
 }

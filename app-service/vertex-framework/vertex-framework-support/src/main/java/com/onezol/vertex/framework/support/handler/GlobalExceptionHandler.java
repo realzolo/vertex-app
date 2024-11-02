@@ -3,13 +3,13 @@ package com.onezol.vertex.framework.support.handler;
 import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.extension.toolkit.Db;
 import com.onezol.vertex.framework.common.bean.AuthenticationContext;
-import com.onezol.vertex.framework.common.constant.enums.BizHttpStatus;
+import com.onezol.vertex.framework.common.constant.enumeration.BizHttpStatusEnum;
 import com.onezol.vertex.framework.common.exception.BusinessException;
 import com.onezol.vertex.framework.common.helper.ResponseHelper;
-import com.onezol.vertex.framework.common.model.entity.ExceptionLogEntity;
 import com.onezol.vertex.framework.common.model.AuthUser;
 import com.onezol.vertex.framework.common.model.GenericResponse;
 import com.onezol.vertex.framework.common.model.SharedHttpServletRequest;
+import com.onezol.vertex.framework.common.model.entity.ExceptionLogEntity;
 import com.onezol.vertex.framework.common.util.JsonUtils;
 import com.onezol.vertex.framework.support.manager.async.AsyncTaskManager;
 import jakarta.servlet.http.HttpServletRequest;
@@ -44,7 +44,7 @@ public class GlobalExceptionHandler {
         if (Objects.nonNull(fieldError)) {
             message = fieldError.getDefaultMessage();
         }
-        return ResponseHelper.buildFailedResponse(BizHttpStatus.BAD_REQUEST, message);
+        return ResponseHelper.buildFailedResponse(BizHttpStatusEnum.BAD_REQUEST, message);
     }
 
     /**
@@ -62,7 +62,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = NullPointerException.class)
     public GenericResponse<?> handleNullPointerException(HttpServletRequest req, NullPointerException ex) {
         log.error(ex.getMessage(), ex);
-        return ResponseHelper.buildFailedResponse(BizHttpStatus.INTERNAL_SERVER_ERROR, "系统内部错误，请联系管理员！");
+        return ResponseHelper.buildFailedResponse(BizHttpStatusEnum.INTERNAL_SERVER_ERROR, "系统内部错误，请联系管理员！");
     }
 
     /**
@@ -82,7 +82,7 @@ public class GlobalExceptionHandler {
         // API异常日志持久化
         SharedHttpServletRequest request = SharedHttpServletRequest.of(req);
         AsyncTaskManager.getInstance().execute(() -> this.createExceptionLog(request, ex));
-        return ResponseHelper.buildFailedResponse(BizHttpStatus.INTERNAL_SERVER_ERROR.getCode(), ex.getMessage());
+        return ResponseHelper.buildFailedResponse(BizHttpStatusEnum.INTERNAL_SERVER_ERROR.getValue(), ex.getMessage());
     }
 
     /**

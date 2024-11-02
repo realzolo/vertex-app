@@ -2,8 +2,8 @@ package com.onezol.vertex.framework.security.biz.service;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.onezol.vertex.framework.common.bean.AuthenticationContext;
-import com.onezol.vertex.framework.common.constant.RedisKey;
-import com.onezol.vertex.framework.common.constant.enums.UserGender;
+import com.onezol.vertex.framework.common.constant.CacheKey;
+import com.onezol.vertex.framework.common.constant.enumeration.GenderEnum;
 import com.onezol.vertex.framework.common.exception.RuntimeBizException;
 import com.onezol.vertex.framework.common.model.AuthUser;
 import com.onezol.vertex.framework.common.mvc.service.BaseServiceImpl;
@@ -17,7 +17,7 @@ import com.onezol.vertex.framework.security.api.model.vo.UserAuthenticationVO;
 import com.onezol.vertex.framework.security.api.service.OnlineUserService;
 import com.onezol.vertex.framework.security.api.service.UserAuthService;
 import com.onezol.vertex.framework.support.cache.RedisCache;
-import com.onezol.vertex.framework.support.support.RedisKeyHelper;
+import com.onezol.vertex.framework.support.support.CacheKeyHelper;
 import eu.bitwalker.useragentutils.UserAgent;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -144,7 +144,7 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
         }
 
         // 校验验证码
-        String captchaRedisKey = RedisKeyHelper.buildRedisKey(RedisKey.CAPTCHA, sessionId);
+        String captchaRedisKey = CacheKeyHelper.buildCacheKey(CacheKey.CAPTCHA, sessionId);
         String captchaInRedis = redisCache.getCacheObject(captchaRedisKey);
         if (StringUtils.isBlank(captcha) || !captcha.equalsIgnoreCase(captchaInRedis)) {
             throw new RuntimeBizException("验证码错误");
@@ -193,10 +193,10 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
     public void logout() {
         AuthUser authUser = AuthenticationContext.get();
         // 移除用户Token
-        String tokenKey = RedisKeyHelper.buildRedisKey(RedisKey.USER_TOKEN, String.valueOf(authUser.getUserId()));
+        String tokenKey = CacheKeyHelper.buildCacheKey(CacheKey.USER_TOKEN, String.valueOf(authUser.getUserId()));
         redisCache.deleteObject(tokenKey);
         // 移除用户信息
-        String infoKey = RedisKeyHelper.buildRedisKey(RedisKey.USER_INFO, String.valueOf(authUser.getUserId()));
+        String infoKey = CacheKeyHelper.buildCacheKey(CacheKey.USER_INFO, String.valueOf(authUser.getUserId()));
         redisCache.deleteObject(infoKey);
     }
 
@@ -215,7 +215,7 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
         String token = JwtUtils.generateToken(subject);
 
         // Redis存储用户Token
-        String tokenKey = RedisKeyHelper.buildRedisKey(RedisKey.USER_TOKEN, subject);
+        String tokenKey = CacheKeyHelper.buildCacheKey(CacheKey.USER_TOKEN, subject);
         redisCache.setCacheObject(tokenKey, token, expirationTime, TimeUnit.SECONDS);
 
         // Redis存储用户信息
@@ -247,7 +247,7 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
         entity.setName("张三");
         entity.setIntroduction("");
         entity.setAvatar("");
-        entity.setGender(UserGender.MALE.getCode());
+        entity.setGender(GenderEnum.MALE.getValue());
         entity.setBirthday(LocalDate.now());
         entity.setPhone("");
         entity.setEmail("");

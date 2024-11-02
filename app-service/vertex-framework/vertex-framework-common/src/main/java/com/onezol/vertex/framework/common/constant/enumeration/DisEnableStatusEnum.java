@@ -14,36 +14,36 @@
  * limitations under the License.
  */
 
-package com.onezol.vertex.framework.common.constant.enums;
+package com.onezol.vertex.framework.common.constant.enumeration;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
-import com.onezol.vertex.framework.common.constant.BaseEnum;
 import com.onezol.vertex.framework.common.constant.UiConstants;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 /**
  * 启用/禁用状态枚举
- *
- * @author Charles7c
- * @since 2022/12/29 22:38
  */
 @Getter
 @RequiredArgsConstructor
-public enum DisEnableStatusEnum implements BaseEnum<Integer> {
-
-    /**
-     * 启用
-     */
-    ENABLE(0, "启用", UiConstants.COLOR_SUCCESS),
+public enum DisEnableStatusEnum implements Enumeration<Integer> {
 
     /**
      * 禁用
      */
-    DISABLE(1, "禁用", UiConstants.COLOR_ERROR),;
+    DISABLE("禁用", 0, UiConstants.COLOR_ERROR),
+
+    /**
+     * 启用
+     */
+    ENABLE("启用", 1, UiConstants.COLOR_SUCCESS);
+
+
+    private final String name;
 
     @EnumValue
     private final Integer value;
-    private final String description;
+
+
     private final String color;
 }

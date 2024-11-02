@@ -2,25 +2,25 @@ package com.onezol.vertex.framework.support.support;
 
 import java.util.Objects;
 
-public final class RedisKeyHelper {
+public final class CacheKeyHelper {
 
     /**
-     * 生成Redis Key
+     * 生成缓存 Key
      *
      * @param templateKey 模板Key，形如 "user:token:{userId}"
      * @param args        参数
-     * @return 生成的Redis Key
+     * @return 生成的Cache Key
      */
-    public static String buildRedisKey(String templateKey, String... args) {
+    public static String buildCacheKey(String templateKey, String... args) {
         for (String arg : args) {
             String placeholderString = getNextPlaceholderString(templateKey);
             if (Objects.isNull(placeholderString)) {
-                throw new IllegalArgumentException("生成Redis Key失败！参数数量大于参数占位符数量");
+                throw new IllegalArgumentException("生成Cache Key失败！参数数量大于参数占位符数量");
             }
             templateKey = templateKey.replace(placeholderString, arg);
         }
         if (templateKey.indexOf('{') != -1) {
-            throw new IllegalArgumentException("生成Redis Key失败！参数占位符数量大于参数数量");
+            throw new IllegalArgumentException("生成Cache Key失败！参数占位符数量大于参数数量");
         }
         return templateKey;
     }
@@ -33,7 +33,7 @@ public final class RedisKeyHelper {
     /**
      * 获取下一个占位符
      *
-     * @param templateKey Redis模板Key
+     * @param templateKey 缓存模板Key
      */
     private static String getNextPlaceholderString(String templateKey) {
         int startIndex = templateKey.indexOf('{');

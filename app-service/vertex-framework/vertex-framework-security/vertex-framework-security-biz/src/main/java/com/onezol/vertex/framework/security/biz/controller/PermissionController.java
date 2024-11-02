@@ -1,17 +1,14 @@
 package com.onezol.vertex.framework.security.biz.controller;
 
-import com.onezol.vertex.framework.common.constant.enums.DisEnableStatusEnum;
-import com.onezol.vertex.framework.common.constant.enums.Enum;
+import com.onezol.vertex.framework.common.constant.enumeration.DisEnableStatusEnum;
 import com.onezol.vertex.framework.common.helper.ResponseHelper;
 import com.onezol.vertex.framework.common.model.GenericResponse;
 import com.onezol.vertex.framework.common.model.TreeNode;
 import com.onezol.vertex.framework.common.util.BeanUtils;
-import com.onezol.vertex.framework.security.api.enumeration.MenuTypeEnum;
 import com.onezol.vertex.framework.security.api.model.dto.Permission;
 import com.onezol.vertex.framework.security.api.model.entity.PermissionEntity;
 import com.onezol.vertex.framework.security.api.service.PermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;

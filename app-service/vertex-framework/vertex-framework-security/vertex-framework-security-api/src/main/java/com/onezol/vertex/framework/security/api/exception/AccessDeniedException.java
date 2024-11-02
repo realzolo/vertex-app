@@ -1,6 +1,6 @@
 package com.onezol.vertex.framework.security.api.exception;
 
-import com.onezol.vertex.framework.common.constant.enums.BizHttpStatus;
+import com.onezol.vertex.framework.common.constant.enumeration.BizHttpStatusEnum;
 import com.onezol.vertex.framework.common.exception.BusinessException;
 
 /**
@@ -9,11 +9,11 @@ import com.onezol.vertex.framework.common.exception.BusinessException;
 public class AccessDeniedException extends BusinessException {
 
     public AccessDeniedException() {
-        super(BizHttpStatus.FORBIDDEN, BizHttpStatus.FORBIDDEN.getValue());
+        super(BizHttpStatusEnum.FORBIDDEN);
     }
 
     public AccessDeniedException(String message) {
-        super(BizHttpStatus.FORBIDDEN, message);
+        super(BizHttpStatusEnum.FORBIDDEN, message);
     }
 
 }

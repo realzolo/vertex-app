@@ -1,7 +1,7 @@
 package com.onezol.vertex.framework.security.biz.runner;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.onezol.vertex.framework.common.constant.enums.UserGender;
+import com.onezol.vertex.framework.common.constant.enumeration.GenderEnum;
 import com.onezol.vertex.framework.security.api.model.entity.RoleEntity;
 import com.onezol.vertex.framework.security.api.model.entity.RolePermissionEntity;
 import com.onezol.vertex.framework.security.api.model.entity.UserEntity;
@@ -14,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.util.Objects;
@@ -163,7 +162,7 @@ public class InitializationRunner implements ApplicationRunner {
         user.setName(nickname);
         user.setIntroduction("");
         user.setAvatar("");
-        user.setGender(UserGender.MALE.getCode());
+        user.setGender(GenderEnum.MALE.getValue());
         user.setBirthday(LocalDate.now());
         user.setPhone("");
         user.setEmail("");

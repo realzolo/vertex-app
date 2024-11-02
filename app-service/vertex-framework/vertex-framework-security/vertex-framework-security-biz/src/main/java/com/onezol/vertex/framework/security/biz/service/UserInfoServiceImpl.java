@@ -1,7 +1,7 @@
 package com.onezol.vertex.framework.security.biz.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.onezol.vertex.framework.common.constant.RedisKey;
+import com.onezol.vertex.framework.common.constant.CacheKey;
 import com.onezol.vertex.framework.common.exception.RuntimeBizException;
 import com.onezol.vertex.framework.common.model.LabelValue;
 import com.onezol.vertex.framework.common.model.PlainPage;
@@ -17,7 +17,7 @@ import com.onezol.vertex.framework.security.api.service.RolePermissionService;
 import com.onezol.vertex.framework.security.api.service.UserInfoService;
 import com.onezol.vertex.framework.security.api.service.UserRoleService;
 import com.onezol.vertex.framework.support.cache.RedisCache;
-import com.onezol.vertex.framework.support.support.RedisKeyHelper;
+import com.onezol.vertex.framework.support.support.CacheKeyHelper;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -121,10 +121,10 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
 
         // 删除Redis相关缓存
         // 1. 删除用户Token缓存
-        String userTokenRedisKey = RedisKeyHelper.buildRedisKey(RedisKey.USER_TOKEN, String.valueOf(userId));
+        String userTokenRedisKey = CacheKeyHelper.buildCacheKey(CacheKey.USER_TOKEN, String.valueOf(userId));
         redisCache.deleteObject(userTokenRedisKey);
         // 2. 删除用户信息缓存
-        String userInfoRedisKey = RedisKeyHelper.buildRedisKey(RedisKey.USER_INFO, String.valueOf(userId));
+        String userInfoRedisKey = CacheKeyHelper.buildCacheKey(CacheKey.USER_INFO, String.valueOf(userId));
         redisCache.deleteObject(userInfoRedisKey);
     }
 

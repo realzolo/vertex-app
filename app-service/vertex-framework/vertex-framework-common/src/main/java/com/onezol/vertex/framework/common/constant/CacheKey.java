@@ -1,9 +1,9 @@
 package com.onezol.vertex.framework.common.constant;
 
 /**
- * Redis常量
+ * 缓存Key常量模板
  */
-public record RedisKey() {
+public record CacheKey() {
     /**
      * 用户Token
      */
@@ -18,4 +18,9 @@ public record RedisKey() {
      * 验证码
      */
     public static final String CAPTCHA = "captcha:{uuid}";
+
+    /**
+     * 字典
+     */
+    public static final String DICTIONARY = "dictionary";
 }
