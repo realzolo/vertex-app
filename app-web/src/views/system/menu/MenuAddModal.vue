@@ -106,8 +106,8 @@
         <a-switch
           v-model="form.status"
           type="round"
-          :checked-value="1"
-          :unchecked-value="2"
+          :checked-value="0"
+          :unchecked-value="1"
           checked-text="启用"
           unchecked-text="禁用"
         />
@@ -137,10 +137,10 @@ const emit = defineEmits<{
 // 转换为菜单树
 const menuSelectTree = computed(() => {
   const menus = JSON.parse(JSON.stringify(props.menus)) as MenuResp[]
-  const data = filterTree(menus, (i) => [1, 2].includes(i.type))
+  const data = filterTree(menus, (i) => [1, 2].includes(i.data.type))
   return mapTree(data, (i) => ({
     key: i.id,
-    title: i.title,
+    title: i.name,
     children: i.children,
   }))
 })
@@ -153,7 +153,7 @@ const filterOptions = (searchKey: string, nodeData: TreeNodeData) => {
   return false
 }
 
-const dataId = ref('')
+const dataId = ref()
 const isUpdate = computed(() => !!dataId.value)
 const title = computed(() => (isUpdate.value ? '修改菜单' : '新增菜单'))
 const formRef = ref<FormInstance>()
@@ -205,15 +205,15 @@ const reset = () => {
 
 const visible = ref(false)
 // 新增
-const onAdd = (id?: string) => {
+const onAdd = (id?: number) => {
   reset()
   form.parentId = id
-  dataId.value = ''
+  dataId.value = null
   visible.value = true
 }
 
 // 修改
-const onUpdate = async (id: string) => {
+const onUpdate = async (id: number) => {
   reset()
   dataId.value = id
   const res = await getMenu(id)

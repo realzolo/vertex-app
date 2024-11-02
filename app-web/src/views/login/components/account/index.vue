@@ -42,15 +42,15 @@ import { encryptByRsa } from '@/utils/encrypt'
 const loginConfig = useStorage('login-config', {
   rememberMe: true,
   username: 'admin', // 演示默认值
-  password: 'admin123', // 演示默认值
+  password: 'admin', // 演示默认值
   // username: debug ? 'admin' : '', // 演示默认值
   // password: debug ? 'admin123' : '', // 演示默认值
 })
 
 const formRef = ref<FormInstance>()
 const form = reactive({
-  username: loginConfig.value.username,
-  password: loginConfig.value.password,
+  username: loginConfig.value.username || 'admin',
+  password: loginConfig.value.password || 'admin',
   captcha: '',
   uuid: '',
   expired: false,
@@ -87,11 +87,11 @@ const captchaImgBase64 = ref()
 // 获取验证码
 const getCaptcha = () => {
   getImageCaptcha().then((res) => {
-    const { uuid, img, expireTime } = res.data
+    const { uuid, image, expires } = res.data
     form.uuid = uuid
-    captchaImgBase64.value = img
+    captchaImgBase64.value = image
     form.expired = false
-    startTimer(expireTime)
+    startTimer(Date.now() + expires * 1000)
   })
 }
 
@@ -107,7 +107,8 @@ const handleLogin = async () => {
     loading.value = true
     await userStore.accountLogin({
       username: form.username,
-      password: encryptByRsa(form.password) || '',
+      // password: encryptByRsa(form.password) || '',
+      password: form.password || '',
       captcha: form.captcha,
       uuid: form.uuid,
     })

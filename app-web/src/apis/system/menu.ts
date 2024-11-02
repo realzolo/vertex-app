@@ -7,25 +7,25 @@ const BASE_URL = '/system/menu'
 
 /** @desc 查询菜单列表 */
 export function listMenu(query: T.MenuQuery) {
-  return http.get<T.MenuResp[]>(`${BASE_URL}/tree`, query)
+  return http.get<T.MenuResp[]>(`/permission/tree`, query)
 }
 
 /** @desc 查询菜单详情 */
-export function getMenu(id: string) {
-  return http.get<T.MenuResp>(`${BASE_URL}/${id}`)
+export function getMenu(id: number) {
+  return http.get<T.MenuResp>(`/permission/${id}`)
 }
 
 /** @desc 新增菜单 */
 export function addMenu(data: any) {
-  return http.post<boolean>(`${BASE_URL}`, data)
+  return http.post<boolean>(`/permission/add`, data)
 }
 
 /** @desc 修改菜单 */
-export function updateMenu(data: any, id: string) {
-  return http.put(`${BASE_URL}/${id}`, data)
+export function updateMenu(data: any, id: number) {
+  return http.put(`/permission/${id}`, data)
 }
 
 /** @desc 删除菜单 */
-export function deleteMenu(id: string) {
-  return http.del(`${BASE_URL}/${id}`)
+export function deleteMenu(id: number) {
+  return http.del(`/permission/${id}`)
 }

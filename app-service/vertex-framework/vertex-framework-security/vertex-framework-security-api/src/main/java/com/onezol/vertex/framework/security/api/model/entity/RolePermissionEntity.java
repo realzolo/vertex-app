@@ -17,8 +17,8 @@ public class RolePermissionEntity extends BaseEntity {
     @TableField("role_id")
     private Long roleId;
 
-    @Schema(description = "权限字符串")
-    @TableField("permissions")
-    private String permissions;
+    @Schema(description = "权限ID")
+    @TableField("permission_id")
+    private Long permissionId;
 
 }

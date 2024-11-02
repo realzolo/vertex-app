@@ -7,7 +7,7 @@ const BASE_URL = '/system/user'
 
 /** @desc 查询用户列表 */
 export function listUser(query: T.UserPageQuery) {
-  return http.get<PageRes<T.UserResp[]>>(`${BASE_URL}`, query)
+  return http.get<PageRes<T.UserResp[]>>(`/user/page`, query)
 }
 export function listAllUser(query: Partial<T.UserPageQuery>) {
   return http.get<T.UserResp[]>(`${BASE_URL}/list`, query)
@@ -15,7 +15,7 @@ export function listAllUser(query: Partial<T.UserPageQuery>) {
 
 /** @desc 查询用户详情 */
 export function getUser(id: string) {
-  return http.get<T.UserDetailResp>(`${BASE_URL}/${id}`)
+  return http.get<T.UserDetailResp>(`/user/${id}`)
 }
 
 /** @desc 新增用户 */
@@ -25,7 +25,7 @@ export function addUser(data: any) {
 
 /** @desc 修改用户 */
 export function updateUser(data: any, id: string) {
-  return http.put(`${BASE_URL}/${id}`, data)
+  return http.put(`/user/${id}`, data)
 }
 
 /** @desc 删除用户 */

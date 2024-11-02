@@ -35,8 +35,8 @@ public class CaptchaController {
         long expires = TimeUnit.MINUTES.toSeconds(60);
 
         Map<String, Object> result = Map.of(
-                "img", captcha.toBase64(),
-                "key", uuid,
+                "uuid", uuid,
+                "image", captcha.toBase64(),
                 "expires", expires
         );
         return ResponseHelper.buildSuccessfulResponse(result);

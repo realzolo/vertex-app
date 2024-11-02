@@ -22,32 +22,32 @@
     >
       <a-descriptions-item :span="2">
         <a-tree
-          :checked-keys="dataDetail?.menuIds"
+          :checked-keys="dataDetail?.permissionIds"
           :data="menuList"
           default-expand-all
           check-strictly
-          checkable
+          :checkable="false"
         />
       </a-descriptions-item>
     </a-descriptions>
-    <a-descriptions
-      v-if="dataDetail?.dataScope === 5"
-      title="数据权限"
-      :column="2"
-      size="large"
-      class="general-description"
-      style="margin-top: 20px; position: relative"
-    >
-      <a-descriptions-item :span="2">
-        <a-tree
-          :checked-keys="dataDetail?.deptIds"
-          :data="deptList"
-          default-expand-all
-          check-strictly
-          checkable
-        />
-      </a-descriptions-item>
-    </a-descriptions>
+<!--    <a-descriptions-->
+<!--      v-if="dataDetail?.dataScope === 5"-->
+<!--      title="数据权限"-->
+<!--      :column="2"-->
+<!--      size="large"-->
+<!--      class="general-description"-->
+<!--      style="margin-top: 20px; position: relative"-->
+<!--    >-->
+<!--      <a-descriptions-item :span="2">-->
+<!--        <a-tree-->
+<!--          :checked-keys="dataDetail?.deptIds"-->
+<!--          :data="deptList"-->
+<!--          default-expand-all-->
+<!--          check-strictly-->
+<!--          checkable-->
+<!--        />-->
+<!--      </a-descriptions-item>-->
+<!--    </a-descriptions>-->
   </a-drawer>
 </template>
 
@@ -75,9 +75,9 @@ const onDetail = async (id: string) => {
   if (!menuList.value.length) {
     await getMenuList()
   }
-  if (!deptList.value.length) {
-    await getDeptList()
-  }
+  // if (!deptList.value.length) {
+  //   await getDeptList()
+  // }
   dataId.value = id
   await getDataDetail()
   visible.value = true

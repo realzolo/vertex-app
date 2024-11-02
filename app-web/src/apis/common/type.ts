@@ -1,8 +1,8 @@
 /** 图形验证码类型 */
 export interface ImageCaptchaResp {
   uuid: string
-  img: string
-  expireTime: number
+  image: string
+  expires: number
 }
 
 /** 仪表盘公告类型 */

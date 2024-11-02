@@ -44,29 +44,29 @@
         <span style="margin-left: 5px; vertical-align: middle">{{ record.title }}</span>
       </template>
       <template #type="{ record }">
-        <a-tag v-if="record.type === 1" color="arcoblue">目录</a-tag>
-        <a-tag v-if="record.type === 2" color="green">菜单</a-tag>
-        <a-tag v-if="record.type === 3">按钮</a-tag>
+        <a-tag v-if="record.data.type === 1" color="arcoblue">目录</a-tag>
+        <a-tag v-if="record.data.type === 2" color="green">菜单</a-tag>
+        <a-tag v-if="record.data.type === 3">按钮</a-tag>
       </template>
       <template #status="{ record }">
-        <GiCellStatus :status="record.status" />
+        <GiCellStatus :status="record.data.status" />
       </template>
       <template #isExternal="{ record }">
-        <a-tag v-if="record.isExternal" color="arcoblue" size="small">是</a-tag>
+        <a-tag v-if="record.data.isExternal" color="arcoblue" size="small">是</a-tag>
         <a-tag v-else color="red" size="small">否</a-tag>
       </template>
       <template #isHidden="{ record }">
-        <a-tag v-if="record.isHidden" color="arcoblue" size="small">是</a-tag>
+        <a-tag v-if="record.data.isHidden" color="arcoblue" size="small">是</a-tag>
         <a-tag v-else color="red" size="small">否</a-tag>
       </template>
       <template #isCache="{ record }">
-        <a-tag v-if="record.isCache" color="arcoblue" size="small">是</a-tag>
+        <a-tag v-if="record.data.isCache" color="arcoblue" size="small">是</a-tag>
         <a-tag v-else color="red" size="small">否</a-tag>
       </template>
       <template #action="{ record }">
         <a-space>
           <a-link v-permission="['system:menu:update']" @click="onUpdate(record)">修改</a-link>
-          <a-link v-permission="['system:menu:add']" :disabled="![1, 2].includes(record.type)" @click="onAdd(record.id)">
+          <a-link v-permission="['system:menu:add']" :disabled="![1, 2].includes(record.data.type)" @click="onAdd(record.id)">
             新增
           </a-link>
           <a-link v-permission="['system:menu:delete']" status="danger" @click="onDelete(record)">删除</a-link>
@@ -130,15 +130,15 @@ const columns: TableInstanceColumns[] = [
   { title: '类型', slotName: 'type', align: 'center' },
   { title: '状态', slotName: 'status', align: 'center' },
   { title: '排序', dataIndex: 'sort', align: 'center', show: false },
-  { title: '路由地址', dataIndex: 'path', ellipsis: true, tooltip: true },
+  { title: '路由地址', dataIndex: 'path', render: ({record}) => record.data.path, ellipsis: true, tooltip: true },
   { title: '组件名称', dataIndex: 'name', ellipsis: true, tooltip: true },
-  { title: '组件路径', dataIndex: 'component', minWidth: 180, ellipsis: true, tooltip: true },
-  { title: '权限标识', dataIndex: 'permission', minWidth: 180, ellipsis: true, tooltip: true },
+  { title: '组件路径', dataIndex: 'component', render: ({record}) => record.data.component, minWidth: 180, ellipsis: true, tooltip: true },
+  { title: '权限标识', dataIndex: 'permission', render: ({record}) => record.data.permission, minWidth: 180, ellipsis: true, tooltip: true },
   { title: '外链', slotName: 'isExternal', align: 'center' },
   { title: '隐藏', slotName: 'isHidden', align: 'center' },
   { title: '缓存', slotName: 'isCache', align: 'center' },
   { title: '创建人', dataIndex: 'createUserString', ellipsis: true, tooltip: true, show: false },
-  { title: '创建时间', dataIndex: 'createTime', width: 180 },
+  { title: '创建时间', dataIndex: 'createTime', render: ({record}) => record.data.createTime, width: 180 },
   { title: '修改人', dataIndex: 'updateUserString', ellipsis: true, tooltip: true, show: false },
   { title: '修改时间', dataIndex: 'updateTime', width: 180, show: false },
   {
@@ -158,7 +158,7 @@ const reset = () => {
 
 // 删除
 const onDelete = (record: MenuResp) => {
-  return handleDelete(() => deleteMenu(record.id), {
+  return handleDelete(() => deleteMenu(record.key), {
     content: `是否确定删除 [${record.title}]？`,
     showModal: true,
   })
@@ -174,13 +174,13 @@ const onExpanded = () => {
 
 const MenuAddModalRef = ref<InstanceType<typeof MenuAddModal>>()
 // 新增
-const onAdd = (parentId?: string) => {
+const onAdd = (parentId?: number) => {
   MenuAddModalRef.value?.onAdd(parentId)
 }
 
 // 修改
 const onUpdate = (record: MenuResp) => {
-  MenuAddModalRef.value?.onUpdate(record.id)
+  MenuAddModalRef.value?.onUpdate(record.key)
 }
 </script>
 

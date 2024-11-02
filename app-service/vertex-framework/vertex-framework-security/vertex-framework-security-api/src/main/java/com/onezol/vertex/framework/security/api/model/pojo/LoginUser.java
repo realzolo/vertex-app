@@ -3,6 +3,7 @@ package com.onezol.vertex.framework.security.api.model.pojo;
 import com.alibaba.fastjson2.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.onezol.vertex.framework.common.constant.enums.AccountStatus;
+import com.onezol.vertex.framework.common.model.LabelValue;
 import com.onezol.vertex.framework.common.util.BeanUtils;
 import com.onezol.vertex.framework.security.api.model.dto.User;
 import com.onezol.vertex.framework.security.api.model.entity.UserEntity;
@@ -13,10 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Data
@@ -50,22 +48,18 @@ public class LoginUser implements UserDetails {
     /**
      * 角色列表
      */
-    private Set<String> roles = Collections.emptySet();
+    private List<LabelValue<String, String>> roles = Collections.emptyList();
 
     /**
      * 权限列表
      */
-    private Set<String> permissions = Collections.emptySet();
+    private List<String> permissions = Collections.emptyList();
 
     /**
      * 用户信息
      */
     private UserEntity details;
 
-    /**
-     * 权限列表
-     */
-    private Set<GrantedAuthority> authorities;
 
     public LoginUser(UserEntity userDetails) {
         this.details = userDetails;
@@ -74,8 +68,9 @@ public class LoginUser implements UserDetails {
     @Override
     @JSONField(serialize = false)
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if (authorities == null) {
-            authorities = permissions.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toSet());
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        for (String permission : permissions) {
+            authorities.add(new SimpleGrantedAuthority(permission));
         }
         return authorities;
     }
@@ -118,12 +113,12 @@ public class LoginUser implements UserDetails {
         return !Integer.valueOf(AccountStatus.DISABLED.getCode()).equals(details.getStatus());
     }
 
-    public void setRoles(Set<String> roles) {
-        this.roles = Objects.isNull(roles) ? Collections.emptySet() : roles;
+    public void setRoles(List<LabelValue<String, String>> roles) {
+        this.roles = Objects.isNull(roles) ? Collections.emptyList() : roles;
     }
 
-    public void setPermissions(Set<String> permissions) {
-        this.permissions = Objects.isNull(permissions) ? Collections.emptySet() : permissions;
+    public void setPermissions(List<String> permissions) {
+        this.permissions = Objects.isNull(permissions) ? Collections.emptyList() : permissions;
     }
 
     public User getDetails() {

@@ -18,19 +18,23 @@ import { resetHasRouteFlag } from '@/router/permission'
 
 const storeSetup = () => {
   const userInfo = reactive<UserInfo>({
-    id: '',
+    id: null,
+    creator:  null,
+    createTime: '',
+    updater: null,
+    updateTime: '',
     username: '',
     nickname: '',
-    gender: 0,
-    email: '',
-    phone: '',
+    name: '',
+    introduction: '',
     avatar: '',
-    pwdResetTime: '',
-    pwdExpired: false,
-    registrationDate: '',
-    deptName: '',
+    gender: 0,
+    birthday: '',
+    phone: '',
+    email: '',
     roles: [],
     permissions: [],
+    status: 0
   })
   const nickname = computed(() => userInfo.nickname)
   const username = computed(() => userInfo.username)
@@ -51,29 +55,29 @@ const storeSetup = () => {
   // 登录
   const accountLogin = async (req: AccountLoginReq) => {
     const res = await accountLoginApi(req)
-    setToken(res.data.token)
-    token.value = res.data.token
+    setToken(res.data.jwt.token);
+    token.value = res.data.jwt.token
   }
 
   // 邮箱登录
   const emailLogin = async (req: EmailLoginReq) => {
     const res = await emailLoginApi(req)
-    setToken(res.data.token)
-    token.value = res.data.token
+    setToken(res.data.jwt.token);
+    token.value = res.data.jwt.token
   }
 
   // 手机号登录
   const phoneLogin = async (req: PhoneLoginReq) => {
     const res = await phoneLoginApi(req)
-    setToken(res.data.token)
-    token.value = res.data.token
+    setToken(res.data.jwt.token);
+    token.value = res.data.jwt.token
   }
 
   // 三方账号登录
   const socialLogin = async (source: string, req: any) => {
     const res = await socialLoginApi(source, req)
-    setToken(res.data.token)
-    token.value = res.data.token
+    setToken(res.data.jwt.token);
+    token.value = res.data.jwt.token
   }
 
   // 退出登录回调

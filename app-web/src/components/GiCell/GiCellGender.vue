@@ -3,7 +3,7 @@
     <template #icon><icon-man /></template>
     <template #default>男</template>
   </a-tag>
-  <a-tag v-else-if="props.gender === 2" color="magenta" size="small" class="gi_round">
+  <a-tag v-else-if="props.gender === 0" color="magenta" size="small" class="gi_round">
     <template #icon><icon-woman /></template>
     <template #default>女</template>
   </a-tag>

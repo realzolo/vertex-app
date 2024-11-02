@@ -142,7 +142,7 @@ public class InitializationRunner implements ApplicationRunner {
         }
         rolePermission = new RolePermissionEntity();
         rolePermission.setRoleId(role.getId());
-        rolePermission.setPermissions(permission);
+//        rolePermission.setPermissions(permission);
         boolean ok = rolePermissionService.save(rolePermission);
         if (!ok) {
             String message = String.format("初始化: 角色 '%s' 绑定权限 '%s' 失败！", role.getName(), permission);

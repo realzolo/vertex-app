@@ -17,20 +17,20 @@ interface ICodeMessage {
 }
 
 const StatusCodeMessage: ICodeMessage = {
-  200: '服务器成功返回请求的数据',
-  201: '新建或修改数据成功。',
-  202: '一个请求已经进入后台排队（异步任务）',
-  204: '删除数据成功',
-  400: '请求错误(400)',
-  401: '未授权，请重新登录(401)',
-  403: '拒绝访问(403)',
-  404: '请求出错(404)',
-  408: '请求超时(408)',
-  500: '服务器错误(500)',
-  501: '服务未实现(501)',
-  502: '网络错误(502)',
-  503: '服务不可用(503)',
-  504: '网络超时(504)',
+  10200: '服务器成功返回请求的数据',
+  10201: '新建或修改数据成功。',
+  10202: '一个请求已经进入后台排队（异步任务）',
+  10204: '删除数据成功',
+  10400: '请求错误(400)',
+  10401: '未授权，请重新登录(401)',
+  10403: '拒绝访问(403)',
+  10404: '请求出错(404)',
+  10408: '请求超时(408)',
+  10500: '服务器错误(500)',
+  10501: '服务未实现(501)',
+  10502: '网络错误(502)',
+  10503: '服务不可用(503)',
+  10504: '网络超时(504)',
 }
 
 const http: AxiosInstance = axios.create({
@@ -63,7 +63,7 @@ http.interceptors.request.use(
 http.interceptors.response.use(
   (response: AxiosResponse) => {
     const { data } = response
-    const { success, code, msg } = data
+    const { success, code, message } = data
     if (response.request.responseType === 'blob') {
       NProgress.done()
       return response
@@ -78,7 +78,7 @@ http.interceptors.response.use(
     if (code === '401' && response.config.url !== '/auth/user/info') {
       modalErrorWrapper({
         title: '提示',
-        content: msg,
+        content: message,
         maskClosable: false,
         escToClose: false,
         okText: '重新登录',
@@ -92,23 +92,23 @@ http.interceptors.response.use(
     } else {
       NProgress.done()
       // 如果错误信息长度过长，使用 Notification 进行提示
-      if (msg.length <= 15) {
+      if (message.length <= 15) {
         messageErrorWrapper({
-          content: msg || '服务器端错误',
+          content: message || '服务器端错误',
           duration: 5 * 1000,
         })
       } else {
-        notificationErrorWrapper(msg || '服务器端错误')
+        notificationErrorWrapper(message || '服务器端错误')
       }
     }
-    return Promise.reject(new Error(msg || '服务器端错误'))
+    return Promise.reject(new Error(message || '服务器端错误'))
   },
   (error) => {
     NProgress.done()
     const response = Object.assign({}, error.response)
     response
     && messageErrorWrapper({
-      content: StatusCodeMessage[response.status] || '服务器暂时未响应，请刷新页面并重试。若无法解决，请联系管理员',
+      content: StatusCodeMessage[response.status] || '服务器暂时未响应，请刷新页面并重试。',
       duration: 5 * 1000,
     })
     return Promise.reject(error)

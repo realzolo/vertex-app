@@ -6,7 +6,7 @@ import type { OptionQuery } from '@/apis'
 const BASE_URL = '/common'
 
 /** @desc 查询部门树 */
-export function listDeptTree(query: { description: string }) {
+export function listDeptTree(query: { description?: string }) {
   return http.get<TreeNodeData[]>(`${BASE_URL}/tree/dept`, query)
 }
 /** @desc 查询部门用户树 */
@@ -14,13 +14,13 @@ export function listDeptWithUsersTree(query: { description?: string, status: num
   return http.get<TreeNodeData[]>(`${BASE_URL}/tree/deptWithUsers`, query)
 }
 /** @desc 查询菜单树 */
-export function listMenuTree(query: { description: string }) {
-  return http.get<TreeNodeData[]>(`${BASE_URL}/tree/menu`, query)
+export function listMenuTree(query: { description?: string }) {
+  return http.get<TreeNodeData[]>(`/permission/tree`, query)
 }
 
 /** @desc 查询角色列表 */
 export function listRoleDict(query?: { name: string, status: number }) {
-  return http.get<LabelValueState[]>(`${BASE_URL}/dict/role`, query)
+  return http.get<LabelValueState[]>(`/role/dict`, query)
 }
 
 /** @desc 查询字典列表 */

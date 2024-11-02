@@ -8,22 +8,22 @@
       <a-descriptions-item label="昵称">{{ dataDetail?.nickname }}</a-descriptions-item>
       <a-descriptions-item label="性别">
         <span v-if="dataDetail?.gender === 1">男</span>
-        <span v-else-if="dataDetail?.gender === 2">女</span>
+        <span v-else-if="dataDetail?.gender === 0">女</span>
         <span v-else>未知</span>
       </a-descriptions-item>
       <a-descriptions-item label="状态">
-        <a-tag v-if="dataDetail?.status === 1" color="green">启用</a-tag>
+        <a-tag v-if="dataDetail?.status === 0" color="green">启用</a-tag>
         <a-tag v-else color="red">禁用</a-tag>
       </a-descriptions-item>
       <a-descriptions-item label="手机号">{{ dataDetail?.phone || '暂无' }}</a-descriptions-item>
       <a-descriptions-item label="邮箱">{{ dataDetail?.email || '暂无' }}</a-descriptions-item>
-      <a-descriptions-item label="所属部门">{{ dataDetail?.deptName }}</a-descriptions-item>
-      <a-descriptions-item label="角色"><GiCellTags :data="dataDetail?.roleNames" /></a-descriptions-item>
-      <a-descriptions-item label="创建人">{{ dataDetail?.createUserString }}</a-descriptions-item>
+<!--      <a-descriptions-item label="所属部门">{{ dataDetail?.deptName }}</a-descriptions-item>-->
+      <a-descriptions-item label="角色"><GiCellTags :data="dataDetail?.roles.map(role => role.label) as string[]" /></a-descriptions-item>
+<!--      <a-descriptions-item label="创建人">{{ dataDetail?.createUserString }}</a-descriptions-item>-->
       <a-descriptions-item label="创建时间">{{ dataDetail?.createTime }}</a-descriptions-item>
-      <a-descriptions-item label="修改人">{{ dataDetail?.updateUserString }}</a-descriptions-item>
+<!--      <a-descriptions-item label="修改人">{{ dataDetail?.updateUserString }}</a-descriptions-item>-->
       <a-descriptions-item label="修改时间">{{ dataDetail?.updateTime }}</a-descriptions-item>
-      <a-descriptions-item label="描述" :span="2">{{ dataDetail?.description }}</a-descriptions-item>
+      <a-descriptions-item label="描述" :span="2">{{ dataDetail?.introduction }}</a-descriptions-item>
     </a-descriptions>
   </a-drawer>
 </template>

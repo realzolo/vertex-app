@@ -1,18 +1,35 @@
 /** 用户类型 */
 export interface UserInfo {
-  id: string
-  username: string
-  nickname: string
-  gender: 0 | 1 | 2
-  email: string
-  phone: string
-  avatar: string
-  pwdResetTime: string
-  pwdExpired: boolean
-  registrationDate: string
-  deptName: string
-  roles: string[]
-  permissions: string[]
+  // id: string
+  // username: string
+  // nickname: string
+  // gender: 0 | 1 | 2
+  // email: string
+  // phone: string
+  // avatar: string
+  // pwdResetTime: string
+  // pwdExpired: boolean
+  // registrationDate: string
+  // deptName: string
+  // roles: string[]
+  // permissions: string[]
+  id: number | null,
+  creator: number | null,
+  createTime: string,
+  updater:number |  null,
+  updateTime: string,
+  username: string,
+  nickname: string,
+  name: string,
+  introduction: string,
+  avatar: string,
+  gender: 0 | 1 | 2,
+  birthday: string,
+  phone: string,
+  email: string,
+  roles: string[],
+  permissions: string[],
+  status: number
 }
 
 /** 路由类型 */
@@ -63,7 +80,11 @@ export interface EmailLoginReq {
 
 // 登录响应类型
 export interface LoginResp {
-  token: string
+  user: {}
+  jwt: {
+    token: string,
+    expire: number
+  }
 }
 
 // 第三方登录授权类型

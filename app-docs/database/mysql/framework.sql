@@ -76,26 +76,26 @@ CREATE TABLE IF NOT EXISTS vx_user_role
     updater        BIGINT       DEFAULT NULL COMMENT '更新人',
     update_time    DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
     version        INT UNSIGNED DEFAULT 0 COMMENT '版本号',
-    INDEX (role_id),
-    UNIQUE (role_id)
-    ) ENGINE = InnoDB
+    INDEX (user_id, role_id),
+    UNIQUE (user_id, role_id)
+) ENGINE = InnoDB
     DEFAULT CHARSET = utf8mb4
     AUTO_INCREMENT = 10000 COMMENT = '用户-角色';
 
 CREATE TABLE IF NOT EXISTS vx_role_permission
 (
-    id          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
+    id             BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
     -- 自定义字段开始 --
-    role_id     BIGINT          COMMENT '角色ID',
-    permissions VARCHAR(2000)   DEFAULT '' COMMENT '权限列表',
+    role_id        BIGINT       COMMENT '角色ID',
+    permission_id  BIGINT       COMMENT '权限ID',
     -- 自定义字段结束 --
     creator        BIGINT       DEFAULT NULL COMMENT '创建人',
     create_time    DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     updater        BIGINT       DEFAULT NULL COMMENT '更新人',
     update_time    DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
     version        INT UNSIGNED DEFAULT 0 COMMENT '版本号',
-    INDEX (role_id),
-    UNIQUE (role_id)
+    INDEX (role_id, permission_id),
+    UNIQUE (role_id, permission_id)
 ) ENGINE = InnoDB
     DEFAULT CHARSET = utf8mb4
     AUTO_INCREMENT = 10000 COMMENT = '角色-权限';

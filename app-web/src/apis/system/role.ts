@@ -3,11 +3,11 @@ import http from '@/utils/http'
 
 export type * from './type'
 
-const BASE_URL = '/system/role'
+const BASE_URL = '/role'
 
 /** @desc 查询角色列表 */
 export function listRole(query: T.RolePageQuery) {
-  return http.get<PageRes<T.RoleResp[]>>(`${BASE_URL}`, query)
+  return http.get<PageRes<T.RoleResp[]>>(`${BASE_URL}/page`, query)
 }
 
 /** @desc 查询角色详情 */

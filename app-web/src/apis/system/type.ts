@@ -1,24 +1,20 @@
+import type { LabelValue } from "@arco-design/web-vue/es/tree-select/interface";
+
 /** 系统用户类型 */
 export interface UserResp {
   id: string
   username: string
   nickname: string
   avatar: string
-  gender: number
+  gender: 0 | 1
   email: string
   phone: string
-  description: string
-  status: 1 | 2
+  introduction: string
+  status: 0 | 1
   isSystem?: boolean
-  createUserString: string
   createTime: string
-  updateUserString: string
   updateTime: string
-  deptId: string
-  deptName: string
-  roleIds: Array<number>
-  roleNames: Array<string>
-  disabled: boolean
+  roles: Array<LabelValue>
 }
 
 export type UserDetailResp = UserResp & {
@@ -68,9 +64,9 @@ export interface RoleDetailResp {
   code: string
   sort: number
   description: string
-  menuIds: Array<number>
+  permissionIds: Array<number>
   dataScope: number
-  deptIds: Array<number>
+  // deptIds: Array<number>
   isSystem: boolean
   menuCheckStrictly: boolean
   deptCheckStrictly: boolean
@@ -91,26 +87,33 @@ export interface RolePageQuery extends RoleQuery, PageQuery {
 
 /** 系统菜单类型 */
 export interface MenuResp {
-  id: string
-  title: string
-  parentId: string
-  type: 1 | 2 | 3
+  key: number
+  parentKey: number
   path: string
-  name: string
-  component: string
-  redirect: string
+  title: string
   icon: string
-  isExternal: boolean
-  isCache: boolean
-  isHidden: boolean
-  permission: string
-  sort: number
-  status: 1 | 2
-  createUserString: string
-  createTime: string
-  updateUserString: string
-  updateTime: string
-  children: MenuResp[]
+  children: MenuResp[],
+  data: {
+    id: number
+    title: string
+    parentId: number
+    type: 1 | 2 | 3
+    path: string
+    name: string
+    component: string
+    redirect: string
+    icon: string
+    isExternal: boolean
+    isCache: boolean
+    isHidden: boolean
+    permission: string
+    sort: number
+    status: 0 | 1
+    createUserString: string
+    createTime: string
+    updateUserString: string
+    updateTime: string
+  }
 }
 
 export interface MenuQuery {

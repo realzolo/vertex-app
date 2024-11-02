@@ -109,7 +109,7 @@ const columns: TableInstanceColumns[] = [
   },
   { title: '名称', dataIndex: 'name', slotName: 'name', ellipsis: true, tooltip: true },
   { title: '编码', dataIndex: 'code', ellipsis: true, tooltip: true },
-  { title: '数据权限', dataIndex: 'dataScope', slotName: 'dataScope', ellipsis: true, tooltip: true },
+  // { title: '数据权限', dataIndex: 'dataScope', slotName: 'dataScope', ellipsis: true, tooltip: true },
   { title: '排序', dataIndex: 'sort', align: 'center', show: false },
   { title: '系统内置', slotName: 'isSystem', align: 'center', show: false },
   { title: '描述', dataIndex: 'description', ellipsis: true, tooltip: true },

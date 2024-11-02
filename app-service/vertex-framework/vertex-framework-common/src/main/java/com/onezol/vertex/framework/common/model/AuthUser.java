@@ -3,6 +3,7 @@ package com.onezol.vertex.framework.common.model;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -15,8 +16,8 @@ public class AuthUser {
 
     private String nickname;
 
-    private Set<String> roles;
+    private List<LabelValue<String, String>> roles;
 
-    private Set<String> permissions;
+    private List<String> permissions;
 
 }

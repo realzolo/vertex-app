@@ -1,8 +1,10 @@
-package com.onezol.vertex.framework.security.api.model.entity;
+package com.onezol.vertex.framework.security.api.model.dto;
 
-import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.onezol.vertex.framework.common.annotation.Dictionary;
+import com.onezol.vertex.framework.common.annotation.UseDictionary;
 import com.onezol.vertex.framework.common.constant.enums.DisEnableStatusEnum;
+import com.onezol.vertex.framework.common.model.dto.BaseDTO;
 import com.onezol.vertex.framework.common.model.entity.BaseEntity;
 import com.onezol.vertex.framework.security.api.enumeration.MenuTypeEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -12,10 +14,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-@TableName("vx_permission")
-@Schema(name = "PermissionEntity", description = "$!{table.comment}")
-public class PermissionEntity extends BaseEntity {
-
+public class Permission extends BaseDTO {
 
     /**
      * 标题
@@ -30,7 +29,7 @@ public class PermissionEntity extends BaseEntity {
     /**
      * 类型
      */
-    private MenuTypeEnum type;
+    private Integer type;
 
     /**
      * 路由地址
@@ -85,6 +84,6 @@ public class PermissionEntity extends BaseEntity {
     /**
      * 状态
      */
-    private DisEnableStatusEnum status;
+    private Integer status;
 
 }

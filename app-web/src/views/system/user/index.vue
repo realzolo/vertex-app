@@ -6,10 +6,10 @@
       </a-space>
     </a-row>
     <a-row align="stretch" :gutter="14" class="h-full page_content">
-      <a-col :xs="0" :sm="0" :md="6" :lg="5" :xl="5" :xxl="4" class="h-full ov-hidden">
-        <DeptTree placeholder="请输入名称" @node-click="handleSelectDept" />
-      </a-col>
-      <a-col :xs="24" :sm="24" :md="18" :lg="19" :xl="19" :xxl="20" class="h-full ov-hidden">
+<!--      <a-col :xs="0" :sm="0" :md="6" :lg="5" :xl="5" :xxl="4" class="h-full ov-hidden">-->
+<!--        <DeptTree placeholder="请输入名称" @node-click="handleSelectDept" />-->
+<!--      </a-col>-->
+      <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" :xxl="24" class="h-full ov-hidden">
         <GiTable
           row-key="id"
           :data="dataList"
@@ -29,16 +29,16 @@
               <template #icon><icon-plus /></template>
               <template #default>新增</template>
             </a-button>
-            <a-button v-permission="['system:user:import']" @click="onImport">
-              <template #icon><icon-upload /></template>
-              <template #default>导入</template>
-            </a-button>
+<!--            <a-button v-permission="['system:user:import']" @click="onImport">-->
+<!--              <template #icon><icon-upload /></template>-->
+<!--              <template #default>导入</template>-->
+<!--            </a-button>-->
           </template>
           <template #toolbar-right>
-            <a-button v-permission="['system:user:export']" @click="onExport">
-              <template #icon><icon-download /></template>
-              <template #default>导出</template>
-            </a-button>
+<!--            <a-button v-permission="['system:user:export']" @click="onExport">-->
+<!--              <template #icon><icon-download /></template>-->
+<!--              <template #default>导出</template>-->
+<!--            </a-button>-->
           </template>
           <template #nickname="{ record }">
             <GiCellAvatar :avatar="record.avatar" :name="record.nickname" />
@@ -47,7 +47,7 @@
             <GiCellGender :gender="record.gender" />
           </template>
           <template #roleNames="{ record }">
-            <GiCellTags :data="record.roleNames" />
+            <GiCellTags :data="record.roles.map(role => role.label) as string[]" />
           </template>
           <template #status="{ record }">
             <GiCellStatus :status="record.status" />
@@ -64,7 +64,7 @@
                 v-permission="['system:user:delete']"
                 status="danger"
                 :title="record.isSystem ? '系统内置数据不能删除' : '删除'"
-                :disabled="record.disabled"
+                :disabled="record.status !== 0"
                 @click="onDelete(record)"
               >
                 删除
@@ -93,7 +93,6 @@
 </template>
 
 <script setup lang="ts">
-import DeptTree from './dept/index.vue'
 import UserAddDrawer from './UserAddDrawer.vue'
 import UserImportDrawer from './UserImportDrawer.vue'
 import UserDetailDrawer from './UserDetailDrawer.vue'
@@ -117,7 +116,7 @@ const {
   pagination,
   search,
   handleDelete,
-} = useTable((page) => listUser({ ...queryForm, ...page }), { immediate: false })
+} = useTable((page) => listUser({ ...queryForm, ...page }), { immediate: true })
 
 const options: Options = reactive({
   form: { layout: 'inline' },
@@ -177,15 +176,14 @@ const columns: TableInstanceColumns[] = [
   { title: '用户名', dataIndex: 'username', slotName: 'username', minWidth: 140, ellipsis: true, tooltip: true },
   { title: '状态', slotName: 'status', align: 'center' },
   { title: '性别', slotName: 'gender', align: 'center' },
-  { title: '所属部门', dataIndex: 'deptName', ellipsis: true, tooltip: true, minWidth: 180 },
   { title: '角色', dataIndex: 'roleNames', minWidth: 160, slotName: 'roleNames' },
   { title: '手机号', dataIndex: 'phone', minWidth: 170, ellipsis: true, tooltip: true },
   { title: '邮箱', dataIndex: 'email', minWidth: 170, ellipsis: true, tooltip: true },
-  { title: '系统内置', slotName: 'isSystem', width: 100, align: 'center', show: false },
-  { title: '描述', dataIndex: 'description', minWidth: 130, ellipsis: true, tooltip: true },
-  { title: '创建人', dataIndex: 'createUserString', width: 140, ellipsis: true, tooltip: true, show: false },
+  // { title: '系统内置', slotName: 'isSystem', width: 100, align: 'center', show: false },
+  { title: '描述', dataIndex: 'introduction', minWidth: 130, ellipsis: true, tooltip: true },
+  // { title: '创建人', dataIndex: 'createUserString', width: 140, ellipsis: true, tooltip: true, show: false },
   { title: '创建时间', dataIndex: 'createTime', width: 180 },
-  { title: '修改人', dataIndex: 'updateUserString', width: 140, ellipsis: true, tooltip: true, show: false },
+  // { title: '修改人', dataIndex: 'updateUserString', width: 140, ellipsis: true, tooltip: true, show: false },
   { title: '修改时间', dataIndex: 'updateTime', width: 180, show: false },
   {
     title: '操作',

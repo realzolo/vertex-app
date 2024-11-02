@@ -49,33 +49,33 @@
           </template>
         </a-form-item>
       </fieldset>
-      <fieldset>
-        <legend>数据权限</legend>
-        <a-form-item hide-label field="dataScope">
-          <a-select
-            v-model.trim="form.dataScope"
-            :options="data_scope_enum"
-            placeholder="请选择数据权限"
-            :disabled="form.isSystem"
-          />
-        </a-form-item>
-        <a-form-item v-if="form.dataScope === 5" hide-label :disabled="form.isSystem">
-          <a-space>
-            <a-checkbox v-model="isDeptExpanded" @change="onExpanded('dept')">展开/折叠</a-checkbox>
-            <a-checkbox v-model="isDeptCheckAll" @change="onCheckAll('dept')">全选/全不选</a-checkbox>
-            <a-checkbox v-model="form.deptCheckStrictly">父子联动</a-checkbox>
-          </a-space>
-          <template #extra>
-            <a-tree
-              ref="deptTreeRef"
-              :data="deptList"
-              :default-expand-all="isDeptExpanded"
-              :check-strictly="!form.deptCheckStrictly"
-              checkable
-            />
-          </template>
-        </a-form-item>
-      </fieldset>
+<!--      <fieldset>-->
+<!--        <legend>数据权限</legend>-->
+<!--        <a-form-item hide-label field="dataScope">-->
+<!--          <a-select-->
+<!--            v-model.trim="form.dataScope"-->
+<!--            :options="data_scope_enum"-->
+<!--            placeholder="请选择数据权限"-->
+<!--            :disabled="form.isSystem"-->
+<!--          />-->
+<!--        </a-form-item>-->
+<!--        <a-form-item v-if="form.dataScope === 5" hide-label :disabled="form.isSystem">-->
+<!--          <a-space>-->
+<!--            <a-checkbox v-model="isDeptExpanded" @change="onExpanded('dept')">展开/折叠</a-checkbox>-->
+<!--            <a-checkbox v-model="isDeptCheckAll" @change="onCheckAll('dept')">全选/全不选</a-checkbox>-->
+<!--            <a-checkbox v-model="form.deptCheckStrictly">父子联动</a-checkbox>-->
+<!--          </a-space>-->
+<!--          <template #extra>-->
+<!--            <a-tree-->
+<!--              ref="deptTreeRef"-->
+<!--              :data="deptList"-->
+<!--              :default-expand-all="isDeptExpanded"-->
+<!--              :check-strictly="!form.deptCheckStrictly"-->
+<!--              checkable-->
+<!--            />-->
+<!--          </template>-->
+<!--        </a-form-item>-->
+<!--      </fieldset>-->
     </a-form>
   </a-drawer>
 </template>
@@ -152,23 +152,23 @@ const onUpdate = async (id: string) => {
   if (!menuList.value.length) {
     await getMenuList()
   }
-  if (!deptList.value.length) {
-    await getDeptList()
-  }
+  // if (!deptList.value.length) {
+  //   await getDeptList()
+  // }
   reset()
   dataId.value = id
   const { data } = await getRole(id)
   Object.assign(form, data)
-  data.menuIds?.forEach((node) => {
+  data.permissionIds?.forEach((node) => {
     nextTick(() => {
       menuTreeRef.value?.checkNode(node, true, true)
     })
   })
-  data.deptIds?.forEach((node) => {
-    nextTick(() => {
-      deptTreeRef.value?.checkNode(node, true, true)
-    })
-  })
+  // data.deptIds?.forEach((node) => {
+  //   nextTick(() => {
+  //     deptTreeRef.value?.checkNode(node, true, true)
+  //   })
+  // })
   visible.value = true
 }
 
@@ -204,8 +204,8 @@ const save = async () => {
   try {
     const isInvalid = await formRef.value?.validate()
     if (isInvalid) return false
-    form.menuIds = getMenuAllCheckedKeys()
-    form.deptIds = getDeptAllCheckedKeys()
+    form.permissionIds = getMenuAllCheckedKeys()
+    // form.deptIds = getDeptAllCheckedKeys()
     if (isUpdate.value) {
       await updateRole(form, dataId.value)
       Message.success('修改成功')

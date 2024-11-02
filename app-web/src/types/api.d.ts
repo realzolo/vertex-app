@@ -2,14 +2,17 @@
 interface ApiRes<T> {
   code: number
   data: T
-  msg: string
+  message: string
   success: boolean
+  traceId: string
   timestamp: string
 }
 
 /** 分页响应数据格式 */
 interface PageRes<T> {
-  list: T
+  items: T,
+  pageNumber: number,
+  pageSize: number,
   total: number
 }
 

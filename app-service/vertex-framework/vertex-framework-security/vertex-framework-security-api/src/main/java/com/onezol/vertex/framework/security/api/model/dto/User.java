@@ -1,11 +1,15 @@
 package com.onezol.vertex.framework.security.api.model.dto;
 
+import com.onezol.vertex.framework.common.model.LabelValue;
 import com.onezol.vertex.framework.common.model.dto.BaseDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.time.LocalDate;
+import java.util.Collections;
+import java.util.Dictionary;
+import java.util.List;
 import java.util.Set;
 
 @Schema(description = "用户信息")
@@ -18,9 +22,6 @@ public class User extends BaseDTO {
 
     @Schema(description = "用户昵称")
     private String nickname;
-
-    @Schema(description = "用户姓名")
-    private String name;
 
     @Schema(description = "用户简介")
     private String introduction;
@@ -41,10 +42,10 @@ public class User extends BaseDTO {
     private String email;
 
     @Schema(description = "角色列表")
-    private Set<String> roles;
+    private List<LabelValue<String, String>> roles = Collections.emptyList();
 
     @Schema(description = "权限列表")
-    private Set<String> permissions;
+    private List<String> permissions = Collections.emptyList();
 
     @Schema(description = "账号状态")
     private Integer status;

@@ -20,7 +20,7 @@ public class UserLoginPayload implements Payload {
     private String email;
 
     @Schema(name = "会话ID")
-    private String sessionId;
+    private String uuid;
 
     @Schema(name = "验证码")
     @NotBlank(message = "验证码不能为空")

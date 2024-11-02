@@ -13,6 +13,13 @@ import java.util.Map;
 public class BeanUtils extends org.springframework.beans.BeanUtils {
     private static final ModelMapper modelMapper = new ModelMapper();
 
+    static {
+        // 完全匹配
+        modelMapper.getConfiguration().setFullTypeMatchingRequired(true);
+        // 匹配策略定义为严格
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+    }
+
     private BeanUtils() {
         throw new IllegalStateException("Utility class cannot be instantiated");
     }

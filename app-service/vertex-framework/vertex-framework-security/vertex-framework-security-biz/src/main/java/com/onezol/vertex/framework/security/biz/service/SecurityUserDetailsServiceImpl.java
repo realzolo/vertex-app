@@ -1,5 +1,6 @@
 package com.onezol.vertex.framework.security.biz.service;
 
+import com.onezol.vertex.framework.common.model.LabelValue;
 import com.onezol.vertex.framework.security.api.model.entity.RoleEntity;
 import com.onezol.vertex.framework.security.api.model.entity.UserEntity;
 import com.onezol.vertex.framework.security.api.model.pojo.LoginUser;
@@ -16,8 +17,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -48,13 +52,19 @@ public class SecurityUserDetailsServiceImpl implements UserDetailsService {
         }
 
         LoginUser user = new LoginUser(userEntity);
-        RoleEntity role = userRoleService.getUserRole(user.getDetails().getId());
-        if (role != null) {
-            user.setRoles(Collections.singleton(role.getCode()));
-
-            String permString = permissionService.getRolePermissions(role.getId());
-            String[] permissions = permString.split(",");
-            user.setPermissions(Set.of(permissions));
+        List<RoleEntity> roleEntities = userRoleService.getUserRoles(user.getDetails().getId());
+        if (roleEntities != null && !roleEntities.isEmpty()) {
+            // 获取用户角色
+            List<LabelValue<String,String>> roles = new ArrayList<>();
+            for (RoleEntity roleEntity : roleEntities) {
+                roles.add(new LabelValue<>(roleEntity.getName(), roleEntity.getCode()));
+            }
+            user.setRoles(roles);
+            // 获取用户权限
+            List<Long> roleIds = roleEntities.stream().map(RoleEntity::getId).toList();
+            Set<String> rolePermissionKeys = permissionService.getRolePermissionKeys(roleIds);
+            List<String> permissions = rolePermissionKeys.stream().toList();
+            user.setPermissions(permissions);
         }
 
         return user;

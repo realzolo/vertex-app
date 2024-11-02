@@ -27,23 +27,23 @@
       <a-form-item label="性别" field="gender">
         <a-radio-group v-model="form.gender">
           <a-radio :value="1">男</a-radio>
-          <a-radio :value="2">女</a-radio>
-          <a-radio :value="0" disabled>未知</a-radio>
+          <a-radio :value="0">女</a-radio>
+          <a-radio :value="2" disabled>未知</a-radio>
         </a-radio-group>
       </a-form-item>
-      <a-form-item label="所属部门" field="deptId">
-        <a-tree-select
-          v-model="form.deptId"
-          :data="deptList"
-          placeholder="请选择所属部门"
-          allow-clear
-          allow-search
-          :filter-tree-node="filterDeptOptions"
-        />
-      </a-form-item>
-      <a-form-item label="角色" field="roleIds">
+<!--      <a-form-item label="所属部门" field="deptId">-->
+<!--        <a-tree-select-->
+<!--          v-model="form.deptId"-->
+<!--          :data="deptList"-->
+<!--          placeholder="请选择所属部门"-->
+<!--          allow-clear-->
+<!--          allow-search-->
+<!--          :filter-tree-node="filterDeptOptions"-->
+<!--        />-->
+<!--      </a-form-item>-->
+      <a-form-item label="角色" field="roles">
         <a-select
-          v-model="form.roleIds"
+          v-model="form.roles"
           :options="roleList"
           placeholder="请选择角色"
           multiple
@@ -64,8 +64,8 @@
         <a-switch
           v-model="form.status"
           :disabled="form.isSystem"
-          :checked-value="1"
-          :unchecked-value="2"
+          :checked-value="0"
+          :unchecked-value="1"
           checked-text="启用"
           unchecked-text="禁用"
           type="round"
@@ -107,8 +107,8 @@ const rules: FormInstance['rules'] = {
   username: [{ required: true, message: '请输入用户名' }],
   nickname: [{ required: true, message: '请输入昵称' }],
   password: [{ required: true, message: '请输入密码' }],
-  deptId: [{ required: true, message: '请选择所属部门' }],
-  roleIds: [{ required: true, message: '请选择角色' }],
+  // deptId: [{ required: true, message: '请选择所属部门' }],
+  roles: [{ required: true, message: '请选择角色' }],
 }
 
 const { form, resetForm } = useForm({
@@ -125,9 +125,9 @@ const reset = () => {
 const visible = ref(false)
 // 新增
 const onAdd = () => {
-  if (!deptList.value.length) {
-    getDeptList()
-  }
+  // if (!deptList.value.length) {
+  //   getDeptList()
+  // }
   if (!roleList.value.length) {
     getRoleList()
   }
@@ -138,9 +138,9 @@ const onAdd = () => {
 
 // 修改
 const onUpdate = async (id: string) => {
-  if (!deptList.value.length) {
-    await getDeptList()
-  }
+  // if (!deptList.value.length) {
+  //   await getDeptList()
+  // }
   if (!roleList.value.length) {
     await getRoleList()
   }
@@ -148,6 +148,7 @@ const onUpdate = async (id: string) => {
   dataId.value = id
   const res = await getUser(id)
   Object.assign(form, res.data)
+  form.roles = res.data.roles.map(item => item.value);
   visible.value = true
 }
 
@@ -157,6 +158,7 @@ const save = async () => {
   try {
     const isInvalid = await formRef.value?.validate()
     if (isInvalid) return false
+    form.roles = form.roles.map((item: string) => ({ value: item }))
     if (isUpdate.value) {
       await updateUser(form, dataId.value)
       Message.success('修改成功')

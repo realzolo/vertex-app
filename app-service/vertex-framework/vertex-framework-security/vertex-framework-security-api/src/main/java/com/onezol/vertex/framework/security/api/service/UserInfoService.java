@@ -10,12 +10,12 @@ import com.onezol.vertex.framework.security.api.model.payload.UserQueryPayload;
 public interface UserInfoService extends BaseService<UserEntity> {
 
     /**
-     * 根据用户名获取用户信息
+     * 根据用户ID取用户信息
      *
-     * @param username 用户名
+     * @param userId 用户ID
      * @return 用户信息
      */
-    User getUserInfo(String username);
+    User getUserInfo(long userId);
 
 
     /**

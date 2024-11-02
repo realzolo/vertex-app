@@ -10,4 +10,23 @@
             rp.role_id = #{roleId}
         LIMIT 1
     </select>
+
+    <select id="queryRolePermissions" resultType="com.onezol.vertex.framework.security.api.model.entity.PermissionEntity">
+        SELECT
+            p.*
+        FROM
+            vx_role_permission rp
+             LEFT JOIN vx_permission p ON p.id = rp.permission_id
+             LEFT JOIN vx_role r ON r.id = rp.role_id
+        <where>
+            <if test="roleIds != null and roleIds.size() > 0">
+                AND
+                <foreach collection="roleIds" item="roleId" open="(" close=")" separator="OR">
+                    rp.role_id = #{roleId}
+                </foreach>
+            </if>
+        </where>
+        GROUP BY
+            p.id
+    </select>
 </mapper>
