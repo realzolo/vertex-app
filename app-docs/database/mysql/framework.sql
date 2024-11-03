@@ -185,10 +185,12 @@ CREATE TABLE IF NOT EXISTS vx_dictionary
     -- 自定义字段开始 --
     name        VARCHAR(25)   COMMENT '字典名称',
     value       VARCHAR(25)   COMMENT '字典值',
-    `group`     VARCHAR(25)   COMMENT '分组',
-    description VARCHAR(50)   COMMENT '字典描述',
     color       VARCHAR(25)   COMMENT '颜色值',
-    type        VARCHAR(25)   COMMENT '字典类型(字典/内置枚举)',
+    `group`     VARCHAR(25)   COMMENT '分组',
+    remark      VARCHAR(50)   COMMENT '字典备注',
+    sort        INT UNSIGNED  DEFAULT 0   COMMENT '排序',
+    type        VARCHAR(25)   COMMENT '字典类型(字典/枚举)',
+    status      BIT           DEFAULT b'0' COMMENT '字典状态(0: 启用，1: 禁用)',
     -- 自定义字段结束 --
     creator     BIGINT       DEFAULT NULL COMMENT '创建人',
     create_time DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -197,4 +199,4 @@ CREATE TABLE IF NOT EXISTS vx_dictionary
     version     INT UNSIGNED DEFAULT 0 COMMENT '版本号'
 ) ENGINE = InnoDB
     DEFAULT CHARSET = utf8mb4
-    AUTO_INCREMENT = 10000 COMMENT = '模板表';
+    AUTO_INCREMENT = 10000 COMMENT = '数据字典';

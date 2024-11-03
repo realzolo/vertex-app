@@ -37,16 +37,17 @@
             </a-button>
           </template>
           <template #label="{ record }">
-            <a-tag :color="record.color">{{ record.label }}</a-tag>
+            <span :style="{color: record.color}">{{ record.name }}</span>
           </template>
           <template #status="{ record }">
             <GiCellStatus :status="record.status" />
           </template>
           <template #action="{ record }">
             <a-space>
-              <a-link v-permission="['system:dict:item:update']" @click="onUpdate(record)">修改</a-link>
+              <a-link v-permission="['system:dict:item:update']" :disabled="record.isBuiltIn" @click="onUpdate(record)">修改</a-link>
               <a-link
                 v-permission="['system:dict:item:delete']"
+                :disabled="record.isBuiltIn"
                 status="danger"
                 @click="onDelete(record)"
               >
@@ -74,7 +75,7 @@ import has from '@/utils/has'
 defineOptions({ name: 'SystemDict' })
 
 const queryForm = reactive<DictItemQuery>({
-  dictId: '',
+  groupId: null,
   sort: ['createTime,desc'],
 })
 
@@ -93,8 +94,8 @@ const columns: TableInstanceColumns[] = [
     align: 'center',
     render: ({ rowIndex }) => h('span', {}, rowIndex + 1 + (pagination.current - 1) * pagination.pageSize),
   },
-  { title: '标签', dataIndex: 'label', slotName: 'label', minWidth: 100, align: 'center' },
-  { title: '值', dataIndex: 'value', minWidth: 100, align: 'center', ellipsis: true, tooltip: true },
+  { title: '字典名称', dataIndex: 'label', slotName: 'label', minWidth: 100, align: 'center' },
+  { title: '字典值', dataIndex: 'value', minWidth: 100, align: 'center', ellipsis: true, tooltip: true },
   { title: '状态', slotName: 'status', align: 'center' },
   {
     title: '排序',
@@ -104,10 +105,10 @@ const columns: TableInstanceColumns[] = [
       sortDirections: ['ascend', 'descend'],
     },
   },
-  { title: '描述', dataIndex: 'description', minWidth: 130, ellipsis: true, tooltip: true },
-  { title: '创建人', dataIndex: 'createUserString', width: 140, ellipsis: true, tooltip: true, show: false },
+  { title: '描述', dataIndex: 'remark', minWidth: 130, ellipsis: true, tooltip: true },
+  // { title: '创建人', dataIndex: 'createUserString', width: 140, ellipsis: true, tooltip: true, show: false },
   { title: '创建时间', dataIndex: 'createTime', width: 180 },
-  { title: '修改人', dataIndex: 'updateUserString', width: 140, ellipsis: true, tooltip: true, show: false },
+  // { title: '修改人', dataIndex: 'updateUserString', width: 140, ellipsis: true, tooltip: true, show: false },
   { title: '修改时间', dataIndex: 'updateTime', width: 180, show: false },
   {
     title: '操作',
@@ -121,7 +122,7 @@ const columns: TableInstanceColumns[] = [
 
 // 重置
 const reset = () => {
-  queryForm.description = undefined
+  queryForm.remark = undefined
   queryForm.status = undefined
   search()
 }
@@ -133,14 +134,14 @@ const onDelete = (record: DictItemResp) => {
 
 // 根据选中字典查询
 const handleSelectDict = (keys: Array<any>) => {
-  queryForm.dictId = keys.length === 1 ? keys[0] : undefined
+  queryForm.groupId = keys.length === 1 ? keys[0] : undefined
   search()
 }
 
 const DictItemAddModalRef = ref<InstanceType<typeof DictItemAddModal>>()
 // 新增
 const onAdd = () => {
-  DictItemAddModalRef.value?.onAdd(queryForm.dictId)
+  DictItemAddModalRef.value?.onAdd(queryForm.groupId)
 }
 
 // 修改

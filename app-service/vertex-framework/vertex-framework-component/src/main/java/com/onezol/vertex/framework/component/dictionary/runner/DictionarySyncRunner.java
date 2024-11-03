@@ -4,23 +4,25 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.onezol.vertex.framework.common.constant.CacheKey;
+import com.onezol.vertex.framework.common.constant.enumeration.DisEnableStatusEnum;
 import com.onezol.vertex.framework.common.constant.enumeration.Enumeration;
 import com.onezol.vertex.framework.common.model.LabelValue;
 import com.onezol.vertex.framework.common.util.StringUtils;
 import com.onezol.vertex.framework.component.dictionary.model.DictionaryEntity;
 import com.onezol.vertex.framework.component.dictionary.service.DictionaryService;
 import com.onezol.vertex.framework.support.cache.RedisCache;
+import com.onezol.vertex.framework.support.manager.async.AsyncTaskManager;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
-import java.sql.Wrapper;
 import java.util.*;
 
 @Slf4j
-@Component
+//@Component
 public class DictionarySyncRunner implements ApplicationRunner {
     private static final List<String> ENUM_PACKAGE = Arrays.asList(
             "com.onezol.vertex.framework.common",
@@ -47,7 +49,7 @@ public class DictionarySyncRunner implements ApplicationRunner {
         redisCache.deleteObject(CacheKey.DICTIONARY);
         redisCache.setCacheMap(CacheKey.DICTIONARY, simpleJsonValue);
 
-        this.syncEnumsToDictionaryTable(enumMap);
+        AsyncTaskManager.getInstance().execute(() -> this.syncEnumsToDictionaryTable(enumMap));
 
         log.info("字典数据已同步到Redis缓存中，其中枚举类共 {} 项，字典类共 {} 项", enumSize, dictSize);
     }
@@ -88,13 +90,26 @@ public class DictionarySyncRunner implements ApplicationRunner {
                 options.add(option);
             }
 
-            String key = StringUtils.camelCaseToUnderline(clazz.getSimpleName()).toLowerCase().replace("_enum", "");
-            enumMap.put(key, options);
+            // 获取枚举类@Schema注解的name属性作为枚举中文名称
+            String name = clazz.getAnnotation(Schema.class).name();
+            if (StringUtils.isBlank(name)) {
+                log.warn("枚举类 {} 没有定义@Schema注解，无法获取枚举名称, 转换字典值失败", clazz.getName());
+                continue;
+            }
+            String code = StringUtils.camelCaseToUnderline(clazz.getSimpleName()).toLowerCase().replace("_enum", "");
+
+            enumMap.put(name + '@' + code, options);
         }
         return enumMap;
     }
 
-    public List<Class<?>> findInterfaceImplementations(Class<?> interfaceClass) {
+    /**
+     * 扫描接口实现类
+     *
+     * @param interfaceClass 接口类
+     * @return 实现类列表
+     */
+    private List<Class<?>> findInterfaceImplementations(Class<?> interfaceClass) {
         List<Class<?>> implementationClasses = new ArrayList<>();
 
         // 获取当前线程的类加载器
@@ -116,6 +131,15 @@ public class DictionarySyncRunner implements ApplicationRunner {
         return implementationClasses;
     }
 
+    /**
+     * 递归扫描目录
+     *
+     * @param directory             目录
+     * @param packageName           包名
+     * @param classLoader           类加载器
+     * @param interfaceClass        接口类
+     * @param implementationClasses 接口实现类容器
+     */
     private void scanDirectoryForClasses(File directory, String packageName, ClassLoader classLoader,
                                          Class<?> interfaceClass, List<Class<?>> implementationClasses) {
         if (!directory.exists() || !directory.isDirectory()) {
@@ -160,7 +184,11 @@ public class DictionarySyncRunner implements ApplicationRunner {
                 jsonValue.put("value", labelValue.getValue());
                 jsonArray.add(jsonValue);
             }
-            jsonMap.put(entry.getKey(), jsonArray.toJSONString());
+            String code = entry.getKey();
+            if (code.contains("@")) {
+                code = code.split("@")[1];
+            }
+            jsonMap.put(code, jsonArray.toJSONString());
         }
         return jsonMap;
     }
@@ -168,6 +196,7 @@ public class DictionarySyncRunner implements ApplicationRunner {
 
     /**
      * 同步枚举类到字典表
+     *
      * @param enumMap 枚举类
      */
     private void syncEnumsToDictionaryTable(Map<String, List<LabelValue<String, String>>> enumMap) {
@@ -178,13 +207,22 @@ public class DictionarySyncRunner implements ApplicationRunner {
         Set<Map.Entry<String, List<LabelValue<String, String>>>> entries = enumMap.entrySet();
         List<DictionaryEntity> dictionaries = new ArrayList<>();
         for (Map.Entry<String, List<LabelValue<String, String>>> entry : entries) {
-
+            String[] vars = entry.getKey().split("@");
+            DictionaryEntity group = new DictionaryEntity();
+            group.setName(vars[0]);
+            group.setValue(vars[1]);
+            group.setType("ENUM");
+            group.setRemark("系统内置枚举");
+            group.setStatus(DisEnableStatusEnum.ENABLE);
+            dictionaries.add(group);
             for (LabelValue<String, String> labelValue : entry.getValue()) {
                 DictionaryEntity dictionary = new DictionaryEntity();
                 dictionary.setName(labelValue.getLabel());
                 dictionary.setValue(labelValue.getValue());
-                dictionary.setGroup(entry.getKey());
+                dictionary.setGroup(vars[1]);
                 dictionary.setType("ENUM");
+                dictionary.setRemark("系统内置枚举");
+                dictionary.setStatus(DisEnableStatusEnum.ENABLE);
                 dictionaries.add(dictionary);
             }
         }

@@ -2,6 +2,7 @@ package com.onezol.vertex.framework.component.dictionary.model;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.onezol.vertex.framework.common.constant.enumeration.DisEnableStatusEnum;
 import com.onezol.vertex.framework.common.model.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -17,16 +18,22 @@ public class DictionaryEntity extends BaseEntity {
     @TableField("value")
     private String value;
 
-    @TableField("description")
-    private Integer description;
-
-    @TableField( "`group`")
-    private String group;
-
     @TableField("color")
     private String color;
 
+    @TableField("remark")
+    private String remark;
+
+    @TableField("`group`")
+    private String group;
+
+    @TableField("sort")
+    private Integer sort;
+
     @TableField("type")
     private String type;
+
+    @TableField("status")
+    private DisEnableStatusEnum status;
 
 }

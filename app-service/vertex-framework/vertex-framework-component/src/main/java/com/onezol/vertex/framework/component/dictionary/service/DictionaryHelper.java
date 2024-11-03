@@ -19,14 +19,14 @@ public class DictionaryHelper {
 
     private static RedisCache redisCache;
 
-    public static List<LabelValue<String, String>> get(String key) {
-        if (StringUtils.isBlank(key)) {
+    public static List<LabelValue<String, String>> get(String code) {
+        if (StringUtils.isBlank(code)) {
             return Collections.emptyList();
         }
         if (Objects.isNull(redisCache)) {
             redisCache = SpringUtils.getBean(RedisCache.class);
         }
-        Object cacheMapValue = redisCache.getCacheMapValue(CacheKey.DICTIONARY, key);
+        Object cacheMapValue = redisCache.getCacheMapValue(CacheKey.DICTIONARY, code);
         if (Objects.isNull(cacheMapValue)) {
             return Collections.emptyList();
         }

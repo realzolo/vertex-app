@@ -162,7 +162,7 @@ public class InitializationRunner implements ApplicationRunner {
         user.setName(nickname);
         user.setIntroduction("");
         user.setAvatar("");
-        user.setGender(GenderEnum.MALE.getValue());
+        user.setGender(GenderEnum.MALE);
         user.setBirthday(LocalDate.now());
         user.setPhone("");
         user.setEmail("");

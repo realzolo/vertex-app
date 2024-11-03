@@ -146,12 +146,10 @@ export interface DeptQuery {
 export interface DictResp {
   id: string
   name: string
-  code: string
-  isSystem: boolean
-  description: string
-  createUserString: string
+  value: string
+  isBuiltIn: boolean
+  remark: string
   createTime: string
-  updateUserString: string
   updateTime: string
 }
 
@@ -162,24 +160,24 @@ export interface DictQuery {
 
 export interface DictItemResp {
   id: string
-  label: string
+  name: string
   value: string
   color: string
   sort: number
-  description: string
-  status: 1 | 2
-  dictId: number
-  createUserString: string
+  remark: string
+  type: string
+  status: 0 | 1
+  isBuiltIn: boolean
+  groupId: number
   createTime: string
-  updateUserString: string
   updateTime: string
 }
 
 export interface DictItemQuery {
-  description?: string
+  remark?: string
   status?: number
   sort: Array<string>
-  dictId: string
+  groupId: number
 }
 
 export interface DictItemPageQuery extends DictItemQuery, PageQuery {

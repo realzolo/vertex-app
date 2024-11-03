@@ -35,10 +35,10 @@ const options: Options = {
 
 const columns: Columns = reactive([
   { label: '名称', field: 'name', type: 'input', rules: [{ required: true, message: '请输入名称' }] },
-  { label: '编码', field: 'code', type: 'input', disabled: () => isUpdate.value, rules: [{ required: true, message: '请输入编码' }] },
+  { label: '编码', field: 'value', type: 'input', disabled: () => isUpdate.value, rules: [{ required: true, message: '请输入编码' }] },
   {
     label: '描述',
-    field: 'description',
+    field: 'remark',
     type: 'textarea',
     props: {
       maxLength: 200,

@@ -25,7 +25,7 @@
                 css: true,
               }"
             >
-              {{ node.name }} ({{ node.code }})
+              {{ node.name }} ({{ node.value }})
             </a-typography-paragraph>
           </template>
           <template #extra="node">
@@ -50,7 +50,7 @@ import type { TreeNodeData } from '@arco-design/web-vue'
 import { mapTree } from 'xe-utils'
 import DictAddModal from './DictAddModal.vue'
 import RightMenu from './RightMenu.vue'
-import { type DictQuery, type DictResp, deleteDict, listDict } from '@/apis/system'
+import { type DictQuery, type DictResp, deleteDict, groupDict } from "@/apis/system";
 import has from '@/utils/has'
 
 interface Props {
@@ -86,7 +86,7 @@ const loading = ref(false)
 const getTreeData = async (query: DictQuery = { ...queryForm }) => {
   try {
     loading.value = true
-    const { data } = await listDict(query)
+    const { data } = await groupDict(query)
     treeData.value = mapTree(data, (i) => ({
       ...i,
       popupVisible: false,

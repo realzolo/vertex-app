@@ -31,8 +31,8 @@ import { useForm } from '@/hooks'
 const emit = defineEmits<{
   (e: 'save-success'): void
 }>()
-const dictId = ref('')
-const dataId = ref('')
+const dictId = ref()
+const dataId = ref()
 const isUpdate = computed(() => !!dataId.value)
 const title = computed(() => (isUpdate.value ? '修改字典项' : '新增字典项'))
 const formRef = ref<InstanceType<typeof GiForm>>()
@@ -43,7 +43,7 @@ const options: Options = {
 }
 
 const columns: Columns = reactive([
-  { label: '标签', field: 'label', type: 'input', rules: [{ required: true, message: '请输入标签' }] },
+  { label: '标签', field: 'name', type: 'input', rules: [{ required: true, message: '请输入标签' }] },
   { label: '值', field: 'value', type: 'input', rules: [{ required: true, message: '请输入值' }] },
   { label: '标签颜色', field: 'color', type: 'input' },
   {
@@ -57,7 +57,7 @@ const columns: Columns = reactive([
   },
   {
     label: '描述',
-    field: 'description',
+    field: 'remark',
     type: 'textarea',
     props: {
       maxLength: 200,
@@ -70,8 +70,8 @@ const columns: Columns = reactive([
     type: 'switch',
     props: {
       type: 'round',
-      checkedValue: 1,
-      uncheckedValue: 2,
+      checkedValue: 0,
+      uncheckedValue: 1,
       checkedText: '启用',
       uncheckedText: '禁用',
     },
@@ -79,9 +79,9 @@ const columns: Columns = reactive([
 ])
 
 const { form, resetForm } = useForm({
-  color: 'blue',
-  sort: 999,
-  status: 1,
+  color: '#FF0000',
+  sort: 0,
+  status: 0,
 })
 
 // 重置
@@ -92,15 +92,15 @@ const reset = () => {
 
 const visible = ref(false)
 // 新增
-const onAdd = (id: string) => {
+const onAdd = (id: number) => {
   reset()
   dictId.value = id
-  dataId.value = ''
+  dataId.value = null
   visible.value = true
 }
 
 // 修改
-const onUpdate = async (id: string) => {
+const onUpdate = async (id: number) => {
   reset()
   dataId.value = id
   const res = await getDictItem(id)
@@ -117,7 +117,7 @@ const save = async () => {
       await updateDictItem(form, dataId.value)
       Message.success('修改成功')
     } else {
-      await addDictItem({ ...form, dictId: dictId.value })
+      await addDictItem({ ...form, groupId: dictId.value })
       Message.success('新增成功')
     }
     emit('save-success')
