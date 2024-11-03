@@ -46,11 +46,6 @@
             <groupId>com.alibaba.fastjson2</groupId>
             <artifactId>fastjson2</artifactId>
         </dependency>
-        <!-- ModelMapper -->
-        <dependency>
-            <groupId>org.modelmapper</groupId>
-            <artifactId>modelmapper</artifactId>
-        </dependency>
         <!-- Jackson Databind -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>

@@ -68,7 +68,7 @@ public class PlainPage<T> {
 
     public static <T> PlainPage<T> from(IPage<?> page, Class<T> targetClass) {
         List<?> records = page.getRecords();
-        Collection<T> objects = BeanUtils.toBean(records, targetClass);
+        Collection<T> objects = BeanUtils.toList(records, targetClass);
         return new PlainPage<>(objects, page.getTotal(), page.getCurrent(), page.getSize());
     }
 }

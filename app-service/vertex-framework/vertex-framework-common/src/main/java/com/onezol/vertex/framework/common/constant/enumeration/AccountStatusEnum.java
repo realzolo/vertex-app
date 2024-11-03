@@ -1,12 +1,11 @@
 package com.onezol.vertex.framework.common.constant.enumeration;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-/**
- * 账户状态枚举
- */
+@Schema(name = "账号状态")
 @Getter
 @AllArgsConstructor
 public enum AccountStatusEnum implements Enumeration<Integer> {

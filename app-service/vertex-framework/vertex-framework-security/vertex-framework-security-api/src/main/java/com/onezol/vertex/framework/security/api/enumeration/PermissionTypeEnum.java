@@ -18,15 +18,11 @@ package com.onezol.vertex.framework.security.api.enumeration;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.onezol.vertex.framework.common.constant.enumeration.Enumeration;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-/**
- * 菜单类型枚举
- *
- * @author Charles7c
- * @since 2023/2/15 20:12
- */
+@Schema(name = "权限类型")
 @Getter
 @RequiredArgsConstructor
 public enum PermissionTypeEnum implements Enumeration<Integer> {

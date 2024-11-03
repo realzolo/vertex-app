@@ -247,7 +247,7 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
         entity.setName("张三");
         entity.setIntroduction("");
         entity.setAvatar("");
-        entity.setGender(GenderEnum.MALE.getValue());
+        entity.setGender(GenderEnum.MALE);
         entity.setBirthday(LocalDate.now());
         entity.setPhone("");
         entity.setEmail("");

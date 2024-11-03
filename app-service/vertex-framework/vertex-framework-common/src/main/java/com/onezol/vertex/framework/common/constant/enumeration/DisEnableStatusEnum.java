@@ -18,12 +18,11 @@ package com.onezol.vertex.framework.common.constant.enumeration;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.onezol.vertex.framework.common.constant.UiConstants;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-/**
- * 启用/禁用状态枚举
- */
+@Schema(name = "启用/禁用状态")
 @Getter
 @RequiredArgsConstructor
 public enum DisEnableStatusEnum implements Enumeration<Integer> {

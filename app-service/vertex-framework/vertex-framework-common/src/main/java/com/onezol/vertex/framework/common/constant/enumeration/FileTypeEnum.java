@@ -2,6 +2,7 @@ package com.onezol.vertex.framework.common.constant.enumeration;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.onezol.vertex.framework.common.util.StringUtils;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -9,9 +10,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * 文件类型枚举
- */
+@Schema(name = "文件类型")
 @Getter
 @AllArgsConstructor
 public enum FileTypeEnum implements Enumeration<Integer> {

@@ -1,24 +1,17 @@
 package com.onezol.vertex.framework.common.util;
 
-import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
+import com.onezol.vertex.framework.common.constant.enumeration.Enumeration;
+import org.springframework.cglib.beans.BeanCopier;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 对象转换工具类
  */
 public class BeanUtils extends org.springframework.beans.BeanUtils {
-    private static final ModelMapper modelMapper = new ModelMapper();
-
-    static {
-        // 完全匹配
-        modelMapper.getConfiguration().setFullTypeMatchingRequired(true);
-        // 匹配策略定义为严格
-        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-    }
 
     private BeanUtils() {
         throw new IllegalStateException("Utility class cannot be instantiated");
@@ -32,10 +25,30 @@ public class BeanUtils extends org.springframework.beans.BeanUtils {
      * @return 转后的目标对象
      */
     public static <S, T> T toBean(S source, Class<T> targetType) {
-        if (source == null) {
-            return null;
+        BeanCopier copier = BeanCopier.create(source.getClass(), targetType, true);
+        try {
+            Constructor<T> constructor = targetType.getDeclaredConstructor();
+            T newInstance = constructor.newInstance();
+            copier.copy(source, newInstance, (value, target, context) -> {
+                if (value instanceof Enumeration<?> && target != Enumeration.class) {
+                    return ((Enumeration<?>) value).getValue();
+                }
+                if (Arrays.stream(target.getInterfaces()).toList().contains(Enumeration.class) && !(value instanceof Enumeration<?>)) {
+                    Object[] enumConstants = target.getEnumConstants();
+                    for (Object enumConstant : enumConstants) {
+                        Enumeration<?> aEnum = (Enumeration<?>) enumConstant;
+                        if (aEnum.getValue().equals(value)) {
+                            return aEnum;
+                        }
+                    }
+                }
+                return value;
+            });
+            return newInstance;
+        } catch (NoSuchMethodException | InstantiationException | IllegalAccessException |
+                 InvocationTargetException e) {
+            throw new RuntimeException(e);
         }
-        return modelMapper.map(source, targetType);
     }
 
     /**
@@ -44,49 +57,7 @@ public class BeanUtils extends org.springframework.beans.BeanUtils {
      * @param source 源对象集合
      * @return 转换后的目标对象List
      */
-    public static <S, T> Collection<T> toBean(Collection<S> source, Class<T> targetType) {
-        if (source == null) {
-            return null;
-        }
-        if (targetType == null) {
-            throw new IllegalArgumentException("Target type must not be null");
-        }
-
-        return source.stream().map(item -> modelMapper.map(item, targetType)).toList();
-    }
-
-
-    /**
-     * 将Map换为目标对象
-     *
-     * @param map        源对象Map
-     * @param targetType 目标对象类型
-     * @return 转换后的目标对象
-     */
-    public static <T> T toBean(Map<String, Object> map, Class<T> targetType) {
-        if (map == null) {
-            return null;
-        }
-        return modelMapper.map(map, targetType);
-    }
-
-    /**
-     * 将源对象换为Map
-     *
-     * @param source 源对象
-     * @return 转换后的Map
-     */
-    public static <S> Map<String, Object> toMap(S source) {
-        if (source == null) {
-            return null;
-        }
-
-        // MatchingStrategies.STANDARD: 要求属性名称必须相同, 容忍属性类型不一致
-        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STANDARD);
-
-        Map<String, Object> resultMap = new HashMap<>();
-        modelMapper.map(source, resultMap);
-
-        return resultMap;
+    public static <S, T> Collection<T> toList(Collection<S> source, Class<T> targetType) {
+        return source.stream().map(item -> toBean(item, targetType)).toList();
     }
 }

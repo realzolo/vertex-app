@@ -11,12 +11,8 @@ import java.lang.annotation.*;
 public @interface Dictionary {
 
     /**
-     * 字典注解: 源于枚举
-     */
-    Class<?> annotation();
-
-    /**
      * 字典注解: 枚举值
      */
-    String value() default "";
+    String value();
+
 }

@@ -17,12 +17,11 @@
 package com.onezol.vertex.framework.common.constant.enumeration;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-/**
- * 性别枚举
- */
+@Schema(name = "性别")
 @Getter
 @RequiredArgsConstructor
 public enum GenderEnum implements Enumeration<Integer> {

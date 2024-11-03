@@ -1,11 +1,10 @@
 package com.onezol.vertex.framework.common.constant.enumeration;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-/**
- * 登录状态枚举
- */
+@Schema(name = "登录状态")
 @Getter
 @AllArgsConstructor
 public enum LoginStatusEnum implements Enumeration<Integer> {

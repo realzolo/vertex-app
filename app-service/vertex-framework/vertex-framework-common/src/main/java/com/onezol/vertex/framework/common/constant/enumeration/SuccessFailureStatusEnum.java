@@ -18,12 +18,11 @@ package com.onezol.vertex.framework.common.constant.enumeration;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.onezol.vertex.framework.common.constant.UiConstants;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-/**
- * 成功/失败状态枚举
- */
+@Schema(name = "成功/失败状态")
 @Getter
 @RequiredArgsConstructor
 public enum SuccessFailureStatusEnum implements Enumeration<String> {

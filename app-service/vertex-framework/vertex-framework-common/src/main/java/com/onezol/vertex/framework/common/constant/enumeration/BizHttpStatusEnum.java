@@ -1,12 +1,11 @@
 package com.onezol.vertex.framework.common.constant.enumeration;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
-/**
- * 业务 HTTP 状态码
- */
+@Schema(name = "业务HTTP状态码")
 @Getter
 @AllArgsConstructor
 public enum BizHttpStatusEnum implements Enumeration<Integer> {

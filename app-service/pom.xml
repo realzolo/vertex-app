@@ -30,7 +30,6 @@
         <knife4j.version>4.4.0</knife4j.version>
         <jjwt.version>0.9.1</jjwt.version>
         <fastjson2.version>2.0.34</fastjson2.version>
-        <modelmapper.version>3.1.1</modelmapper.version>
         <druid.version>1.2.21</druid.version>
         <jaxb-api.version>2.3.1</jaxb-api.version>
         <liquibase.version>4.25.1</liquibase.version>
@@ -63,12 +62,6 @@
                 <groupId>com.alibaba.fastjson2</groupId>
                 <artifactId>fastjson2</artifactId>
                 <version>${fastjson2.version}</version>
-            </dependency>
-            <!-- https://mvnrepository.com/artifact/org.modelmapper/modelmapper -->
-            <dependency>
-                <groupId>org.modelmapper</groupId>
-                <artifactId>modelmapper</artifactId>
-                <version>${modelmapper.version}</version>
             </dependency>
             <!-- https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt -->
             <dependency>
