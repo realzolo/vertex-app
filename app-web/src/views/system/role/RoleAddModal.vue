@@ -24,9 +24,9 @@
         <a-form-item label="排序" field="sort">
           <a-input-number v-model="form.sort" placeholder="请输入排序" :min="1" mode="button" />
         </a-form-item>
-        <a-form-item label="描述" field="description">
+        <a-form-item label="描述" field="remark">
           <a-textarea
-            v-model.trim="form.description"
+            v-model.trim="form.remark"
             placeholder="请输入描述"
             show-word-limit
             :max-length="200"
@@ -174,7 +174,7 @@ const onPrev = () => {
 const onNext = async () => {
   try {
     if (current.value === 1) {
-      const isInvalid = await formRef.value?.validateField(['name', 'code', 'sort', 'description'])
+      const isInvalid = await formRef.value?.validateField(['name', 'code', 'sort', 'remark'])
       if (isInvalid) return
     }
     current.value = Math.min(3, current.value + 1)

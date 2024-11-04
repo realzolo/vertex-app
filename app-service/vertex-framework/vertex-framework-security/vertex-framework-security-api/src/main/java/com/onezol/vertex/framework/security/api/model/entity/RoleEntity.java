@@ -25,6 +25,10 @@ public class RoleEntity extends BaseEntity {
     @TableField("sort")
     private Integer sort;
 
+    @Schema(description = "备注")
+    @TableField("remark")
+    private String remark;
+
     @Schema(description = "角色状态(0: 正常, 1: 禁用)")
     @TableField("status")
     private Integer status;

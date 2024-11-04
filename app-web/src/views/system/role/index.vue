@@ -112,7 +112,7 @@ const columns: TableInstanceColumns[] = [
   // { title: '数据权限', dataIndex: 'dataScope', slotName: 'dataScope', ellipsis: true, tooltip: true },
   { title: '排序', dataIndex: 'sort', align: 'center', show: false },
   { title: '系统内置', slotName: 'isSystem', align: 'center', show: false },
-  { title: '描述', dataIndex: 'description', ellipsis: true, tooltip: true },
+  { title: '描述', dataIndex: 'remark', ellipsis: true, tooltip: true },
   { title: '创建人', dataIndex: 'createUserString', ellipsis: true, tooltip: true, show: false },
   { title: '创建时间', dataIndex: 'createTime', width: 180 },
   { title: '修改人', dataIndex: 'updateUserString', ellipsis: true, tooltip: true, show: false },

@@ -34,6 +34,7 @@ CREATE TABLE IF NOT EXISTS vx_role
     name        VARCHAR(25)  COMMENT '角色名称',
     code        VARCHAR(25)  COMMENT '角色Code',
     sort        INT UNSIGNED DEFAULT 0 COMMENT '排序号',
+    remark      VARCHAR(255) COMMENT '备注',
     status      INT UNSIGNED DEFAULT 0 COMMENT '(0: 正常, 1: 禁用)',
     -- 自定义字段结束 --
     creator        BIGINT           DEFAULT NULL COMMENT '创建人',

@@ -25,9 +25,9 @@ public class MyBatisPlusConfiguration implements MetaObjectHandler {
     @Override
     public void insertFill(MetaObject metaObject) {
         AuthUser authUser = AuthenticationContext.get();
-        this.strictInsertFill(metaObject, "creator", String.class, Objects.nonNull(authUser) ? String.valueOf(authUser.getUserId()) : null);
+        this.strictInsertFill(metaObject, "creator", Long.class, Objects.nonNull(authUser) ? authUser.getUserId() : null);
         this.strictInsertFill(metaObject, "createTime", LocalDateTime.class, LocalDateTime.now());
-        this.strictInsertFill(metaObject, "updater", String.class, Objects.nonNull(authUser) ? String.valueOf(authUser.getUserId()) : null);
+        this.strictInsertFill(metaObject, "updater", Long.class, Objects.nonNull(authUser) ? authUser.getUserId() : null);
         this.strictInsertFill(metaObject, "updateTime", LocalDateTime.class, LocalDateTime.now());
         this.strictInsertFill(metaObject, "deleted", Boolean.class, Boolean.FALSE);
     }
@@ -35,7 +35,7 @@ public class MyBatisPlusConfiguration implements MetaObjectHandler {
     @Override
     public void updateFill(MetaObject metaObject) {
         AuthUser authUser = AuthenticationContext.get();
-        this.strictUpdateFill(metaObject, "updater", String.class, Objects.nonNull(authUser) ? String.valueOf(authUser.getUserId()) : null);
+        this.strictUpdateFill(metaObject, "updater", Long.class, Objects.nonNull(authUser) ? authUser.getUserId() : null);
         this.strictUpdateFill(metaObject, "updateTime", LocalDateTime.class, LocalDateTime.now());
     }
 

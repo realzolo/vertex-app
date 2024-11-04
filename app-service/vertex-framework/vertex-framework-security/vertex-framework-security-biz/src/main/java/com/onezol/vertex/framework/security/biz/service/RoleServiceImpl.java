@@ -39,20 +39,44 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleMapper, RoleEntity> imp
         if (!updateById(entity)) {
             throw new RuntimeBizException("更新角色失败");
         }
-        rolePermissionService.remove(Wrappers.<RolePermissionEntity>lambdaQuery().eq(RolePermissionEntity::getRoleId, entity.getId()));
-        if (role.getPermissionIds() != null && !role.getPermissionIds().isEmpty()) {
-            Set<Long> permissionIds = role.getPermissionIds();
+        // 查询当前角色原权限ID列表
+        List<Long> oldPermissionIds = rolePermissionService.list(
+                Wrappers.<RolePermissionEntity>lambdaQuery()
+                        .select(RolePermissionEntity::getPermissionId)
+                        .eq(RolePermissionEntity::getRoleId, role.getId())
+        ).stream().map(RolePermissionEntity::getPermissionId).toList();
+
+        // 当前角色权限列表
+        Set<Long> newPermissionIds = role.getPermissionIds();
+
+        // 计算待删除的权限ID列表
+        List<Long> removePermissionIds = new ArrayList<>(oldPermissionIds);
+        removePermissionIds.removeAll(newPermissionIds);
+
+        // 计算待新增的权限ID列表
+        List<Long> addPermissionIds = new ArrayList<>(newPermissionIds);
+        addPermissionIds.removeAll(oldPermissionIds);
+
+        // 删除多余的角色权限
+        if (!removePermissionIds.isEmpty()) {
+            rolePermissionService.remove(
+                    Wrappers.<RolePermissionEntity>lambdaQuery()
+                            .eq(RolePermissionEntity::getRoleId, role.getId())
+                            .in(RolePermissionEntity::getPermissionId, removePermissionIds)
+            );
+        }
+
+        // 新增角色权限
+        if (!addPermissionIds.isEmpty()) {
             List<RolePermissionEntity> rolePermissions = new ArrayList<>();
-            for (Long permissionId : permissionIds) {
+            for (Long permissionId : addPermissionIds) {
                 RolePermissionEntity rolePermission = new RolePermissionEntity();
                 rolePermission.setRoleId(role.getId());
                 rolePermission.setPermissionId(permissionId);
                 rolePermissions.add(rolePermission);
             }
-            boolean ok = rolePermissionService.saveBatch(rolePermissions);
-            if (!ok) {
-                throw new RuntimeBizException("更新角色权限失败");
-            }
+            rolePermissionService.saveBatch(rolePermissions);
         }
+        log.info("更新角色 '{}' 权限完成", role.getName());
     }
 }

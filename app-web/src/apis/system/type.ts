@@ -78,7 +78,7 @@ export interface RoleDetailResp {
 }
 
 export interface RoleQuery {
-  description?: string
+  remark?: string
   sort: Array<string>
 }
 
