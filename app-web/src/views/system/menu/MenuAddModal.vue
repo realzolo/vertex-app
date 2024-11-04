@@ -139,8 +139,8 @@ const menuSelectTree = computed(() => {
   const menus = JSON.parse(JSON.stringify(props.menus)) as MenuResp[]
   const data = filterTree(menus, (i) => [1, 2].includes(i.data.type))
   return mapTree(data, (i) => ({
-    key: i.id,
-    title: i.name,
+    key: i.key,
+    title: i.title,
     children: i.children,
   }))
 })
