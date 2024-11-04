@@ -46,7 +46,10 @@ public class PermissionController {
             }
         }
         for (TreeNode node : treeNodes) {
-            node.setChildren(buildTree(nodes, node.getKey()));
+            List<TreeNode> children = buildTree(nodes, node.getKey());
+            if (!children.isEmpty()) {
+                node.setChildren(children);
+            }
         }
         return treeNodes;
     }

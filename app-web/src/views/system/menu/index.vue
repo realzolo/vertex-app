@@ -3,7 +3,7 @@
     <GiTable
       ref="tableRef"
       title="菜单管理"
-      row-key="id"
+      row-key="key"
       :data="dataList"
       :columns="columns"
       :loading="loading"
@@ -137,9 +137,9 @@ const columns: TableInstanceColumns[] = [
   { title: '外链', slotName: 'isExternal', align: 'center' },
   { title: '隐藏', slotName: 'isHidden', align: 'center' },
   { title: '缓存', slotName: 'isCache', align: 'center' },
-  { title: '创建人', dataIndex: 'createUserString', ellipsis: true, tooltip: true, show: false },
+  // { title: '创建人', dataIndex: 'createUserString', ellipsis: true, tooltip: true, show: false },
   { title: '创建时间', dataIndex: 'createTime', render: ({record}) => record.data.createTime, width: 180 },
-  { title: '修改人', dataIndex: 'updateUserString', ellipsis: true, tooltip: true, show: false },
+  // { title: '修改人', dataIndex: 'updateUserString', ellipsis: true, tooltip: true, show: false },
   { title: '修改时间', dataIndex: 'updateTime', width: 180, show: false },
   {
     title: '操作',
