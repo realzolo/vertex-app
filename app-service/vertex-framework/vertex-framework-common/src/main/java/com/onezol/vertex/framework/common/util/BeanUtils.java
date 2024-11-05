@@ -7,6 +7,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * 对象转换工具类
@@ -57,7 +58,7 @@ public class BeanUtils extends org.springframework.beans.BeanUtils {
      * @param source 源对象集合
      * @return 转换后的目标对象List
      */
-    public static <S, T> Collection<T> toList(Collection<S> source, Class<T> targetType) {
+    public static <S, T> List<T> toList(Collection<S> source, Class<T> targetType) {
         return source.stream().map(item -> toBean(item, targetType)).toList();
     }
 }

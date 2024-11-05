@@ -1,11 +1,11 @@
 package com.onezol.vertex.framework.component.storage.runner;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.onezol.vertex.framework.common.model.entity.RuntimeConfigurationEntity;
+import com.onezol.vertex.framework.component.configuration.mapper.RuntimeConfigurationMapper;
+import com.onezol.vertex.framework.component.configuration.model.RuntimeConfigurationEntity;
 import com.onezol.vertex.framework.component.storage.client.FileStorageClientFactory;
 import com.onezol.vertex.framework.component.storage.client.s3.S3FileStorageClientConfig;
 import com.onezol.vertex.framework.component.storage.constant.FileStorage;
-import com.onezol.vertex.framework.support.mapper.RuntimeConfigurationMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -37,7 +37,7 @@ public class FileStorageInitializationRunner implements ApplicationRunner {
         );
 
         // 按照configName进行分组
-        Map<String, List<RuntimeConfigurationEntity>> configMap = fileStorageConfigs.stream().collect(Collectors.groupingBy(RuntimeConfigurationEntity::getConfigName));
+        Map<String, List<RuntimeConfigurationEntity>> configMap = fileStorageConfigs.stream().collect(Collectors.groupingBy(RuntimeConfigurationEntity::getName));
 
         // 初始化文件存储客户端
         initFileStorageClients(configMap);
@@ -77,8 +77,8 @@ public class FileStorageInitializationRunner implements ApplicationRunner {
         }
         S3FileStorageClientConfig config = new S3FileStorageClientConfig();
         fileStorageConfigs.forEach(fileStorageConfig -> {
-            String value = fileStorageConfig.getConfigValue();
-            switch (fileStorageConfig.getConfigKey()) {
+            String value = fileStorageConfig.getValue();
+            switch (fileStorageConfig.getCode()) {
                 case "accessKey":
                     config.setAccessKey(value);
                     break;

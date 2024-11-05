@@ -29,8 +29,8 @@ export function listCommonDict(code: string) {
 }
 
 /** @desc 查询参数列表 */
-export function listOptionDict(query: OptionQuery) {
-  return http.get<LabelValueState[]>(`${BASE_URL}/dict/option`, query)
+export function listOptionDict(code: string) {
+  return http.get<LabelValueState[]>(`/runtime-configuration/${code}`)
 }
 
 /** @desc 上传文件 */

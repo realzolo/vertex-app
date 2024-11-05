@@ -177,13 +177,10 @@ const handleCancel = () => {
   isUpdate.value = false
 }
 
-const queryForm = reactive({
-  category: 'SITE',
-})
 // 查询列表数据
 const getDataList = async () => {
   loading.value = true
-  const { data } = await listOption(queryForm)
+  const { data } = await listOption('SITE')
   siteConfig.value = data.reduce((obj: SiteConfig, option: OptionResp) => {
     obj[option.code] = { ...option }
     return obj
@@ -209,7 +206,7 @@ const handleSave = async () => {
 
 // 恢复默认
 const handleResetValue = async () => {
-  await resetOptionValue(queryForm)
+  await resetOptionValue('SITE')
   Message.success('恢复成功')
   await getDataList()
   appStore.setSiteConfig(form)

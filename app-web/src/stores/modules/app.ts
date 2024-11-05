@@ -58,9 +58,7 @@ const storeSetup = () => {
   const siteConfig = reactive({}) as BasicConfig
   // 初始化系统配置
   const initSiteConfig = () => {
-    listOptionDict({
-      category: 'SITE',
-    }).then((res) => {
+    listOptionDict('SITE').then((res) => {
       const resMap = new Map()
       res.data.forEach((item) => {
         resMap.set(item.label, item.value)

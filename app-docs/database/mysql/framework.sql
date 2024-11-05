@@ -165,11 +165,12 @@ CREATE TABLE IF NOT EXISTS vx_runtime_configuration
 (
     id          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
     -- 自定义字段开始 --
-    subject     VARCHAR(255) DEFAULT '' COMMENT '所属主题',
-    config_name        VARCHAR(100) DEFAULT '' COMMENT '配置名称',
-    config_key         VARCHAR(100) DEFAULT '' COMMENT '配置键',
-    config_value       VARCHAR(512) COMMENT '配置值',
-    config_description VARCHAR(512) COMMENT '配置描述',
+    subject         VARCHAR(255) COMMENT '所属主题',
+    name            VARCHAR(25)  COMMENT '配置名称',
+    code            VARCHAR(25)  COMMENT '配置键',
+    default_value   VARCHAR(512) COMMENT '配置默认值',
+    value           VARCHAR(512) COMMENT '配置值',
+    description     VARCHAR(512) COMMENT '配置描述',
     -- 自定义字段结束 --
     creator     BIGINT       DEFAULT NULL COMMENT '创建人',
     create_time DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',

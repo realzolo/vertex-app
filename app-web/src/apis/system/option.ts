@@ -3,11 +3,11 @@ import http from '@/utils/http'
 
 export type * from './type'
 
-const BASE_URL = '/system/option'
+const BASE_URL = '/runtime-configuration'
 
 /** @desc 查询参数列表 */
-export function listOption(query: T.OptionQuery) {
-  return http.get<T.OptionResp[]>(`${BASE_URL}`, query)
+export function listOption(subject: string) {
+  return http.get<T.OptionResp[]>(`${BASE_URL}/list/${subject}`)
 }
 
 /** @desc 修改参数 */
@@ -16,6 +16,6 @@ export function updateOption(data: any) {
 }
 
 /** @desc 重置参数 */
-export function resetOptionValue(query: T.OptionQuery) {
-  return http.patch(`${BASE_URL}/value`, query)
+export function resetOptionValue(subject: string) {
+  return http.patch(`${BASE_URL}/reset/${subject}`)
 }
