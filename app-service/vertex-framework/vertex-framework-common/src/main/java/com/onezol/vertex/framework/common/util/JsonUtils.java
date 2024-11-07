@@ -5,6 +5,7 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.fastjson2.JSONWriter;
 
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,8 +33,20 @@ public class JsonUtils {
      * @param <T>   目标对象类型
      * @return 解析后的目标对象
      */
-    public static <T> T fromJson(String json, Class<T> clazz) {
+    public static <T> T parseObject(String json, Class<T> clazz) {
         return JSON.parseObject(json, clazz);
+    }
+
+    /**
+     * 将JSON字符串转换为指定类型的对象。
+     *
+     * @param json JSON字符串
+     * @param type 目标对象的类型
+     * @param <T>  目标对象类型
+     * @return 解析后的目标对象
+     */
+    public static <T> T parseObject(String json, Type type) {
+        return JSON.parseObject(json, type);
     }
 
     /**
