@@ -87,8 +87,8 @@ export interface RolePageQuery extends RoleQuery, PageQuery {
 
 /** 系统菜单类型 */
 export interface MenuResp {
-  key: number
-  parentKey: number
+  id: number
+  parentId: number
   path: string
   title: string
   icon: string

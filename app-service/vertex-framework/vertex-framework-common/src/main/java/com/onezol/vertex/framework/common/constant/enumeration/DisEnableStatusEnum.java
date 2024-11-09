@@ -28,13 +28,14 @@ import lombok.RequiredArgsConstructor;
 public enum DisEnableStatusEnum implements Enumeration<Integer> {
 
     /**
-     * 启用
-     */
-    ENABLE("启用", 0, UiConstants.COLOR_SUCCESS),
-    /**
      * 禁用
      */
-    DISABLE("禁用", 1, UiConstants.COLOR_ERROR);
+    DISABLE("禁用", 0, UiConstants.COLOR_ERROR),
+
+    /**
+     * 启用
+     */
+    ENABLE("启用", 1, UiConstants.COLOR_SUCCESS);
 
 
     private final String name;

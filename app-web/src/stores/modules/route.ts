@@ -44,29 +44,29 @@ const transformComponentView = (component: string) => {
  */
 const formatAsyncRoutes = (menus: RouteItem[]) => {
   if (!menus.length) return []
-  menus.sort((a, b) => (a?.sort ?? 0) - (b?.sort ?? 0)) // 排序
+  menus.sort((a, b) => (a?.data.sort ?? 0) - (b?.data.sort ?? 0)) // 排序
   const pathMap = new Map()
   const routes = mapTree(menus, (item) => {
-    pathMap.set(item.id, item.path)
+    pathMap.set(item.id, item.data.path)
     if (item.children && item.children.length) {
-      item.children.sort((a, b) => (a?.sort ?? 0) - (b?.sort ?? 0)) // 排序
+      item.children.sort((a, b) => (a?.data.sort ?? 0) - (b?.data.sort ?? 0)) // 排序
     }
     // 部分子菜单，例如：通知公告新增、查看详情，需要选中其父菜单
-    if (item.parentId && item.type === 2 && item.permission) {
-      item.activeMenu = pathMap.get(item.parentId)
+    if (item.parentId && item.data.type === 2 && item.data.permission) {
+      item.data.activeMenu = pathMap.get(item.parentId)
     }
     return {
-      path: item.path,
-      name: item.name ?? transformPathToName(item.path),
-      component: transformComponentView(item.component),
-      redirect: item.redirect,
+      path: item.data.path,
+      name: item.data.name ?? transformPathToName(item.data.path),
+      component: transformComponentView(item.data.component),
+      redirect: item.data.redirect,
       meta: {
         title: item.title,
-        hidden: item.isHidden,
-        keepAlive: item.isCache,
+        hidden: item.data.isHidden,
+        keepAlive: item.data.isCache,
         icon: item.icon,
-        showInTabs: item.showInTabs,
-        activeMenu: item.activeMenu,
+        showInTabs: item.data.showInTabs,
+        activeMenu: item.data.activeMenu,
       },
     }
   })

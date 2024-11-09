@@ -93,6 +93,7 @@ router.beforeEach(async (to, from, next) => {
           // 设置 replace: true, 因此导航将不会留下历史记录
           next({ ...to, replace: true })
         } catch (error: any) {
+          console.error(error);
           // 过程中发生任何错误，都直接重置 Token，并重定向到登录页面
           await userStore.logoutCallBack()
           next(`/login?redirect=${to.path}`)

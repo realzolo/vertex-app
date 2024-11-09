@@ -6,8 +6,8 @@ import java.util.List;
 
 @Data
 public class TreeNode {
-    private Long key;
-    private Long parentKey;
+    private Long id;
+    private Long parentId;
     private String title;
     private String icon;
     private Boolean disabled;

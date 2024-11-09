@@ -3,7 +3,7 @@
     <GiTable
       ref="tableRef"
       title="菜单管理"
-      row-key="key"
+      row-key="id"
       :data="dataList"
       :columns="columns"
       :loading="loading"
@@ -158,7 +158,7 @@ const reset = () => {
 
 // 删除
 const onDelete = (record: MenuResp) => {
-  return handleDelete(() => deleteMenu(record.key), {
+  return handleDelete(() => deleteMenu(record.id), {
     content: `是否确定删除 [${record.title}]？`,
     showModal: true,
   })
@@ -180,7 +180,7 @@ const onAdd = (parentId?: number) => {
 
 // 修改
 const onUpdate = (record: MenuResp) => {
-  MenuAddModalRef.value?.onUpdate(record.key)
+  MenuAddModalRef.value?.onUpdate(record.id)
 }
 </script>
 

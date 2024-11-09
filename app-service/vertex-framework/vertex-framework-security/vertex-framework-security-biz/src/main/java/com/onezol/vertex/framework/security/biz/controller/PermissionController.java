@@ -1,10 +1,12 @@
 package com.onezol.vertex.framework.security.biz.controller;
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.onezol.vertex.framework.common.constant.enumeration.DisEnableStatusEnum;
 import com.onezol.vertex.framework.common.helper.ResponseHelper;
 import com.onezol.vertex.framework.common.model.GenericResponse;
 import com.onezol.vertex.framework.common.model.TreeNode;
 import com.onezol.vertex.framework.common.util.BeanUtils;
+import com.onezol.vertex.framework.common.util.TreeUtils;
 import com.onezol.vertex.framework.security.api.model.dto.Permission;
 import com.onezol.vertex.framework.security.api.model.entity.PermissionEntity;
 import com.onezol.vertex.framework.security.api.service.PermissionService;
@@ -24,8 +26,8 @@ public class PermissionController {
         List<TreeNode> treeNodes = new ArrayList<>();
         for (PermissionEntity entity : list) {
             TreeNode treeNode = new TreeNode();
-            treeNode.setKey(entity.getId());
-            treeNode.setParentKey(entity.getParentId());
+            treeNode.setId(entity.getId());
+            treeNode.setParentId(entity.getParentId());
             treeNode.setTitle(entity.getTitle());
             treeNode.setIcon(entity.getIcon());
             treeNode.setDisabled(false);
@@ -38,27 +40,11 @@ public class PermissionController {
         return treeNodes;
     }
 
-    public static List<TreeNode> buildTree(List<TreeNode> nodes, Long parentId) {
-        List<TreeNode> treeNodes = new ArrayList<>();
-        for (TreeNode node : nodes) {
-            if (node.getParentKey().toString().equals(parentId.toString())) {
-                treeNodes.add(node);
-            }
-        }
-        for (TreeNode node : treeNodes) {
-            List<TreeNode> children = buildTree(nodes, node.getKey());
-            if (!children.isEmpty()) {
-                node.setChildren(children);
-            }
-        }
-        return treeNodes;
-    }
-
     @GetMapping("/tree")
     public GenericResponse<List<TreeNode>> getPermissionTree() {
         List<PermissionEntity> list = permissionService.list();
         List<TreeNode> nodes = toTreeNodes(list);
-        List<TreeNode> treeNodes = buildTree(nodes, 0L);
+        List<TreeNode> treeNodes = TreeUtils.buildTree(nodes, 0L);
         return ResponseHelper.buildSuccessfulResponse(treeNodes);
     }
 
@@ -84,11 +70,11 @@ public class PermissionController {
     @PutMapping("/{id}")
     public GenericResponse<Permission> updatePermission(@RequestBody Permission permission) {
         PermissionEntity entity = BeanUtils.toBean(permission, PermissionEntity.class);
-        switch (permission.getStatus()) {
-            case 0 -> entity.setStatus(DisEnableStatusEnum.ENABLE);
-            case 1 -> entity.setStatus(DisEnableStatusEnum.DISABLE);
-        }
-        boolean ok = permissionService.updateById(entity);
+        Long rootId = entity.getId();
+        List<PermissionEntity> subPermissions = this.findSubPermissions(new ArrayList<>(), rootId);
+        subPermissions.forEach(item -> item.setStatus(entity.getStatus()));
+        subPermissions.add(entity);
+        boolean ok = permissionService.updateBatchById(subPermissions);
         if (!ok) {
             return ResponseHelper.buildFailedResponse("修改权限失败");
         }
@@ -103,5 +89,15 @@ public class PermissionController {
             return ResponseHelper.buildFailedResponse("删除权限失败");
         }
         return ResponseHelper.buildSuccessfulResponse();
+    }
+
+
+    private List<PermissionEntity> findSubPermissions(List<PermissionEntity> list, Long parentId) {
+        List<PermissionEntity> sublist = permissionService.list(Wrappers.<PermissionEntity>lambdaQuery().eq(PermissionEntity::getParentId, parentId));
+        for (PermissionEntity permission : sublist) {
+           this.findSubPermissions(list, permission.getId());
+        }
+        list.addAll(sublist);
+        return list;
     }
 }
