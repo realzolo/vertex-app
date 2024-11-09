@@ -2,29 +2,19 @@ package com.onezol.vertex.framework.common.util;
 
 
 import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 
 /**
  * 时间工具类
  */
-public class DateUtils {
+public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
 
     /**
      * 时区 - 默认
      */
     public static final String TIME_ZONE_DEFAULT = "GMT+8";
-
-    /**
-     * 秒转换成毫秒
-     */
-    public static final long SECOND_MILLIS = 1000;
-
-    public static final String FORMAT_YEAR_MONTH_DAY = "yyyy-MM-dd";
-
-    public static final String FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND = "yyyy-MM-dd HH:mm:ss";
-
-    public static final String FORMAT_HOUR_MINUTE_SECOND = "HH:mm:ss";
 
     /**
      * 将 LocalDateTime 转换成 Date
@@ -174,6 +164,21 @@ public class DateUtils {
         LocalDateTime today = LocalDateTime.of(now.toLocalDate(), LocalTime.MIN);
         LocalDateTime tomorrow = today.plusDays(1);
         return date.isAfter(today) && date.isBefore(tomorrow);
+    }
+
+    /**
+     * 格式化时间
+     * <p>
+     *
+     * @param date    日期
+     * @param pattern 格式
+     * @return 格式化后的时间
+     */
+    public static String format(LocalDateTime date, String pattern) {
+        if (date == null) {
+            throw new IllegalArgumentException("date is null");
+        }
+        return date.format(DateTimeFormatter.ofPattern(pattern));
     }
 
 }

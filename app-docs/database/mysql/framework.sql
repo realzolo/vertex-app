@@ -202,3 +202,52 @@ CREATE TABLE IF NOT EXISTS vx_dictionary
 ) ENGINE = InnoDB
     DEFAULT CHARSET = utf8mb4
     AUTO_INCREMENT = 10000 COMMENT = '数据字典';
+
+CREATE TABLE IF NOT EXISTS vx_storage_strategy
+(
+    id          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
+    -- 自定义字段开始 --
+    name        VARCHAR(25)   COMMENT '存储策略名称',
+    code        VARCHAR(25)   COMMENT '存储策略Code',
+    type        VARCHAR(25)   COMMENT '存储策略类型',
+    access_key  VARCHAR(255)  COMMENT 'accessKey',
+    secret_key  VARCHAR(255)  COMMENT 'secretKey',
+    endpoint    VARCHAR(255)  COMMENT '端点',
+    bucket      VARCHAR(255)  COMMENT '存储桶',
+    base_path   VARCHAR(255)  COMMENT '基础路径',
+    access_address VARCHAR(255)  COMMENT '访问地址',
+    is_default     BIT           DEFAULT b'0' COMMENT '是否默认(1: 默认，0: 非默认)',
+    remark      VARCHAR(255)  COMMENT '字典备注',
+    sort        INT UNSIGNED  DEFAULT 0   COMMENT '排序',
+    status      BIT           DEFAULT b'0' COMMENT '字典状态(0: 启用，1: 禁用)',
+    -- 自定义字段结束 --
+    creator     BIGINT       DEFAULT NULL COMMENT '创建人',
+    create_time DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    updater     BIGINT       DEFAULT NULL COMMENT '更新人',
+    update_time DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+    version     INT UNSIGNED DEFAULT 0 COMMENT '版本号'
+) ENGINE = InnoDB
+    DEFAULT CHARSET = utf8mb4
+    AUTO_INCREMENT = 10000 COMMENT = '存储策略';
+
+CREATE TABLE IF NOT EXISTS vx_file_record
+(
+    id          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
+    -- 自定义字段开始 --
+    name                VARCHAR(25)   COMMENT '文件名称',
+    size                BIGINT        COMMENT '文件大小（字节)',
+    url                 VARCHAR(512)  COMMENT 'URL',
+    extension           VARCHAR(25)   COMMENT '文件后缀',
+    type                VARCHAR(25)   COMMENT '文件类型',
+    thumbnail_size      BIGINT        COMMENT '缩略图大小（字节)',
+    thumbnail_url       VARCHAR(512)  COMMENT '缩略图URL',
+    storage_strategy_id BIGINT        COMMENT '存储策略 ID',
+    -- 自定义字段结束 --
+    creator     BIGINT       DEFAULT NULL COMMENT '创建人',
+    create_time DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    updater     BIGINT       DEFAULT NULL COMMENT '更新人',
+    update_time DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+    version     INT UNSIGNED DEFAULT 0 COMMENT '版本号'
+) ENGINE = InnoDB
+    DEFAULT CHARSET = utf8mb4
+    AUTO_INCREMENT = 10000 COMMENT = '文件记录';

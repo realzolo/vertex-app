@@ -34,7 +34,9 @@
         <jaxb-api.version>2.3.1</jaxb-api.version>
         <liquibase.version>4.25.1</liquibase.version>
         <user-agent-utils.version>1.21</user-agent-utils.version>
-        <aws-java-sdk-s3.version>1.12.651</aws-java-sdk-s3.version>
+        <x-file-storage.version>2.2.1</x-file-storage.version>
+        <aws-java-sdk-s3.version>1.12.777</aws-java-sdk-s3.version>
+        <minio.version>8.5.13</minio.version>
     </properties>
 
     <dependencyManagement>
@@ -87,11 +89,23 @@
                 <artifactId>UserAgentUtils</artifactId>
                 <version>${user-agent-utils.version}</version>
             </dependency>
+            <!-- https://mvnrepository.com/artifact/org.dromara.x-file-storage/x-file-storage-spring -->
+            <dependency>
+                <groupId>org.dromara.x-file-storage</groupId>
+                <artifactId>x-file-storage-spring</artifactId>
+                <version>${x-file-storage.version}</version>
+            </dependency>
             <!-- https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-s3 -->
             <dependency>
                 <groupId>com.amazonaws</groupId>
                 <artifactId>aws-java-sdk-s3</artifactId>
                 <version>${aws-java-sdk-s3.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/io.minio/minio -->
+            <dependency>
+                <groupId>io.minio</groupId>
+                <artifactId>minio</artifactId>
+                <version>${minio.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
