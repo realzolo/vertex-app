@@ -19,6 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/permission")
 public class PermissionController {
+
     @Autowired
     private PermissionService permissionService;
 
@@ -100,4 +101,5 @@ public class PermissionController {
         list.addAll(sublist);
         return list;
     }
+
 }

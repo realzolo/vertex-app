@@ -7,7 +7,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
-public class ResourceUtils extends org.springframework.util.ResourceUtils {
+public final class ResourceUtils extends org.springframework.util.ResourceUtils {
 
     /**
      * 获取项目根路径
@@ -51,4 +51,5 @@ public class ResourceUtils extends org.springframework.util.ResourceUtils {
         File file = getFile(resourceLocation);
         return StreamUtils.copyToByteArray(new FileInputStream(file));
     }
+
 }

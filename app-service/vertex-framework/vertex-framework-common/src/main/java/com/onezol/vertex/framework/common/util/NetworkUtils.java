@@ -4,6 +4,7 @@ package com.onezol.vertex.framework.common.util;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,12 +14,13 @@ import java.net.UnknownHostException;
 /**
  * 网络工具类
  */
-public class NetworkUtils {
+@Slf4j
+public final class NetworkUtils {
+
     // 本地IP地址
     public static final String LOCAL_HOST = "127.0.0.1";
     // IP地址查询
     public static final String IP_URL = "http://whois.pconline.com.cn/ipJson.jsp";
-    private static final Logger logger = LoggerFactory.getLogger(NetworkUtils.class);
 
     /**
      * 获取请求的IP地址
@@ -64,7 +66,7 @@ public class NetworkUtils {
         try {
             String rspStr = HttpUtils.sendGet(IP_URL, "ip=" + ip + "&json=true", "GBK");
             if (StringUtils.isEmpty(rspStr)) {
-                logger.error("获取地理位置异常 {}", ip);
+                log.error("获取地理位置异常 {}", ip);
                 return "XX XX";
             }
             JSONObject obj = JSON.parseObject(rspStr);
@@ -72,7 +74,7 @@ public class NetworkUtils {
             String city = obj.getString("city");
             return String.format("%s %s", region, city);
         } catch (Exception e) {
-            logger.error("获取地理位置异常 {}", ip);
+            log.error("获取地理位置异常 {}", ip);
         }
         return "XX XX";
     }
@@ -259,4 +261,5 @@ public class NetworkUtils {
         }
         return bytes;
     }
+
 }

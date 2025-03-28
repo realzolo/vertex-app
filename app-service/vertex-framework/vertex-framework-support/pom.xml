@@ -29,10 +29,10 @@
             <artifactId>mysql-connector-j</artifactId>
         </dependency>
         <!-- PostgresSQL -->
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.postgresql</groupId>-->
+<!--            <artifactId>postgresql</artifactId>-->
+<!--        </dependency>-->
         <!-- Redis -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -63,6 +63,7 @@
             <groupId>com.github.xiaoymin</groupId>
             <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
         </dependency>
+
         <!-- Vertex Framework Dependencies -->
         <dependency>
             <groupId>com.onezol</groupId>

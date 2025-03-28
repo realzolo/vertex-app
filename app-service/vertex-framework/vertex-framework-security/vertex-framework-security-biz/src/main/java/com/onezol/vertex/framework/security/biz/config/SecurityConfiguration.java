@@ -24,6 +24,7 @@ import java.util.Set;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
+
     /**
      * JWT认证过滤器
      */
@@ -110,6 +111,5 @@ public class SecurityConfiguration {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 
 }

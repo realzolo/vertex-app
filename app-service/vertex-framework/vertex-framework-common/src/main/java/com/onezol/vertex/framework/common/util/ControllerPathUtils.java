@@ -18,7 +18,7 @@ import java.util.Set;
 /**
  * Controller路径工具类
  */
-public class ControllerPathUtils {
+public final class ControllerPathUtils {
 
     /**
      * 将路径转换为SpringSecurity的mvcMatchers格式<br/>
@@ -132,4 +132,5 @@ public class ControllerPathUtils {
         }
         return patterns;
     }
+
 }

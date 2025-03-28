@@ -45,4 +45,5 @@ public interface UserAuthService extends BaseService<UserEntity> {
      * 用户登出
      */
     void logout();
+
 }

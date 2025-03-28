@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * 对象转换工具类
  */
-public class BeanUtils extends org.springframework.beans.BeanUtils {
+public final class BeanUtils extends org.springframework.beans.BeanUtils {
 
     private BeanUtils() {
         throw new IllegalStateException("Utility class cannot be instantiated");
@@ -61,4 +61,5 @@ public class BeanUtils extends org.springframework.beans.BeanUtils {
     public static <S, T> List<T> toList(Collection<S> source, Class<T> targetType) {
         return source.stream().map(item -> toBean(item, targetType)).toList();
     }
+
 }

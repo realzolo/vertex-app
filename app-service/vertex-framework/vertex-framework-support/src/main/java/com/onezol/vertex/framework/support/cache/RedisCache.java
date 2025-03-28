@@ -11,7 +11,8 @@ import java.util.concurrent.TimeUnit;
 
 @Component
 @SuppressWarnings("ALL")
-public class RedisCache implements com.onezol.vertex.framework.common.facade.RedisCache{
+public class RedisCache implements com.onezol.vertex.framework.common.facade.RedisCache {
+
     public final RedisTemplate redisTemplate;
 
     public RedisCache(RedisTemplate redisTemplate) {
@@ -329,4 +330,5 @@ public class RedisCache implements com.onezol.vertex.framework.common.facade.Red
     public Long getMapSize(final String key) {
         return redisTemplate.opsForHash().size(key);
     }
+
 }

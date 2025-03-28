@@ -6,7 +6,8 @@ import io.jsonwebtoken.SignatureAlgorithm;
 
 import java.util.Date;
 
-public class JwtUtils {
+public final class JwtUtils {
+
     /**
      * 默认getSecret()
      */

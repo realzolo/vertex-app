@@ -37,6 +37,7 @@
         <x-file-storage.version>2.2.1</x-file-storage.version>
         <aws-java-sdk-s3.version>1.12.777</aws-java-sdk-s3.version>
         <minio.version>8.5.13</minio.version>
+        <easy-captcha.version>1.6.2</easy-captcha.version>
     </properties>
 
     <dependencyManagement>

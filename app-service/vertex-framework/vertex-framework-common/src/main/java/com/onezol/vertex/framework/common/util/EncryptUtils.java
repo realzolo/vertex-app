@@ -17,38 +17,7 @@ import java.util.Base64;
 import java.util.Objects;
 
 @Slf4j
-@SuppressWarnings("unused")
-public class EncryptUtils {
-
-    /**
-     * 将字节数组转化为 16 进制字符串
-     *
-     * @param bytes 字节数组
-     * @return 16 进制字符串
-     */
-    private static String byteArrayToHexString(byte[] bytes) {
-        StringBuilder sb = new StringBuilder();
-        for (byte b : bytes) {
-            sb.append(String.format("%02x", b & 0xff));
-        }
-        return sb.toString();
-    }
-
-    /**
-     * 将 16 进制字符串转化为字节数组
-     *
-     * @param hexString 16 进制字符串
-     * @return 字节数组
-     */
-    private static byte[] hexStringToByteArray(String hexString) {
-        int len = hexString.length();
-        byte[] bytes = new byte[len / 2];
-        for (int i = 0; i < len; i += 2) {
-            bytes[i / 2] = (byte) ((Character.digit(hexString.charAt(i), 16) << 4)
-                    + Character.digit(hexString.charAt(i + 1), 16));
-        }
-        return bytes;
-    }
+public final class EncryptUtils {
 
     /**
      * 对字符串进行 Base64 编码
@@ -284,6 +253,36 @@ public class EncryptUtils {
         } catch (NoSuchAlgorithmException ignored) {
             return null;
         }
+    }
+
+    /**
+     * 将字节数组转化为 16 进制字符串
+     *
+     * @param bytes 字节数组
+     * @return 16 进制字符串
+     */
+    private static String byteArrayToHexString(byte[] bytes) {
+        StringBuilder sb = new StringBuilder();
+        for (byte b : bytes) {
+            sb.append(String.format("%02x", b & 0xff));
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 将 16 进制字符串转化为字节数组
+     *
+     * @param hexString 16 进制字符串
+     * @return 字节数组
+     */
+    private static byte[] hexStringToByteArray(String hexString) {
+        int len = hexString.length();
+        byte[] bytes = new byte[len / 2];
+        for (int i = 0; i < len; i += 2) {
+            bytes[i / 2] = (byte) ((Character.digit(hexString.charAt(i), 16) << 4)
+                    + Character.digit(hexString.charAt(i + 1), 16));
+        }
+        return bytes;
     }
 
 }

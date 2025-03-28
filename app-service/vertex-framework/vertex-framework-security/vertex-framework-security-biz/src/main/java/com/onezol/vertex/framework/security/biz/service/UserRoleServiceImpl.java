@@ -63,7 +63,7 @@ public class UserRoleServiceImpl extends BaseServiceImpl<UserRoleMapper, UserRol
 
     /**
      * @param userId 用户ID
-     * @param roles  角色列表
+     * @param roleIds  角色ID列表
      */
     @Override
     @Transactional

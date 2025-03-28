@@ -12,7 +12,6 @@ public interface OnlineUserService {
      * 添加在线用户
      *
      * @param loginUser      登录用户
-     * @param expirationTime 过期时间(秒)
      */
     void addOnlineUser(LoginUser loginUser);
 

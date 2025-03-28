@@ -14,7 +14,8 @@ import java.util.Map;
  * JSON工具类，提供了JSON序列化和反序列化的方法，以及常用的JSON操作功能。
  */
 @SuppressWarnings({"unchecked", "unused"})
-public class JsonUtils {
+public final class JsonUtils {
+
     /**
      * 将对象转换为JSON字符串。
      *
@@ -121,4 +122,5 @@ public class JsonUtils {
     public static <T> List<T> jsonArrayToList(String jsonArray, Class<T> clazz) {
         return JSON.parseArray(jsonArray, clazz);
     }
+
 }

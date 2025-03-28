@@ -8,8 +8,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
-@Schema(description = "用户注册参数")
 @Data
+@Schema(name = "用户注册参数", description = "用户注册参数")
 public class UserRegistrationPayload implements Payload {
 
     @Schema(description = "用户名")

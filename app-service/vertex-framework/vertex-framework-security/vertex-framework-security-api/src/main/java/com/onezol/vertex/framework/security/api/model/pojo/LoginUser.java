@@ -90,13 +90,13 @@ public class LoginUser implements UserDetails {
     @Override
     @JSONField(serialize = false)
     public boolean isAccountNonExpired() {
-        return !AccountStatusEnum.EXPIRED.getValue().equals(details.getStatus());
+        return !AccountStatusEnum.EXPIRED.equals(details.getStatus());
     }
 
     @Override
     @JSONField(serialize = false)
     public boolean isAccountNonLocked() {
-        return !AccountStatusEnum.LOCKED.getValue().equals(details.getStatus());
+        return !AccountStatusEnum.LOCKED.equals(details.getStatus());
     }
 
     @Override
@@ -109,7 +109,7 @@ public class LoginUser implements UserDetails {
     @Override
     @JSONField(serialize = false)
     public boolean isEnabled() {
-        return !AccountStatusEnum.DISABLED.getValue().equals(details.getStatus());
+        return !AccountStatusEnum.DISABLED.equals(details.getStatus());
     }
 
     public void setRoles(List<LabelValue<String, String>> roles) {

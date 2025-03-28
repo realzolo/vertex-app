@@ -26,4 +26,5 @@ public interface UserRoleService extends BaseService<UserRoleEntity> {
     void updateUserRole(Long userId, List<Long> roleIds);
 
     void updateUserRoleByRoleCode(Long userId, List<String> roleCodes);
+
 }

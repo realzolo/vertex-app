@@ -1,6 +1,5 @@
 package com.onezol.vertex.framework.support.filter;
 
-
 import com.onezol.vertex.framework.common.constant.enumeration.BizHttpStatusEnum;
 import com.onezol.vertex.framework.common.helper.ResponseHelper;
 import com.onezol.vertex.framework.common.model.GenericResponse;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 import static com.onezol.vertex.framework.common.constant.FilterInterceptorOrderNumber.PROTECTED_RESOURCE_FILTER_ORDER;
-
 
 /**
  * 受保护资源拦截器<br>

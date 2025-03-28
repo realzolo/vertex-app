@@ -1,11 +1,6 @@
 package com.onezol.vertex.framework.common.util;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-public class HttpUtils {
-
-    private static final Logger logger = LoggerFactory.getLogger(HttpUtils.class);
+public final class HttpUtils {
 
     /**
      * 向指定 URL 发送GET方法的请求

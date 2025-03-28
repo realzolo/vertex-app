@@ -46,4 +46,5 @@ public enum PermissionTypeEnum implements Enumeration<Integer> {
 
     @EnumValue
     private final Integer value;
+
 }

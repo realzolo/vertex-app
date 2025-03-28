@@ -1,7 +1,7 @@
 package com.onezol.vertex.framework.security.biz.service;
 
 import com.onezol.vertex.framework.common.constant.CacheKey;
-import com.onezol.vertex.framework.common.util.LocalDateTimeUtils;
+import com.onezol.vertex.framework.common.util.DateUtils;
 import com.onezol.vertex.framework.security.api.model.dto.OnlineUser;
 import com.onezol.vertex.framework.security.api.model.dto.User;
 import com.onezol.vertex.framework.security.api.model.pojo.LoginUser;
@@ -20,8 +20,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-@Component
 @Slf4j
+@Component
 public class OnlineUserServiceImpl implements OnlineUserService {
 
     private final RedisCache redisCache;
@@ -37,7 +37,6 @@ public class OnlineUserServiceImpl implements OnlineUserService {
      * 添加在线用户
      *
      * @param loginUser      登录用户
-     * @param expirationTime 过期时间(秒)
      */
     @Override
     public void addOnlineUser(LoginUser loginUser) {
@@ -109,7 +108,7 @@ public class OnlineUserServiceImpl implements OnlineUserService {
                     .location(loginUser.getLocation())
                     .loginTime(loginUser.getLoginTime())
                     .onlineTime(loginUser.getLocation())
-                    .onlineTime(LocalDateTimeUtils.shortTimeDifference(loginUser.getLoginTime(), LocalDateTime.now()))
+                    .onlineTime(DateUtils.shortTimeDifference(loginUser.getLoginTime(), LocalDateTime.now()))
                     .build();
             onlineUsers.add(ou);
         }

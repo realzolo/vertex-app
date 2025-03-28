@@ -3,7 +3,11 @@ package com.onezol.vertex.framework.common.util;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
-public class CodecUtils {
+/**
+ * 编码工具
+ */
+public final class CodecUtils {
+
     /**
      * Base64编码
      *
@@ -23,5 +27,6 @@ public class CodecUtils {
     public static String decodeBase64(String str) {
         return new String(Base64.getDecoder().decode(str), StandardCharsets.UTF_8);
     }
+
 }
 

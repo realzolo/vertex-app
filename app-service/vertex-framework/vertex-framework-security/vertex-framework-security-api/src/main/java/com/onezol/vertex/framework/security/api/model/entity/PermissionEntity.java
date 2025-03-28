@@ -15,7 +15,6 @@ import lombok.EqualsAndHashCode;
 @Schema(name = "PermissionEntity", description = "$!{table.comment}")
 public class PermissionEntity extends BaseEntity {
 
-
     /**
      * 标题
      */

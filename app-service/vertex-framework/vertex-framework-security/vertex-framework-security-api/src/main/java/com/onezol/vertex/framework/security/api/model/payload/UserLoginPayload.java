@@ -6,8 +6,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
-@Schema(description = "用户登录参数: 用户名+密码 或 邮箱+验证码")
 @Data
+@Schema(name = "用户登录参数", description = "用户名+密码 或 邮箱+验证码")
 public class UserLoginPayload implements Payload {
 
     @Schema(name = "用户名")

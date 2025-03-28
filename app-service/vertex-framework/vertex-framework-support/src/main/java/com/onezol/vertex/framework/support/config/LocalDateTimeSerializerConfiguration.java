@@ -4,6 +4,7 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import com.onezol.vertex.framework.common.constant.DatePattern;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
@@ -19,28 +20,24 @@ import java.time.format.DateTimeFormatter;
 @Configuration
 public class LocalDateTimeSerializerConfiguration {
 
-    private final String datePattern = "yyyy-MM-dd";
-    @Value("${spring.jackson.date-format:yyyy-MM-dd HH:mm:ss}")
-    private String pattern;
-
     @Bean
     public LocalDateTimeSerializer localDateTimeSerializer() {
-        return new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(pattern));
+        return new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(DatePattern.YYYY_MM_DD__HH_MM_SS));
     }
 
     @Bean
     public LocalDateTimeDeserializer localDateTimeDeserializer() {
-        return new LocalDateTimeDeserializer(DateTimeFormatter.ofPattern(pattern));
+        return new LocalDateTimeDeserializer(DateTimeFormatter.ofPattern(DatePattern.YYYY_MM_DD__HH_MM_SS));
     }
 
     @Bean
     public LocalDateSerializer localDateSerializer() {
-        return new LocalDateSerializer(DateTimeFormatter.ofPattern(datePattern));
+        return new LocalDateSerializer(DateTimeFormatter.ofPattern(DatePattern.YYYY_MM_DD));
     }
 
     @Bean
     public LocalDateDeserializer localDateDeserializer() {
-        return new LocalDateDeserializer(DateTimeFormatter.ofPattern(datePattern));
+        return new LocalDateDeserializer(DateTimeFormatter.ofPattern(DatePattern.YYYY_MM_DD));
     }
 
     @Bean
@@ -50,7 +47,7 @@ public class LocalDateTimeSerializerConfiguration {
             builder.deserializerByType(LocalDateTime.class, localDateTimeDeserializer());
             builder.serializerByType(LocalDate.class, localDateSerializer());
             builder.deserializerByType(LocalDate.class, localDateDeserializer());
-            builder.simpleDateFormat(pattern);
+            builder.simpleDateFormat(DatePattern.YYYY_MM_DD__HH_MM_SS);
         };
     }
 

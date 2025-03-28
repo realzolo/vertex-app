@@ -48,24 +48,6 @@ public class GlobalExceptionHandler {
         return ResponseHelper.buildFailedResponse(BizHttpStatusEnum.BAD_REQUEST, message);
     }
 
-//    /**
-//     * NoResourceFoundException 处理资源未找到异常<br/>
-//     * 此处不做处理，直接抛出异常(因为存在兜底的异常处理器{@link #handleException}, 为避免被其处理导致静态资源404, 所以此处直接抛出)
-//     */
-//    @ExceptionHandler(value = NoResourceFoundException.class)
-//    public Object handleNoResourceFoundException(HttpServletRequest req, NoResourceFoundException ex) throws NoResourceFoundException {
-//        throw ex;
-//    }
-
-//    /**
-//     * NullPointerException 空指针异常
-//     */
-//    @ExceptionHandler(value = NullPointerException.class)
-//    public GenericResponse<?> handleNullPointerException(HttpServletRequest req, NullPointerException ex) {
-//        log.error(ex.getMessage(), ex);
-//        return ResponseHelper.buildFailedResponse(BizHttpStatusEnum.INTERNAL_SERVER_ERROR, "系统内部错误，请联系管理员！");
-//    }
-
     /**
      * MaxUploadSizeExceededException 文件上传大小异常
      */

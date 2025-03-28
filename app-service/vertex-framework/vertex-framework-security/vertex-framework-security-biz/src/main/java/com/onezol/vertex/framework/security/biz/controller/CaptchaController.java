@@ -23,6 +23,7 @@ import java.util.concurrent.TimeUnit;
 @RestController
 @RequestMapping("/captcha")
 public class CaptchaController {
+
     @Autowired
     private RedisCache redisCache;
 
@@ -41,4 +42,5 @@ public class CaptchaController {
         );
         return ResponseHelper.buildSuccessfulResponse(result);
     }
+
 }

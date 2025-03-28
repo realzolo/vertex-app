@@ -1,15 +1,18 @@
 package com.onezol.vertex.framework.common.util;
 
 
+import com.onezol.vertex.framework.common.constant.StringConstants;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class StringUtils extends org.apache.commons.lang3.StringUtils {
-    public static final String SPACE = " ";
-    public static final String EMPTY = "";
-    public static final String LF = "\n";
-    public static final String CR = "\r";
-    private static final char UNDERLINE = '_';
+public final class StringUtils extends org.apache.commons.lang3.StringUtils {
+
+//    public static final String SPACE = " ";
+//    public static final String EMPTY = "";
+//    public static final String LF = "\n";
+//    public static final String CR = "\r";
+//    private static final char UNDERLINE = '_';
 
     /**
      * 下划线转大驼峰 例如：user_name -> UserName
@@ -22,7 +25,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
         boolean nextUpperCase = false;
         for (int i = 0; i < input.length(); i++) {
             char c = input.charAt(i);
-            if (c == UNDERLINE) {
+            if (c == StringConstants.C_UNDERLINE) {
                 nextUpperCase = true;
             } else {
                 if (nextUpperCase) {
@@ -61,13 +64,13 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
         for (int i = 0; i < input.length(); i++) {
             char c = input.charAt(i);
             if (Character.isUpperCase(c)) {
-                sb.append(UNDERLINE).append(Character.toLowerCase(c));
+                sb.append(StringConstants.C_UNDERLINE).append(Character.toLowerCase(c));
             } else {
                 sb.append(c);
             }
         }
         // 如果下划线在开头则去掉
-        if (sb.charAt(0) == UNDERLINE) {
+        if (sb.charAt(0) == StringConstants.C_UNDERLINE) {
             sb.deleteCharAt(0);
         }
         return sb.toString();

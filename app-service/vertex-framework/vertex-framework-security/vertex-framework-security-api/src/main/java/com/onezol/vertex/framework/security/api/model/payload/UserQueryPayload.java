@@ -5,8 +5,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 
-@Schema(description = "用户查询参数")
 @Data
+@Schema(name = "用户查询参数", description = "用户查询参数")
 public class UserQueryPayload implements Payload {
 
     @Schema(description = "用户ID")

@@ -7,10 +7,10 @@ import java.util.List;
 
 public final class TreeUtils {
 
-    public static List<TreeNode> buildTree(List<TreeNode> nodes, Long rootId) {
+    public static List<TreeNode> buildTree(List<TreeNode> nodes, Long parentId) {
         List<TreeNode> treeNodes = new ArrayList<>();
         for (TreeNode node : nodes) {
-            if (node.getParentId().equals(rootId)) {
+            if (node.getParentId().equals(parentId)) {
                 treeNodes.add(node);
             }
         }

@@ -11,4 +11,5 @@ import org.apache.ibatis.annotations.Param;
 public interface UserMapper extends BaseMapper<UserEntity> {
 
     Page<UserEntity> queryUserPage(@Param("page") Page<UserEntity> page, @Param("param") UserQueryPayload payload);
+
 }

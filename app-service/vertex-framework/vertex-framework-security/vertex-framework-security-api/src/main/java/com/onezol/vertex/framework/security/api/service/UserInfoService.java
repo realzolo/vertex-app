@@ -33,4 +33,5 @@ public interface UserInfoService extends BaseService<UserEntity> {
      * 获取用户列表
      */
     PlainPage<User> getUserPage(Page<UserEntity> page, UserQueryPayload payload);
+
 }

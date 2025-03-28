@@ -34,6 +34,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/role")
 public class RoleController extends BaseController<RoleEntity> {
+
     @Autowired
     private RoleService roleService;
     @Autowired
@@ -108,4 +109,5 @@ public class RoleController extends BaseController<RoleEntity> {
         roleService.updateRole(role);
         return ResponseHelper.buildSuccessfulResponse();
     }
+
 }

@@ -22,7 +22,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
-public class ServletUtils {
+public final class ServletUtils {
+
     /**
      * 获取当前request
      *
