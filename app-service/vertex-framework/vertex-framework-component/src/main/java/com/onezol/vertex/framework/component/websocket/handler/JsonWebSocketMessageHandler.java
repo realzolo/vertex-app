@@ -14,7 +14,10 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.lang.reflect.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @Slf4j
 public class JsonWebSocketMessageHandler extends TextWebSocketHandler {
@@ -30,53 +33,59 @@ public class JsonWebSocketMessageHandler extends TextWebSocketHandler {
 
     @Override
     protected void handleTextMessage(@NonNull WebSocketSession session, TextMessage message) throws Exception {
-        // 1.1 空消息，跳过
+        // 1 空消息，跳过
         if (message.getPayloadLength() == 0) {
             return;
         }
-        // 1.2 ping 心跳消息，直接返回 pong 消息。
+        // 2 ping 心跳消息，直接返回 pong 消息
         if (message.getPayloadLength() == 4 && Objects.equals(message.getPayload(), "ping")) {
             session.sendMessage(new TextMessage("pong"));
             return;
         }
 
+        // 3 解析消息
+        JsonWebSocketMessage jsonMessage;
         try {
-            // 2.1 解析消息
-            JsonWebSocketMessage jsonMessage = JsonUtils.parseObject(message.getPayload(), JsonWebSocketMessage.class);
-            if (jsonMessage == null) {
-                log.error("[handleTextMessage][session({}) message({}) 解析为空]", session.getId(), message.getPayload());
+            jsonMessage = JsonUtils.parseObject(message.getPayload(), JsonWebSocketMessage.class);
+        } catch (Exception e) {
+            log.error("[WebSocket][session({}) message({})] > 解析异常", session.getId(), message.getPayload());
+            return;
+        }
+        if (StringUtils.isEmpty(jsonMessage.getGroup())) {
+            log.error("[WebSocket][session({}) message({})] > 消息组为空", session.getId(), message.getPayload());
+            return;
+        }
+        // 4 获得对应的 WebSocketMessageListener
+        List<ObjectMethodMapping> messageListener = listeners.get(jsonMessage.getGroup());
+        if (messageListener == null || messageListener.isEmpty()) {
+            log.error("[WebSocket][session({}) message({})] > 监听器为空", session.getId(), message.getPayload());
+            return;
+        }
+        // 5 遍历监听器, 调用对应的方法
+        for (ObjectMethodMapping mapping : messageListener) {
+            Object listener = mapping.getObject();
+            Method method = mapping.getMethod();
+
+            Type type = this.getArgumentType(method);
+            if (type == Object.class) {
                 return;
             }
-            if (StringUtils.isEmpty(jsonMessage.getGroup())) {
-                log.error("[handleTextMessage][session({}) message({}) 消息组为空]", session.getId(), message.getPayload());
+            Object messagePayload;
+            try {
+                messagePayload = JsonUtils.parseObject(jsonMessage.getContent(), type);
+            } catch (Exception e) {
+                log.error("[WebSocket][session({}) message({})] > 解析消息内容异常", session.getId(), message.getPayload());
                 return;
             }
-            // 2.2 获得对应的 WebSocketMessageListener
-            List<ObjectMethodMapping> messageListener = listeners.get(jsonMessage.getGroup());
-            if (messageListener == null || messageListener.isEmpty()) {
-                log.error("[handleTextMessage][session({}) message({}) 监听器为空]", session.getId(), message.getPayload());
-                return;
-            }
-            for (ObjectMethodMapping mapping : messageListener) {
-                Object listener = mapping.getObject();
-                Method method = mapping.getMethod();
-                // 2.3 处理消息
-                Type type = this.getArgumentType(method);
-                if (type == Object.class) {
-                    return;
+
+            WebSocketMessage<Object> webSocketMessage = new DefaultWebSocketMessage<>(messagePayload);
+            AsyncTaskManager.getInstance().execute(() -> {
+                try {
+                    method.invoke(listener, session, webSocketMessage);
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    throw new RuntimeException(e);
                 }
-                Object messagePayload = JsonUtils.parseObject(jsonMessage.getContent(), type);
-                WebSocketMessage<Object> webSocketMessage = new DefaultWebSocketMessage<>(messagePayload);
-                AsyncTaskManager.getInstance().execute(() -> {
-                    try {
-                        method.invoke(listener, session, webSocketMessage);
-                    } catch (IllegalAccessException | InvocationTargetException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
-            }
-        } catch (Throwable ex) {
-            log.error("[handleTextMessage][session({}) message({}) 处理异常]", session.getId(), message.getPayload());
+            });
         }
     }
 
