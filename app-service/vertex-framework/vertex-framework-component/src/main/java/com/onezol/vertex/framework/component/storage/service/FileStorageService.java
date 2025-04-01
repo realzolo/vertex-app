@@ -1,12 +1,10 @@
 package com.onezol.vertex.framework.component.storage.service;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.onezol.vertex.framework.common.constant.DatePattern;
 import com.onezol.vertex.framework.common.constant.StringConstants;
+import com.onezol.vertex.framework.common.constant.enumeration.BizHttpStatusEnum;
 import com.onezol.vertex.framework.common.constant.enumeration.FileTypeEnum;
 import com.onezol.vertex.framework.common.exception.RuntimeBizException;
-import com.onezol.vertex.framework.common.util.DateUtils;
-import com.onezol.vertex.framework.common.util.StringUtils;
 import com.onezol.vertex.framework.component.storage.annotation.StorageTypeEnum;
 import com.onezol.vertex.framework.component.storage.mapper.FileRecordMapper;
 import com.onezol.vertex.framework.component.storage.mapper.StorageStrategyMapper;
@@ -14,6 +12,7 @@ import com.onezol.vertex.framework.component.storage.model.FileRecordEntity;
 import com.onezol.vertex.framework.component.storage.model.StorageStrategyEntity;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FilenameUtils;
 import org.dromara.x.file.storage.core.FileInfo;
 import org.dromara.x.file.storage.core.FileStorageProperties;
 import org.dromara.x.file.storage.core.FileStorageServiceBuilder;
@@ -25,10 +24,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
+
+import static com.onezol.vertex.framework.component.storage.helper.StorageHelper.*;
 
 @Slf4j
 @Service("frameworkFileStorageService")
@@ -53,32 +53,7 @@ public class FileStorageService {
             log.warn("未配置默认存储策略，文件存储服务不可用");
             return;
         }
-        this.load(strategy);
-        storageStrategy = strategy;
-    }
-
-    public void load(StorageStrategyEntity strategy) {
-        CopyOnWriteArrayList<FileStorage> fileStorageList = fileStorageService.getFileStorageList();
-        if (StorageTypeEnum.LOCAL.equals(strategy.getType())) {
-            FileStorageProperties.LocalPlusConfig config = new FileStorageProperties.LocalPlusConfig();
-            config.setPlatform(strategy.getCode());
-            config.setStoragePath(strategy.getBasePath());
-            config.setDomain(strategy.getDomain());
-            fileStorageList.addAll(
-                    FileStorageServiceBuilder.buildLocalPlusFileStorage(Collections.singletonList(config))
-            );
-        } else if (StorageTypeEnum.S3.equals(strategy.getType())) {
-            FileStorageProperties.AmazonS3Config config = new FileStorageProperties.AmazonS3Config();
-            config.setPlatform(strategy.getCode());
-            config.setAccessKey(strategy.getAccessKey());
-            config.setSecretKey(strategy.getSecretKey());
-            config.setEndPoint(strategy.getEndpoint());
-            config.setBucketName(strategy.getBucketName());
-            config.setDomain(strategy.getDomain());
-            fileStorageList.addAll(
-                    FileStorageServiceBuilder.buildAmazonS3FileStorage(Collections.singletonList(config), null)
-            );
-        }
+        storageStrategy = this.loadStrategy(strategy);
     }
 
     /**
@@ -86,49 +61,41 @@ public class FileStorageService {
      *
      * @param file 上传文件
      */
-    public FileInfo upload(MultipartFile file) {
+    public String upload(MultipartFile file) {
         if (Objects.isNull(file)) {
             throw new IllegalArgumentException("上传文件不可为空");
         }
         if (Objects.isNull(storageStrategy)) {
             throw new RuntimeBizException("未配置默认存储策略，文件存储服务不可用");
         }
-        // 获取时间戳
-        LocalDateTime now = LocalDateTime.now();
-        long timestamp = now.toInstant(java.time.ZoneOffset.of("+8")).toEpochMilli();
-        String extName = file.getOriginalFilename();
-        String fileName = timestamp + StringConstants.DOT + extName;
-        String filePath = DateUtils.format(now, DatePattern.YYYYMMDD) + StringConstants.SLASH;
+
+        String extName = FilenameUtils.getExtension(file.getOriginalFilename());
+        String extSuffix = StringConstants.DOT + extName;
+        String filePath = generateFilePath();
+        String fileName = generateFileName();
+
         log.info("文件上传开始，文件名：{}", fileName);
         UploadPretreatment uploadPretreatment = fileStorageService.of(file)
                 .setPlatform(storageStrategy.getCode())
                 .setPath(filePath)
-                .setSaveFilename(fileName)
+                .setSaveFilename(fileName + extSuffix)
+                .setSaveThFilename(fileName)
                 .putAttr("storageStrategy", storageStrategy);
         if (FileTypeEnum.IMAGE.getExtensions().contains(extName)) {
             uploadPretreatment.thumbnail(image -> image.size(128, 128));
         }
-        uploadPretreatment.setProgressMonitor(new ProgressListener() {
-            @Override
-            public void start() {
-                log.info("开始上传");
-            }
+        uploadPretreatment.setProgressMonitor(this.buildProgressListener());
 
-            @Override
-            public void progress(long progressSize, Long allSize) {
-                log.info("已上传 [{}]，总大小 [{}]", progressSize, allSize);
-            }
+        try {
+            uploadPretreatment.upload();
+        } catch (Exception e) {
+            throw new RuntimeBizException(BizHttpStatusEnum.INTERNAL_SERVER_ERROR, "文件上传失败");
+        }
 
-            @Override
-            public void finish() {
-                log.info("上传结束");
-            }
-        });
-        FileInfo fileInfo = uploadPretreatment.upload();
-
-        String domain = StringUtils.appendIfMissing(Objects.isNull(storageStrategy.getDomain()) ? "" : storageStrategy.getDomain(), StringConstants.SLASH);
-        fileInfo.setUrl(domain + fileInfo.getPath() + fileInfo.getFilename());
-        return fileInfo;
+        if (Objects.equals(storageStrategy.getType(), StorageTypeEnum.S3)) {
+            return String.format("%s/%s%s%s%s%s", fixDomain(storageStrategy.getDomain()), storageStrategy.getBucketName(), fixRootPath(storageStrategy.getRootPath()), filePath, fileName, extSuffix);
+        }
+        return String.format("%s%s%s%s", fixDomain(storageStrategy.getDomain()), filePath, fileName, extSuffix);
     }
 
 
@@ -148,6 +115,60 @@ public class FileStorageService {
         entity.setIsDefault(true);
         storageStrategyMapper.updateById(entity);
         this.storageStrategy = entity;
+    }
+
+    /**
+     * 加载存储策略
+     * @param strategy 存储策略
+     */
+    private StorageStrategyEntity loadStrategy(StorageStrategyEntity strategy) {
+        CopyOnWriteArrayList<FileStorage> fileStorageList = fileStorageService.getFileStorageList();
+        if (StorageTypeEnum.LOCAL.equals(strategy.getType())) {
+            FileStorageProperties.LocalPlusConfig config = new FileStorageProperties.LocalPlusConfig();
+            config.setPlatform(strategy.getCode());
+            config.setStoragePath(fixRootPath(strategy.getRootPath()));
+            config.setDomain(fixDomain(strategy.getDomain()));
+            fileStorageList.addAll(
+                    FileStorageServiceBuilder.buildLocalPlusFileStorage(Collections.singletonList(config))
+            );
+        } else if (StorageTypeEnum.S3.equals(strategy.getType())) {
+            FileStorageProperties.AmazonS3Config config = new FileStorageProperties.AmazonS3Config();
+            config.setPlatform(strategy.getCode());
+            config.setAccessKey(strategy.getAccessKey());
+            config.setSecretKey(strategy.getSecretKey());
+            config.setEndPoint(strategy.getEndpoint());
+            config.setBucketName(strategy.getBucketName());
+            config.setBasePath(fixRootPath(strategy.getRootPath()));
+            config.setDomain(fixDomain(strategy.getDomain()));
+            fileStorageList.addAll(
+                    FileStorageServiceBuilder.buildAmazonS3FileStorage(Collections.singletonList(config), null)
+            );
+        }
+        return strategy;
+    }
+
+    /**
+     * 构建进度监听器
+     *
+     * @return ProgressListener
+     */
+    private ProgressListener buildProgressListener() {
+        return new ProgressListener() {
+            @Override
+            public void start() {
+                log.info("开始上传");
+            }
+
+            @Override
+            public void progress(long progressSize, Long allSize) {
+                log.info("已上传 [{}]，总大小 [{}]", progressSize, allSize);
+            }
+
+            @Override
+            public void finish() {
+                log.info("上传结束");
+            }
+        };
     }
 
     @Component

@@ -11,29 +11,40 @@ import org.springframework.lang.NonNull;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-@EnableFileStorage
+import java.util.Objects;
+
 @Configuration
+@EnableFileStorage
 public class FileStorageConfiguration {
+
     private final StorageStrategyMapper storageStrategyMapper;
 
     public FileStorageConfiguration(StorageStrategyMapper storageStrategyMapper) {
         this.storageStrategyMapper = storageStrategyMapper;
     }
 
-//    @Bean
+    @Bean
     public WebMvcConfigurer myFileStorageWebMvcConfigurer() {
-        StorageStrategyEntity strategy = storageStrategyMapper.selectOne(
-                Wrappers.<StorageStrategyEntity>lambdaQuery()
-                        .eq(StorageStrategyEntity::getType, StorageTypeEnum.LOCAL)
-                        .eq(StorageStrategyEntity::getIsDefault, true)
-        );
+        StorageStrategyEntity localStorageStrategy = this.getLocalStorageStrategy();
+        if (Objects.isNull(localStorageStrategy)) {
+            return null;
+        }
+
         return new WebMvcConfigurer() {
             @Override
             public void addResourceHandlers(@NonNull ResourceHandlerRegistry registry) {
                 registry.addResourceHandler("/storage/**")
-                        .addResourceLocations("file:" + strategy.getBasePath());
+                        .addResourceLocations(String.format("file:%s/", localStorageStrategy.getRootPath()));
             }
         };
+    }
+
+    private StorageStrategyEntity getLocalStorageStrategy() {
+        return storageStrategyMapper.selectOne(
+                Wrappers.<StorageStrategyEntity>lambdaQuery()
+                        .eq(StorageStrategyEntity::getType, StorageTypeEnum.LOCAL)
+                        .eq(StorageStrategyEntity::getIsDefault, true)
+        );
     }
 
 }

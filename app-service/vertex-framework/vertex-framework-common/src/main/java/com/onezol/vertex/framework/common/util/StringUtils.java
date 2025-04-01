@@ -8,12 +8,6 @@ import java.util.regex.Pattern;
 
 public final class StringUtils extends org.apache.commons.lang3.StringUtils {
 
-//    public static final String SPACE = " ";
-//    public static final String EMPTY = "";
-//    public static final String LF = "\n";
-//    public static final String CR = "\r";
-//    private static final char UNDERLINE = '_';
-
     /**
      * 下划线转大驼峰 例如：user_name -> UserName
      *
@@ -93,4 +87,14 @@ public final class StringUtils extends org.apache.commons.lang3.StringUtils {
             return EMPTY;
         }
     }
+
+    /**
+     * 将输入字符串中的空值转换为空字符串。
+     * @param input 输入字符串
+     * @return 处理后的字符串，如果输入字符串为空则返回空字符串，否则返回原始字符串
+     */
+    public static String nullToEmpty(String input) {
+        return input == null ? EMPTY : input;
+    }
+
 }

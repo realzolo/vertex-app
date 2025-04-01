@@ -8,8 +8,6 @@ import org.springframework.data.redis.connection.stream.MapRecord;
 import org.springframework.data.redis.connection.stream.PendingMessagesSummary;
 import org.springframework.data.redis.core.RedisTemplate;
 
-import java.util.Map;
-
 @Slf4j
 @MessageListener
 public class DemoRedisMessageListener {

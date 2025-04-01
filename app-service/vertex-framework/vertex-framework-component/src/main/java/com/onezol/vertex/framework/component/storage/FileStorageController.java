@@ -15,16 +15,16 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping("/file-storage")
 public class FileStorageController {
+
     @Autowired
     private FileStorageService fileStorageService;
 
     @RequestMapping("/upload")
     public GenericResponse<String> upload(@RequestParam("file") MultipartFile file) {
-        FileInfo fileInfo = fileStorageService.upload(file);
-        if (fileInfo == null) {
+        String url = fileStorageService.upload(file);
+        if (url == null) {
             return ResponseHelper.buildFailedResponse("文件上传失败");
         }
-        String url = fileInfo.getUrl();
         return ResponseHelper.buildSuccessfulResponse(url);
     }
 

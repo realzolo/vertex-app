@@ -34,8 +34,8 @@ public class StorageStrategyEntity extends BaseEntity {
     @TableField("bucket_name")
     private String bucketName;
 
-    @TableField("base_path")
-    private String basePath;
+    @TableField("root_path")
+    private String rootPath;
 
     @TableField("domain")
     private String domain;
@@ -51,4 +51,5 @@ public class StorageStrategyEntity extends BaseEntity {
 
     @TableField("status")
     private DisEnableStatusEnum status;
+
 }

@@ -214,9 +214,8 @@ CREATE TABLE IF NOT EXISTS vx_storage_strategy
     secret_key  VARCHAR(255)  COMMENT 'secretKey',
     endpoint    VARCHAR(100)  COMMENT '端点',
     bucket_name VARCHAR(100)  COMMENT '存储桶',
-    base_path   VARCHAR(255)  COMMENT '基础路径',
+    root_path   VARCHAR(255)  COMMENT '根路径',
     domain      VARCHAR(100)  COMMENT '域名',
-    access_address VARCHAR(255)  COMMENT '访问地址',
     is_default     BIT           DEFAULT b'0' COMMENT '是否默认(1: 默认，0: 非默认)',
     remark      VARCHAR(255)  COMMENT '字典备注',
     sort        INT UNSIGNED  DEFAULT 0   COMMENT '排序',
@@ -235,7 +234,7 @@ CREATE TABLE IF NOT EXISTS vx_file_record
 (
     id          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
     -- 自定义字段开始 --
-    name                VARCHAR(25)   COMMENT '文件名称',
+    name                VARCHAR(255)  COMMENT '文件名称',
     size                BIGINT        COMMENT '文件大小（字节)',
     url                 VARCHAR(512)  COMMENT 'URL',
     extension           VARCHAR(25)   COMMENT '文件后缀',

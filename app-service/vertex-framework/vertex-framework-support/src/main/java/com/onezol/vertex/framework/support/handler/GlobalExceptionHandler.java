@@ -49,6 +49,14 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * NoResourceFoundException 处理资源未找到异常
+     */
+    @ExceptionHandler(value = NoResourceFoundException.class)
+    public Object handleNoResourceFoundException(HttpServletRequest req, NoResourceFoundException ex) throws NoResourceFoundException {
+        return ResponseHelper.buildFailedResponse(BizHttpStatusEnum.NOT_FOUND, ex.getMessage());
+    }
+
+    /**
      * MaxUploadSizeExceededException 文件上传大小异常
      */
     @ExceptionHandler(value = MaxUploadSizeExceededException.class)
