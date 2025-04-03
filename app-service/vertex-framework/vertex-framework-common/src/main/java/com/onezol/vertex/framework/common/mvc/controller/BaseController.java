@@ -1,6 +1,5 @@
 package com.onezol.vertex.framework.common.mvc.controller;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 import java.util.Objects;
@@ -19,8 +18,8 @@ public abstract class BaseController<T> {
     /**
      * 获取分页对象
      *
-     * @param pageNumber   当前页
-     * @param pageSize 每页显示条数
+     * @param pageNumber 当前页
+     * @param pageSize   每页显示条数
      * @return 分页对象
      */
     protected Page<T> getPage(Integer pageNumber, Integer pageSize) {

@@ -2,8 +2,8 @@ package com.onezol.vertex.framework.support.aspect;
 
 import com.baomidou.mybatisplus.extension.toolkit.Db;
 import com.onezol.vertex.framework.common.annotation.LogPoint;
-import com.onezol.vertex.framework.common.model.entity.OperationLogEntity;
 import com.onezol.vertex.framework.common.model.SharedHttpServletRequest;
+import com.onezol.vertex.framework.common.model.entity.OperationLogEntity;
 import com.onezol.vertex.framework.common.util.JsonUtils;
 import com.onezol.vertex.framework.common.util.NetworkUtils;
 import com.onezol.vertex.framework.common.util.ServletUtils;
@@ -26,6 +26,7 @@ import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StopWatch;
 
 import java.lang.reflect.Method;
 import java.util.Objects;
@@ -43,14 +44,16 @@ public class LogPointAspect {
     public Object doAround(ProceedingJoinPoint joinPoint) throws Throwable {
         Object result = null;
         Exception exception = null;
-        long start = System.currentTimeMillis();  // 开始时间
+
+        StopWatch stopWatch = new StopWatch();          // 开始
+        stopWatch.start();
         try {
             result = joinPoint.proceed();
         } catch (Exception e) {
             exception = e;
         }
-        long end = System.currentTimeMillis();    // 结束时间
-        long time = end - start;                  // 耗时(单位：毫秒)
+        stopWatch.stop();                               // 结束
+        long time = stopWatch.getTotalTimeMillis();     // 耗时(单位：毫秒)
 
         // 处理日志
         HttpServletRequest request = ServletUtils.getRequest();
