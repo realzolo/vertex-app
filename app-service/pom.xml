@@ -27,6 +27,7 @@
         <springboot.version>3.2.2</springboot.version>
         <application.version>1.0.0</application.version>
         <mybatis-plus.version>3.5.5</mybatis-plus.version>
+        <redisson.version>3.45.1</redisson.version>
         <knife4j.version>4.4.0</knife4j.version>
         <jjwt.version>0.9.1</jjwt.version>
         <fastjson2.version>2.0.34</fastjson2.version>
@@ -47,6 +48,12 @@
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
                 <version>${mybatis-plus.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/org.redisson/redisson-spring-boot-starter -->
+            <dependency>
+                <groupId>org.redisson</groupId>
+                <artifactId>redisson-spring-boot-starter</artifactId>
+                <version>${redisson.version}</version>
             </dependency>
             <!-- https://mvnrepository.com/artifact/com.github.xiaoymin/knife4j-openapi3-jakarta-spring-boot-starter -->
             <dependency>
