@@ -1,30 +1,31 @@
 package com.onezol.vertex.framework.component.message;
 
+import com.onezol.vertex.framework.common.util.ThreadUtils;
+import com.onezol.vertex.framework.support.manager.async.AsyncTaskManager;
+import com.onezol.vertex.framework.support.support.RedisStream;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.connection.stream.RecordId;
-import org.springframework.data.redis.connection.stream.StreamRecords;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
-
-import java.util.Collections;
 
 @Slf4j
 @Component
 public class RedisMessageProducer {
 
-    private final RedisTemplate redisTemplate;
+    private final RedisStream redisStream;
 
-    public RedisMessageProducer(RedisTemplate redisTemplate) {
-        this.redisTemplate = redisTemplate;
+    public RedisMessageProducer(RedisStream redisStream) {
+        this.redisStream = redisStream;
     }
 
-    public void sendMessage(Object message) {
-//        RecordId recordId = redisTemplate
-//                .opsForStream().add(StreamRecords.newRecord()
-//                        .ofMap(Collections.singletonMap("data", message))
-//                        .withStreamKey(streamKey));
-//        if (recordId != null) {
-//            log.info("Message sent to Stream '{}' with RecordId: {}", streamKey, recordId);
-//        }
+    @PostConstruct
+    public void init() {
+//        AsyncTaskManager.getInstance().execute(this::doSomething);
+    }
+
+    public void doSomething() {
+        for (int i = 0; i < 100; i++) {
+            redisStream.publish("vertex-application", "key", "value: " + i);
+            ThreadUtils.sleep(500);
+        }
     }
 }
