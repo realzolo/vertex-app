@@ -18,6 +18,13 @@ spring:
     port: 465
     username: mail@onezol.com
     password: JYGtUgkah6x89BLc
+  # MQTT配置
+  mqtt:
+    enabled: true
+    broker-url: tcp://onezol.com:1883
+    client-id: ${spring.application.name}-${random.value}
+    username: admin
+    password: public
 
 # 应用配置
 application:
