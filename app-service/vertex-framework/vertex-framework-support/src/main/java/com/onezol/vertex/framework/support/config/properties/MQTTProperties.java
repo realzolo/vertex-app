@@ -24,8 +24,11 @@ public class MQTTProperties {
     @Schema(description = "MQTT Password")
     private String password;
 
-    @Schema(description = "MQTT Topic")
-    private String topic = "/#";
+    @Schema(description = "默认入站主题")
+    private String inboundDefault = "/#";
+
+    @Schema(description = "默认出站主题")
+    private String outboundDefault = "/app/default/outbound";
 
     @Schema(description = "是否启用MQTT")
     private Boolean enabled = false;

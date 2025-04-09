@@ -22,7 +22,7 @@ spring:
   mqtt:
     enabled: true
     broker-url: tcp://onezol.com:1883
-    client-id: ${spring.application.name}-${random.value}
+    client-id: ${spring.application.name}
     username: admin
     password: public
 

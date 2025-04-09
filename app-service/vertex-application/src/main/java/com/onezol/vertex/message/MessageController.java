@@ -10,8 +10,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/message")
 public class MessageController {
 
-    @Autowired
-    private MQTTGateway mqttGateway;
+    private final MQTTGateway mqttGateway;
+
+    public MessageController(@Autowired(required = false) MQTTGateway mqttGateway) {
+        this.mqttGateway = mqttGateway;
+    }
 
     @RequestMapping("/mqtt/send/{topic}/{message}")
     public void send(@PathVariable("topic") String topic, @PathVariable("message") String message) {
