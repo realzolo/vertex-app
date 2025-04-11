@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 
 @Component
 @SuppressWarnings("ALL")
-public class RedisCache implements com.onezol.vertex.framework.common.facade.RedisCache {
+public class RedisCache {
 
     public final RedisTemplate redisTemplate;
 

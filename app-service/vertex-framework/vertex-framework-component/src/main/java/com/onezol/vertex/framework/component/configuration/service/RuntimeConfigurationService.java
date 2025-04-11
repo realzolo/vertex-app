@@ -1,7 +1,7 @@
 package com.onezol.vertex.framework.component.configuration.service;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.onezol.vertex.framework.common.exception.RuntimeBizException;
+import com.onezol.vertex.framework.common.exception.RuntimeServiceException;
 import com.onezol.vertex.framework.common.model.LabelValue;
 import com.onezol.vertex.framework.common.mvc.service.BaseServiceImpl;
 import com.onezol.vertex.framework.common.util.BeanUtils;
@@ -57,12 +57,12 @@ public class RuntimeConfigurationService extends BaseServiceImpl<RuntimeConfigur
     @Transactional
     public void updateConfigurations(List<RuntimeConfiguration> runtimeConfigurations) {
         if (Objects.isNull(runtimeConfigurations)) {
-            throw new RuntimeBizException("配置列表不能为空");
+            throw new RuntimeServiceException("配置列表不能为空");
         }
         List<RuntimeConfigurationEntity> entities = BeanUtils.toList(runtimeConfigurations, RuntimeConfigurationEntity.class);
         boolean ok = this.updateBatchById(entities);
         if (!ok) {
-            throw new RuntimeBizException("更新配置失败");
+            throw new RuntimeServiceException("更新配置失败");
         }
     }
 
@@ -79,7 +79,7 @@ public class RuntimeConfigurationService extends BaseServiceImpl<RuntimeConfigur
 
         boolean ok = this.updateBatchById(configurationEntities);
         if (!ok) {
-            throw new RuntimeBizException("重置配置失败");
+            throw new RuntimeServiceException("重置配置失败");
         }
     }
 }

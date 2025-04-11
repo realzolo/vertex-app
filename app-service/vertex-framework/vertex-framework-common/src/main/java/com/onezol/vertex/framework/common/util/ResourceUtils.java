@@ -1,13 +1,19 @@
 package com.onezol.vertex.framework.common.util;
 
-
 import org.springframework.util.StreamUtils;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
+/**
+ * 资源工具类
+ */
 public final class ResourceUtils extends org.springframework.util.ResourceUtils {
+
+    private ResourceUtils() {
+        throw new IllegalStateException("Utility class cannot be instantiated");
+    }
 
     /**
      * 获取项目根路径

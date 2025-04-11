@@ -1,12 +1,18 @@
 package com.onezol.vertex.framework.common.util;
 
-
 import com.onezol.vertex.framework.common.constant.StringConstants;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * 字符串工具类
+ */
 public final class StringUtils extends org.apache.commons.lang3.StringUtils {
+
+    private StringUtils() {
+        throw new IllegalStateException("Utility class cannot be instantiated");
+    }
 
     /**
      * 下划线转大驼峰 例如：user_name -> UserName

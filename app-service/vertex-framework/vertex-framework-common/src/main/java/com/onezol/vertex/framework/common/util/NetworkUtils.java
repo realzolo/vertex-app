@@ -1,6 +1,5 @@
 package com.onezol.vertex.framework.common.util;
 
-
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,6 +15,10 @@ import java.net.UnknownHostException;
  */
 @Slf4j
 public final class NetworkUtils {
+
+    private NetworkUtils() {
+        throw new IllegalStateException("Utility class cannot be instantiated");
+    }
 
     // 本地IP地址
     public static final String LOCAL_HOST = "127.0.0.1";

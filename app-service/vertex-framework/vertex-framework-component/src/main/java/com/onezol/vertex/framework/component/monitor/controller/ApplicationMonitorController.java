@@ -1,7 +1,7 @@
 package com.onezol.vertex.framework.component.monitor.controller;
 
 import com.alibaba.fastjson2.JSONObject;
-import com.onezol.vertex.framework.common.helper.ResponseHelper;
+import com.onezol.vertex.framework.support.support.ResponseHelper;
 import com.onezol.vertex.framework.common.model.GenericResponse;
 import com.onezol.vertex.framework.common.util.StringUtils;
 import com.onezol.vertex.framework.security.api.annotation.RestrictAccess;

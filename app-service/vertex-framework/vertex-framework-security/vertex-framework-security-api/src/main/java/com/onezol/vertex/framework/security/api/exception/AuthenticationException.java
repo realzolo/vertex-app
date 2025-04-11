@@ -1,20 +1,19 @@
 package com.onezol.vertex.framework.security.api.exception;
 
-
-import com.onezol.vertex.framework.common.constant.enumeration.BizHttpStatusEnum;
-import com.onezol.vertex.framework.common.exception.BusinessException;
+import com.onezol.vertex.framework.common.constant.enumeration.ServiceStatusEnum;
+import com.onezol.vertex.framework.common.exception.ServiceException;
 
 /**
  * 认证异常
  */
-public class AuthenticationException extends BusinessException {
+public class AuthenticationException extends ServiceException {
 
     public AuthenticationException() {
-        super(BizHttpStatusEnum.UNAUTHORIZED);
+        super(ServiceStatusEnum.UNAUTHORIZED);
     }
 
     public AuthenticationException(String message) {
-        super(BizHttpStatusEnum.UNAUTHORIZED, message);
+        super(ServiceStatusEnum.UNAUTHORIZED, message);
     }
 
 }

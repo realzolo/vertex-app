@@ -17,17 +17,12 @@
 package com.onezol.vertex.framework.common.constant;
 
 /**
- * UI 相关常量
- *
- * @author Charles7c
- * @since 2023/9/17 14:12
+ * 颜色相关常量
  */
-public class UiConstants {
+public final class ColorConstants {
 
-    /**
-     * 主色（极致蓝）
-     */
-    public static final String COLOR_PRIMARY = "arcoblue";
+    private ColorConstants() {
+    }
 
     /**
      * 成功色（仙野绿）
@@ -49,6 +44,4 @@ public class UiConstants {
      */
     public static final String COLOR_DEFAULT = "gray";
 
-    private UiConstants() {
-    }
 }

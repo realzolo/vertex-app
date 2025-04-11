@@ -3,7 +3,11 @@ package com.onezol.vertex.framework.common.constant;
 /**
  * 缓存Key常量模板
  */
-public record CacheKey() {
+public final class CacheKey {
+
+    private CacheKey() {
+    }
+
     /**
      * 用户Token
      */

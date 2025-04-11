@@ -1,6 +1,6 @@
 package com.onezol.vertex.framework.component.application;
 
-import com.onezol.vertex.framework.common.helper.ResponseHelper;
+import com.onezol.vertex.framework.support.support.ResponseHelper;
 import com.onezol.vertex.framework.common.model.GenericResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

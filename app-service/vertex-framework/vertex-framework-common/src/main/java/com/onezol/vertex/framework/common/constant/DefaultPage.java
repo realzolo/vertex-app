@@ -1,6 +1,9 @@
 package com.onezol.vertex.framework.common.constant;
 
-public record DefaultPage() {
+public final class DefaultPage {
+
+    private DefaultPage() {
+    }
 
     /**
      * 默认页码

@@ -1,7 +1,7 @@
 package com.onezol.vertex.framework.security.biz.service;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.onezol.vertex.framework.common.exception.RuntimeBizException;
+import com.onezol.vertex.framework.common.exception.RuntimeServiceException;
 import com.onezol.vertex.framework.common.mvc.service.BaseServiceImpl;
 import com.onezol.vertex.framework.common.util.BeanUtils;
 import com.onezol.vertex.framework.security.api.mapper.RoleMapper;
@@ -37,7 +37,7 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleMapper, RoleEntity> imp
     public void updateRole(Role role) {
         RoleEntity entity = BeanUtils.toBean(role, RoleEntity.class);
         if (!updateById(entity)) {
-            throw new RuntimeBizException("更新角色失败");
+            throw new RuntimeServiceException("更新角色失败");
         }
         // 查询当前角色原权限ID列表
         List<Long> oldPermissionIds = rolePermissionService.list(

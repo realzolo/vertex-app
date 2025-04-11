@@ -1,11 +1,11 @@
-package com.onezol.vertex.framework.security.biz.fillter;
+package com.onezol.vertex.framework.security.biz.interceptor;
 
 import com.onezol.vertex.framework.common.constant.CacheKey;
-import com.onezol.vertex.framework.common.util.JwtUtils;
 import com.onezol.vertex.framework.common.util.StringUtils;
 import com.onezol.vertex.framework.security.api.model.pojo.LoginUser;
 import com.onezol.vertex.framework.support.cache.RedisCache;
-import com.onezol.vertex.framework.support.support.CacheKeyHelper;
+import com.onezol.vertex.framework.support.support.JWTHelper;
+import com.onezol.vertex.framework.support.support.RedisKeyHelper;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -62,15 +62,15 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             String token = authorizationHeader.substring(AUTHORIZATION_HEADER.length());
 
             // 验证token有效性
-            boolean ok = JwtUtils.validateToken(token);
+            boolean ok = JWTHelper.validateToken(token);
             if (!ok) {
                 filterChain.doFilter(request, response);
                 return;
             }
 
             // 从Redis中获取用户信息, 并验证用户信息是否存在
-            String subject = JwtUtils.getSubjectFromToken(token);
-            String redisKey = CacheKeyHelper.buildCacheKey(CacheKey.USER_INFO, subject);
+            String subject = JWTHelper.getSubjectFromToken(token);
+            String redisKey = RedisKeyHelper.buildCacheKey(CacheKey.USER_INFO, subject);
             LoginUser loginUser = redisCache.getCacheObject(redisKey);
             if (Objects.isNull(loginUser)) {
                 filterChain.doFilter(request, response);
@@ -78,7 +78,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             }
 
             // 检查token是否快要过期，进行续期操作
-            Claims claims = JwtUtils.getClaimsFromToken(token);
+            Claims claims = JWTHelper.getClaimsFromToken(token);
             assert claims != null;
             if (isTokenNearExpiration(claims)) {
                 // 续期JWT
@@ -123,7 +123,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     private String renewToken(Claims claims) {
         String subject = claims.getSubject();
         // 进行JWT续期操作(重新生成一个)
-        return JwtUtils.generateToken(subject);
+        return JWTHelper.generateToken(subject);
     }
 
 }

@@ -2,7 +2,14 @@ package com.onezol.vertex.framework.support.support;
 
 import java.util.Objects;
 
-public final class CacheKeyHelper {
+/**
+ * Redis Key生成工具
+ */
+public final class RedisKeyHelper {
+
+    private RedisKeyHelper() {
+        throw new IllegalStateException("Utility class cannot be instantiated");
+    }
 
     /**
      * 生成缓存 Key

@@ -1,28 +1,24 @@
 package com.onezol.vertex.framework.common.constant;
 
 /**
- * 常量类
+ * 通用常量类
  */
 @SuppressWarnings("ALL")
-public record GenericConstants() {
+public final class GenericConstants {
 
-    /**
-     * http协议
-     */
+    private GenericConstants() {
+    }
+
+    /**  http协议 */
     public static String PROTOCOL_HTTP = "http://";
 
-    /**
-     * https协议
-     */
+    /** * https协议 */
     public static String PROTOCOL_HTTPS = "https://";
 
-    /**
-     * UNKNOWN
-     */
+    /** * UNKNOWN */
     public static String UNKNOWN = "unknown";
 
-    /**
-     * Authorization header 前缀
-     */
+    /** * Authorization header 前缀 */
     public static String AUTHORIZATION_HEADER = "Bearer ";
+
 }

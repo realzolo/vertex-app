@@ -1,11 +1,11 @@
 package com.onezol.vertex.framework.security.biz.config;
 
-import com.onezol.vertex.framework.common.util.ControllerPathUtils;
 import com.onezol.vertex.framework.security.api.annotation.RestrictAccess;
-import com.onezol.vertex.framework.security.biz.fillter.JwtAuthenticationTokenFilter;
+import com.onezol.vertex.framework.security.biz.interceptor.JwtAuthenticationTokenFilter;
 import com.onezol.vertex.framework.security.biz.handler.UserAccessDeniedHandler;
 import com.onezol.vertex.framework.security.biz.handler.UserAuthenticationHandler;
 import com.onezol.vertex.framework.security.biz.handler.UserLogoutSuccessHandler;
+import com.onezol.vertex.framework.support.support.RequestPathHelper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -53,8 +53,8 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         // 获取限制访问路径并转换为 MvcMatchers
-        Set<String> restrictPathSet = ControllerPathUtils.getControllerPaths(RestrictAccess.class);
-        Set<String> mvcMatchers = ControllerPathUtils.convertPathToMvcMatcher(restrictPathSet);
+        Set<String> restrictPathSet = RequestPathHelper.getControllerPaths(RestrictAccess.class);
+        Set<String> mvcMatchers = RequestPathHelper.convertPathToMvcMatcher(restrictPathSet);
         String[] restrictPaths = mvcMatchers.toArray(new String[0]);
 
         return http

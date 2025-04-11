@@ -5,7 +5,14 @@ import com.onezol.vertex.framework.common.model.TreeNode;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 树工具类
+ */
 public final class TreeUtils {
+
+    private TreeUtils() {
+        throw new IllegalStateException("Utility class cannot be instantiated");
+    }
 
     public static List<TreeNode> buildTree(List<TreeNode> nodes, Long parentId) {
         List<TreeNode> treeNodes = new ArrayList<>();

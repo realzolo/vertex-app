@@ -3,11 +3,11 @@ package com.onezol.vertex.framework.component.monitor.controller;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import com.onezol.vertex.framework.common.constant.enumeration.BizHttpStatusEnum;
-import com.onezol.vertex.framework.common.exception.RuntimeBizException;
-import com.onezol.vertex.framework.common.helper.ResponseHelper;
+import com.onezol.vertex.framework.common.constant.enumeration.ServiceStatusEnum;
+import com.onezol.vertex.framework.common.exception.RuntimeServiceException;
+import com.onezol.vertex.framework.support.support.ResponseHelper;
 import com.onezol.vertex.framework.common.model.GenericResponse;
-import com.onezol.vertex.framework.common.model.PlainPage;
+import com.onezol.vertex.framework.common.model.PageModel;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
@@ -62,7 +62,7 @@ public class DatabaseMonitorController {
     @GetMapping("/{key}")
     public GenericResponse<Object> getData(@PathVariable("key") String key) {
         if (!DRUID_RESOURCE_SET.contains(key) && !DRUID_PAGE_RESOURCE_SET.contains(key)) {
-            throw new RuntimeBizException(BizHttpStatusEnum.NOT_FOUND, "未找到Druid资源");
+            throw new RuntimeServiceException(ServiceStatusEnum.NOT_FOUND, "未找到Druid资源");
         }
         String path = String.format("/%s.json", key);
 
@@ -77,7 +77,7 @@ public class DatabaseMonitorController {
 
     @Operation(summary = "分页查询数据", description = "分页获取Druid数据库连接池监控")
     @GetMapping("/{key}/{orderBy}/{orderType}/{page}/{perPageCount}")
-    public GenericResponse<PlainPage<Object>> getPageData(
+    public GenericResponse<PageModel<Object>> getPageData(
             @PathVariable("key") String key,
             @PathVariable("orderBy") String orderBy,
             @PathVariable("orderType") String orderType,
@@ -85,7 +85,7 @@ public class DatabaseMonitorController {
             @PathVariable("perPageCount") Integer perPageCount
     ) {
         if (!DRUID_RESOURCE_SET.contains(key) && !DRUID_PAGE_RESOURCE_SET.contains(key)) {
-            throw new RuntimeBizException(BizHttpStatusEnum.NOT_FOUND, "未找到Druid资源");
+            throw new RuntimeServiceException(ServiceStatusEnum.NOT_FOUND, "未找到Druid资源");
         }
         String path = String.format("/%s.json?orderBy=%s&orderType=%s&page=1&perPageCount=99999", key, orderBy, orderType);
         // 请求数据
@@ -95,7 +95,7 @@ public class DatabaseMonitorController {
         int start = (page - 1) * perPageCount;
         int end = page * perPageCount;
         if (data.size() < start) {
-            return ResponseHelper.buildSuccessfulResponse(new PlainPage<>(data, data.size(), page, perPageCount));
+            return ResponseHelper.buildSuccessfulResponse(new PageModel<>(data, data.size(), page, perPageCount));
         }
         for (int i = start; i < end; i++) {
             if (i >= data.size()) {
@@ -103,8 +103,8 @@ public class DatabaseMonitorController {
             }
             pageData.add(data.get(i));
         }
-        PlainPage<Object> plainPage = new PlainPage<>(pageData, data.size(), page, perPageCount);
-        return ResponseHelper.buildSuccessfulResponse(plainPage);
+        PageModel<Object> PageModel = new PageModel<>(pageData, data.size(), page, perPageCount);
+        return ResponseHelper.buildSuccessfulResponse(PageModel);
     }
 
     /**
@@ -133,11 +133,11 @@ public class DatabaseMonitorController {
         try {
             response = restTemplate.exchange(url, HttpMethod.GET, requestEntity, String.class);
         } catch (RestClientException e) {
-            throw new RuntimeBizException(BizHttpStatusEnum.INTERNAL_SERVER_ERROR, "Druid请求失败, 请检查Druid配置服务状态");
+            throw new RuntimeServiceException(ServiceStatusEnum.INTERNAL_SERVER_ERROR, "Druid请求失败, 请检查Druid配置服务状态");
         }
 
         if (response.getStatusCode() != HttpStatus.OK) {
-            throw new RuntimeBizException(BizHttpStatusEnum.INTERNAL_SERVER_ERROR, "Druid请求失败, 请检查Druid配置服务状态");
+            throw new RuntimeServiceException(ServiceStatusEnum.INTERNAL_SERVER_ERROR, "Druid请求失败, 请检查Druid配置服务状态");
         }
 
         JSONObject result = JSON.parseObject(response.getBody());
@@ -178,10 +178,10 @@ public class DatabaseMonitorController {
         String body = response.getBody();
         boolean isErrorMessage = JSON.isValid(body);
         if (response.getStatusCode() != HttpStatus.OK || isErrorMessage) {
-            throw new RuntimeBizException(BizHttpStatusEnum.INTERNAL_SERVER_ERROR, "Druid登录失败, 请检查Druid是否开启了Web访问权限");
+            throw new RuntimeServiceException(ServiceStatusEnum.INTERNAL_SERVER_ERROR, "Druid登录失败, 请检查Druid是否开启了Web访问权限");
         }
         if (!Objects.equals(body, "success")) {
-            throw new RuntimeBizException(BizHttpStatusEnum.INTERNAL_SERVER_ERROR, "Druid登录失败, 请检查用户名密码是否正确");
+            throw new RuntimeServiceException(ServiceStatusEnum.INTERNAL_SERVER_ERROR, "Druid登录失败, 请检查用户名密码是否正确");
         }
 
         String cookieStr = response.getHeaders().getFirst("Set-Cookie");

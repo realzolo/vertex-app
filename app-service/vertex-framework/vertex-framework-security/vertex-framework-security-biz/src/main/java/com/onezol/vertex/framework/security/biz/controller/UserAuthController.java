@@ -1,7 +1,6 @@
 package com.onezol.vertex.framework.security.biz.controller;
 
-import com.onezol.vertex.framework.common.constant.enumeration.BizHttpStatusEnum;
-import com.onezol.vertex.framework.common.helper.ResponseHelper;
+import com.onezol.vertex.framework.common.constant.enumeration.ServiceStatusEnum;
 import com.onezol.vertex.framework.common.model.GenericResponse;
 import com.onezol.vertex.framework.common.util.StringUtils;
 import com.onezol.vertex.framework.security.api.annotation.RestrictAccess;
@@ -9,6 +8,7 @@ import com.onezol.vertex.framework.security.api.model.payload.UserLoginPayload;
 import com.onezol.vertex.framework.security.api.model.payload.UserRegistrationPayload;
 import com.onezol.vertex.framework.security.api.model.vo.UserAuthenticationVO;
 import com.onezol.vertex.framework.security.api.service.UserAuthService;
+import com.onezol.vertex.framework.support.support.ResponseHelper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -42,16 +42,16 @@ public class UserAuthController {
     @PostMapping("/login")
     public GenericResponse<UserAuthenticationVO> loginByIdPassword(@RequestBody @Valid UserLoginPayload payload) {
         if (StringUtils.isBlank(payload.getUuid())) {
-            return ResponseHelper.buildFailedResponse(BizHttpStatusEnum.BAD_REQUEST, "会话ID不能为空");
+            return ResponseHelper.buildFailedResponse(ServiceStatusEnum.BAD_REQUEST, "会话ID不能为空");
         }
         if (StringUtils.isAnyBlank(payload.getUsername(), payload.getPassword())) {
-            return ResponseHelper.buildFailedResponse(BizHttpStatusEnum.BAD_REQUEST, "用户名或密码不能为空");
+            return ResponseHelper.buildFailedResponse(ServiceStatusEnum.BAD_REQUEST, "用户名或密码不能为空");
         }
         UserAuthenticationVO userAuthenticationVO = userAuthService.loginByIdPassword(payload.getUsername(), payload.getPassword(), payload.getUuid(), payload.getCaptcha());
 
         return Objects.nonNull(userAuthenticationVO) ?
                 ResponseHelper.buildSuccessfulResponse(userAuthenticationVO) :
-                ResponseHelper.buildFailedResponse(BizHttpStatusEnum.BAD_REQUEST, "请使用用户名或邮箱登录");
+                ResponseHelper.buildFailedResponse(ServiceStatusEnum.BAD_REQUEST, "请使用用户名或邮箱登录");
     }
 
     @Operation(summary = "用户登出", description = "用户登出")

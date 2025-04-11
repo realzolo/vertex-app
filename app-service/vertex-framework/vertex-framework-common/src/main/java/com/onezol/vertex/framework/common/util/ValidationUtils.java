@@ -1,11 +1,20 @@
 package com.onezol.vertex.framework.common.util;
 
+/**
+ * 校验工具类
+ */
 public final class ValidationUtils {
+
+    private ValidationUtils() {
+        throw new IllegalStateException("Utility class cannot be instantiated");
+    }
 
     // 邮箱正则表达式
     public static final String PATTERN_EMAIL = "^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$";
+
     // 手机号正则表达式
     public static final String PATTERN_MOBILE_PHONE = "^(?:(?:\\+|00)86)?1(?:3\\d|4[0,14-9]|5[0-3,5-9]|6[2,5-7]|7[0-8]|8\\d|9[0-3,5-9])\\d{8}$";
+
     // URL正则表达式
     public static final String PATTERN_URL = "^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
 

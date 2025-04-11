@@ -1,10 +1,9 @@
 package com.onezol.vertex.framework.component.storage;
 
-import com.onezol.vertex.framework.common.helper.ResponseHelper;
+import com.onezol.vertex.framework.support.support.ResponseHelper;
 import com.onezol.vertex.framework.common.model.GenericResponse;
 import com.onezol.vertex.framework.component.storage.service.FileStorageService;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.dromara.x.file.storage.core.FileInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;

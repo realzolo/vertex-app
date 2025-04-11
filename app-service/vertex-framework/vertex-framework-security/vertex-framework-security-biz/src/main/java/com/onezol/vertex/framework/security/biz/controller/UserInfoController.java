@@ -1,13 +1,12 @@
 package com.onezol.vertex.framework.security.biz.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.onezol.vertex.framework.common.bean.AuthenticationContext;
-import com.onezol.vertex.framework.common.helper.ResponseHelper;
-import com.onezol.vertex.framework.common.model.AuthUser;
+import com.onezol.vertex.framework.security.api.context.AuthenticationContext;
+import com.onezol.vertex.framework.support.support.ResponseHelper;
+import com.onezol.vertex.framework.security.api.model.dto.AuthUser;
 import com.onezol.vertex.framework.common.model.GenericResponse;
-import com.onezol.vertex.framework.common.model.PlainPage;
+import com.onezol.vertex.framework.common.model.PageModel;
 import com.onezol.vertex.framework.common.mvc.controller.BaseController;
-import com.onezol.vertex.framework.common.util.BeanUtils;
 import com.onezol.vertex.framework.security.api.annotation.RestrictAccess;
 import com.onezol.vertex.framework.security.api.model.dto.User;
 import com.onezol.vertex.framework.security.api.model.entity.UserEntity;
@@ -77,7 +76,7 @@ public class UserInfoController extends BaseController<UserEntity> {
     @Operation(summary = "获取用户列表", description = "条件查询用户列表")
     @RestrictAccess
     @GetMapping("/page")
-    public GenericResponse<PlainPage<User>> getUserPage(
+    public GenericResponse<PageModel<User>> getUserPage(
             @RequestParam(value = "page", required = false) Integer pageNumber,
             @RequestParam(value = "size", required = false) Integer pageSize,
             @RequestBody(required = false) UserQueryPayload payload

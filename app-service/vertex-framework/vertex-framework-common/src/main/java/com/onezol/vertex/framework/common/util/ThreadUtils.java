@@ -10,6 +10,10 @@ import java.util.concurrent.*;
 @Slf4j
 public final class ThreadUtils {
 
+    private ThreadUtils() {
+        throw new IllegalStateException("Utility class cannot be instantiated");
+    }
+
     /**
      * sleep等待,单位为毫秒
      */

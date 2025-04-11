@@ -4,6 +4,10 @@ import java.io.File;
 
 public final class FileUtils {
 
+    private FileUtils() {
+        throw new IllegalStateException("Utility class cannot be instantiated");
+    }
+
     private static final CharSequence[] SPECIAL_SUFFIX = new CharSequence[]{"tar.bz2", "tar.Z", "tar.gz", "tar.xz"};
 
     /**

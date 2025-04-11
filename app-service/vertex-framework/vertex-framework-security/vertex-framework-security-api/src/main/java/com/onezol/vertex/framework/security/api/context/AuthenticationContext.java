@@ -1,6 +1,6 @@
-package com.onezol.vertex.framework.common.bean;
+package com.onezol.vertex.framework.security.api.context;
 
-import com.onezol.vertex.framework.common.model.AuthUser;
+import com.onezol.vertex.framework.security.api.model.dto.AuthUser;
 
 public class AuthenticationContext {
 

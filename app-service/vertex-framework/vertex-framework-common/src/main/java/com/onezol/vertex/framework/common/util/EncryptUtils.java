@@ -19,28 +19,8 @@ import java.util.Objects;
 @Slf4j
 public final class EncryptUtils {
 
-    /**
-     * 对字符串进行 Base64 编码
-     *
-     * @param str 需要进行编码的字符串
-     * @return Base64 编码后的字符串
-     */
-    public static String encodeWithBase64(String str) {
-        byte[] bytes = str.getBytes(StandardCharsets.UTF_8);
-        byte[] encoded = Base64.getEncoder().encode(bytes);
-        return new String(encoded, StandardCharsets.UTF_8);
-    }
-
-    /**
-     * 对 Base64 编码的字符串进行解码
-     *
-     * @param encodedStr 需要进行解码的 Base64 编码后的字符串
-     * @return 解码后的字符串
-     */
-    public static String decodeWithBase64(String encodedStr) {
-        byte[] encoded = encodedStr.getBytes(StandardCharsets.UTF_8);
-        byte[] bytes = Base64.getDecoder().decode(encoded);
-        return new String(bytes, StandardCharsets.UTF_8);
+    private EncryptUtils() {
+        throw new IllegalStateException("Utility class cannot be instantiated");
     }
 
     /**

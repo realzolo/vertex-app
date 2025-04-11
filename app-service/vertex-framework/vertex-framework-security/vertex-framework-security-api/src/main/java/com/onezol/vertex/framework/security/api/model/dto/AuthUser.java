@@ -1,10 +1,10 @@
-package com.onezol.vertex.framework.common.model;
+package com.onezol.vertex.framework.security.api.model.dto;
 
+import com.onezol.vertex.framework.common.model.LabelValue;
 import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
-import java.util.Set;
 
 @Data
 @Builder

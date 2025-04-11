@@ -2,11 +2,11 @@ package com.onezol.vertex.framework.support.handler;
 
 import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.extension.toolkit.Db;
-import com.onezol.vertex.framework.common.bean.AuthenticationContext;
-import com.onezol.vertex.framework.common.constant.enumeration.BizHttpStatusEnum;
-import com.onezol.vertex.framework.common.exception.BusinessException;
-import com.onezol.vertex.framework.common.helper.ResponseHelper;
-import com.onezol.vertex.framework.common.model.AuthUser;
+import com.onezol.vertex.framework.common.constant.enumeration.ServiceStatusEnum;
+import com.onezol.vertex.framework.common.exception.ServiceException;
+import com.onezol.vertex.framework.security.api.context.AuthenticationContext;
+import com.onezol.vertex.framework.support.support.ResponseHelper;
+import com.onezol.vertex.framework.security.api.model.dto.AuthUser;
 import com.onezol.vertex.framework.common.model.GenericResponse;
 import com.onezol.vertex.framework.common.model.SharedHttpServletRequest;
 import com.onezol.vertex.framework.common.model.entity.ExceptionLogEntity;
@@ -45,7 +45,7 @@ public class GlobalExceptionHandler {
         if (Objects.nonNull(fieldError)) {
             message = fieldError.getDefaultMessage();
         }
-        return ResponseHelper.buildFailedResponse(BizHttpStatusEnum.BAD_REQUEST, message);
+        return ResponseHelper.buildFailedResponse(ServiceStatusEnum.BAD_REQUEST, message);
     }
 
     /**
@@ -53,7 +53,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value = NoResourceFoundException.class)
     public Object handleNoResourceFoundException(HttpServletRequest req, NoResourceFoundException ex) throws NoResourceFoundException {
-        return ResponseHelper.buildFailedResponse(BizHttpStatusEnum.NOT_FOUND, ex.getMessage());
+        return ResponseHelper.buildFailedResponse(ServiceStatusEnum.NOT_FOUND, ex.getMessage());
     }
 
     /**
@@ -62,14 +62,14 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = MaxUploadSizeExceededException.class)
     public GenericResponse<?> handleNullPointerException(HttpServletRequest req, MaxUploadSizeExceededException ex) {
         log.error(ex.getMessage(), ex);
-        return ResponseHelper.buildFailedResponse(BizHttpStatusEnum.INTERNAL_SERVER_ERROR, "上传文件大小超限！");
+        return ResponseHelper.buildFailedResponse(ServiceStatusEnum.INTERNAL_SERVER_ERROR, "上传文件大小超限！");
     }
 
     /**
-     * BusinessException 处理业务异常
+     * ServiceException 处理服务异常
      */
-    @ExceptionHandler(value = BusinessException.class)
-    public GenericResponse<?> handleBusinessException(HttpServletRequest req, BusinessException ex) {
+    @ExceptionHandler(value = ServiceException.class)
+    public GenericResponse<?> handleServiceException(HttpServletRequest req, ServiceException ex) {
         return ResponseHelper.buildFailedResponse(ex.getCode(), ex.getMessage());
     }
 
@@ -82,7 +82,7 @@ public class GlobalExceptionHandler {
         // API异常日志持久化
         SharedHttpServletRequest request = SharedHttpServletRequest.of(req);
         AsyncTaskManager.getInstance().execute(() -> this.createExceptionLog(request, ex));
-        return ResponseHelper.buildFailedResponse(BizHttpStatusEnum.INTERNAL_SERVER_ERROR.getValue(), ex.getMessage());
+        return ResponseHelper.buildFailedResponse(ServiceStatusEnum.INTERNAL_SERVER_ERROR.getValue(), ex.getMessage());
     }
 
     /**

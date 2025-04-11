@@ -1,5 +1,7 @@
-package com.onezol.vertex.framework.common.util;
+package com.onezol.vertex.framework.support.support;
 
+import com.onezol.vertex.framework.common.util.SpringUtils;
+import com.onezol.vertex.framework.common.util.StringUtils;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.condition.PathPatternsRequestCondition;
@@ -16,9 +18,13 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Controller路径工具类
+ * Controller 请求路径工具类
  */
-public final class ControllerPathUtils {
+public final class RequestPathHelper {
+
+    private RequestPathHelper() {
+        throw new IllegalStateException("Utility class cannot be instantiated");
+    }
 
     /**
      * 将路径转换为SpringSecurity的mvcMatchers格式<br/>

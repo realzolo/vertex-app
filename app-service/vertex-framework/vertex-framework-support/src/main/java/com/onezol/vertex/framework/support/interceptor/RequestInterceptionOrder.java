@@ -1,6 +1,13 @@
-package com.onezol.vertex.framework.common.constant;
+package com.onezol.vertex.framework.support.interceptor;
 
-public record FilterInterceptorOrderNumber() {
+/**
+ * 过滤器拦截器执行顺序
+ */
+public final class RequestInterceptionOrder {
+
+    private RequestInterceptionOrder() {
+    }
+
     // -------------------------👇过滤器👇-------------------------
     /**
      * 受保护资源过滤器
@@ -14,4 +21,5 @@ public record FilterInterceptorOrderNumber() {
      */
     public static final int AUTHENTICATION_CONTEXT_INTERCEPTOR_ORDER = 101;
     // -------------------------👆拦截器👆-------------------------
+
 }

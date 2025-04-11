@@ -1,7 +1,7 @@
 package com.onezol.vertex.framework.security.biz.handler;
 
 import com.onezol.vertex.framework.common.model.GenericResponse;
-import com.onezol.vertex.framework.common.helper.ResponseHelper;
+import com.onezol.vertex.framework.support.support.ResponseHelper;
 import com.onezol.vertex.framework.common.util.ServletUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

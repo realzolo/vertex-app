@@ -6,8 +6,8 @@ import com.baomidou.mybatisplus.extension.plugins.inner.BlockAttackInnerIntercep
 import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import com.baomidou.mybatisplus.extension.toolkit.JdbcUtils;
-import com.onezol.vertex.framework.common.bean.AuthenticationContext;
-import com.onezol.vertex.framework.common.model.AuthUser;
+import com.onezol.vertex.framework.security.api.context.AuthenticationContext;
+import com.onezol.vertex.framework.security.api.model.dto.AuthUser;
 import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

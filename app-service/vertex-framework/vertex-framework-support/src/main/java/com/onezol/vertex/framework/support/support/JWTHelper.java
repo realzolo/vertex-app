@@ -1,12 +1,21 @@
-package com.onezol.vertex.framework.common.util;
+package com.onezol.vertex.framework.support.support;
 
+import com.onezol.vertex.framework.common.util.SpringUtils;
+import com.onezol.vertex.framework.common.util.StringUtils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
 import java.util.Date;
 
-public final class JwtUtils {
+/**
+ * JWT 工具类
+ */
+public final class JWTHelper {
+
+    private JWTHelper() {
+        throw new IllegalStateException("Utility class cannot be instantiated");
+    }
 
     /**
      * 默认getSecret()

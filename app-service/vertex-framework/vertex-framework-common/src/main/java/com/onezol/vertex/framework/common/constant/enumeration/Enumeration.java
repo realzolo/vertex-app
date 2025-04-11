@@ -8,16 +8,6 @@ import java.util.Objects;
  */
 public interface Enumeration<T extends Serializable> {
 
-    static <T extends Enumeration<?>> T getEnumByValue(Class<T> enumClass, T value) {
-        T[] enumConstants = enumClass.getEnumConstants();
-        for (T enumConstant : enumConstants) {
-            if (Objects.equals(enumConstant.getValue(), value.toString())) {
-                return enumConstant;
-            }
-        }
-        return null;
-    }
-
     default String getName() {
         return null;
     }
@@ -31,4 +21,5 @@ public interface Enumeration<T extends Serializable> {
     default String getDescription() {
         return null;
     }
+
 }

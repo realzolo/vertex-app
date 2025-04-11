@@ -2,6 +2,10 @@ package com.onezol.vertex.framework.common.util;
 
 public final class HttpUtils {
 
+    private HttpUtils() {
+        throw new IllegalStateException("Utility class cannot be instantiated");
+    }
+
     /**
      * 向指定 URL 发送GET方法的请求
      *

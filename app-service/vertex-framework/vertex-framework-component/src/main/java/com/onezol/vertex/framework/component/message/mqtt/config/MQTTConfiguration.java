@@ -1,6 +1,6 @@
-package com.onezol.vertex.framework.support.config;
+package com.onezol.vertex.framework.component.message.mqtt.config;
 
-import com.onezol.vertex.framework.support.config.properties.MQTTProperties;
+import com.onezol.vertex.framework.component.message.mqtt.config.properties.MQTTProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttMessage;

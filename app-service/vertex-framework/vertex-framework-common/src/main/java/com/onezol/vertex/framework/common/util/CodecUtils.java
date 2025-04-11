@@ -8,6 +8,10 @@ import java.util.Base64;
  */
 public final class CodecUtils {
 
+    private CodecUtils() {
+        throw new IllegalStateException("Utility class cannot be instantiated");
+    }
+
     /**
      * Base64编码
      *

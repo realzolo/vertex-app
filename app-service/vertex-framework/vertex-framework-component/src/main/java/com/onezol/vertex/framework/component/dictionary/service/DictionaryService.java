@@ -1,7 +1,7 @@
 package com.onezol.vertex.framework.component.dictionary.service;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.onezol.vertex.framework.common.exception.RuntimeBizException;
+import com.onezol.vertex.framework.common.exception.RuntimeServiceException;
 import com.onezol.vertex.framework.common.mvc.service.BaseServiceImpl;
 import com.onezol.vertex.framework.common.util.BeanUtils;
 import com.onezol.vertex.framework.common.util.StringUtils;
@@ -74,7 +74,7 @@ public class DictionaryService extends BaseServiceImpl<DictionaryMapper, Diction
                             .eq(DictionaryEntity::getValue, dictionaryItem.getValue())
             );
             if (count > 0) {
-                throw new RuntimeBizException("字典已存在");
+                throw new RuntimeServiceException("字典已存在");
             }
             entity = BeanUtils.toBean(dictionaryItem, DictionaryEntity.class);
             entity.setGroup(null);
@@ -93,7 +93,7 @@ public class DictionaryService extends BaseServiceImpl<DictionaryMapper, Diction
             );
             DictionaryEntity group = this.getById(dictionaryItem.getGroupId());
             if (count > 0) {
-                throw new RuntimeBizException("字典项已存在");
+                throw new RuntimeServiceException("字典项已存在");
             }
             entity = BeanUtils.toBean(dictionaryItem, DictionaryEntity.class);
             entity.setGroup(group.getValue());
@@ -101,7 +101,7 @@ public class DictionaryService extends BaseServiceImpl<DictionaryMapper, Diction
         entity.setType("DICT");
         boolean ok = this.save(entity);
         if (!ok) {
-            throw new RuntimeBizException("添加字典失败");
+            throw new RuntimeServiceException("添加字典失败");
         }
     }
 }

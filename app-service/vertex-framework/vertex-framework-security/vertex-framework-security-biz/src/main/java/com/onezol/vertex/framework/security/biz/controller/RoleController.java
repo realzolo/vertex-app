@@ -2,13 +2,13 @@ package com.onezol.vertex.framework.security.biz.controller;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.onezol.vertex.framework.common.bean.AuthenticationContext;
 import com.onezol.vertex.framework.common.constant.enumeration.DisEnableStatusEnum;
-import com.onezol.vertex.framework.common.helper.ResponseHelper;
+import com.onezol.vertex.framework.security.api.context.AuthenticationContext;
+import com.onezol.vertex.framework.security.api.model.dto.AuthUser;
+import com.onezol.vertex.framework.support.support.ResponseHelper;
 import com.onezol.vertex.framework.common.model.*;
 import com.onezol.vertex.framework.common.mvc.controller.BaseController;
 import com.onezol.vertex.framework.common.util.BeanUtils;
-import com.onezol.vertex.framework.common.util.JsonUtils;
 import com.onezol.vertex.framework.common.util.TreeUtils;
 import com.onezol.vertex.framework.security.api.annotation.RestrictAccess;
 import com.onezol.vertex.framework.security.api.enumeration.PermissionTypeEnum;
@@ -75,13 +75,13 @@ public class RoleController extends BaseController<RoleEntity> {
     }
 
     @GetMapping("/page")
-    public GenericResponse<PlainPage<RoleEntity>> getRolePage(
+    public GenericResponse<PageModel<RoleEntity>> getRolePage(
             @RequestParam(value = "page", required = false) Integer pageNumber,
             @RequestParam(value = "size", required = false) Integer pageSize
     ) {
         Page<RoleEntity> page = this.getPage(pageNumber, pageSize);
         Page<RoleEntity> quriedPage = roleService.page(page);
-        PlainPage<RoleEntity> resultPage = PlainPage.from(quriedPage);
+        PageModel<RoleEntity> resultPage = PageModel.from(quriedPage);
         return ResponseHelper.buildSuccessfulResponse(resultPage);
     }
 

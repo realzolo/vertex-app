@@ -10,8 +10,11 @@ import java.util.function.Consumer;
 /**
  * Map 工具类
  */
-@Deprecated
 public final class MapUtils {
+
+    private MapUtils() {
+        throw new IllegalStateException("Utility class cannot be instantiated");
+    }
 
     /**
      * 从哈希表查找到 key 对应的 value，然后进一步处理

@@ -11,7 +11,7 @@ import static com.onezol.vertex.framework.common.constant.DefaultPage.DEFAULT_PA
 
 @Schema(description = "分页参数")
 @Data
-public class PageParam implements Payload {
+public class PagePayload implements Payload {
 
     @Schema(description = "页码，从 1 开始", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
     @NotNull(message = "页码不能为空")

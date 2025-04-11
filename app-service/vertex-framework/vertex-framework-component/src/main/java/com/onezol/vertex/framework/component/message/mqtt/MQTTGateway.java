@@ -1,6 +1,6 @@
 package com.onezol.vertex.framework.component.message.mqtt;
 
-import com.onezol.vertex.framework.support.config.properties.MQTTProperties;
+import com.onezol.vertex.framework.component.message.mqtt.config.properties.MQTTProperties;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.integration.annotation.MessagingGateway;
 import org.springframework.integration.mqtt.support.MqttHeaders;

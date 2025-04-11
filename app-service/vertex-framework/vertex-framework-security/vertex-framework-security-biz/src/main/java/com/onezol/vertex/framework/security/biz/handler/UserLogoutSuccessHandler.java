@@ -1,7 +1,7 @@
 package com.onezol.vertex.framework.security.biz.handler;
 
-
-import com.onezol.vertex.framework.common.helper.ResponseHelper;
+import com.onezol.vertex.framework.support.support.JWTHelper;
+import com.onezol.vertex.framework.support.support.ResponseHelper;
 import com.onezol.vertex.framework.common.util.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -13,17 +13,17 @@ import org.springframework.stereotype.Component;
 
 import static com.onezol.vertex.framework.common.constant.GenericConstants.AUTHORIZATION_HEADER;
 
-
 /**
  * 注销成功处理类
  */
 @Component
 public class UserLogoutSuccessHandler implements LogoutSuccessHandler {
-//    private final OnlineUserService onlineUserService;
 
-//    public UserLogoutSuccessHandler(OnlineUserService onlineUserService) {
-//        this.onlineUserService = onlineUserService;
-//    }
+    //    private final OnlineUserService onlineUserService;
+
+    //    public UserLogoutSuccessHandler(OnlineUserService onlineUserService) {
+    //        this.onlineUserService = onlineUserService;
+    //    }
 
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
@@ -31,7 +31,7 @@ public class UserLogoutSuccessHandler implements LogoutSuccessHandler {
         String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (StringUtils.isNotBlank(authorizationHeader) && authorizationHeader.startsWith(AUTHORIZATION_HEADER)) {
             String token = authorizationHeader.substring(AUTHORIZATION_HEADER.length());
-            String subject = JwtUtils.getSubjectFromToken(token);
+            String subject = JWTHelper.getSubjectFromToken(token);
 
             // 清除Redis缓存
 //            onlineUserService.removeOnlineUser(subject);
@@ -43,4 +43,5 @@ public class UserLogoutSuccessHandler implements LogoutSuccessHandler {
         String json = JsonUtils.toJsonString(ResponseHelper.buildSuccessfulResponse("注销成功"));
         ServletUtils.writeJSON(response, json);
     }
+
 }

@@ -1,7 +1,7 @@
 package com.onezol.vertex.framework.security.api.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.onezol.vertex.framework.common.model.PlainPage;
+import com.onezol.vertex.framework.common.model.PageModel;
 import com.onezol.vertex.framework.common.mvc.service.BaseService;
 import com.onezol.vertex.framework.security.api.model.dto.User;
 import com.onezol.vertex.framework.security.api.model.entity.UserEntity;
@@ -32,6 +32,6 @@ public interface UserInfoService extends BaseService<UserEntity> {
     /**
      * 获取用户列表
      */
-    PlainPage<User> getUserPage(Page<UserEntity> page, UserQueryPayload payload);
+    PageModel<User> getUserPage(Page<UserEntity> page, UserQueryPayload payload);
 
 }

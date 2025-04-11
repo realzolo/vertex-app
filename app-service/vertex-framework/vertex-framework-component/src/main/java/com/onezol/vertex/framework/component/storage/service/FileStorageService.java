@@ -2,9 +2,9 @@ package com.onezol.vertex.framework.component.storage.service;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.onezol.vertex.framework.common.constant.StringConstants;
-import com.onezol.vertex.framework.common.constant.enumeration.BizHttpStatusEnum;
+import com.onezol.vertex.framework.common.constant.enumeration.ServiceStatusEnum;
 import com.onezol.vertex.framework.common.constant.enumeration.FileTypeEnum;
-import com.onezol.vertex.framework.common.exception.RuntimeBizException;
+import com.onezol.vertex.framework.common.exception.RuntimeServiceException;
 import com.onezol.vertex.framework.component.storage.annotation.StorageTypeEnum;
 import com.onezol.vertex.framework.component.storage.mapper.FileRecordMapper;
 import com.onezol.vertex.framework.component.storage.mapper.StorageStrategyMapper;
@@ -66,7 +66,7 @@ public class FileStorageService {
             throw new IllegalArgumentException("上传文件不可为空");
         }
         if (Objects.isNull(storageStrategy)) {
-            throw new RuntimeBizException("未配置默认存储策略，文件存储服务不可用");
+            throw new RuntimeServiceException("未配置默认存储策略，文件存储服务不可用");
         }
 
         String extName = FilenameUtils.getExtension(file.getOriginalFilename());
@@ -89,7 +89,7 @@ public class FileStorageService {
         try {
             uploadPretreatment.upload();
         } catch (Exception e) {
-            throw new RuntimeBizException(BizHttpStatusEnum.INTERNAL_SERVER_ERROR, "文件上传失败");
+            throw new RuntimeServiceException(ServiceStatusEnum.INTERNAL_SERVER_ERROR, "文件上传失败");
         }
 
         if (Objects.equals(storageStrategy.getType(), StorageTypeEnum.S3)) {

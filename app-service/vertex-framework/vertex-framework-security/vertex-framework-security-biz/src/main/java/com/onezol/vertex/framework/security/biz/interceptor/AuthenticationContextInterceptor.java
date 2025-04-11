@@ -1,8 +1,7 @@
-package com.onezol.vertex.framework.security.api.interceptor;
+package com.onezol.vertex.framework.security.biz.interceptor;
 
-
-import com.onezol.vertex.framework.common.bean.AuthenticationContext;
-import com.onezol.vertex.framework.common.model.AuthUser;
+import com.onezol.vertex.framework.security.api.context.AuthenticationContext;
+import com.onezol.vertex.framework.security.api.model.dto.AuthUser;
 import com.onezol.vertex.framework.common.util.BeanUtils;
 import com.onezol.vertex.framework.security.api.model.dto.User;
 import com.onezol.vertex.framework.security.api.model.pojo.LoginUser;
@@ -15,7 +14,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.context.request.WebRequestInterceptor;
 
-import static com.onezol.vertex.framework.common.constant.FilterInterceptorOrderNumber.AUTHENTICATION_CONTEXT_INTERCEPTOR_ORDER;
+import static com.onezol.vertex.framework.support.interceptor.RequestInterceptionOrder.AUTHENTICATION_CONTEXT_INTERCEPTOR_ORDER;
 
 /**
  * 认证上下文拦截器<br>

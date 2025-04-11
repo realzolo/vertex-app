@@ -2,9 +2,9 @@ package com.onezol.vertex.framework.security.biz.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.onezol.vertex.framework.common.constant.CacheKey;
-import com.onezol.vertex.framework.common.exception.RuntimeBizException;
+import com.onezol.vertex.framework.common.exception.RuntimeServiceException;
 import com.onezol.vertex.framework.common.model.LabelValue;
-import com.onezol.vertex.framework.common.model.PlainPage;
+import com.onezol.vertex.framework.common.model.PageModel;
 import com.onezol.vertex.framework.common.mvc.service.BaseServiceImpl;
 import com.onezol.vertex.framework.common.util.BeanUtils;
 import com.onezol.vertex.framework.security.api.mapper.UserMapper;
@@ -17,7 +17,7 @@ import com.onezol.vertex.framework.security.api.service.RolePermissionService;
 import com.onezol.vertex.framework.security.api.service.UserInfoService;
 import com.onezol.vertex.framework.security.api.service.UserRoleService;
 import com.onezol.vertex.framework.support.cache.RedisCache;
-import com.onezol.vertex.framework.support.support.CacheKeyHelper;
+import com.onezol.vertex.framework.support.support.RedisKeyHelper;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -52,7 +52,7 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
     public User getUserInfo(long userId) {
         UserEntity entity = this.getById(userId);
         if (Objects.isNull(entity)) {
-            throw new RuntimeBizException("用户不存在");
+            throw new RuntimeServiceException("用户不存在");
         }
         User user = BeanUtils.toBean(entity, User.class);
         // 获取用户角色
@@ -81,12 +81,12 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
     @Override
     public User updateUserInfo(User user) {
         if (Objects.isNull(user) || Objects.isNull(user.getId())) {
-            throw new RuntimeBizException("用户信息不可为空");
+            throw new RuntimeServiceException("用户信息不可为空");
         }
         UserEntity entity = BeanUtils.toBean(user, UserEntity.class);
         boolean ok = this.updateById(entity);
         if (!ok) {
-            throw new RuntimeBizException("修改用户信息失败");
+            throw new RuntimeServiceException("修改用户信息失败");
         }
         List<String> roleCodes = user.getRoles().stream().map(LabelValue::getValue).toList();
 
@@ -106,11 +106,11 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
     @Override
     public void deleteUser(Long userId) {
         if (Objects.isNull(userId)) {
-            throw new RuntimeBizException("用户ID不可为空");
+            throw new RuntimeServiceException("用户ID不可为空");
         }
         UserEntity user = this.getById(userId);
         if (Objects.isNull(user)) {
-            throw new RuntimeBizException("用户不存在");
+            throw new RuntimeServiceException("用户不存在");
         }
 
         // 判断当前用户是否满足删除条件：...
@@ -121,10 +121,10 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
 
         // 删除Redis相关缓存
         // 1. 删除用户Token缓存
-        String userTokenRedisKey = CacheKeyHelper.buildCacheKey(CacheKey.USER_TOKEN, String.valueOf(userId));
+        String userTokenRedisKey = RedisKeyHelper.buildCacheKey(CacheKey.USER_TOKEN, String.valueOf(userId));
         redisCache.deleteObject(userTokenRedisKey);
         // 2. 删除用户信息缓存
-        String userInfoRedisKey = CacheKeyHelper.buildCacheKey(CacheKey.USER_INFO, String.valueOf(userId));
+        String userInfoRedisKey = RedisKeyHelper.buildCacheKey(CacheKey.USER_INFO, String.valueOf(userId));
         redisCache.deleteObject(userInfoRedisKey);
     }
 
@@ -132,9 +132,9 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
      * 获取用户列表
      */
     @Override
-    public PlainPage<User> getUserPage(Page<UserEntity> page, UserQueryPayload payload) {
+    public PageModel<User> getUserPage(Page<UserEntity> page, UserQueryPayload payload) {
         Page<UserEntity> userPage = this.baseMapper.queryUserPage(page, payload);
-        PlainPage<User> resultPage = PlainPage.from(userPage, User.class);
+        PageModel<User> resultPage = PageModel.from(userPage, User.class);
         resultPage.getItems().forEach(userEntity -> {
             List<RoleEntity> userRoles = userRoleService.getUserRoles(userEntity.getId());
             if (userRoles != null && !userRoles.isEmpty()) {

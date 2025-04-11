@@ -1,12 +1,13 @@
 package com.onezol.vertex.framework.support.config;
 
-import com.onezol.vertex.framework.security.api.interceptor.AuthenticationContextInterceptor;
+import com.onezol.vertex.framework.common.util.ReflectionUtils;
 import org.springframework.boot.web.server.ConfigurableWebServerFactory;
 import org.springframework.boot.web.server.ErrorPage;
 import org.springframework.boot.web.server.WebServerFactoryCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.context.request.WebRequestInterceptor;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -18,7 +19,10 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addWebRequestInterceptor(new AuthenticationContextInterceptor())
+        // 认证上下文拦截器
+        Class<?> clazz = ReflectionUtils.getClass("com.onezol.vertex.framework.security.biz.interceptor.AuthenticationContextInterceptor");
+        WebRequestInterceptor authenticationContextInterceptor = (WebRequestInterceptor) ReflectionUtils.newInstance(clazz);
+        registry.addWebRequestInterceptor(authenticationContextInterceptor)
                 .addPathPatterns("/**")
                 .excludePathPatterns("/auth/register", "/auth/login");
     }

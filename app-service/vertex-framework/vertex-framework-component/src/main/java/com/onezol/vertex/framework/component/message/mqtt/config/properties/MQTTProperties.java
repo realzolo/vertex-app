@@ -1,4 +1,4 @@
-package com.onezol.vertex.framework.support.config.properties;
+package com.onezol.vertex.framework.component.message.mqtt.config.properties;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;

@@ -1,4 +1,4 @@
-package com.onezol.vertex.framework.common.helper;
+package com.onezol.vertex.framework.support.support;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -8,10 +8,13 @@ import java.util.Date;
  */
 public final class CodeGenerationHelper {
 
+    private CodeGenerationHelper() {
+        throw new IllegalStateException("Utility class cannot be instantiated");
+    }
+
     /**
      * 生成编码
      *
-     * @param typeCode 类型编码, 取自{@link com.onezol.vertex.framework.common.constant.enumeration.BizCode}的code
      * @return 编码
      */
     public static String generateCode() {

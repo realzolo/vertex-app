@@ -1,10 +1,10 @@
 package com.onezol.vertex.framework.security.biz.controller;
 
 import com.onezol.vertex.framework.common.constant.CacheKey;
-import com.onezol.vertex.framework.common.helper.ResponseHelper;
 import com.onezol.vertex.framework.common.model.GenericResponse;
 import com.onezol.vertex.framework.support.cache.RedisCache;
-import com.onezol.vertex.framework.support.support.CacheKeyHelper;
+import com.onezol.vertex.framework.support.support.RedisKeyHelper;
+import com.onezol.vertex.framework.support.support.ResponseHelper;
 import com.wf.captcha.GifCaptcha;
 import com.wf.captcha.base.Captcha;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -31,7 +31,7 @@ public class CaptchaController {
     public GenericResponse<Map<String, Object>> getCaptcha() {
         Captcha captcha = new GifCaptcha(111, 36, 4);
         String uuid = UUID.randomUUID().toString();
-        String cacheKey = CacheKeyHelper.buildCacheKey(CacheKey.CAPTCHA, uuid);
+        String cacheKey = RedisKeyHelper.buildCacheKey(CacheKey.CAPTCHA, uuid);
         redisCache.setCacheObject(cacheKey, captcha.text(), 60, TimeUnit.SECONDS);
         long expires = TimeUnit.MINUTES.toSeconds(60);
 

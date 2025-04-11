@@ -17,7 +17,7 @@
 package com.onezol.vertex.framework.common.constant.enumeration;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
-import com.onezol.vertex.framework.common.constant.UiConstants;
+import com.onezol.vertex.framework.common.constant.ColorConstants;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -30,12 +30,12 @@ public enum SuccessFailureStatusEnum implements Enumeration<String> {
     /**
      * 成功
      */
-    SUCCESS("成功", "SUCCESS", UiConstants.COLOR_SUCCESS),
+    SUCCESS("成功", "SUCCESS", ColorConstants.COLOR_SUCCESS),
 
     /**
      * 失败
      */
-    FAILURE("失败", "FAILURE", UiConstants.COLOR_ERROR);
+    FAILURE("失败", "FAILURE", ColorConstants.COLOR_ERROR);
 
 
     private final String name;
@@ -44,4 +44,5 @@ public enum SuccessFailureStatusEnum implements Enumeration<String> {
     private final String value;
 
     private final String color;
+
 }

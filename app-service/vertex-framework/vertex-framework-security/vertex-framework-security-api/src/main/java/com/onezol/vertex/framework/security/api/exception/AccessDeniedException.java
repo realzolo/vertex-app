@@ -1,19 +1,19 @@
 package com.onezol.vertex.framework.security.api.exception;
 
-import com.onezol.vertex.framework.common.constant.enumeration.BizHttpStatusEnum;
-import com.onezol.vertex.framework.common.exception.BusinessException;
+import com.onezol.vertex.framework.common.constant.enumeration.ServiceStatusEnum;
+import com.onezol.vertex.framework.common.exception.ServiceException;
 
 /**
  * AccessDeniedException 无权限异常
  */
-public class AccessDeniedException extends BusinessException {
+public class AccessDeniedException extends ServiceException {
 
     public AccessDeniedException() {
-        super(BizHttpStatusEnum.FORBIDDEN);
+        super(ServiceStatusEnum.FORBIDDEN);
     }
 
     public AccessDeniedException(String message) {
-        super(BizHttpStatusEnum.FORBIDDEN, message);
+        super(ServiceStatusEnum.FORBIDDEN, message);
     }
 
 }

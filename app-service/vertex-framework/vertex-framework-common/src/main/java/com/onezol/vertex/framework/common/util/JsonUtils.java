@@ -16,6 +16,10 @@ import java.util.Map;
 @SuppressWarnings({"unchecked", "unused"})
 public final class JsonUtils {
 
+    private JsonUtils() {
+        throw new IllegalStateException("Utility class cannot be instantiated");
+    }
+
     /**
      * 将对象转换为JSON字符串。
      *

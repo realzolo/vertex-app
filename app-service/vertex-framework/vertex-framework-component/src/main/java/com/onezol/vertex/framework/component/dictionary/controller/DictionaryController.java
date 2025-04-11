@@ -1,13 +1,11 @@
 package com.onezol.vertex.framework.component.dictionary.controller;
 
 import com.onezol.vertex.framework.common.constant.CacheKey;
-import com.onezol.vertex.framework.common.helper.ResponseHelper;
+import com.onezol.vertex.framework.support.support.ResponseHelper;
 import com.onezol.vertex.framework.common.model.GenericResponse;
-import com.onezol.vertex.framework.common.model.LabelValue;
 import com.onezol.vertex.framework.common.util.BeanUtils;
 import com.onezol.vertex.framework.component.dictionary.model.DictionaryEntity;
 import com.onezol.vertex.framework.component.dictionary.model.DictionaryItem;
-import com.onezol.vertex.framework.component.dictionary.service.DictionaryHelper;
 import com.onezol.vertex.framework.component.dictionary.service.DictionaryService;
 import com.onezol.vertex.framework.support.cache.RedisCache;
 import io.swagger.v3.oas.annotations.Operation;

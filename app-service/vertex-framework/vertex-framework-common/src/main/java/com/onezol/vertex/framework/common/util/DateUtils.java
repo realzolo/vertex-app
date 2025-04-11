@@ -12,6 +12,10 @@ import java.util.Date;
  */
 public final class DateUtils extends org.apache.commons.lang3.time.DateUtils {
 
+    private DateUtils() {
+        throw new IllegalStateException("Utility class cannot be instantiated");
+    }
+
     /**
      * 时区 - 默认
      */

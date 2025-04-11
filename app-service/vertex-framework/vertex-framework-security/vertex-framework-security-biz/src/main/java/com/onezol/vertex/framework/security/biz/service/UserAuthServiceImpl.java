@@ -1,14 +1,14 @@
 package com.onezol.vertex.framework.security.biz.service;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.onezol.vertex.framework.common.bean.AuthenticationContext;
 import com.onezol.vertex.framework.common.constant.CacheKey;
 import com.onezol.vertex.framework.common.constant.enumeration.GenderEnum;
-import com.onezol.vertex.framework.common.exception.RuntimeBizException;
-import com.onezol.vertex.framework.common.model.AuthUser;
+import com.onezol.vertex.framework.common.exception.RuntimeServiceException;
 import com.onezol.vertex.framework.common.mvc.service.BaseServiceImpl;
 import com.onezol.vertex.framework.common.util.*;
+import com.onezol.vertex.framework.security.api.context.AuthenticationContext;
 import com.onezol.vertex.framework.security.api.mapper.UserMapper;
+import com.onezol.vertex.framework.security.api.model.dto.AuthUser;
 import com.onezol.vertex.framework.security.api.model.dto.User;
 import com.onezol.vertex.framework.security.api.model.entity.UserEntity;
 import com.onezol.vertex.framework.security.api.model.payload.UserRegistrationPayload;
@@ -17,7 +17,8 @@ import com.onezol.vertex.framework.security.api.model.vo.UserAuthenticationVO;
 import com.onezol.vertex.framework.security.api.service.OnlineUserService;
 import com.onezol.vertex.framework.security.api.service.UserAuthService;
 import com.onezol.vertex.framework.support.cache.RedisCache;
-import com.onezol.vertex.framework.support.support.CacheKeyHelper;
+import com.onezol.vertex.framework.support.support.JWTHelper;
+import com.onezol.vertex.framework.support.support.RedisKeyHelper;
 import eu.bitwalker.useragentutils.UserAgent;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -79,14 +80,14 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
     @Transactional
     public UserAuthenticationVO register(UserRegistrationPayload payload) {
         if (StringUtils.isAnyBlank(payload.getUsername(), payload.getPassword(), payload.getEmail(), payload.getVerifyCode())) {
-            throw new RuntimeBizException("用户名、密码、邮箱、验证码不能为空");
+            throw new RuntimeServiceException("用户名、密码、邮箱、验证码不能为空");
         }
 
         // 验证码校验 TODO: Redis验证码校验
         String verifyCode = payload.getVerifyCode();
 //        if (StringUtils.isBlank(verifyCode) || verifyCode.length() != 6 || !verifyCode.equalsIgnoreCase(redisCache.getCacheObject("verifyCode:" + captchaKey))) {
         if (StringUtils.isBlank(verifyCode) || verifyCode.length() != 6) {
-            throw new RuntimeBizException("验证码错误");
+            throw new RuntimeServiceException("验证码错误");
         }
 
         UserEntity entity = this.newBlankUser();
@@ -103,9 +104,9 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
         );
         if (Objects.nonNull(entityFromDB)) {
             if (Objects.equals(entityFromDB.getUsername(), entity.getUsername())) {
-                throw new RuntimeBizException("用户名已存在");
+                throw new RuntimeServiceException("用户名已存在");
             } else if (Objects.equals(entityFromDB.getEmail(), entity.getEmail())) {
-                throw new RuntimeBizException("邮箱已存在");
+                throw new RuntimeServiceException("邮箱已存在");
             }
         }
 
@@ -114,7 +115,7 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
 
         // 构建返回结果
         User user = BeanUtils.toBean(entity, User.class);
-        String token = JwtUtils.generateToken(CodecUtils.encodeBase64(String.valueOf(user.getId())));
+        String token = JWTHelper.generateToken(CodecUtils.encodeBase64(String.valueOf(user.getId())));
         return UserAuthenticationVO.builder()
                 .user(user)
                 .jwt(
@@ -134,20 +135,20 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
      * @param captcha  验证码
      */
     @Override
-    public UserAuthenticationVO loginByIdPassword(String username, String password, String sessionId, String captcha) throws RuntimeBizException {
+    public UserAuthenticationVO loginByIdPassword(String username, String password, String sessionId, String captcha) throws RuntimeServiceException {
         // 参数校验
         if (StringUtils.isBlank(sessionId)) {
-            throw new RuntimeBizException("会话ID不能为空");
+            throw new RuntimeServiceException("会话ID不能为空");
         }
         if (StringUtils.isAnyBlank(username, password)) {
-            throw new RuntimeBizException("用户名或密码不能为空");
+            throw new RuntimeServiceException("用户名或密码不能为空");
         }
 
         // 校验验证码
-        String captchaRedisKey = CacheKeyHelper.buildCacheKey(CacheKey.CAPTCHA, sessionId);
+        String captchaRedisKey = RedisKeyHelper.buildCacheKey(CacheKey.CAPTCHA, sessionId);
         String captchaInRedis = redisCache.getCacheObject(captchaRedisKey);
         if (StringUtils.isBlank(captcha) || !captcha.equalsIgnoreCase(captchaInRedis)) {
-            throw new RuntimeBizException("验证码错误");
+            throw new RuntimeServiceException("验证码错误");
         }
 
         // 调用SpringSecurity的AuthenticationManager处理登录验证
@@ -164,7 +165,7 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
             };
             // 登录失败时移除Redis中的验证码
             redisCache.deleteObject(captchaRedisKey);
-            throw new RuntimeBizException(message);
+            throw new RuntimeServiceException(message);
         }
 
         // 获取用户信息
@@ -193,10 +194,10 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
     public void logout() {
         AuthUser authUser = AuthenticationContext.get();
         // 移除用户Token
-        String tokenKey = CacheKeyHelper.buildCacheKey(CacheKey.USER_TOKEN, String.valueOf(authUser.getUserId()));
+        String tokenKey = RedisKeyHelper.buildCacheKey(CacheKey.USER_TOKEN, String.valueOf(authUser.getUserId()));
         redisCache.deleteObject(tokenKey);
         // 移除用户信息
-        String infoKey = CacheKeyHelper.buildCacheKey(CacheKey.USER_INFO, String.valueOf(authUser.getUserId()));
+        String infoKey = RedisKeyHelper.buildCacheKey(CacheKey.USER_INFO, String.valueOf(authUser.getUserId()));
         redisCache.deleteObject(infoKey);
     }
 
@@ -212,10 +213,10 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
 
         // 生成token
         String subject = String.valueOf(loginUser.getDetails().getId());
-        String token = JwtUtils.generateToken(subject);
+        String token = JWTHelper.generateToken(subject);
 
         // Redis存储用户Token
-        String tokenKey = CacheKeyHelper.buildCacheKey(CacheKey.USER_TOKEN, subject);
+        String tokenKey = RedisKeyHelper.buildCacheKey(CacheKey.USER_TOKEN, subject);
         redisCache.setCacheObject(tokenKey, token, expirationTime, TimeUnit.SECONDS);
 
         // Redis存储用户信息

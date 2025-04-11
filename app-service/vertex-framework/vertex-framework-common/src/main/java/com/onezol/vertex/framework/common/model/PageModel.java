@@ -11,7 +11,7 @@ import java.util.List;
 
 @Schema(description = "分页对象")
 @Data
-public class PlainPage<T> {
+public class PageModel<T> {
 
     @Schema(description = "数据项", requiredMode = Schema.RequiredMode.REQUIRED)
     private Collection<T> items;
@@ -25,50 +25,50 @@ public class PlainPage<T> {
     @Schema(description = "当前页条数", requiredMode = Schema.RequiredMode.REQUIRED)
     private long pageSize;
 
-    public PlainPage() {
+    public PageModel() {
         this.items = Collections.emptyList();
         this.total = 0;
         this.pageNumber = 1;
         this.pageSize = 0;
     }
 
-    public PlainPage(Collection<T> items, long total) {
+    public PageModel(Collection<T> items, long total) {
         this.items = items;
         this.total = total;
         this.pageNumber = 1;
         this.pageSize = items.size();
     }
 
-    public PlainPage(Collection<T> items, long total, long pageNumber, long pageSize) {
+    public PageModel(Collection<T> items, long total, long pageNumber, long pageSize) {
         this.items = items;
         this.total = total;
         this.pageNumber = pageNumber;
         this.pageSize = pageSize;
     }
 
-    public static <T> PlainPage<T> empty() {
-        return new PlainPage<>(Collections.emptyList(), 0);
+    public static <T> PageModel<T> empty() {
+        return new PageModel<>(Collections.emptyList(), 0);
     }
 
-    public static <T> PlainPage<T> of(Collection<T> items, Integer total) {
-        return new PlainPage<>(items, total);
+    public static <T> PageModel<T> of(Collection<T> items, Integer total) {
+        return new PageModel<>(items, total);
     }
 
-    public static <T> PlainPage<T> of(Collection<T> items) {
-        return new PlainPage<>(items, items.size());
+    public static <T> PageModel<T> of(Collection<T> items) {
+        return new PageModel<>(items, items.size());
     }
 
-    public static <T> PlainPage<T> singleton(T item) {
-        return new PlainPage<>(Collections.singletonList(item), 1);
+    public static <T> PageModel<T> singleton(T item) {
+        return new PageModel<>(Collections.singletonList(item), 1);
     }
 
-    public static <T> PlainPage<T> from(IPage<T> page) {
-        return new PlainPage<>(page.getRecords(), page.getTotal(), page.getCurrent(), page.getSize());
+    public static <T> PageModel<T> from(IPage<T> page) {
+        return new PageModel<>(page.getRecords(), page.getTotal(), page.getCurrent(), page.getSize());
     }
 
-    public static <T> PlainPage<T> from(IPage<?> page, Class<T> targetClass) {
+    public static <T> PageModel<T> from(IPage<?> page, Class<T> targetClass) {
         List<?> records = page.getRecords();
         Collection<T> objects = BeanUtils.toList(records, targetClass);
-        return new PlainPage<>(objects, page.getTotal(), page.getCurrent(), page.getSize());
+        return new PageModel<>(objects, page.getTotal(), page.getCurrent(), page.getSize());
     }
 }

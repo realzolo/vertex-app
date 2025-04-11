@@ -6,7 +6,6 @@ import eu.bitwalker.useragentutils.UserAgent;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.context.request.RequestAttributes;
@@ -21,8 +20,14 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-@Slf4j
+/**
+ * Servlet工具类
+ */
 public final class ServletUtils {
+
+    private ServletUtils() {
+        throw new IllegalStateException("Utility class cannot be instantiated");
+    }
 
     /**
      * 获取当前request

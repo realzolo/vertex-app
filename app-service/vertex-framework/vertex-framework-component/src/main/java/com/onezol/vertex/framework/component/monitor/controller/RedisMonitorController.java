@@ -1,6 +1,6 @@
 package com.onezol.vertex.framework.component.monitor.controller;
 
-import com.onezol.vertex.framework.common.helper.ResponseHelper;
+import com.onezol.vertex.framework.support.support.ResponseHelper;
 import com.onezol.vertex.framework.common.model.GenericResponse;
 import com.onezol.vertex.framework.common.util.StringUtils;
 import io.swagger.v3.oas.annotations.Operation;
