@@ -8,6 +8,10 @@ export default antfu(
         'vue/block-order': ['error', {
           order: [['script', 'template'], 'style'],
         }], // 强制组件顶级元素的顺序
+        'vue/define-macros-order': ['error', {
+          order: ['defineOptions', 'defineModel', 'defineProps', 'defineEmits', 'defineSlots'],
+          defineExposeLast: true,
+        }], // 强制执行定义限制和定义弹出编译器宏的顺序
         'vue/singleline-html-element-content-newline': 'off', // 要求在单行元素的内容前后换行
         'vue/html-self-closing': ['off', {
           html: {

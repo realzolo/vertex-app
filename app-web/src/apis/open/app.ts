@@ -1,45 +1,18 @@
+import type * as T from './type'
 import http from '@/utils/http'
+
+export type * from './type'
 
 const BASE_URL = '/open/app'
 
-export interface AppResp {
-  id: string
-  name: string
-  appKey: string
-  status: string
-  expirationTime: string
-  appDesc: string
-  createUserString: string
-  updateUserString: string
-}
-export interface AppDetailResp {
-  id: string
-  name: string
-  appKey: string
-  status: string
-  expirationTime: string
-  appDesc: string
-  createTime: string
-  updateUser: string
-  updateTime: string
-  createUserString: string
-  updateUserString: string
-}
-export interface AppQuery {
-  name: string
-  appKey: string
-  sort: Array<string>
-}
-export interface AppPageQuery extends AppQuery, PageQuery {}
-
 /** @desc 查询应用列表 */
-export function listApp(query: AppPageQuery) {
-  return http.get<PageRes<AppResp[]>>(`${BASE_URL}`, query)
+export function listApp(query: T.AppPageQuery) {
+  return http.get<PageRes<T.AppResp[]>>(`${BASE_URL}`, query)
 }
 
 /** @desc 查询应用详情 */
 export function getApp(id: string) {
-  return http.get<AppDetailResp>(`${BASE_URL}/${id}`)
+  return http.get<T.AppResp>(`${BASE_URL}/${id}`)
 }
 
 /** @desc 新增应用 */
@@ -58,16 +31,16 @@ export function deleteApp(id: string) {
 }
 
 /** @desc 导出应用 */
-export function exportApp(query: AppQuery) {
+export function exportApp(query: T.AppQuery) {
   return http.download(`${BASE_URL}/export`, query)
 }
 
-/** @desc 查看AK */
+/** @desc 获取密钥 */
 export function getAppSecret(id: string) {
-  return http.get(`${BASE_URL}/${id}/appsecret`)
+  return http.get(`${BASE_URL}/${id}/secret`)
 }
 
-/** @desc 刷新AK */
-export function refreshAppSecret(id: string) {
-  return http.get(`${BASE_URL}/${id}/refreshas`)
+/** @desc 重置密钥 */
+export function resetAppSecret(id: string) {
+  return http.patch(`${BASE_URL}/${id}/secret`)
 }

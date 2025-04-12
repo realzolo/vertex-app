@@ -11,23 +11,11 @@ export function useMenu(options?: { onSuccess?: () => void }) {
     try {
       loading.value = true
       const res = await listMenuTree({ description: name })
-      menuList.value = buildTree(res.data)
-      console.log(menuList.value);
+      menuList.value = res.data
       options?.onSuccess && options.onSuccess()
     } finally {
       loading.value = false
     }
-  }
-
-  const buildTree = (data: any[]) => {
-    return data.map((item) => {
-      return {
-        key: item.key,
-        parentId: item.parentKey,
-        title: item.title,
-        children: item.children && buildTree(item.children),
-      }
-    })
   }
   return { menuList, getMenuList, loading }
 }

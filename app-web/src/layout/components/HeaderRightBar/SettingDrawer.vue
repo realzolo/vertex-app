@@ -1,8 +1,11 @@
 <template>
   <a-drawer v-model:visible="visible" title="项目配置" width="300px" unmount-on-close :footer="false">
     <a-space :size="15" direction="vertical" fill>
-      <a-divider orientation="center">系统布局</a-divider>
-      <a-row justify="center">
+      <a-alert v-if="settingOpen" :show-icon="false" type="info">
+        「复制配置」按钮，并将配置粘贴到 src/config/settings.ts 文件中。
+      </a-alert>
+      <a-divider v-if="settingOpen" orientation="center">系统布局</a-divider>
+      <a-row v-if="settingOpen" justify="center">
         <a-space>
           <a-badge>
             <template #content>
@@ -35,9 +38,9 @@
         ></ColorPicker>
       </a-row>
 
-      <a-divider orientation="center">界面显示</a-divider>
+      <a-divider v-if="settingOpen" orientation="center">界面显示</a-divider>
 
-      <a-descriptions :column="1" :align="{ value: 'right' }" :value-style="{ paddingRight: 0 }">
+      <a-descriptions v-if="settingOpen" :column="1" :align="{ value: 'right' }" :value-style="{ paddingRight: 0 }">
         <a-descriptions-item label="页签显示">
           <a-switch v-model="appStore.tab" />
         </a-descriptions-item>
@@ -70,10 +73,28 @@
         <a-descriptions-item label="水印">
           <a-switch v-model="appStore.isOpenWatermark" />
         </a-descriptions-item>
-        <a-descriptions-item v-if="appStore.isOpenWatermark" label="水印信息">
+        <a-descriptions-item label="水印信息">
           <a-input v-model="appStore.watermark" placeholder="留空则显示用户名" />
         </a-descriptions-item>
       </a-descriptions>
+
+      <a-divider orientation="center">其它</a-divider>
+      <a-descriptions :column="1" :align="{ value: 'right' }" :value-style="{ paddingRight: 0 }">
+        <a-descriptions-item label="色弱模式">
+          <a-switch v-model="appStore.enableColorWeaknessMode" />
+        </a-descriptions-item>
+        <a-descriptions-item v-if="settingOpen" label="哀悼模式">
+          <a-switch v-model="appStore.enableMourningMode" />
+        </a-descriptions-item>
+      </a-descriptions>
+      <a-space v-if="settingOpen" direction="vertical" fill>
+        <a-button type="primary" long @click="copySettings">
+          <template #icon>
+            <icon-copy />
+          </template>
+          复制配置
+        </a-button>
+      </a-space>
     </a-space>
   </a-drawer>
 </template>
@@ -81,13 +102,15 @@
 <script setup lang="ts">
 import { ColorPicker } from 'vue-color-kit'
 import 'vue-color-kit/dist/vue-color-kit.css'
+import { useClipboard } from '@vueuse/core'
+import { Message } from '@arco-design/web-vue'
 import LayoutItem from './components/LayoutItem.vue'
 import { useAppStore } from '@/stores'
 
 defineOptions({ name: 'SettingDrawer' })
 const appStore = useAppStore()
 const visible = ref(false)
-
+const settingOpen = JSON.parse(import.meta.env.VITE_APP_SETTING)
 const tabModeList: App.TabItem[] = [
   { label: '卡片', value: 'card' },
   { label: '间隔卡片', value: 'card-gutter' },
@@ -105,8 +128,6 @@ const animateModeList: App.AnimateItem[] = [
 const open = () => {
   visible.value = true
 }
-
-defineExpose({ open })
 
 // 默认显示的主题色列表
 const defaultColorList = [
@@ -139,9 +160,41 @@ const changeColor = (colorObj: ColorObj) => {
   if (!/^#[0-9A-Z]{6}/i.test(colorObj.hex)) return
   appStore.setThemeColor(colorObj.hex)
 }
+
+// 复制配置
+const copySettings = () => {
+  const settings: App.AppSettings = {
+    theme: 'light',
+    themeColor: appStore.themeColor,
+    tab: appStore.tab,
+    tabMode: appStore.tabMode,
+    animate: appStore.animate,
+    animateMode: appStore.animateMode,
+    menuCollapse: appStore.menuCollapse,
+    menuAccordion: appStore.menuAccordion,
+    menuDark: appStore.menuDark,
+    copyrightDisplay: appStore.copyrightDisplay,
+    layout: appStore.layout,
+    isOpenWatermark: appStore.isOpenWatermark,
+    watermark: appStore.watermark,
+    enableColorWeaknessMode: appStore.enableColorWeaknessMode,
+    enableMourningMode: appStore.enableMourningMode,
+  }
+
+  const settingJson = JSON.stringify(settings, null, 2)
+  const { isSupported, copy } = useClipboard({ source: settingJson })
+  if (isSupported) {
+    copy(settingJson)
+    Message.success({ content: '复制成功!' })
+  } else {
+    Message.error({ content: '请检查浏览器权限是否开启' })
+  }
+}
+
+defineExpose({ open })
 </script>
 
-<style lang="scss" scoped>
+<style scoped lang="scss">
 :deep(.arco-descriptions-item-label-block) {
   color: var(--color-text-1);
 }

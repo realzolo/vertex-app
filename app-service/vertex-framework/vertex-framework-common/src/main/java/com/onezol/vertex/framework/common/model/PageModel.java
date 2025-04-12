@@ -1,6 +1,7 @@
 package com.onezol.vertex.framework.common.model;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.onezol.vertex.framework.common.util.BeanUtils;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -56,6 +57,10 @@ public class PageModel<T> {
 
     public static <T> PageModel<T> of(Collection<T> items) {
         return new PageModel<>(items, items.size());
+    }
+
+    public static <T> PageModel<T> of(Collection<T> items, long total, long pageNumber, long pageSize) {
+        return new PageModel<>(items, total, pageNumber, pageSize);
     }
 
     public static <T> PageModel<T> singleton(T item) {

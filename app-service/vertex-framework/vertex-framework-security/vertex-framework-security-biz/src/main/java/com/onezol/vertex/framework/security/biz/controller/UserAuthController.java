@@ -5,7 +5,7 @@ import com.onezol.vertex.framework.common.model.GenericResponse;
 import com.onezol.vertex.framework.common.util.StringUtils;
 import com.onezol.vertex.framework.security.api.annotation.RestrictAccess;
 import com.onezol.vertex.framework.security.api.model.payload.UserLoginPayload;
-import com.onezol.vertex.framework.security.api.model.payload.UserRegistrationPayload;
+import com.onezol.vertex.framework.security.api.model.payload.UserSavePayload;
 import com.onezol.vertex.framework.security.api.model.vo.UserAuthenticationVO;
 import com.onezol.vertex.framework.security.api.service.UserAuthService;
 import com.onezol.vertex.framework.support.support.ResponseHelper;
@@ -32,11 +32,11 @@ public class UserAuthController {
         this.userAuthService = userAuthService;
     }
 
-    @Operation(summary = "用户注册", description = "用户注册")
-    @PostMapping("/register")
-    public GenericResponse<UserAuthenticationVO> register(@RequestBody @Valid UserRegistrationPayload payload) {
-        return ResponseHelper.buildSuccessfulResponse(userAuthService.register(payload));
-    }
+//    @Operation(summary = "用户注册", description = "用户注册")
+//    @PostMapping("/register")
+//    public GenericResponse<UserAuthenticationVO> register(@RequestBody @Valid UserRegistrationPayload payload) {
+//        return ResponseHelper.buildSuccessfulResponse(userAuthService.register(payload));
+//    }
 
     @Operation(summary = "用户登录", description = "用户登录: 根据用户名密码")
     @PostMapping("/login")
@@ -59,6 +59,13 @@ public class UserAuthController {
     @PostMapping("/logout")
     public GenericResponse<Void> logout() {
         userAuthService.logout();
+        return ResponseHelper.buildSuccessfulResponse();
+    }
+
+    @Operation(summary = "创建用户", description = "创建用户")
+    @PostMapping("/create")
+    public GenericResponse<Void> create(@RequestBody @Valid UserSavePayload payload) {
+        userAuthService.createOrUpdateUser(payload);
         return ResponseHelper.buildSuccessfulResponse();
     }
 

@@ -1,18 +1,17 @@
 <template>
-  <div class="table-page">
-    <a-row justify="space-between" align="center" class="header">
-      <a-space wrap>
-        <div class="title">系统日志</div>
-      </a-space>
-    </a-row>
+  <GiPageLayout>
     <a-tabs v-model:active-key="activeKey" type="card-gutter" size="large" @change="change">
-      <a-tab-pane key="1" title="登录日志" />
-      <a-tab-pane key="2" title="操作日志" />
+      <a-tab-pane key="1">
+        <template #title><icon-lock /> 登录日志</template>
+      </a-tab-pane>
+      <a-tab-pane key="2">
+        <template #title><icon-find-replace /> 操作日志</template>
+      </a-tab-pane>
     </a-tabs>
     <keep-alive>
       <component :is="PaneMap[activeKey]" />
     </keep-alive>
-  </div>
+  </GiPageLayout>
 </template>
 
 <script setup lang="ts">
@@ -44,7 +43,7 @@ const change = (key: string | number) => {
 }
 </script>
 
-<style lang="scss" scoped>
+<style scoped lang="scss">
 :deep(.arco-tabs .arco-tabs-nav-type-card-gutter .arco-tabs-tab-active) {
   box-shadow: inset 0 2px 0 rgb(var(--primary-6)), inset -1px 0 0 var(--color-border-2),
     inset 1px 0 0 var(--color-border-2);

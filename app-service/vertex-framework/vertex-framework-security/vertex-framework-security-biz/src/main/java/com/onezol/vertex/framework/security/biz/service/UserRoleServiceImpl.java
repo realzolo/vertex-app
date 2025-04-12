@@ -1,15 +1,24 @@
 package com.onezol.vertex.framework.security.biz.service;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.onezol.vertex.framework.common.constant.enumeration.ServiceStatusEnum;
+import com.onezol.vertex.framework.common.exception.RuntimeServiceException;
+import com.onezol.vertex.framework.common.model.PageModel;
 import com.onezol.vertex.framework.common.mvc.service.BaseServiceImpl;
-import com.onezol.vertex.framework.security.api.mapper.RoleMapper;
-import com.onezol.vertex.framework.security.api.mapper.UserMapper;
+import com.onezol.vertex.framework.common.util.Asserts;
 import com.onezol.vertex.framework.security.api.mapper.UserRoleMapper;
+import com.onezol.vertex.framework.security.api.model.dto.User;
 import com.onezol.vertex.framework.security.api.model.entity.RoleEntity;
+import com.onezol.vertex.framework.security.api.model.entity.RolePermissionEntity;
 import com.onezol.vertex.framework.security.api.model.entity.UserEntity;
 import com.onezol.vertex.framework.security.api.model.entity.UserRoleEntity;
+import com.onezol.vertex.framework.security.api.service.RolePermissionService;
+import com.onezol.vertex.framework.security.api.service.RoleService;
+import com.onezol.vertex.framework.security.api.service.UserInfoService;
 import com.onezol.vertex.framework.security.api.service.UserRoleService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,15 +30,21 @@ import java.util.Objects;
 @Service
 public class UserRoleServiceImpl extends BaseServiceImpl<UserRoleMapper, UserRoleEntity> implements UserRoleService {
 
-    private final RoleMapper roleMapper;
-    private final UserMapper userMapper;
+    private final RoleService roleService;
+
+    private final UserInfoService userInfoService;
+
     private final UserRoleMapper userRoleMapper;
 
-    public UserRoleServiceImpl(RoleMapper roleMapper, UserMapper userMapper, UserRoleMapper userRoleMapper) {
-        this.roleMapper = roleMapper;
-        this.userMapper = userMapper;
+    private final RolePermissionService rolePermissionService;
+
+    public UserRoleServiceImpl(@Lazy RoleService roleService, @Lazy UserInfoService userInfoService, UserRoleMapper userRoleMapper, RolePermissionService rolePermissionService) {
+        this.roleService = roleService;
+        this.userInfoService = userInfoService;
         this.userRoleMapper = userRoleMapper;
+        this.rolePermissionService = rolePermissionService;
     }
+
 
     /**
      * 获取用户的角色
@@ -41,89 +56,187 @@ public class UserRoleServiceImpl extends BaseServiceImpl<UserRoleMapper, UserRol
         if (userId == null) {
             return null;
         }
-        return roleMapper.queryUserRoles(userId);
+        return userRoleMapper.queryUserRoles(userId);
+    }
+
+    /**
+     * 更新用户角色
+     *
+     * @param roleId  角色ID
+     * @param userIds 用户ID列表
+     */
+    @Override
+    @Transactional
+    public void assignToUsers(Long roleId, List<Long> userIds) {
+        if (Objects.isNull(roleId) || Objects.isNull(userIds) || userIds.isEmpty()) {
+            throw new RuntimeServiceException(ServiceStatusEnum.BAD_REQUEST, "角色ID或用户ID列表不能为空");
+        }
+
+        // 角色校验
+        RoleEntity role = roleService.getById(roleId);
+        if (Objects.isNull(role)) {
+            throw new RuntimeServiceException(ServiceStatusEnum.BAD_REQUEST, "角色不存在");
+        }
+
+        // 用户校验
+        long count = userInfoService.count(
+                Wrappers.<UserEntity>lambdaQuery()
+                        .in(UserEntity::getId, userIds)
+        );
+        if (count != userIds.size()) {
+            throw new RuntimeServiceException(ServiceStatusEnum.BAD_REQUEST, "部分用户不存在, 无法绑定角色");
+        }
+
+        // 角色绑定
+        // 查询已存在的关联关系
+        List<UserRoleEntity> relations = this.list(
+                Wrappers.<UserRoleEntity>lambdaQuery()
+                        .select(UserRoleEntity::getId, UserRoleEntity::getUserId, UserRoleEntity::getRoleId)
+                        .eq(UserRoleEntity::getRoleId, roleId)
+        );
+        List<Long> shouldSkipUserIds = relations.stream().map(UserRoleEntity::getUserId).toList();
+        List<UserRoleEntity> shouldCreateEntities = new ArrayList<>();
+        for (Long userId : userIds) {
+            if (shouldSkipUserIds.contains(userId)) {
+                continue;
+            }
+            UserRoleEntity entity = new UserRoleEntity();
+            entity.setUserId(userId);
+            entity.setRoleId(roleId);
+            shouldCreateEntities.add(entity);
+        }
+        this.saveBatch(shouldCreateEntities);
+    }
+
+    /**
+     * 解绑用户所有角色
+     *
+     * @param userId 用户ID
+     */
+    @Override
+    public void unbindUserAllRoles(Long userId) {
+        this.remove(
+                Wrappers.<UserRoleEntity>lambdaQuery()
+                        .eq(UserRoleEntity::getUserId, userId)
+        );
+    }
+
+    /**
+     * 更新用户角色
+     *
+     * @param userId    用户ID
+     * @param roleCodes 角色编码列表
+     */
+    @Override
+    @Transactional
+    public void updateUserRoles(Long userId, List<String> roleCodes) {
+        if (Objects.isNull(userId) || Objects.isNull(roleCodes) || roleCodes.isEmpty()) {
+            throw new RuntimeServiceException(ServiceStatusEnum.BAD_REQUEST, "用户ID或用户角色编码列表不能为空");
+        }
+
+        // 用户校验
+        UserEntity user = userInfoService.getById(userId);
+        if (Objects.isNull(user)) {
+            throw new RuntimeServiceException(ServiceStatusEnum.BAD_REQUEST, "用户不存在");
+        }
+
+        // 角色校验
+        List<RoleEntity> roleEntities = roleService.list(
+                Wrappers.<RoleEntity>lambdaQuery()
+                        .in(RoleEntity::getCode, roleCodes)
+        );
+        if (roleEntities.size() != roleCodes.size()) {
+            throw new RuntimeServiceException(ServiceStatusEnum.BAD_REQUEST, "部分角色不存在, 无法绑定用户");
+        }
+
+        // 删除旧绑定关系
+        this.remove(
+                Wrappers.<UserRoleEntity>lambdaQuery()
+                        .eq(UserRoleEntity::getUserId, userId)
+        );
+
+        // 创建新绑定关系
+        List<UserRoleEntity> shouldCreateEntities = new ArrayList<>();
+        for (String roleCode : roleCodes) {
+            Long roleId = roleEntities.stream().filter(role -> role.getCode().equals(roleCode)).findFirst().get().getId();
+            UserRoleEntity entity = new UserRoleEntity();
+            entity.setUserId(userId);
+            entity.setRoleId(roleId);
+            shouldCreateEntities.add(entity);
+        }
+        this.saveBatch(shouldCreateEntities);
+    }
+
+    /**
+     * 获取角色下的用户列表
+     *
+     * @param page   分页对象
+     * @param roleId 角色ID
+     * @return 用户列表
+     */
+    @Override
+    public PageModel<User> getRoleUsers(Page<UserRoleEntity> page, Long roleId) {
+        page = this.page(
+                page,
+                Wrappers.<UserRoleEntity>lambdaQuery()
+                        .select(UserRoleEntity::getUserId)
+                        .eq(UserRoleEntity::getRoleId, roleId)
+        );
+        List<UserRoleEntity> records = page.getRecords();
+        List<Long> userIds = records.stream().map(UserRoleEntity::getUserId).toList();
+
+        if (userIds.isEmpty()) {
+            return PageModel.empty();
+        }
+
+        List<User> users = userInfoService.getUsersInfo(userIds.toArray(Long[]::new));
+
+        return PageModel.of(users, page.getTotal(), page.getCurrent(), page.getSize());
     }
 
     /**
      * 解绑用户角色
      *
-     * @param userId 用户ID
-     */
-    @Override
-    public void unbindUserRole(Long userId) {
-        if (Objects.isNull(userId)) {
-            throw new IllegalArgumentException("userId must not be null");
-        }
-        UserEntity userEntity = userMapper.selectById(userId);
-        if (Objects.isNull(userEntity)) {
-            throw new IllegalArgumentException("user not found");
-        }
-        roleMapper.removeUserRole(userId);
-    }
-
-    /**
-     * @param userId 用户ID
-     * @param roleIds  角色ID列表
+     * @param roleId  角色ID
+     * @param userIds 用户ID列表
      */
     @Override
     @Transactional
-    public void updateUserRole(Long userId, List<Long> roleIds) {
-        UserEntity userEntity = userMapper.selectById(userId);
-        if (Objects.isNull(userEntity)) {
-            throw new IllegalArgumentException("user not found");
-        }
-        if (Objects.isNull(roleIds) || roleIds.isEmpty()) {
-            return;
-        }
-        // 删除用户角色
-        roleMapper.removeUserRole(userId);
-        // 填加新用户角色
-        List<RoleEntity> roleEntities = roleMapper.selectList(Wrappers.<RoleEntity>lambdaQuery().in(RoleEntity::getId, roleIds));
-        List<UserRoleEntity> userRoleEntities = new ArrayList<>(roleEntities.size());
-        roleEntities.forEach(roleEntity -> {
-            UserRoleEntity userRoleEntity = new UserRoleEntity();
-            userRoleEntity.setUserId(userId);
-            userRoleEntity.setRoleId(roleEntity.getId());
-            userRoleEntities.add(userRoleEntity);
-        });
-        boolean ok = this.saveBatch(userRoleEntities);
+    public void unbindUserRole(Long roleId, List<Long> userIds) {
+        Asserts.notNull(roleId, "角色ID不能为空");
+        Asserts.notEmpty(userIds, "用户ID不能为空");
 
-        StringBuilder simpleRoleNames = new StringBuilder();
-        for (int i = 0; i < roleEntities.size(); i++) {
-            if (i < 3) {
-                simpleRoleNames.append(roleEntities.get(i).getName()).append(" ");
-            } else if (!simpleRoleNames.toString().endsWith("...")){
-                simpleRoleNames.append("...");
-            }
-        }
-        if (!ok) {
-            String message = String.format("用户 '%s' 绑定角色 '%s' 失败！", userEntity.getName(), simpleRoleNames);
-            throw new RuntimeException(message);
-        }
-        log.info("用户 '{}' 绑定角色 '{}' 完成", userEntity.getName(), simpleRoleNames);
+        this.remove(
+                Wrappers.<UserRoleEntity>lambdaQuery()
+                        .eq(UserRoleEntity::getRoleId, roleId)
+                        .in(UserRoleEntity::getUserId, userIds)
+        );
     }
 
-
     /**
-     * @param userId
-     * @param roleCodes
+     * 角色绑定权限
+     *
+     * @param roleId        角色ID
+     * @param permissionIds 权限ID列表
      */
     @Override
     @Transactional
-    public void updateUserRoleByRoleCode(Long userId, List<String> roleCodes) {
-        UserEntity userEntity = userMapper.selectById(userId);
-        if (Objects.isNull(userEntity)) {
-            throw new IllegalArgumentException("user not found");
+    public void bindRolePermissions(Long roleId, List<Long> permissionIds) {
+        if (Objects.isNull(roleId) || Objects.isNull(permissionIds) || permissionIds.isEmpty()) {
+            throw new RuntimeServiceException(ServiceStatusEnum.BAD_REQUEST, "角色ID或用户权限ID列表不能为空");
         }
-        if (Objects.isNull(roleCodes) || roleCodes.isEmpty()) {
-            return;
-        }
-        List<Long> roleIds = roleMapper.selectList(
-                Wrappers.<RoleEntity>lambdaQuery()
-                        .select(RoleEntity::getId)
-                        .in(RoleEntity::getCode, roleCodes)
-        ).stream().map(RoleEntity::getId).toList();
 
-        updateUserRole(userId, roleIds);
+        // 删除旧绑定关系
+        rolePermissionService.removePermissionsByRole(roleId);
+
+        // 创建新绑定关系
+        List<RolePermissionEntity> shouldCreateEntities = new ArrayList<>();
+        for (Long permissionId : permissionIds) {
+            RolePermissionEntity entity = new RolePermissionEntity();
+            entity.setRoleId(roleId);
+            entity.setPermissionId(permissionId);
+            shouldCreateEntities.add(entity);
+        }
+        rolePermissionService.saveBatch(shouldCreateEntities);
     }
 }

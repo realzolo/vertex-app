@@ -3,30 +3,31 @@ package com.onezol.vertex.framework.security.biz.controller;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.onezol.vertex.framework.common.constant.enumeration.DisEnableStatusEnum;
-import com.onezol.vertex.framework.security.api.context.AuthenticationContext;
-import com.onezol.vertex.framework.security.api.model.dto.AuthUser;
-import com.onezol.vertex.framework.support.support.ResponseHelper;
-import com.onezol.vertex.framework.common.model.*;
+import com.onezol.vertex.framework.common.model.GenericResponse;
+import com.onezol.vertex.framework.common.model.LabelValue;
+import com.onezol.vertex.framework.common.model.PageModel;
+import com.onezol.vertex.framework.common.model.TreeNode;
 import com.onezol.vertex.framework.common.mvc.controller.BaseController;
 import com.onezol.vertex.framework.common.util.BeanUtils;
 import com.onezol.vertex.framework.common.util.TreeUtils;
 import com.onezol.vertex.framework.security.api.annotation.RestrictAccess;
+import com.onezol.vertex.framework.security.api.context.AuthenticationContext;
 import com.onezol.vertex.framework.security.api.enumeration.PermissionTypeEnum;
-import com.onezol.vertex.framework.security.api.model.dto.Permission;
-import com.onezol.vertex.framework.security.api.model.dto.Role;
+import com.onezol.vertex.framework.security.api.model.dto.*;
 import com.onezol.vertex.framework.security.api.model.entity.PermissionEntity;
 import com.onezol.vertex.framework.security.api.model.entity.RoleEntity;
 import com.onezol.vertex.framework.security.api.model.entity.RolePermissionEntity;
+import com.onezol.vertex.framework.security.api.model.entity.UserRoleEntity;
 import com.onezol.vertex.framework.security.api.service.PermissionService;
 import com.onezol.vertex.framework.security.api.service.RolePermissionService;
 import com.onezol.vertex.framework.security.api.service.RoleService;
+import com.onezol.vertex.framework.security.api.service.UserRoleService;
+import com.onezol.vertex.framework.support.support.ResponseHelper;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -41,12 +42,14 @@ public class RoleController extends BaseController<RoleEntity> {
     private PermissionService permissionService;
     @Autowired
     private RolePermissionService rolePermissionService;
+    @Autowired
+    private UserRoleService userRoleService;
 
     @GetMapping("/route")
     public GenericResponse<List<TreeNode>> route() {
         AuthUser authUser = AuthenticationContext.get();
-        List<LabelValue<String, String>> roles = authUser.getRoles();
-        Set<String> roleIds = roles.stream().map(LabelValue::getValue).collect(Collectors.toSet());
+        List<SimpleRole> roles = authUser.getRoles();
+        Set<Long> roleIds = roles.stream().map(SimpleRole::getId).collect(Collectors.toSet());
         Set<Long> permissionIds = rolePermissionService.list(
                 Wrappers.<RolePermissionEntity>lambdaQuery()
                         .select(RolePermissionEntity::getPermissionId)
@@ -76,13 +79,20 @@ public class RoleController extends BaseController<RoleEntity> {
 
     @GetMapping("/page")
     public GenericResponse<PageModel<RoleEntity>> getRolePage(
-            @RequestParam(value = "page", required = false) Integer pageNumber,
-            @RequestParam(value = "size", required = false) Integer pageSize
+            @RequestParam(value = "page", required = false) Long pageNumber,
+            @RequestParam(value = "size", required = false) Long pageSize
     ) {
         Page<RoleEntity> page = this.getPage(pageNumber, pageSize);
         Page<RoleEntity> quriedPage = roleService.page(page);
         PageModel<RoleEntity> resultPage = PageModel.from(quriedPage);
         return ResponseHelper.buildSuccessfulResponse(resultPage);
+    }
+
+    @GetMapping("/list")
+    public GenericResponse<List<Role>> getRoles() {
+        List<RoleEntity> list = roleService.list();
+        List<Role> roles = BeanUtils.toList(list, Role.class);
+        return ResponseHelper.buildSuccessfulResponse(roles);
     }
 
     @GetMapping("/dict")
@@ -107,6 +117,46 @@ public class RoleController extends BaseController<RoleEntity> {
     @PutMapping("/{id}")
     public GenericResponse<Void> updateRole(@RequestBody Role role) {
         roleService.updateRole(role);
+        return ResponseHelper.buildSuccessfulResponse();
+    }
+
+    @Operation(summary = "绑定角色用户")
+    @PostMapping("/bind-users/{roleId}")
+    public GenericResponse<Void> assignToUsers(@PathVariable("roleId") Long roleId, @RequestBody List<Long> userIds) {
+        userRoleService.assignToUsers(roleId, userIds);
+        return ResponseHelper.buildSuccessfulResponse();
+    }
+
+    @Operation(summary = "查询角色下的用户列表")
+    @GetMapping("/users/{roleId}")
+    public GenericResponse<PageModel<User>> getRoleUsers(
+            @RequestParam("pageNumber") Long pageNumber,
+            @RequestParam("pageSize") Long pageSize,
+            @PathVariable("roleId") Long roleId
+    ) {
+        Page<UserRoleEntity> page = new Page<>(pageNumber, pageSize);
+        PageModel<User> users = userRoleService.getRoleUsers(page, roleId);
+        return ResponseHelper.buildSuccessfulResponse(users);
+    }
+
+    @Operation(summary = "删除用户-角色关系")
+    @DeleteMapping("/unbind-users/{roleId}")
+    public GenericResponse<Void> deleteUserRole(
+            @PathVariable("roleId") Long roleId,
+            @RequestBody List<Long> userIds
+    ) {
+        userRoleService.unbindUserRole(roleId, userIds);
+        return ResponseHelper.buildSuccessfulResponse();
+    }
+
+    @Operation(summary = "角色绑定权限")
+    @PutMapping("/bind-permissions/{roleId}")
+    public GenericResponse<Void> bindPermissions(
+            @PathVariable("roleId") Long roleId,
+            @RequestBody Map<String, Object> body
+    ) {
+        List<Long> permissionIds = ((List<?>) body.get("permissionIds")).stream().map(id -> Long.parseLong(id.toString())).collect(Collectors.toList());
+        userRoleService.bindRolePermissions(roleId, permissionIds);
         return ResponseHelper.buildSuccessfulResponse();
     }
 

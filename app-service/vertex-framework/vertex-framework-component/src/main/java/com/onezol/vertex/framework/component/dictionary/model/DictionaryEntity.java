@@ -27,6 +27,9 @@ public class DictionaryEntity extends BaseEntity {
     @TableField("`group`")
     private String group;
 
+    @TableField("builtin")
+    private Boolean builtIn;
+
     @TableField("sort")
     private Integer sort;
 

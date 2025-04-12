@@ -1,12 +1,11 @@
 <template>
-  <div class="table-page">
+  <GiPageLayout>
     <GiTable
-      title="任务日志"
       row-key="id"
       :data="dataList"
       :columns="columns"
       :loading="loading"
-      :scroll="{ x: '100%', y: '100%', minWidth: 1500 }"
+      :scroll="{ x: '100%', y: '100%', minWidth: 1300 }"
       :pagination="pagination"
       :disabled-tools="['size']"
       @refresh="search"
@@ -19,7 +18,7 @@
           style="width: 200px"
           @change="search"
         />
-        <a-input v-model="queryForm.jobName" placeholder="请输入任务名称" allow-clear @change="search" />
+        <a-input-search v-model="queryForm.jobName" placeholder="搜索任务名称" allow-clear @search="search" />
         <a-select
           v-model="queryForm.taskBatchStatus"
           placeholder="请选择状态"
@@ -42,15 +41,16 @@
       </template>
       <template #action="{ record }">
         <a-space>
-          <a-link @click="onDetail(record)">详情</a-link>
+          <a-link v-permission="['schedule:log:get']" title="详情" @click="onDetail(record)">详情</a-link>
           <a-popconfirm content="是否确定停止本次执行?" type="warning" @ok="onStop(record)">
-            <a-link v-if="record.taskBatchStatus === 2" v-permission="['schedule:log:stop']" status="danger">停止</a-link>
+            <a-link v-if="record.taskBatchStatus === 2" v-permission="['schedule:log:stop']" status="danger" title="停止">停止</a-link>
           </a-popconfirm>
           <a-popconfirm content="是否确定重试本次执行?" type="warning" @ok="onRetry(record)">
             <a-link
               v-if="record.taskBatchStatus === 4 || record.taskBatchStatus === 5 || record.taskBatchStatus === 6"
               v-permission="['schedule:log:retry']"
               status="danger"
+              title="重试"
             >
               重试
             </a-link>
@@ -59,17 +59,17 @@
       </template>
     </GiTable>
 
-    <JobLogDetailModal ref="JobLogDetailModalRef" />
-  </div>
+    <LogDetailDrawer ref="LogDetailDrawerRef" />
+  </GiPageLayout>
 </template>
 
 <script setup lang="ts">
+import type { TableInstance } from '@arco-design/web-vue'
 import { Message } from '@arco-design/web-vue'
 import { useRoute } from 'vue-router'
 import dayjs from 'dayjs'
-import JobLogDetailModal from './LogDetailModal.vue'
+import LogDetailDrawer from './LogDetailDrawer.vue'
 import { type JobLogQuery, type JobLogResp, listGroup, listJobLog, retryJob, stopJob } from '@/apis/schedule'
-import type { TableInstanceColumns } from '@/components/GiTable/type'
 import { useTable } from '@/hooks'
 import { useDict } from '@/hooks/app'
 import { isMobile } from '@/utils'
@@ -85,14 +85,14 @@ const queryForm = reactive<JobLogQuery>({
     dayjs().endOf('day').format('YYYY-MM-DD HH:mm:ss'),
   ],
 })
+
 const {
   tableData: dataList,
   pagination,
   loading,
   search,
 } = useTable((page) => listJobLog({ ...queryForm, ...page }), { immediate: false })
-
-const columns: TableInstanceColumns[] = [
+const columns: TableInstance['columns'] = [
   {
     title: '序号',
     width: 66,
@@ -108,10 +108,10 @@ const columns: TableInstanceColumns[] = [
   {
     title: '操作',
     slotName: 'action',
-    width: 60,
+    width: 130,
     align: 'center',
     fixed: !isMobile() ? 'right' : undefined,
-    show: has.hasPermOr(['schedule:log:stop', 'schedule:log:retry']),
+    show: has.hasPermOr(['schedule:log:get', 'schedule:log:stop', 'schedule:log:retry']),
   },
 ]
 
@@ -149,10 +149,10 @@ const onRetry = (record: JobLogResp) => {
   })
 }
 
-const JobLogDetailModalRef = ref<InstanceType<typeof JobLogDetailModal>>()
-// 查看日志详情
+const LogDetailDrawerRef = ref<InstanceType<typeof LogDetailDrawer>>()
+// 详情
 const onDetail = (record: JobLogResp) => {
-  JobLogDetailModalRef.value?.onDetail(record)
+  LogDetailDrawerRef.value?.onOpen(record)
 }
 
 const route = useRoute()

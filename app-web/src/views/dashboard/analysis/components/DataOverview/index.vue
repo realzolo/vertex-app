@@ -20,7 +20,7 @@
   </a-card>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import Pv from './Pv.vue'
 import Ip from './Ip.vue'
 import Demo1 from './Demo1.vue'

@@ -3,37 +3,19 @@ import { defineStore } from 'pinia'
 import type { RouteRecordRaw } from 'vue-router'
 import { mapTree, toTreeArray } from 'xe-utils'
 import { cloneDeep, omit } from 'lodash-es'
-import { constantRoutes } from '@/router'
-import ParentView from '@/components/ParentView/index.vue'
+import { constantRoutes, systemRoutes } from '@/router/route'
 import { type RouteItem, getUserRoute } from '@/apis'
 import { transformPathToName } from '@/utils'
+import { asyncRouteModules } from '@/router/asyncModules'
 
-const Layout = () => import('@/layout/index.vue')
-
-// 匹配views里面所有的.vue文件
-const modules = import.meta.glob('@/views/**/*.vue')
-
-/** 加载模块 */
-export const loadView = (view: string) => {
-  let res
-  for (const path in modules) {
-    const dir = path.split('views/')[1].split('.vue')[0]
-    if (dir === view) {
-      res = () => modules[path]()
-    }
-  }
-  return res
+const layoutComponentMap = {
+  Layout: () => import('@/layout/index.vue'),
+  ParentView: () => import('@/components/ParentView/index.vue'),
 }
 
 /** 将component由字符串转成真正的模块 */
 const transformComponentView = (component: string) => {
-  if (component === 'Layout') {
-    return Layout as never
-  } else if (component === 'ParentView') {
-    return ParentView as never
-  } else {
-    return loadView(component) as never
-  }
+  return layoutComponentMap[component as keyof typeof layoutComponentMap] || asyncRouteModules[component]
 }
 
 /**
@@ -44,17 +26,20 @@ const transformComponentView = (component: string) => {
  */
 const formatAsyncRoutes = (menus: RouteItem[]) => {
   if (!menus.length) return []
-  menus.sort((a, b) => (a?.data.sort ?? 0) - (b?.data.sort ?? 0)) // 排序
+
   const pathMap = new Map()
-  const routes = mapTree(menus, (item) => {
+  return mapTree(menus, (item) => {
     pathMap.set(item.id, item.data.path)
-    if (item.children && item.children.length) {
-      item.children.sort((a, b) => (a?.data.sort ?? 0) - (b?.data.sort ?? 0)) // 排序
+
+    if (item.children?.length) {
+      item.children.sort((a, b) => (a?.data.sort ?? 0) - (b?.data.sort ?? 0))
     }
+
     // 部分子菜单，例如：通知公告新增、查看详情，需要选中其父菜单
     if (item.parentId && item.data.type === 2 && item.data.permission) {
       item.data.activeMenu = pathMap.get(item.parentId)
     }
+
     return {
       path: item.data.path,
       name: item.data.name ?? transformPathToName(item.data.path),
@@ -69,30 +54,24 @@ const formatAsyncRoutes = (menus: RouteItem[]) => {
         activeMenu: item.data.activeMenu,
       },
     }
-  })
-  return routes as RouteRecordRaw[]
+  }) as unknown as RouteRecordRaw[]
 }
 
 /** 判断路由层级是否大于 2 */
 export const isMultipleRoute = (route: RouteRecordRaw) => {
-  const children = route.children
-  if (children?.length) {
-    // 只要有一个子路由的 children 长度大于 0，就说明是三级及其以上路由
-    return children.some((child) => child.children?.length)
-  }
-  return false
+  return route.children?.some((child) => child.children?.length) ?? false
 }
 
 /** 路由降级（把三级及其以上的路由转化为二级路由） */
 export const flatMultiLevelRoutes = (routes: RouteRecordRaw[]) => {
-  const cloneRoutes = cloneDeep(routes)
-  cloneRoutes.forEach((route) => {
-    if (isMultipleRoute(route)) {
-      const flatRoutes = toTreeArray(route.children)
-      route.children = flatRoutes.map((i) => omit(i, 'children')) as RouteRecordRaw[]
+  return cloneDeep(routes).map((route) => {
+    if (!isMultipleRoute(route)) return route
+
+    return {
+      ...route,
+      children: toTreeArray(route.children).map((item) => omit(item, 'children')) as RouteRecordRaw[],
     }
   })
-  return cloneRoutes
 }
 
 const storeSetup = () => {
@@ -103,23 +82,19 @@ const storeSetup = () => {
 
   // 合并路由
   const setRoutes = (data: RouteRecordRaw[]) => {
-    routes.value = constantRoutes.concat(data)
+    // 合并路由并排序
+    routes.value = [...constantRoutes, ...systemRoutes].concat(data)
+      .sort((a, b) => (a.meta?.sort ?? 0) - (b.meta?.sort ?? 0))
     asyncRoutes.value = data
   }
 
   // 生成路由
-  const generateRoutes = (): Promise<RouteRecordRaw[]> => {
-    return new Promise((resolve) => {
-      // 向后端请求路由数据 这个接口已经根据用户角色过滤了没权限的路由(后端根据用户角色过滤路由显得比较安全些)
-      getUserRoute().then((res) => {
-        const asyncRoutes = formatAsyncRoutes(res.data)
-        console.log(asyncRoutes);
-        setRoutes(asyncRoutes)
-        const cloneRoutes = cloneDeep(asyncRoutes)
-        const flatRoutes = flatMultiLevelRoutes(cloneRoutes as RouteRecordRaw[])
-        resolve(flatRoutes)
-      })
-    })
+  const generateRoutes = async (): Promise<RouteRecordRaw[]> => {
+    const { data } = await getUserRoute()
+    const asyncRoutes = formatAsyncRoutes(data)
+    const flatRoutes = flatMultiLevelRoutes(cloneDeep(asyncRoutes))
+    setRoutes(asyncRoutes)
+    return flatRoutes
   }
 
   return {

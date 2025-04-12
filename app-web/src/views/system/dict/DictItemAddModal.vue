@@ -4,19 +4,24 @@
     :title="title"
     :mask-closable="false"
     :esc-to-close="false"
-    :modal-style="{ maxWidth: '520px' }"
-    width="90%"
+    :width="width >= 500 ? 500 : '100%'"
     draggable
     @before-ok="save"
     @close="reset"
   >
-    <GiForm ref="formRef" v-model="form" :options="options" :columns="columns">
+    <GiForm ref="formRef" v-model="form" :columns="columns">
       <template #color>
-        <a-input v-model="form.color" placeholder="请选择或输入标签颜色" allow-clear>
-          <template #suffix>
-            <a-color-picker v-model="form.color" />
-          </template>
-        </a-input>
+        <a-select
+          v-model="form.color"
+          placeholder="请选择颜色"
+          allow-clear
+        >
+          <a-option value="primary"><a-tag color="arcoblue">主要（极致蓝）</a-tag></a-option>
+          <a-option value="success"><a-tag color="green">成功（仙野绿）</a-tag></a-option>
+          <a-option value="warning"><a-tag color="orangered">警告（活力橙）</a-tag></a-option>
+          <a-option value="error"><a-tag color="red">错误（浪漫红）</a-tag></a-option>
+          <a-option value="default"><a-tag color="gray">默认（中性灰）</a-tag></a-option>
+        </a-select>
       </template>
     </GiForm>
   </a-modal>
@@ -24,32 +29,61 @@
 
 <script setup lang="ts">
 import { Message } from '@arco-design/web-vue'
-import { addDictItem, getDictItem, updateDictItem } from '@/apis/system'
-import { type Columns, GiForm } from '@/components/GiForm'
-import { useForm } from '@/hooks'
+import { useWindowSize } from '@vueuse/core'
+import { addDictItem, getDictItem, updateDictItem } from '@/apis/system/dict'
+import { type ColumnItem, GiForm } from '@/components/GiForm'
+import { useResetReactive } from '@/hooks'
 
 const emit = defineEmits<{
   (e: 'save-success'): void
 }>()
+
+const { width } = useWindowSize()
+
 const dictId = ref()
 const dataId = ref()
+const visible = ref(false)
 const isUpdate = computed(() => !!dataId.value)
 const title = computed(() => (isUpdate.value ? '修改字典项' : '新增字典项'))
 const formRef = ref<InstanceType<typeof GiForm>>()
 
-const options: Options = {
-  form: { size: 'large' },
-  btns: { hide: true },
-}
+const [form, resetForm] = useResetReactive({
+  sort: 999,
+  status: 1,
+})
 
-const columns: Columns = reactive([
-  { label: '标签', field: 'name', type: 'input', rules: [{ required: true, message: '请输入标签' }] },
-  { label: '值', field: 'value', type: 'input', rules: [{ required: true, message: '请输入值' }] },
-  { label: '标签颜色', field: 'color', type: 'input' },
+const columns: ColumnItem[] = reactive([
+  {
+    label: '字典名称',
+    field: 'name',
+    type: 'input',
+    span: 24,
+    required: true,
+    props: {
+      maxLength: 30,
+    },
+  },
+  {
+    label: '字典值',
+    field: 'value',
+    type: 'input',
+    span: 24,
+    required: true,
+    props: {
+      maxLength: 30,
+    },
+  },
+  {
+    label: '颜色',
+    field: 'color',
+    type: 'input',
+    span: 24,
+  },
   {
     label: '排序',
     field: 'sort',
     type: 'input-number',
+    span: 24,
     props: {
       min: 1,
       mode: 'button',
@@ -59,53 +93,27 @@ const columns: Columns = reactive([
     label: '描述',
     field: 'remark',
     type: 'textarea',
-    props: {
-      maxLength: 200,
-      autoSize: { minRows: 3, maxRows: 5 },
-    },
+    span: 24,
   },
   {
     label: '状态',
     field: 'status',
     type: 'switch',
+    span: 24,
     props: {
       type: 'round',
-      checkedValue: 0,
-      uncheckedValue: 1,
+      checkedValue: 1,
+      uncheckedValue: 2,
       checkedText: '启用',
       uncheckedText: '禁用',
     },
   },
 ])
 
-const { form, resetForm } = useForm({
-  color: '#FF0000',
-  sort: 0,
-  status: 0,
-})
-
 // 重置
 const reset = () => {
   formRef.value?.formRef?.resetFields()
   resetForm()
-}
-
-const visible = ref(false)
-// 新增
-const onAdd = (id: number) => {
-  reset()
-  dictId.value = id
-  dataId.value = null
-  visible.value = true
-}
-
-// 修改
-const onUpdate = async (id: number) => {
-  reset()
-  dataId.value = id
-  const res = await getDictItem(id)
-  Object.assign(form, res.data)
-  visible.value = true
 }
 
 // 保存
@@ -127,5 +135,24 @@ const save = async () => {
   }
 }
 
+// 新增
+const onAdd = (id: number) => {
+  reset()
+  dictId.value = id
+  dataId.value = null
+  visible.value = true
+}
+
+// 修改
+const onUpdate = async (id: number) => {
+  reset()
+  dataId.value = id
+  const res = await getDictItem(id)
+  Object.assign(form, res.data)
+  visible.value = true
+}
+
 defineExpose({ onAdd, onUpdate })
 </script>
+
+<style scoped lang="scss"></style>

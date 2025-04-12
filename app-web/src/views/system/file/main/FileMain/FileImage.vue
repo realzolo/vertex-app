@@ -32,7 +32,7 @@ const getFileImg = computed<string>(() => {
 })
 </script>
 
-<style lang="scss" scoped>
+<style scoped lang="scss">
 .file-image {
   width: 100%;
   height: 100%;

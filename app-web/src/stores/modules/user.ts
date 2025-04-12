@@ -3,6 +3,7 @@ import { computed, reactive, ref } from 'vue'
 import { resetRouter } from '@/router'
 import {
   type AccountLoginReq,
+  AuthTypeConstants,
   type EmailLoginReq,
   type PhoneLoginReq,
   type UserInfo,
@@ -14,27 +15,24 @@ import {
   socialLogin as socialLoginApi,
 } from '@/apis'
 import { clearToken, getToken, setToken } from '@/utils/auth'
-import { resetHasRouteFlag } from '@/router/permission'
+import { resetHasRouteFlag } from '@/router/guard'
+import type { SimpleRole } from '@/types/api'
 
 const storeSetup = () => {
   const userInfo = reactive<UserInfo>({
-    id: null,
-    creator:  null,
-    createTime: '',
-    updater: null,
-    updateTime: '',
+    id: '',
     username: '',
     nickname: '',
-    name: '',
-    introduction: '',
-    avatar: '',
     gender: 0,
-    birthday: '',
-    phone: '',
     email: '',
+    phone: '',
+    avatar: '',
+    pwdResetTime: '',
+    pwdExpired: false,
+    registrationDate: '',
+    department: null,
     roles: [],
     permissions: [],
-    status: 0
   })
   const nickname = computed(() => userInfo.nickname)
   const username = computed(() => userInfo.username)
@@ -42,7 +40,7 @@ const storeSetup = () => {
 
   const token = ref(getToken() || '')
   const pwdExpiredShow = ref<boolean>(true)
-  const roles = ref<string[]>([]) // 当前用户角色
+  const roles = ref<Array<SimpleRole>>([]) // 当前用户角色
   const permissions = ref<string[]>([]) // 当前角色权限标识集合
 
   // 重置token
@@ -54,29 +52,29 @@ const storeSetup = () => {
 
   // 登录
   const accountLogin = async (req: AccountLoginReq) => {
-    const res = await accountLoginApi(req)
-    setToken(res.data.jwt.token);
+    const res = await accountLoginApi({ ...req, clientId: import.meta.env.VITE_CLIENT_ID, authType: AuthTypeConstants.ACCOUNT })
+    setToken(res.data.jwt.token)
     token.value = res.data.jwt.token
   }
 
   // 邮箱登录
   const emailLogin = async (req: EmailLoginReq) => {
-    const res = await emailLoginApi(req)
-    setToken(res.data.jwt.token);
+    const res = await emailLoginApi({ ...req, clientId: import.meta.env.VITE_CLIENT_ID, authType: AuthTypeConstants.EMAIL })
+    setToken(res.data.jwt.token)
     token.value = res.data.jwt.token
   }
 
   // 手机号登录
   const phoneLogin = async (req: PhoneLoginReq) => {
-    const res = await phoneLoginApi(req)
-    setToken(res.data.jwt.token);
+    const res = await phoneLoginApi({ ...req, clientId: import.meta.env.VITE_CLIENT_ID, authType: AuthTypeConstants.PHONE })
+    setToken(res.data.jwt.token)
     token.value = res.data.jwt.token
   }
 
   // 三方账号登录
   const socialLogin = async (source: string, req: any) => {
-    const res = await socialLoginApi(source, req)
-    setToken(res.data.jwt.token);
+    const res = await socialLoginApi({ ...req, source, clientId: import.meta.env.VITE_CLIENT_ID, authType: AuthTypeConstants.SOCIAL })
+    setToken(res.data.jwt.token)
     token.value = res.data.jwt.token
   }
 
@@ -95,6 +93,7 @@ const storeSetup = () => {
       await logoutApi()
       await logoutCallBack()
       return true
+      // eslint-disable-next-line unused-imports/no-unused-vars
     } catch (error) {
       return false
     }

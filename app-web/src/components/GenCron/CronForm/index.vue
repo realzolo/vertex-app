@@ -120,7 +120,7 @@
 <script lang="ts">
 </script>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { useDebounceFn } from '@vueuse/core'
 import CronParser from 'cron-parser'
 import SecondForm from '@/components/GenCron/CronForm/component/second-form.vue'

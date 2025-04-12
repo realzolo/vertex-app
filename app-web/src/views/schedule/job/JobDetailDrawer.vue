@@ -1,5 +1,5 @@
 <template>
-  <a-drawer v-model:visible="visible" title="任务详情" :width="width >= 600 ? 600 : '100%'" :footer="false">
+  <a-drawer v-model:visible="visible" title="任务详情" :width="width >= 500 ? 500 : '100%'" :footer="false">
     <a-descriptions :column="2" size="large" class="general-description">
       <a-descriptions-item label="ID" :span="2">
         <a-typography-paragraph copyable>{{ dataDetail?.id }}</a-typography-paragraph>
@@ -40,6 +40,9 @@ import type { JobResp } from '@/apis/schedule'
 import { useDict } from '@/hooks/app'
 
 const { width } = useWindowSize()
+
+const dataDetail = ref<JobResp>()
+const visible = ref(false)
 const { job_status_enum, job_trigger_type_enum, job_task_type_enum, job_route_strategy_enum, job_block_strategy_enum } = useDict(
   'job_status_enum',
   'job_trigger_type_enum',
@@ -48,13 +51,11 @@ const { job_status_enum, job_trigger_type_enum, job_task_type_enum, job_route_st
   'job_block_strategy_enum',
 )
 
-const visible = ref(false)
-const dataDetail = ref<JobResp>()
-// 详情
-const onDetail = (record: JobResp) => {
+// 打开
+const onOpen = (record: JobResp) => {
   dataDetail.value = record
   visible.value = true
 }
 
-defineExpose({ onDetail })
+defineExpose({ onOpen })
 </script>

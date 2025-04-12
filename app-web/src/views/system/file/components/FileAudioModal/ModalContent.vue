@@ -82,7 +82,7 @@ const close = () => {
 }
 </script>
 
-<style lang="scss" scoped>
+<style scoped lang="scss">
 .audio-box {
   width: 300px;
   position: fixed;

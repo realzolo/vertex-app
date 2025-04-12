@@ -149,7 +149,7 @@ const handleSelectedIcon = async (icon: string) => {
 }
 </script>
 
-<style lang="scss" scoped>
+<style scoped lang="scss">
 .container {
   width: 300px;
   overflow: hidden;

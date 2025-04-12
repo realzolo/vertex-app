@@ -1,21 +1,22 @@
 import type { TreeNodeData } from '@arco-design/web-vue'
 import http from '@/utils/http'
 import type { LabelValueState } from '@/types/global'
-import type { OptionQuery } from '@/apis'
 
 const BASE_URL = '/common'
 
 /** @desc 查询部门树 */
-export function listDeptTree(query: { description?: string }) {
-  return http.get<TreeNodeData[]>(`${BASE_URL}/tree/dept`, query)
+export function listDeptTree(query: { description: string | unknown }) {
+  return http.get<TreeNodeData[]>(`/department/tree`, query)
 }
-/** @desc 查询部门用户树 */
-export function listDeptWithUsersTree(query: { description?: string, status: number }) {
-  return http.get<TreeNodeData[]>(`${BASE_URL}/tree/deptWithUsers`, query)
-}
+
 /** @desc 查询菜单树 */
-export function listMenuTree(query: { description?: string }) {
+export function listMenuTree(query: { description: string }) {
   return http.get<TreeNodeData[]>(`/permission/tree`, query)
+}
+
+/** @desc 查询用户列表 */
+export function listUserDict(query?: { status: number }) {
+  return http.get<LabelValueState[]>(`${BASE_URL}/dict/user`, query)
 }
 
 /** @desc 查询角色列表 */
@@ -28,9 +29,9 @@ export function listCommonDict(code: string) {
   return http.get<LabelValueState[]>(`${BASE_URL}/dict/${code}`)
 }
 
-/** @desc 查询参数列表 */
-export function listOptionDict(code: string) {
-  return http.get<LabelValueState[]>(`/runtime-configuration/${code}`)
+/** @desc 查询系统配置参数 */
+export function listSiteOptionDict() {
+  return http.get<LabelValueState[]>(`/runtime-configuration/site/dict`)
 }
 
 /** @desc 上传文件 */

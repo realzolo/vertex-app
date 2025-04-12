@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a-card title="文件管理" :bordered="false" :body-style="{ padding: 0 }">
+    <a-card title="" :bordered="false" :body-style="{ padding: 0 }">
       <a-menu :default-open-keys="['0']" :selected-keys="[selectedKey]">
         <a-sub-menu key="0">
           <template #icon>
@@ -46,7 +46,7 @@ const onClickItem = (item: FileTypeListItem) => {
 }
 </script>
 
-<style lang="scss" scoped>
+<style scoped lang="scss">
 :deep(.arco-card) {
   .arco-card-header {
     border-bottom-style: dashed;

@@ -24,7 +24,7 @@ const appStore = useAppStore()
 const { isMobile } = useDevice()
 </script>
 
-<style lang="scss" scoped>
+<style scoped lang="scss">
 .layout {
   height: 100%;
 }

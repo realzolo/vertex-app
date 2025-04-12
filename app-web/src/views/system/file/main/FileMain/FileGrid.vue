@@ -40,15 +40,8 @@
 </template>
 
 <script setup lang="ts">
-import FileImage from './FileImage.vue'
 import FileRightMenu from './FileRightMenu.vue'
 import type { FileItem } from '@/apis/system'
-
-interface Props {
-  data?: FileItem[]
-  selectedFileIds?: string[]
-  isBatchMode?: boolean
-}
 
 const props = withDefaults(defineProps<Props>(), {
   data: () => [], // 文件数据
@@ -61,6 +54,14 @@ const emit = defineEmits<{
   (e: 'select', record: FileItem): void
   (e: 'right-menu-click', mode: string, item: FileItem): void
 }>()
+
+const FileImage = defineAsyncComponent(() => import('./FileImage.vue'))
+
+interface Props {
+  data?: FileItem[]
+  selectedFileIds?: string[]
+  isBatchMode?: boolean
+}
 
 // 文件名称带后缀
 const getFileName = (item: FileItem) => {
@@ -83,7 +84,7 @@ const handleRightMenuClick = (mode: string, item: FileItem) => {
 }
 </script>
 
-<style lang="scss" scoped>
+<style scoped lang="scss">
 .file-grid {
   flex: 1;
   margin-top: 12px;

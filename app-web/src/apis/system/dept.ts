@@ -3,7 +3,7 @@ import http from '@/utils/http'
 
 export type * from './type'
 
-const BASE_URL = '/system/dept'
+const BASE_URL = '/department'
 
 /** @desc 查询部门列表 */
 export function listDept(query: T.DeptQuery) {
@@ -11,7 +11,7 @@ export function listDept(query: T.DeptQuery) {
 }
 
 /** @desc 查询部门详情 */
-export function getDept(id: string) {
+export function getDept(id: number) {
   return http.get<T.DeptResp>(`${BASE_URL}/${id}`)
 }
 
@@ -21,16 +21,16 @@ export function addDept(data: any) {
 }
 
 /** @desc 修改部门 */
-export function updateDept(data: any, id: string) {
+export function updateDept(data: any, id: number) {
   return http.put(`${BASE_URL}/${id}`, data)
 }
 
 /** @desc 删除部门 */
-export function deleteDept(id: string) {
+export function deleteDept(id: number) {
   return http.del(`${BASE_URL}/${id}`)
 }
 
 /** @desc 导出部门 */
 export function exportDept(query: T.DeptQuery) {
-  return http.download<any>(`${BASE_URL}/export`, query)
+  return http.download(`${BASE_URL}/export`, query)
 }

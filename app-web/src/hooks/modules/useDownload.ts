@@ -10,7 +10,7 @@ import { Message, Notification } from '@arco-design/web-vue'
 interface NavigatorWithMsSaveOrOpenBlob extends Navigator {
   msSaveOrOpenBlob: (blob: Blob, fileName: string) => void
 }
-export const useDownload = async (api: () => Promise<any>, isNotify = true, tempName = '', fileType = '.xlsx') => {
+export const useDownload = async (api: () => Promise<any>, isNotify = false, tempName = '', fileType = '.xlsx') => {
   try {
     const res = await api()
     if (res.headers['content-disposition']) {

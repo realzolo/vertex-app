@@ -19,7 +19,7 @@ import { goodTimeText } from '@/utils'
 const userStore = useUserStore()
 </script>
 
-<style lang="scss" scoped>
+<style scoped lang="scss">
 :deep(.arco-statistic-title) {
   margin-bottom: 0;
 }

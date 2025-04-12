@@ -64,7 +64,7 @@
               在 <a-link :href="item.repo.url" target="_blank" rel="noopener">{{ item.repo.alias }}</a-link>
               创建了 Issue <a-link :href="item.payload.url" target="_blank" rel="noopener">{{ item.payload.title }}</a-link>
             </p>
-            <p v-else-if="item.type === 'ISSUE_CLOSE'">
+            <p v-else-if="item.type === 'ISSUE_CLOSE' || item.type === 'ISSUE_REOPEN'">
               更改了 <a-link :href="item.repo.url" target="_blank" rel="noopener">{{ item.repo.alias }}</a-link>
               的 Issue <a-link :href="item.payload.url" target="_blank" rel="noopener">{{ item.payload.title }}</a-link>
               状态为 {{ item.payload.stateString }}
@@ -81,7 +81,7 @@
               接受了 <a-link :href="item.repo.url" target="_blank" rel="noopener">{{ item.repo.alias }}</a-link>
               的 Pull Request <a-link :href="item.payload.url" target="_blank" rel="noopener">{{ item.payload.title }}</a-link>
             </p>
-            <p v-else-if="item.type === 'PULL_REQUEST_CLOSE'">
+            <p v-else-if="item.type === 'PULL_REQUEST_CLOSE' || item.type === 'PULL_REQUEST_REOPEN'">
               更改了 <a-link :href="item.repo.url" target="_blank" rel="noopener">{{ item.repo.alias }}</a-link>
               的 Pull Request <a-link :href="item.payload.url" target="_blank" rel="noopener">{{ item.payload.title }}</a-link>
               状态为 {{ item.payload.stateString }}
@@ -103,8 +103,9 @@
   </a-card>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import dayjs from 'dayjs'
+import 'dayjs/locale/zh-cn'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import axios, { type AxiosRequestConfig, type AxiosResponse } from 'axios'
 import qs from 'query-string'

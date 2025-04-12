@@ -1,18 +1,19 @@
 package com.onezol.vertex.framework.security.biz.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.onezol.vertex.framework.security.api.context.AuthenticationContext;
-import com.onezol.vertex.framework.support.support.ResponseHelper;
-import com.onezol.vertex.framework.security.api.model.dto.AuthUser;
 import com.onezol.vertex.framework.common.model.GenericResponse;
 import com.onezol.vertex.framework.common.model.PageModel;
 import com.onezol.vertex.framework.common.mvc.controller.BaseController;
 import com.onezol.vertex.framework.security.api.annotation.RestrictAccess;
+import com.onezol.vertex.framework.security.api.context.AuthenticationContext;
+import com.onezol.vertex.framework.security.api.model.dto.AuthUser;
 import com.onezol.vertex.framework.security.api.model.dto.User;
 import com.onezol.vertex.framework.security.api.model.entity.UserEntity;
 import com.onezol.vertex.framework.security.api.model.payload.UserQueryPayload;
+import com.onezol.vertex.framework.security.api.model.payload.UserSavePayload;
 import com.onezol.vertex.framework.security.api.service.UserInfoService;
 import com.onezol.vertex.framework.security.api.service.UserRoleService;
+import com.onezol.vertex.framework.support.support.ResponseHelper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.validation.annotation.Validated;
@@ -56,13 +57,13 @@ public class UserInfoController extends BaseController<UserEntity> {
     @PutMapping("/{id}")
     public GenericResponse<User> updateUserInfo(
             @PathVariable(value = "id") Long userId,
-            @RequestBody User user
+            @RequestBody UserSavePayload payload
     ) {
         UserEntity userEntity = userInfoService.getById(userId);
         if (Objects.isNull(userEntity)) {
             ResponseHelper.buildFailedResponse("用户不存在");
         }
-        return ResponseHelper.buildSuccessfulResponse(userInfoService.updateUserInfo(user));
+        return ResponseHelper.buildSuccessfulResponse(userInfoService.updateUserInfo(payload));
     }
 
     @Operation(summary = "删除用户", description = "删除用户")
@@ -77,12 +78,32 @@ public class UserInfoController extends BaseController<UserEntity> {
     @RestrictAccess
     @GetMapping("/page")
     public GenericResponse<PageModel<User>> getUserPage(
-            @RequestParam(value = "page", required = false) Integer pageNumber,
-            @RequestParam(value = "size", required = false) Integer pageSize,
-            @RequestBody(required = false) UserQueryPayload payload
+            @RequestParam(value = "pageNumber", required = false) Long pageNumber,
+            @RequestParam(value = "pageSize", required = false) Long pageSize,
+            @RequestParam(value = "departmentId", required = false) Long departmentId
     ) {
+        UserQueryPayload payload = new UserQueryPayload();
+
         Page<UserEntity> page = this.getPage(pageNumber, pageSize);
+        payload.setDepartmentId(departmentId);
         return ResponseHelper.buildSuccessfulResponse(userInfoService.getUserPage(page, payload));
+    }
+
+    @Operation(summary = "获取用户列表", description = "条件查询用户列表")
+    @RestrictAccess
+    @GetMapping("/unbound-role/page")
+    public GenericResponse<PageModel<User>> getUserPage(
+            @RequestParam(value = "pageNumber", required = false) Long pageNumber,
+            @RequestParam(value = "pageSize", required = false) Long pageSize,
+            @RequestParam(value = "departmentId", required = false) Long departmentId,
+            @RequestParam(value = "roleId", required = false) Long roleId
+    ) {
+        UserQueryPayload payload = new UserQueryPayload();
+
+        Page<UserEntity> page = this.getPage(pageNumber, pageSize);
+        payload.setDepartmentId(departmentId);
+        payload.setRoleId(roleId);
+        return ResponseHelper.buildSuccessfulResponse(userInfoService.getUnboundRoleUserPage(page, payload));
     }
 
 }

@@ -12,4 +12,6 @@ public interface UserMapper extends BaseMapper<UserEntity> {
 
     Page<UserEntity> queryUserPage(@Param("page") Page<UserEntity> page, @Param("param") UserQueryPayload payload);
 
+    Page<UserEntity> queryUnboundRoleUserPage(@Param("page") Page<UserEntity> page, @Param("param") UserQueryPayload payload);
+
 }

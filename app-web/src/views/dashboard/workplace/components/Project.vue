@@ -33,7 +33,15 @@
             <template #title>
               <a-space>
                 <img :src="item.logo" width="35px" height="25px" alt="logo" />
-                <a-typography-text bold>{{ item.alias }}</a-typography-text>
+                <a-typography-paragraph
+                  :ellipsis="{
+                    rows: 1,
+                    showTooltip: true,
+                    css: true,
+                  }"
+                >
+                  {{ item.alias }}
+                </a-typography-paragraph>
               </a-space>
             </template>
             <template #description>
@@ -49,19 +57,8 @@
                 </a-typography-text>
               </a-typography-paragraph>
             </template>
-            <template #avatar>
-              <a-avatar-group :size="32" :max-count="7">
-                <a-avatar
-                  v-for="(contributor, idx) in item.contributors"
-                  :key="idx"
-                  :title="contributor.name"
-                >
-                  <img :src="contributor.avatar" alt="avatar" />
-                </a-avatar>
-              </a-avatar-group>
-            </template>
           </a-card-meta>
-          <template v-if="!loading && item.status !== '孵化'" #actions>
+          <template #actions>
             <a-tooltip content="点个 Star 吧">
               <span class="icon-hover">
                 <a :href="item.url" target="_blank" rel="noopener"><IconThumbUp :size="20" /></a>
@@ -74,10 +71,7 @@
   </a-card>
 </template>
 
-<script lang="ts" setup>
-import axios, { type AxiosRequestConfig, type AxiosResponse } from 'axios'
-import qs from 'query-string'
-
+<script setup lang="ts">
 const list = [
   {
     alias: 'ContiNew Admin',
@@ -140,43 +134,6 @@ const list = [
     statusColor: 'rgb(var(--warning-6))',
   },
 ]
-
-const get = <T = unknown>(url: string, params?: object, config?: AxiosRequestConfig): Promise<ApiRes<T>> => {
-  return new Promise((resolve, reject) => {
-    axios
-      .request<T>({
-        method: 'get',
-        url,
-        params,
-        paramsSerializer: (obj) => {
-          return qs.stringify(obj)
-        },
-        ...config,
-      })
-      .then((res: AxiosResponse) => resolve(res.data))
-      .catch((err: { msg: string }) => reject(err))
-  })
-}
-
-const loading = ref(false)
-// 查询数据
-const getDataList = async () => {
-  try {
-    loading.value = true
-    for (const item of list) {
-      const { data } = await get(`https://api.charles7c.top/git/repos/contributors/${item.owner}/${item.name}`)
-      item.contributors = data
-    }
-  } catch (err) {
-    // console.log(err)
-  } finally {
-    loading.value = false
-  }
-}
-
-onMounted(() => {
-  getDataList()
-})
 </script>
 
 <style scoped lang="less">
@@ -185,9 +142,9 @@ onMounted(() => {
   overflow: hidden;
   .badge {
     position: absolute;
-    font-size: 10px;
-    height: 16px;
-    line-height: 16px;
+    font-size: 11px;
+    height: 18px;
+    line-height: 18px;
     text-align: center;
     width: 74px;
     color: #fff;

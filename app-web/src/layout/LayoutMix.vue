@@ -102,7 +102,7 @@ watch(
 )
 </script>
 
-<style lang="scss" scoped>
+<style scoped lang="scss">
 :deep(.arco-menu-pop) {
   white-space: nowrap;
 }

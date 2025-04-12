@@ -7,7 +7,7 @@
       <div>
         <a-grid :cols="24" :col-gap="14" :row-gap="14">
           <a-grid-item :span="{ xs: 24, sm: 24, md: 24, lg: 24, xl: 18, xxl: 18 }">
-            <AccessTrend />
+            <Geo />
           </a-grid-item>
           <a-grid-item :span="{ xs: 24, sm: 24, md: 24, lg: 24, xl: 6, xxl: 6 }">
             <Os style="margin-bottom: 16px" />
@@ -31,7 +31,7 @@
 
 <script setup lang="ts">
 import DataOverview from './components/DataOverview/index.vue'
-import AccessTrend from './components/AccessTrend.vue'
+import Geo from './components/Geo.vue'
 import Os from './components/Os.vue'
 import Browser from './components/Browser.vue'
 import Module from './components/Module.vue'
@@ -40,5 +40,4 @@ import AccessTimeslot from './components/AccessTimeslot.vue'
 defineOptions({ name: 'Analysis' })
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style scoped lang="scss"></style>

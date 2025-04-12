@@ -1,35 +1,20 @@
+import type { SimpleDepartment, SimpleRole } from '@/types/api'
+
 /** 用户类型 */
 export interface UserInfo {
-  // id: string
-  // username: string
-  // nickname: string
-  // gender: 0 | 1 | 2
-  // email: string
-  // phone: string
-  // avatar: string
-  // pwdResetTime: string
-  // pwdExpired: boolean
-  // registrationDate: string
-  // deptName: string
-  // roles: string[]
-  // permissions: string[]
-  id: number | null,
-  creator: number | null,
-  createTime: string,
-  updater:number |  null,
-  updateTime: string,
-  username: string,
-  nickname: string,
-  name: string,
-  introduction: string,
-  avatar: string,
-  gender: 0 | 1 | 2,
-  birthday: string,
-  phone: string,
-  email: string,
-  roles: string[],
-  permissions: string[],
-  status: number
+  id: string
+  username: string
+  nickname: string
+  gender: 0 | 1 | 2
+  email: string
+  phone: string
+  avatar: string
+  pwdResetTime: string
+  pwdExpired: boolean
+  registrationDate: string
+  department: SimpleDepartment | null
+  roles: Array<SimpleRole>
+  permissions: string[]
 }
 
 /** 路由类型 */
@@ -60,8 +45,24 @@ export interface RouteItem {
   }
 }
 
+/** 认证类型 */
+export type AuthType = 'ACCOUNT' | 'PHONE' | 'EMAIL' | 'SOCIAL'
+
+export const AuthTypeConstants = {
+  ACCOUNT: 'ACCOUNT',
+  PHONE: 'PHONE',
+  EMAIL: 'EMAIL',
+  SOCIAL: 'SOCIAL',
+} as const
+
+/** 基础认证请求接口 */
+export interface AuthReq {
+  clientId?: string
+  authType?: AuthType
+}
+
 /** 账号登录请求参数 */
-export interface AccountLoginReq {
+export interface AccountLoginReq extends AuthReq {
   username: string
   password: string
   captcha: string
@@ -69,27 +70,27 @@ export interface AccountLoginReq {
 }
 
 /** 手机号登录请求参数 */
-export interface PhoneLoginReq {
+export interface PhoneLoginReq extends AuthReq {
   phone: string
   captcha: string
 }
 
 /** 邮箱登录请求参数 */
-export interface EmailLoginReq {
+export interface EmailLoginReq extends AuthReq {
   email: string
   captcha: string
 }
 
-// 登录响应类型
+/** 登录响应类型 */
 export interface LoginResp {
-  user: {}
+  user: object
   jwt: {
-    token: string,
+    token: string
     expire: number
   }
 }
 
-// 第三方登录授权类型
+/** 第三方登录授权类型 */
 export interface SocialAuthAuthorizeResp {
   authorizeUrl: string
 }

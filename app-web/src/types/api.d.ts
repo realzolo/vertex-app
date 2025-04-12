@@ -10,14 +10,25 @@ interface ApiRes<T> {
 
 /** 分页响应数据格式 */
 interface PageRes<T> {
-  items: T,
-  pageNumber: number,
-  pageSize: number,
+  items: T
+  pageNumber: number
+  pageSize: number
   total: number
 }
 
 /** 分页请求数据格式 */
 interface PageQuery {
-  page: number
-  size: number
+  pageNumber: number
+  pageSize: number
+}
+
+export interface SimpleRole {
+  id: number
+  name: string
+  code: string
+}
+
+export interface SimpleDepartment {
+  id: number
+  name: string
 }

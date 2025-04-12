@@ -1,5 +1,6 @@
 package com.onezol.vertex.framework.component.dictionary.model;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.onezol.vertex.framework.common.model.vo.VO;
 import lombok.Data;
 
@@ -19,6 +20,8 @@ public class DictionaryItem implements VO {
     private Long groupId;
 
     private String group;
+
+    private Boolean builtIn;
 
     private Integer sort;
 

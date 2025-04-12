@@ -1,11 +1,11 @@
 package com.onezol.vertex.framework.common.mvc.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.onezol.vertex.framework.common.model.entity.Entity;
 
 import java.util.Objects;
 
-import static com.onezol.vertex.framework.common.constant.DefaultPage.DEFAULT_PAGE_SIZE;
-import static com.onezol.vertex.framework.common.constant.DefaultPage.MAX_PAGE_SIZE;
+import static com.onezol.vertex.framework.common.constant.DefaultPage.*;
 
 
 /**
@@ -13,7 +13,7 @@ import static com.onezol.vertex.framework.common.constant.DefaultPage.MAX_PAGE_S
  *
  * @param <T>
  */
-public abstract class BaseController<T> {
+public abstract class BaseController<T extends Entity> {
 
     /**
      * 获取分页对象
@@ -22,9 +22,9 @@ public abstract class BaseController<T> {
      * @param pageSize   每页显示条数
      * @return 分页对象
      */
-    protected Page<T> getPage(Integer pageNumber, Integer pageSize) {
+    protected Page<T> getPage(Long pageNumber, Long pageSize) {
         if (Objects.isNull(pageNumber)) {
-            pageNumber = 1;
+            pageNumber = DEFAULT_PAGE_NUMBER;
         }
         if (Objects.isNull(pageSize)) {
             pageSize = DEFAULT_PAGE_SIZE;
@@ -33,4 +33,5 @@ public abstract class BaseController<T> {
 
         return new Page<>(pageNumber, pageSize);
     }
+
 }

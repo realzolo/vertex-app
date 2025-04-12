@@ -12,10 +12,10 @@
     @refresh="search"
   >
     <template #toolbar-left>
-      <a-input v-model="queryForm.createUserString" placeholder="请输入操作人" allow-clear @change="search">
+      <a-input v-model="queryForm.createUserString" placeholder="搜索操作人" allow-clear @change="search">
         <template #prefix><icon-search /></template>
       </a-input>
-      <a-input v-model="queryForm.ip" placeholder="请输入操作 IP 或地点" allow-clear @change="search">
+      <a-input v-model="queryForm.ip" placeholder="搜索操作 IP 或地点" allow-clear @change="search">
         <template #prefix><icon-search /></template>
       </a-input>
       <DateRangePicker v-model="queryForm.createTime" @change="search" />
@@ -30,7 +30,7 @@
         <template #default>导出</template>
       </a-button>
     </template>
-    <template #createTime="{ record }">
+    <template v-if="has.hasPermOr(['monitor:log:get'])" #createTime="{ record }">
       <a-link @click="onDetail(record)">{{ record.createTime }}</a-link>
     </template>
     <template #status="{ record }">
@@ -57,11 +57,12 @@
 
 <script setup lang="ts">
 import dayjs from 'dayjs'
+import type { TableInstance } from '@arco-design/web-vue'
 import OperationLogDetailDrawer from './OperationLogDetailDrawer.vue'
 import { type LogQuery, type LogResp, exportOperationLog, listLog } from '@/apis/monitor'
-import type { TableInstanceColumns } from '@/components/GiTable/type'
 import DateRangePicker from '@/components/DateRangePicker/index.vue'
 import { useDownload, useTable } from '@/hooks'
+import has from '@/utils/has'
 
 defineOptions({ name: 'OperationLog' })
 
@@ -79,20 +80,20 @@ const {
   pagination,
   search,
 } = useTable((page) => listLog({ ...queryForm, ...page }), { immediate: true })
-
-const columns: TableInstanceColumns[] = [
+const columns: TableInstance['columns'] = [
   {
     title: '序号',
-    width: 66,
+    minWidth: 66,
     align: 'center',
     render: ({ rowIndex }) => h('span', {}, rowIndex + 1 + (pagination.current - 1) * pagination.pageSize),
   },
-  { title: '操作时间', slotName: 'createTime', width: 180 },
+  { title: '操作时间', dataIndex: 'createTime', slotName: 'createTime', width: 180 },
   { title: '操作人', dataIndex: 'createUserString', ellipsis: true, tooltip: true },
   { title: '操作内容', dataIndex: 'description', ellipsis: true, tooltip: true },
   { title: '所属模块', dataIndex: 'module', align: 'center', ellipsis: true, tooltip: true },
   {
     title: '状态',
+    dataIndex: 'status',
     slotName: 'status',
     align: 'center',
     filterable: {
@@ -112,7 +113,7 @@ const columns: TableInstanceColumns[] = [
   },
   { title: '操作 IP', dataIndex: 'ip', ellipsis: true, tooltip: true },
   { title: '操作地点', dataIndex: 'address', ellipsis: true, tooltip: true },
-  { title: '耗时', slotName: 'timeTaken', align: 'center' },
+  { title: '耗时', dataIndex: 'timeTaken', slotName: 'timeTaken', align: 'center' },
   { title: '浏览器', dataIndex: 'browser', ellipsis: true, tooltip: true },
   { title: '终端系统', dataIndex: 'os', ellipsis: true, tooltip: true },
 ]
@@ -149,8 +150,8 @@ const onExport = () => {
 const OperationLogDetailDrawerRef = ref<InstanceType<typeof OperationLogDetailDrawer>>()
 // 详情
 const onDetail = (item: LogResp) => {
-  OperationLogDetailDrawerRef.value?.onDetail(item.id)
+  OperationLogDetailDrawerRef.value?.onOpen(item.id)
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped lang="scss"></style>

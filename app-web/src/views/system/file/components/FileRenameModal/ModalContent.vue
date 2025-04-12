@@ -13,7 +13,7 @@
   </a-row>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import type { FormInstance } from '@arco-design/web-vue'
 import type { FileItem } from '@/apis/system'
 
@@ -30,4 +30,4 @@ const form = reactive({
 defineExpose({ formRef })
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped lang="scss"></style>

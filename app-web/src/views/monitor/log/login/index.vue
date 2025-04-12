@@ -11,10 +11,10 @@
     @refresh="search"
   >
     <template #toolbar-left>
-      <a-input v-model="queryForm.createUserString" placeholder="请输入登录用户" allow-clear @change="search">
+      <a-input v-model="queryForm.createUserString" placeholder="搜索登录用户" allow-clear @change="search">
         <template #prefix><icon-search /></template>
       </a-input>
-      <a-input v-model="queryForm.ip" placeholder="请输入登录 IP 或地点" allow-clear @change="search">
+      <a-input v-model="queryForm.ip" placeholder="搜索登录 IP 或地点" allow-clear @change="search">
         <template #prefix><icon-search /></template>
       </a-input>
       <DateRangePicker v-model="queryForm.createTime" @change="search" />
@@ -46,8 +46,8 @@
 
 <script setup lang="ts">
 import dayjs from 'dayjs'
+import type { TableInstance } from '@arco-design/web-vue'
 import { type LogQuery, exportLoginLog, listLog } from '@/apis/monitor'
-import type { TableInstanceColumns } from '@/components/GiTable/type'
 import DateRangePicker from '@/components/DateRangePicker/index.vue'
 import { useDownload, useTable } from '@/hooks'
 
@@ -69,10 +69,10 @@ const {
   search,
 } = useTable((page) => listLog({ ...queryForm, ...page }), { immediate: true })
 
-const columns: TableInstanceColumns[] = [
+const columns: TableInstance['columns'] = [
   {
     title: '序号',
-    width: 66,
+    minWidth: 66,
     align: 'center',
     render: ({ rowIndex }) => h('span', {}, rowIndex + 1 + (pagination.current - 1) * pagination.pageSize),
   },
@@ -135,4 +135,4 @@ const onExport = () => {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped lang="scss"></style>

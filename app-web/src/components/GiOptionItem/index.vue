@@ -44,7 +44,7 @@ const handleClick = () => {
 }
 </script>
 
-<style lang="scss" scoped>
+<style scoped lang="scss">
 .gi-option-item {
   padding: 0 5px 0 10px;
   height: 34px;

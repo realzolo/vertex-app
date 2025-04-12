@@ -35,6 +35,7 @@ public class AuthenticationContextInterceptor implements WebRequestInterceptor {
                     .userId(user.getId())
                     .username(user.getUsername())
                     .nickname(user.getNickname())
+                    .department(user.getDepartment())
                     .roles(user.getRoles())
                     .permissions(user.getPermissions())
                     .build();

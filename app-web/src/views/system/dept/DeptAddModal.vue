@@ -4,49 +4,65 @@
     :title="title"
     :mask-closable="false"
     :esc-to-close="false"
-    :modal-style="{ maxWidth: '520px' }"
-    width="90%"
+    :width="width >= 500 ? 500 : '100%'"
     draggable
     @before-ok="save"
     @close="reset"
   >
-    <GiForm ref="formRef" v-model="form" :options="options" :columns="columns" />
+    <GiForm ref="formRef" v-model="form" :columns="columns" />
   </a-modal>
 </template>
 
 <script setup lang="ts">
 import { Message } from '@arco-design/web-vue'
-import { addDept, getDept, updateDept } from '@/apis/system'
-import { type Columns, GiForm } from '@/components/GiForm'
-import { useForm } from '@/hooks'
-import { useDept } from '@/hooks/app'
+import { useWindowSize } from '@vueuse/core'
+import { mapTree } from 'xe-utils'
+import { type DeptResp, addDept, getDept, updateDept } from '@/apis/system/dept'
+import { type ColumnItem, GiForm } from '@/components/GiForm'
+import { useResetReactive } from '@/hooks'
+
+interface Props {
+  depts: DeptResp[]
+}
+const props = withDefaults(defineProps<Props>(), {
+  depts: () => [],
+})
 
 const emit = defineEmits<{
   (e: 'save-success'): void
 }>()
 
-const { deptList, getDeptList } = useDept()
+const { width } = useWindowSize()
 
-const dataId = ref('')
+const dataId = ref()
+const visible = ref(false)
 const isUpdate = computed(() => !!dataId.value)
 const title = computed(() => (isUpdate.value ? '修改部门' : '新增部门'))
 const formRef = ref<InstanceType<typeof GiForm>>()
 
-const options: Options = {
-  form: { size: 'large' },
-  btns: { hide: true },
-}
+// 转换为部门树
+const deptSelectTree = computed(() => {
+  const data = JSON.parse(JSON.stringify(props.depts)) as DeptResp[]
+  return mapTree(data, (i) => ({
+    key: i.id,
+    title: i.title,
+    children: i.children,
+  }))
+})
 
-const columns: Columns = reactive([
+const [form, resetForm] = useResetReactive({
+  sort: 999,
+  status: 1,
+})
+
+const columns: ColumnItem[] = reactive([
   {
     label: '上级部门',
     field: 'parentId',
     type: 'tree-select',
-    data: deptList,
-    hide: (form) => {
-      return form.parentId === 0
-    },
+    span: 24,
     props: {
+      data: deptSelectTree,
       allowClear: true,
       allowSearch: true,
       fallbackOption: false,
@@ -58,20 +74,25 @@ const columns: Columns = reactive([
       },
     },
     rules: [{ required: true, message: '请选择上级部门' }],
+    hide: (form) => {
+      return form.parentId === 0
+    },
   },
   {
     label: '名称',
     field: 'name',
     type: 'input',
-    rules: [{ required: true, message: '请输入名称' }],
+    span: 24,
     props: {
       maxLength: 30,
     },
+    rules: [{ required: true, message: '请输入名称' }],
   },
   {
     label: '排序',
     field: 'sort',
     type: 'input-number',
+    span: 24,
     props: {
       min: 1,
       mode: 'button',
@@ -79,17 +100,15 @@ const columns: Columns = reactive([
   },
   {
     label: '描述',
-    field: 'description',
+    field: 'remark',
     type: 'textarea',
-    props: {
-      maxLength: 200,
-      autoSize: { minRows: 3, maxRows: 5 },
-    },
+    span: 24,
   },
   {
     label: '状态',
     field: 'status',
     type: 'switch',
+    span: 24,
     props: {
       type: 'round',
       checkedValue: 1,
@@ -100,39 +119,10 @@ const columns: Columns = reactive([
   },
 ])
 
-const { form, resetForm } = useForm({
-  sort: 999,
-  status: 1,
-})
-
 // 重置
 const reset = () => {
   formRef.value?.formRef?.resetFields()
   resetForm()
-}
-
-const visible = ref(false)
-// 新增
-const onAdd = (id?: string) => {
-  if (!deptList.value.length) {
-    getDeptList()
-  }
-  reset()
-  form.parentId = id
-  dataId.value = ''
-  visible.value = true
-}
-
-// 修改
-const onUpdate = async (id: string) => {
-  if (!deptList.value.length) {
-    await getDeptList()
-  }
-  reset()
-  dataId.value = id
-  const res = await getDept(id)
-  Object.assign(form, res.data)
-  visible.value = true
 }
 
 // 保存
@@ -147,8 +137,6 @@ const save = async () => {
       await addDept(form)
       Message.success('新增成功')
     }
-    // 更新部门树
-    await getDeptList()
     emit('save-success')
     return true
   } catch (error) {
@@ -156,5 +144,24 @@ const save = async () => {
   }
 }
 
+// 新增
+const onAdd = (id?: number) => {
+  reset()
+  form.parentId = id
+  dataId.value = ''
+  visible.value = true
+}
+
+// 修改
+const onUpdate = async (id: number) => {
+  reset()
+  dataId.value = id
+  const { data } = await getDept(id)
+  Object.assign(form, data)
+  visible.value = true
+}
+
 defineExpose({ onAdd, onUpdate })
 </script>
+
+<style scoped lang="scss"></style>

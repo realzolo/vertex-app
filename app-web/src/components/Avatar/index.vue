@@ -20,7 +20,7 @@
   </a-avatar>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import Unknown from '@/assets/images/avatar/unknown.png'
 import * as Regexp from '@/utils/regexp'
 

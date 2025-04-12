@@ -1,12 +1,12 @@
 <template>
-  <div class="left-tree">
-    <div class="left-tree__search">
-      <a-input v-model="searchKey" :placeholder="props.placeholder" allow-clear>
+  <div class="container">
+    <div class="search">
+      <a-input v-model="searchKey" placeholder="搜索部门名称" allow-clear>
         <template #prefix><icon-search /></template>
       </a-input>
     </div>
-    <div class="left-tree__container">
-      <div class="left-tree__tree">
+    <div class="tree-wrapper">
+      <div class="tree">
         <a-tree
           ref="treeRef"
           :data="treeData"
@@ -28,12 +28,7 @@
                 css: true,
               }"
             >
-              <!-- eslint-disable-next-line vue/no-parsing-error -->
-              <template v-if="index = getMatchIndex(node?.title), index < 0">{{ node?.title }}</template>
-              <span v-else>{{ node?.title?.substr(0, index) }}
-                <span style="color: rgb(var(--arcoblue-6));">{{ node?.title?.substr(index, searchKey.length) }}</span>
-                {{ node?.title?.substr(index + searchKey.length) }}
-              </span>
+              {{ node?.title }}
             </a-typography-paragraph>
           </template>
         </a-tree>
@@ -47,15 +42,10 @@ import type { TreeInstance, TreeNodeData } from '@arco-design/web-vue'
 import { ref } from 'vue'
 import { useDept } from '@/hooks/app'
 
-interface Props {
-  placeholder?: string
-}
-const props = withDefaults(defineProps<Props>(), {
-  placeholder: '请输入关键词',
-})
 const emit = defineEmits<{
   (e: 'node-click', keys: Array<any>): void
 }>()
+
 // 选中节点
 const selectedKeys = ref()
 const select = (keys: Array<any>) => {
@@ -72,7 +62,7 @@ const { deptList, getDeptList } = useDept({
   onSuccess: () => {
     nextTick(() => {
       treeRef.value?.expandAll(true)
-      select([deptList.value[0]?.key])
+      select([deptList.value[0]?.id])
     })
   },
 })
@@ -83,7 +73,7 @@ const search = (keyword: string) => {
   const loop = (data: TreeNodeData[]) => {
     const result = [] as TreeNodeData[]
     data.forEach((item: TreeNodeData) => {
-      if (item.title?.toLowerCase().includes(keyword.toLowerCase())) {
+      if (item.title?.toLowerCase().includes(keyword)) {
         result.push({ ...item })
       } else if (item.children) {
         const filterData = loop(item.children)
@@ -102,26 +92,15 @@ const search = (keyword: string) => {
 
 const treeData = computed(() => {
   if (!searchKey.value) return deptList.value
-  return search(searchKey.value)
+  return search(searchKey.value.toLowerCase())
 })
-
-/**
- * 获取匹配索引
- *
- * @param name 名称
- */
-// eslint-disable-next-line unused-imports/no-unused-vars
-const getMatchIndex = (name: string) => {
-  if (!searchKey.value) return -1
-  return name.toLowerCase().indexOf(searchKey.value.toLowerCase())
-}
 
 onMounted(() => {
   getDeptList()
 })
 </script>
 
-<style lang="scss" scoped>
+<style scoped lang="scss">
 :deep(.arco-tree-node-title-text) {
   width: 100%;
   white-space: nowrap;
@@ -152,7 +131,7 @@ onMounted(() => {
   }
 }
 
-.left-tree {
+.container {
   flex: 1;
   overflow: hidden;
   position: relative;
@@ -161,26 +140,25 @@ onMounted(() => {
   box-sizing: border-box;
   height: 100%;
 
-  &__search {
+  .search {
     margin-bottom: 16px;
   }
 
-  &__container {
+  .tree-wrapper {
     flex: 1;
     overflow: hidden;
     background-color: var(--color-bg-1);
     position: relative;
     height: 100%;
-    margin-bottom:10px;
-  }
-
-  &__tree {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    overflow: auto
+/*    margin-bottom:10px;*/
+    .tree {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      overflow: auto
+    }
   }
 }
 </style>

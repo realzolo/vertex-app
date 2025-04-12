@@ -27,7 +27,7 @@
   </a-space>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 defineOptions({ name: 'GiCellAvatar' })
 
 const props = withDefaults(defineProps<Props>(), {
@@ -47,4 +47,4 @@ interface Props {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped lang="scss"></style>

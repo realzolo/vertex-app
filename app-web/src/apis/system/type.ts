@@ -1,6 +1,6 @@
-import type { LabelValue } from "@arco-design/web-vue/es/tree-select/interface";
+import type { PageQuery, SimpleDepartment, SimpleRole } from '@/types/api'
 
-/** 系统用户类型 */
+/** 用户类型 */
 export interface UserResp {
   id: string
   username: string
@@ -10,11 +10,13 @@ export interface UserResp {
   email: string
   phone: string
   introduction: string
-  status: 0 | 1
-  isSystem?: boolean
+  status: 0 | 1 | 2 | 3
+  builtin?: boolean
   createTime: string
   updateTime: string
-  roles: Array<LabelValue>
+  department: SimpleDepartment
+  roles: Array<SimpleRole>
+  remark: string
 }
 
 export type UserDetailResp = UserResp & {
@@ -34,15 +36,16 @@ export interface UserQuery {
   description?: string
   status?: number
   createTime?: Array<string>
-  deptId?: string
+  departmentId?: number
   sort: Array<string>
-  userIds?: Array<string>
+  userIds?: Array<number>
+  roleId?: number
 }
 
 export interface UserPageQuery extends UserQuery, PageQuery {
 }
 
-/** 系统角色类型 */
+/** 角色类型 */
 export interface RoleResp {
   id: string
   name: string
@@ -50,7 +53,7 @@ export interface RoleResp {
   sort: number
   description: string
   dataScope: number
-  isSystem: boolean
+  builtin: boolean
   createUserString: string
   createTime: string
   updateUserString: string
@@ -58,41 +61,48 @@ export interface RoleResp {
   disabled: boolean
 }
 
-export interface RoleDetailResp {
-  id: string
-  name: string
-  code: string
-  sort: number
-  description: string
-  permissionIds: Array<number>
-  dataScope: number
-  // deptIds: Array<number>
-  isSystem: boolean
+export type RoleDetailResp = RoleResp & {
+  menuIds: Array<number>
+  deptIds: Array<number>
   menuCheckStrictly: boolean
   deptCheckStrictly: boolean
-  createUserString: string
-  createTime: string
-  updateUserString: string
-  updateTime: string
+}
+
+export interface RoleUserResp {
+  id: number
+  username: string
+  nickname: string
+  gender: 0 | 1 | 2
+  description: string
+  status: 0 | 1
+  builtin?: boolean
+  departmentId: string
+  department: SimpleDepartment
+  roles: Array<SimpleRole>
   disabled: boolean
 }
 
 export interface RoleQuery {
-  remark?: string
+  description?: string
   sort: Array<string>
 }
 
-export interface RolePageQuery extends RoleQuery, PageQuery {
+export interface RoleUserQuery {
+  description?: string
+  sort: Array<string>
 }
 
-/** 系统菜单类型 */
+export interface RoleUserPageQuery extends RoleUserQuery, PageQuery {
+}
+
+/** 菜单类型 */
 export interface MenuResp {
   id: number
   parentId: number
   path: string
   title: string
   icon: string
-  children: MenuResp[],
+  children: MenuResp[]
   data: {
     id: number
     title: string
@@ -121,20 +131,27 @@ export interface MenuQuery {
   status?: number
 }
 
-/** 系统部门类型 */
+/** 部门类型 */
 export interface DeptResp {
-  id: string
-  name: string
-  sort: number
-  status: 1 | 2
-  isSystem: boolean
-  description: string
-  createUserString: string
-  createTime: string
-  updateUserString: string
-  updateTime: string
-  parentId: string
+  id: number
+  parentId: number
+  path: string
+  title: string
+  icon: string
   children: DeptResp[]
+  data: {
+    id: number
+    name: string
+    sort: number
+    status: 0 | 1
+    builtIn: boolean
+    description: string
+    createUserString: string
+    createTime: string
+    updateUserString: string
+    updateTime: string
+    parentId: number
+  }
 }
 
 export interface DeptQuery {
@@ -142,14 +159,15 @@ export interface DeptQuery {
   status?: number
 }
 
-/** 系统字典类型 */
+/** 字典类型 */
 export interface DictResp {
-  id: string
+  id: number
   name: string
   value: string
-  isBuiltIn: boolean
+  builtIn: boolean
   remark: string
   createTime: string
+  // updateUserString: string
   updateTime: string
 }
 
@@ -159,7 +177,7 @@ export interface DictQuery {
 }
 
 export interface DictItemResp {
-  id: string
+  id: number
   name: string
   value: string
   color: string
@@ -167,9 +185,10 @@ export interface DictItemResp {
   remark: string
   type: string
   status: 0 | 1
-  isBuiltIn: boolean
+  builtIn: boolean
   groupId: number
   createTime: string
+  // updateUserString: string
   updateTime: string
 }
 
@@ -183,7 +202,7 @@ export interface DictItemQuery {
 export interface DictItemPageQuery extends DictItemQuery, PageQuery {
 }
 
-/** 系统公告类型 */
+/** 公告类型 */
 export interface NoticeResp {
   id?: string
   title?: string
@@ -209,14 +228,20 @@ export interface NoticeQuery {
 export interface NoticePageQuery extends NoticeQuery, PageQuery {
 }
 
-/** 系统文件类型 */
+/** 文件类型 */
 export interface FileItem {
   id: string
   name: string
   size: number
   url: string
+  parentPath: string
+  absPath: string
+  metadata: string
+  md5: string
+  contentType: string
   thumbnailSize: number
   thumbnailUrl: string
+  thumbnailMetadata: string
   extension: string
   type: number
   storageId: string
@@ -239,13 +264,14 @@ export interface FileStatisticsResp {
 export interface FileQuery {
   name?: string
   type?: string
+  absPath?: string
   sort: Array<string>
 }
 
 export interface FilePageQuery extends FileQuery, PageQuery {
 }
 
-/** 系统存储类型 */
+/** 存储类型 */
 export interface StorageResp {
   id: string
   name: string
@@ -268,11 +294,57 @@ export interface StorageResp {
 
 export interface StorageQuery {
   description?: string
-  status?: number
+  type?: number
   sort: Array<string>
 }
 
-export interface StoragePageQuery extends StorageQuery, PageQuery {
+/** 终端类型 */
+export interface ClientResp {
+  id: string
+  clientId: string
+  clientKey: string
+  clientSecret: string
+  authType: string
+  clientType: string
+  activeTimeout: string
+  timeout: string
+  status: string
+  createUser: string
+  createTime: string
+  updateUser: string
+  updateTime: string
+  createUserString: string
+  updateUserString: string
+}
+
+export interface ClientDetailResp {
+  id: string
+  clientId: string
+  clientKey: string
+  clientSecret: string
+  authType: string
+  clientType: string
+  activeTimeout: string
+  timeout: string
+  status: string
+  createUser: string
+  createTime: string
+  updateUser: string
+  updateTime: string
+  createUserString: string
+  updateUserString: string
+}
+
+export interface ClientQuery {
+  clientKey: string
+  clientSecret: string
+  authType: string[]
+  clientType: string
+  status: string
+  sort: Array<string>
+}
+
+export interface ClientPageQuery extends ClientQuery, PageQuery {
 }
 
 /** 系统参数类型 */
@@ -308,6 +380,18 @@ export interface SiteConfig {
   SITE_BEIAN: OptionResp
 }
 
+/** 安全配置类型 */
+export interface SecurityConfig {
+  PASSWORD_ERROR_LOCK_COUNT: OptionResp
+  PASSWORD_ERROR_LOCK_MINUTES: OptionResp
+  PASSWORD_EXPIRATION_DAYS: OptionResp
+  PASSWORD_EXPIRATION_WARNING_DAYS: OptionResp
+  PASSWORD_REPETITION_TIMES: OptionResp
+  PASSWORD_MIN_LENGTH: OptionResp
+  PASSWORD_ALLOW_CONTAIN_USERNAME: OptionResp
+  PASSWORD_REQUIRE_SYMBOLS: OptionResp
+}
+
 /** 邮箱配置类型 */
 export interface MailConfig {
   MAIL_PROTOCOL: OptionResp
@@ -319,16 +403,69 @@ export interface MailConfig {
   MAIL_SSL_PORT: OptionResp
 }
 
-/** 安全配置类型 */
-export interface SecurityConfig {
-  PASSWORD_ERROR_LOCK_COUNT: OptionResp
-  PASSWORD_ERROR_LOCK_MINUTES: OptionResp
-  PASSWORD_EXPIRATION_DAYS: OptionResp
-  PASSWORD_EXPIRATION_WARNING_DAYS: OptionResp
-  PASSWORD_REPETITION_TIMES: OptionResp
-  PASSWORD_MIN_LENGTH: OptionResp
-  PASSWORD_ALLOW_CONTAIN_USERNAME: OptionResp
-  PASSWORD_REQUIRE_SYMBOLS: OptionResp
+/** 登录配置类型 */
+export interface LoginConfig {
+  LOGIN_CAPTCHA_ENABLED: OptionResp
+}
+
+/** 短信配置类型 */
+export interface SmsConfigResp {
+  id: string
+  name: string
+  supplier: string
+  accessKey: string
+  secretKey: string
+  signature: string
+  templateId: string
+  weight: string
+  retryInterval: string
+  maxRetries: string
+  maximum: string
+  supplierConfig: string
+  status: number
+  createUser: string
+  createTime: string
+  updateUser: string
+  updateTime: string
+  createUserString: string
+  updateUserString: string
+  disabled: boolean
+}
+
+export interface SmsConfigQuery {
+  name: string | undefined
+  supplier: string | undefined
+  accessKey: string | undefined
+  sort: Array<string>
+}
+
+export interface SmsConfigPageQuery extends SmsConfigQuery, PageQuery {
+}
+
+/** 短信日志类型 */
+export interface SmsLogResp {
+  id: string
+  configId: string
+  phone: string
+  params: string
+  status: number
+  resMsg: string
+  createUser: string
+  createTime: string
+  updateUser: string
+  updateTime: string
+  createUserString: string
+  updateUserString: string
+}
+
+export interface SmsLogQuery {
+  configId: string | undefined
+  phone: string | undefined
+  status: number | undefined
+  sort: Array<string>
+}
+
+export interface SmsLogPageQuery extends SmsLogQuery, PageQuery {
 }
 
 /** 绑定三方账号信息 */

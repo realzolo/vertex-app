@@ -6,6 +6,9 @@ import com.onezol.vertex.framework.common.mvc.service.BaseService;
 import com.onezol.vertex.framework.security.api.model.dto.User;
 import com.onezol.vertex.framework.security.api.model.entity.UserEntity;
 import com.onezol.vertex.framework.security.api.model.payload.UserQueryPayload;
+import com.onezol.vertex.framework.security.api.model.payload.UserSavePayload;
+
+import java.util.List;
 
 public interface UserInfoService extends BaseService<UserEntity> {
 
@@ -17,11 +20,17 @@ public interface UserInfoService extends BaseService<UserEntity> {
      */
     User getUserInfo(long userId);
 
+    /**
+     * 根据用户ID列表取用户信息列表
+     * @param userIds 用户ID列表
+     * @return 用户信息列表
+     */
+    List<User> getUsersInfo(Long[] userIds);
 
     /**
      * 修改用户信息
      */
-    User updateUserInfo(User user);
+    User updateUserInfo(UserSavePayload payload);
 
     /**
      * 删除用户
@@ -33,5 +42,10 @@ public interface UserInfoService extends BaseService<UserEntity> {
      * 获取用户列表
      */
     PageModel<User> getUserPage(Page<UserEntity> page, UserQueryPayload payload);
+
+    /**
+     * 获取未绑定角色的用户列表
+     */
+    PageModel<User> getUnboundRoleUserPage(Page<UserEntity> page, UserQueryPayload payload);
 
 }

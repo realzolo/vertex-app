@@ -12,7 +12,7 @@
       <a-input v-model="form.email" placeholder="请输入邮箱" allow-clear />
     </a-form-item>
     <a-form-item field="captcha" hide-label>
-      <a-input v-model="form.captcha" placeholder="请输入验证码" :max-length="4" allow-clear style="flex: 1 1" />
+      <a-input v-model="form.captcha" placeholder="请输入验证码" :max-length="6" allow-clear style="flex: 1 1" />
       <a-button
         class="captcha-btn"
         :loading="captchaLoading"
@@ -28,12 +28,20 @@
         <a-button disabled class="btn" type="primary" :loading="loading" html-type="submit" size="large" long>立即登录</a-button>
       </a-space>
     </a-form-item>
+    <Verify
+      ref="VerifyRef"
+      :captcha-type="captchaType"
+      :mode="captchaMode"
+      :img-size="{ width: '330px', height: '155px' }"
+      @success="getCaptcha"
+    />
   </a-form>
 </template>
 
 <script setup lang="ts">
-// import { getEmailCaptcha } from '@/apis'
 import { type FormInstance, Message } from '@arco-design/web-vue'
+import type { BehaviorCaptchaReq } from '@/apis'
+// import { type BehaviorCaptchaReq, getEmailCaptcha } from '@/apis'
 import { useTabsStore, useUserStore } from '@/stores'
 import * as Regexp from '@/utils/regexp'
 
@@ -64,7 +72,7 @@ const handleLogin = async () => {
     await userStore.emailLogin(form)
     tabsStore.reset()
     const { redirect, ...othersQuery } = router.currentRoute.value.query
-    router.push({
+    await router.push({
       path: (redirect as string) || '/',
       query: {
         ...othersQuery,
@@ -76,6 +84,19 @@ const handleLogin = async () => {
   } finally {
     loading.value = false
   }
+}
+
+const VerifyRef = ref<InstanceType<any>>()
+const captchaType = ref('blockPuzzle')
+const captchaMode = ref('pop')
+const captchaLoading = ref(false)
+
+// 弹出行为验证码
+const onCaptcha = async () => {
+  if (captchaLoading.value) return
+  const isInvalid = await formRef.value?.validateField('email')
+  if (isInvalid) return
+  VerifyRef.value.show()
 }
 
 const captchaTimer = ref()
@@ -90,18 +111,13 @@ const resetCaptcha = () => {
   captchaDisable.value = false
 }
 
-const captchaLoading = ref(false)
 // 获取验证码
-const onCaptcha = async () => {
-  if (captchaLoading.value) return
-  const isInvalid = await formRef.value?.validateField('email')
-  if (isInvalid) return
+// eslint-disable-next-line unused-imports/no-unused-vars
+const getCaptcha = async (captchaReq: BehaviorCaptchaReq) => {
   try {
     captchaLoading.value = true
     captchaBtnName.value = '发送中...'
-    // await getEmailCaptcha({
-    //   email: form.email
-    // })
+    // await getEmailCaptcha(form.email, captchaReq)
     captchaLoading.value = false
     captchaDisable.value = true
     captchaBtnName.value = `获取验证码(${(captchaTime.value -= 1)}s)`
@@ -122,7 +138,7 @@ const onCaptcha = async () => {
 }
 </script>
 
-<style lang="scss" scoped>
+<style scoped lang="scss">
 .arco-input-wrapper,
 :deep(.arco-select-view-single) {
   height: 40px;

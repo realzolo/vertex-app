@@ -30,7 +30,7 @@ const handleCollapse = (isCollapsed: boolean) => {
 }
 </script>
 
-<style lang="scss" scoped>
+<style scoped lang="scss">
 :deep(.arco-menu.arco-menu-vertical.arco-menu-collapsed) {
 
   // Menu菜单组件修改

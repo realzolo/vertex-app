@@ -1,15 +1,21 @@
 <template>
   <a-menu class="right-menu">
-    <a-menu-item v-permission="['system:dict:update']" :disabled="data.isBuiltIn" @click="onClick('update')">
+    <a-menu-item v-permission="['system:dict:update']" title="修改" @click="onClick('update')">
       <span>修改</span>
     </a-menu-item>
-    <a-menu-item v-permission="['system:dict:delete']" class="danger" :title="data.isBuiltIn ? '系统内置数据不能删除' : undefined" :disabled="data.isBuiltIn" @click="onClick('delete')">
+    <a-menu-item
+      v-permission="['system:dict:delete']"
+      class="danger"
+      :disabled="data.builtIn"
+      :title="data.builtIn ? '系统内置数据不能删除' : '删除'"
+      @click="onClick('delete')"
+    >
       <span>删除</span>
     </a-menu-item>
   </a-menu>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import type { DictResp } from '@/apis/system'
 
 interface Props {
@@ -28,7 +34,7 @@ const onClick = (mode: string) => {
 }
 </script>
 
-<style lang="scss" scoped>
+<style scoped lang="scss">
 :deep(.arco-menu-inner) {
   padding: 4px;
 

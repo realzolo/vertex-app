@@ -9,7 +9,7 @@ const storeSetup = () => {
   const tabList = ref<RouteLocationNormalized[]>([]) // 保存页签tab的数组
   const cacheList = ref<RouteRecordName[]>([]) // keep-alive缓存的数组，元素是组件名
 
-  // 添加一个页签, 如果当前路由已经打开, 则不再重复添加
+  // 添加一个页签，如果当前路由已经打开，则不再重复添加
   const addTabItem = (item: RouteLocationNormalized) => {
     const index = tabList.value.findIndex((i) => i.path === item.path)
     if (index >= 0) {
@@ -43,6 +43,17 @@ const storeSetup = () => {
       }
     })
     tabList.value = arr
+  }
+
+  // 设置当前tab页签名称
+  const setTabTitle = (title: string) => {
+    if (!title) return false
+    const route = router.currentRoute.value
+    const path = route?.fullPath || route.path
+    const index = tabList.value.findIndex((i) => i.fullPath === path)
+    if (index >= 0) {
+      tabList.value[index].meta.title = title
+    }
   }
 
   // 添加缓存页
@@ -83,6 +94,17 @@ const storeSetup = () => {
     })
   }
 
+  // 关闭左侧
+  const closeLeft = (path: string) => {
+    const index = tabList.value.findIndex((i) => i.path === path)
+    if (index < 0) return
+    const arr = tabList.value.filter((i, n) => n < index)
+    arr.forEach((item) => {
+      deleteTabItem(item.path)
+      item?.name && deleteCacheItem(item.name)
+    })
+  }
+
   // 关闭右侧
   const closeRight = (path: string) => {
     const index = tabList.value.findIndex((i) => i.path === path)
@@ -113,21 +135,37 @@ const storeSetup = () => {
     reset()
   }
 
+  // Tabs页签右侧刷新按钮-页面重新加载
+  const reloadFlag = ref(true)
+  const reloadPage = () => {
+    const route = router.currentRoute.value
+    deleteCacheItem(route.name as string) // 修复点击刷新图标，无法重新触发生命周期钩子函数问题
+    reloadFlag.value = false
+    nextTick(() => {
+      reloadFlag.value = true
+      addCacheItem(route)
+    })
+  }
+
   return {
     tabList,
     cacheList,
     addTabItem,
     deleteTabItem,
     clearTabList,
+    setTabTitle,
     addCacheItem,
     deleteCacheItem,
     clearCacheList,
     closeCurrent,
     closeOther,
+    closeLeft,
     closeRight,
     closeAll,
     reset,
     init,
+    reloadFlag,
+    reloadPage,
   }
 }
 

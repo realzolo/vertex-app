@@ -15,6 +15,12 @@ public class UserQueryPayload implements Payload {
     @Schema(description = "用户名")
     private String username;
 
+    @Schema(description = "部门ID")
+    private Long departmentId;
+
+    @Schema(description = "角色ID")
+    private Long roleId;
+
     @Schema(description = "用户昵称")
     private String nickname;
 

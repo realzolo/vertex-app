@@ -11,7 +11,7 @@
     </a-space>
     <div v-if="chartData.length > 0">
       <a-divider />
-      <VCharts :option="option" autoresize :style="{ height: '120px', width: '150px' }" />
+      <VCharts :option="chartOption" autoresize :style="{ height: '120px', width: '150px' }" />
     </div>
   </section>
 </template>
@@ -26,6 +26,7 @@ import { FileTypeList } from '@/constant/file'
 import { useChart } from '@/hooks'
 import { type FileStatisticsResp, getFileStatistics } from '@/apis/system'
 import { formatFileSize } from '@/utils'
+import mittBus from '@/utils/mitt'
 
 use([TitleComponent, TooltipComponent, LegendComponent, PieChart, CanvasRenderer])
 
@@ -38,7 +39,7 @@ const totalData = ref<FileStatisticsResp>({
 })
 const chartData = ref<Array<{ name: string, value: number, size: string }>>([])
 const statisticValueStyle = { 'color': '#5856D6', 'font-size': '18px' }
-const { option } = useChart(() => {
+const { chartOption } = useChart(() => {
   return {
     grid: {
       left: 0,
@@ -106,10 +107,13 @@ const getStatisticsData = async () => {
 
 onMounted(() => {
   getStatisticsData()
+  mittBus.on('file-total-refresh', () => {
+    getStatisticsData()
+  })
 })
 </script>
 
-<style lang="scss" scoped>
+<style scoped lang="scss">
 .statistic-space {
   display: flex;
   justify-content: center;

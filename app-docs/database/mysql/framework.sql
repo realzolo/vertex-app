@@ -175,8 +175,8 @@ CREATE TABLE IF NOT EXISTS vx_runtime_configuration
     id          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
     -- 自定义字段开始 --
     subject         VARCHAR(255) COMMENT '所属主题',
-    name            VARCHAR(25)  COMMENT '配置名称',
-    code            VARCHAR(25)  COMMENT '配置键',
+    name            VARCHAR(50)  COMMENT '配置名称',
+    code            VARCHAR(50)  COMMENT '配置键',
     default_value   VARCHAR(512) COMMENT '配置默认值',
     value           VARCHAR(512) COMMENT '配置值',
     description     VARCHAR(512) COMMENT '配置描述',
@@ -199,6 +199,7 @@ CREATE TABLE IF NOT EXISTS vx_dictionary
     color       VARCHAR(25)   COMMENT '颜色值',
     `group`     VARCHAR(25)   COMMENT '分组',
     remark      VARCHAR(50)   COMMENT '字典备注',
+    builtIn     BIT           DEFAULT b'0' COMMENT '是否内置',
     sort        INT UNSIGNED  DEFAULT 0   COMMENT '排序',
     type        VARCHAR(25)   COMMENT '字典类型(字典/枚举)',
     status      BIT           DEFAULT b'0' COMMENT '字典状态(0: 启用，1: 禁用)',
@@ -260,3 +261,40 @@ CREATE TABLE IF NOT EXISTS vx_file_record
 ) ENGINE = InnoDB
     DEFAULT CHARSET = utf8mb4
     AUTO_INCREMENT = 10000 COMMENT = '文件记录';
+
+CREATE TABLE IF NOT EXISTS vx_department
+(
+    id          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
+    -- 自定义字段开始 --
+    name                VARCHAR(255)  COMMENT '部门名称',
+    parent_id           BIGINT        COMMENT '上级ID',
+    ancestors           VARCHAR(255)  COMMENT '祖级列表',
+    builtin             BIT           DEFAULT b'0' COMMENT '是否内置',
+    remark              VARCHAR(255)  COMMENT '备注',
+    sort                INT UNSIGNED  DEFAULT 0 COMMENT '排序号',
+    status              INT UNSIGNED  DEFAULT 0 COMMENT '角色状态',
+    -- 自定义字段结束 --
+    creator     BIGINT       DEFAULT NULL COMMENT '创建人',
+    create_time DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    updater     BIGINT       DEFAULT NULL COMMENT '更新人',
+    update_time DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+    version     INT UNSIGNED DEFAULT 0 COMMENT '版本号'
+) ENGINE = InnoDB
+    DEFAULT CHARSET = utf8mb4
+    AUTO_INCREMENT = 10000 COMMENT = '部门';
+
+CREATE TABLE IF NOT EXISTS vx_user_department
+(
+    id          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
+    -- 自定义字段开始 --
+    user_id           BIGINT        COMMENT '用户ID',
+    dept_id           BIGINT        COMMENT '部门ID',
+    -- 自定义字段结束 --
+    creator     BIGINT       DEFAULT NULL COMMENT '创建人',
+    create_time DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    updater     BIGINT       DEFAULT NULL COMMENT '更新人',
+    update_time DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+    version     INT UNSIGNED DEFAULT 0 COMMENT '版本号'
+) ENGINE = InnoDB
+    DEFAULT CHARSET = utf8mb4
+    AUTO_INCREMENT = 10000 COMMENT = '用户-部门';

@@ -6,7 +6,7 @@ export type * from './type'
 const BASE_URL = '/system/menu'
 
 /** @desc 查询菜单列表 */
-export function listMenu(query: T.MenuQuery) {
+export function listMenu(query?: T.MenuQuery) {
   return http.get<T.MenuResp[]>(`/permission/tree`, query)
 }
 
@@ -28,4 +28,9 @@ export function updateMenu(data: any, id: number) {
 /** @desc 删除菜单 */
 export function deleteMenu(id: number) {
   return http.del(`/permission/${id}`)
+}
+
+/** @desc 清除菜单缓存 */
+export function clearMenuCache() {
+  return http.del(`/permission/cache`)
 }

@@ -1,15 +1,10 @@
 <template>
-  <div class="table-page">
-    <a-row justify="space-between" align="center" class="header page_header">
-      <a-space wrap>
-        <div class="title">字典管理</div>
-      </a-space>
-    </a-row>
+  <GiPageLayout>
+    <template #left>
+      <DictTree @node-click="handleSelectDict" />
+    </template>
     <a-row align="stretch" :gutter="14" class="h-full page_content">
-      <a-col :xs="0" :sm="8" :md="7" :lg="6" :xl="5" :xxl="4" flex="260px" class="h-full ov-hidden">
-        <DictTree placeholder="请输入名称/编码/描述" @node-click="handleSelectDict" />
-      </a-col>
-      <a-col :xs="24" :sm="16" :md="17" :lg="18" :xl="19" :xxl="20" flex="1" class="h-full ov-hidden">
+      <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" :xxl="24" flex="1" class="h-full overflow-hidden">
         <GiTable
           row-key="id"
           :data="dataList"
@@ -22,33 +17,39 @@
           @refresh="search"
         >
           <template #toolbar-left>
-            <a-input v-model="queryForm.description" placeholder="请输入标签/描述" allow-clear @change="search">
-              <template #prefix><icon-search /></template>
-            </a-input>
+            <a-input-search v-model="queryForm.remark" placeholder="搜索标签/描述" allow-clear @search="search" />
             <a-button @click="reset">
               <template #icon><icon-refresh /></template>
               <template #default>重置</template>
             </a-button>
           </template>
           <template #toolbar-right>
-            <a-button v-permission="['system:dict:item:add']" type="primary" @click="onAdd">
+            <a-button v-permission="['system:dict:item:create']" type="primary" @click="onAdd">
               <template #icon><icon-plus /></template>
               <template #default>新增</template>
             </a-button>
+            <a-button v-permission="['system:dict:item:clearCache']" type="outline" status="warning" @click="onClearCache">
+              <template #icon><icon-delete /></template>
+              <template #default>清除缓存</template>
+            </a-button>
           </template>
           <template #label="{ record }">
-            <span :style="{color: record.color}">{{ record.name }}</span>
+            <a-tag v-if="record.color === 'primary'" color="arcoblue">{{ record.name }}</a-tag>
+            <a-tag v-else-if="record.color === 'success'" color="green">{{ record.name }}</a-tag>
+            <a-tag v-else-if="record.color === 'warning'" color="orangered">{{ record.name }}</a-tag>
+            <a-tag v-else-if="record.color === 'error'" color="red">{{ record.name }}</a-tag>
+            <a-tag v-else-if="record.color === 'default'" color="gray">{{ record.name }}</a-tag>
           </template>
           <template #status="{ record }">
             <GiCellStatus :status="record.status" />
           </template>
           <template #action="{ record }">
             <a-space>
-              <a-link v-permission="['system:dict:item:update']" :disabled="record.isBuiltIn" @click="onUpdate(record)">修改</a-link>
+              <a-link v-permission="['system:dict:item:update']" title="修改" @click="onUpdate(record)">修改</a-link>
               <a-link
                 v-permission="['system:dict:item:delete']"
-                :disabled="record.isBuiltIn"
                 status="danger"
+                title="删除"
                 @click="onDelete(record)"
               >
                 删除
@@ -60,14 +61,15 @@
     </a-row>
 
     <DictItemAddModal ref="DictItemAddModalRef" @save-success="search" />
-  </div>
+  </GiPageLayout>
 </template>
 
 <script setup lang="ts">
+import type { TableInstance } from '@arco-design/web-vue'
+import { Message, Modal } from '@arco-design/web-vue'
 import DictTree from './tree/index.vue'
 import DictItemAddModal from './DictItemAddModal.vue'
-import { type DictItemQuery, type DictItemResp, deleteDictItem, listDictItem } from '@/apis/system'
-import type { TableInstanceColumns } from '@/components/GiTable/type'
+import { type DictItemQuery, type DictItemResp, clearDictCache, deleteDictItem, listDictItem } from '@/apis/system/dict'
 import { useTable } from '@/hooks'
 import { isMobile } from '@/utils'
 import has from '@/utils/has'
@@ -75,7 +77,7 @@ import has from '@/utils/has'
 defineOptions({ name: 'SystemDict' })
 
 const queryForm = reactive<DictItemQuery>({
-  groupId: null,
+  groupId: 0,
   sort: ['createTime,desc'],
 })
 
@@ -86,8 +88,7 @@ const {
   search,
   handleDelete,
 } = useTable((page) => listDictItem({ ...queryForm, ...page }), { immediate: false })
-
-const columns: TableInstanceColumns[] = [
+const columns: TableInstance['columns'] = [
   {
     title: '序号',
     width: 66,
@@ -96,7 +97,7 @@ const columns: TableInstanceColumns[] = [
   },
   { title: '字典名称', dataIndex: 'label', slotName: 'label', minWidth: 100, align: 'center' },
   { title: '字典值', dataIndex: 'value', minWidth: 100, align: 'center', ellipsis: true, tooltip: true },
-  { title: '状态', slotName: 'status', align: 'center' },
+  { title: '状态', dataIndex: 'status', slotName: 'status', align: 'center' },
   {
     title: '排序',
     dataIndex: 'sort',
@@ -112,6 +113,7 @@ const columns: TableInstanceColumns[] = [
   { title: '修改时间', dataIndex: 'updateTime', width: 180, show: false },
   {
     title: '操作',
+    dataIndex: 'action',
     slotName: 'action',
     width: 130,
     align: 'center',
@@ -129,12 +131,36 @@ const reset = () => {
 
 // 删除
 const onDelete = (record: DictItemResp) => {
-  return handleDelete(() => deleteDictItem(record.id), { content: `是否确定删除 [${record.label}]？`, showModal: true })
+  return handleDelete(() => deleteDictItem(record.id), {
+    content: `是否确定删除字典项「${record.name}」？`,
+    showModal: true,
+  })
+}
+
+const dictName = ref()
+const dictValue = ref()
+// 清除缓存
+const onClearCache = () => {
+  if (!dictValue.value) {
+    return Message.warning('请先选择字典')
+  }
+  Modal.warning({
+    title: '提示',
+    content: `是否确定清除字典「${dictName.value}(${dictValue.value})」缓存？`,
+    hideCancel: false,
+    maskClosable: false,
+    onOk: async () => {
+      await clearDictCache(dictValue.value)
+      Message.success('清除成功')
+    },
+  })
 }
 
 // 根据选中字典查询
-const handleSelectDict = (keys: Array<any>) => {
-  queryForm.groupId = keys.length === 1 ? keys[0] : undefined
+const handleSelectDict = (dict: { dictId: number, dictName: string, dictValue: string }) => {
+  queryForm.groupId = dict.dictId
+  dictName.value = dict.dictName
+  dictValue.value = dict.dictValue
   search()
 }
 
@@ -150,7 +176,7 @@ const onUpdate = (record: DictItemResp) => {
 }
 </script>
 
-<style lang="scss" scoped>
+<style scoped lang="scss">
 .page_header {
   flex: 0 0 auto;
 }

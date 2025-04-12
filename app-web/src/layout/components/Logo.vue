@@ -1,7 +1,7 @@
 <template>
   <section class="system-logo" :class="{ collapsed: props.collapsed }" @click="toHome">
     <img v-if="logo" class="logo" :src="logo" alt="logo" />
-    <img v-else class="logo" src="/logo.png" alt="logo" />
+    <img v-else class="logo" src="/logo.svg" alt="logo" />
     <span class="system-name gi_line_1">{{ title }}</span>
   </section>
 </template>
@@ -26,7 +26,7 @@ const toHome = () => {
 }
 </script>
 
-<style lang="scss" scoped>
+<style scoped lang="scss">
 .system-logo {
   height: 56px;
   padding: 0 12px;
@@ -63,6 +63,9 @@ const toHome = () => {
     padding-left: 6px;
     white-space: nowrap;
     transition: color 0.3s;
+    line-height: 1.5;
+    display: inline-flex;
+    align-items: center;
 
     &:hover {
       color: $color-theme !important;

@@ -2,7 +2,7 @@
   <div class="login pc">
     <h3 class="login-logo">
       <img v-if="logo" :src="logo" alt="logo" />
-      <img v-else src="/logo.png" alt="logo" />
+      <img v-else src="/logo.svg" alt="logo" />
       <span>{{ title }}</span>
     </h3>
 
@@ -42,7 +42,7 @@
   <div class="login h5">
     <div class="login-logo">
       <img v-if="logo" :src="logo" alt="logo" />
-      <img v-else src="/logo.png" alt="logo" />
+      <img v-else src="/logo.svg" alt="logo" />
       <span>{{ title }}</span>
     </div>
     <a-row align="stretch" class="login-box">
@@ -76,7 +76,7 @@ const title = computed(() => appStore.getTitle())
 const logo = computed(() => appStore.getLogo())
 </script>
 
-<style lang="scss" scoped>
+<style scoped lang="scss">
 @media screen and (max-width: 570px) {
     .pc {
         display: none !important;

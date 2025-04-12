@@ -1,6 +1,8 @@
 <template>
   <a-row justify="end" align="center">
     <a-space size="medium">
+      <!-- 搜索 -->
+      <Search v-if="isDesktop" />
       <!-- 项目配置 -->
       <a-tooltip content="项目配置" position="bl">
         <a-button size="mini" class="gi_hover_btn" @click="SettingDrawerRef?.open">
@@ -30,7 +32,7 @@
       </a-popover>
 
       <!-- 全屏切换组件 -->
-      <a-tooltip v-if="!isMobile()" content="全屏切换" position="bottom">
+      <a-tooltip v-if="!['xs', 'sm'].includes(breakpoint)" content="全屏切换" position="bottom">
         <a-button size="mini" class="gi_hover_btn" @click="toggle">
           <template #icon>
             <icon-fullscreen v-if="!isFullscreen" :size="18" />
@@ -53,7 +55,7 @@
           <icon-down />
         </a-row>
         <template #content>
-          <a-doption @click="router.push('/setting/profile')">
+          <a-doption @click="router.push('/user/profile')">
             <span>个人中心</span>
           </a-doption>
           <a-divider :margin="0" />
@@ -74,13 +76,16 @@ import { useFullscreen } from '@vueuse/core'
 import { onMounted, ref } from 'vue'
 import Message from './Message.vue'
 import SettingDrawer from './SettingDrawer.vue'
+import Search from './Search.vue'
 import { getUnreadMessageCount } from '@/apis'
 import { useUserStore } from '@/stores'
-import { isMobile } from '@/utils'
 import { getToken } from '@/utils/auth'
+import { useBreakpoint, useDevice } from '@/hooks'
 
 defineOptions({ name: 'HeaderRight' })
 
+const { isDesktop } = useDevice()
+const { breakpoint } = useBreakpoint()
 let socket: WebSocket
 onBeforeUnmount(() => {
   if (socket) {
@@ -135,7 +140,7 @@ const logout = () => {
     onBeforeOk: async () => {
       try {
         await userStore.logout()
-        router.replace('/login')
+        await router.replace('/login')
         return true
       } catch (error) {
         return false
@@ -149,7 +154,7 @@ onMounted(() => {
 })
 </script>
 
-<style lang="scss" scoped>
+<style scoped lang="scss">
 .arco-dropdown-open .arco-icon-down {
   transform: rotate(180deg);
 }

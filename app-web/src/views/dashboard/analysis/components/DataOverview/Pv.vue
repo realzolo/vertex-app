@@ -37,7 +37,7 @@
   </a-spin>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { computed } from 'vue'
 import { useChart } from '@/hooks'
 import { useAppStore } from '@/stores'
@@ -45,7 +45,6 @@ import { type DashboardChartCommonResp, getDashboardOverviewPv as getData } from
 
 const appStore = useAppStore()
 const isDark = computed(() => appStore.theme === 'dark')
-
 const count = ref(0)
 const today = ref(0)
 const growth = ref(0)

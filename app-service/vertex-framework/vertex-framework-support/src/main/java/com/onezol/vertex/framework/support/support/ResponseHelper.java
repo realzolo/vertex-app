@@ -26,11 +26,11 @@ public final class ResponseHelper {
     }
 
     public static <T> GenericResponse<T> buildFailedResponse() {
-        return new GenericResponse<>(ServiceStatusEnum.INTERNAL_SERVER_ERROR.getValue(), false, ServiceStatusEnum.INTERNAL_SERVER_ERROR.getDescription(), null);
+        return new GenericResponse<>(ServiceStatusEnum.BAD_REQUEST.getValue(), false, ServiceStatusEnum.BAD_REQUEST.getDescription(), null);
     }
 
     public static <T> GenericResponse<T> buildFailedResponse(String message) {
-        return new GenericResponse<>(ServiceStatusEnum.INTERNAL_SERVER_ERROR.getValue(), false, message, null);
+        return new GenericResponse<>(ServiceStatusEnum.BAD_REQUEST.getValue(), false, message, null);
     }
 
     public static <T> GenericResponse<T> buildFailedResponse(int code, String message) {

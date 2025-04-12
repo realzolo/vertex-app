@@ -9,7 +9,7 @@
   />
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import CodeMirror from 'vue-codemirror6'
 import { javascript } from '@codemirror/lang-javascript'
 import { vue } from '@codemirror/lang-vue'
@@ -50,7 +50,7 @@ const extensions = computed(() => {
 })
 </script>
 
-<style lang="scss" scoped>
+<style scoped lang="scss">
 :deep(.ͼ1 .cm-scroller) {
   font-family: source-code-pro, Menlo, Monaco, Consolas, Courier New, monospace;
 }

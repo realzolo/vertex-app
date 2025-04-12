@@ -2,22 +2,4 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.onezol.vertex.framework.security.api.mapper.RoleMapper">
 
-    <select id="queryUserRoles" resultType="com.onezol.vertex.framework.security.api.model.entity.RoleEntity">
-        SELECT
-            r.*
-        FROM
-            vx_role r
-            LEFT JOIN vx_user_role ur ON r.id = ur.role_id
-        WHERE
-            ur.user_id = #{userId}
-    </select>
-
-    <delete id="removeUserRole" parameterType="long">
-        DELETE
-        FROM
-            vx_user_role t
-        WHERE
-            t.user_id = #{userId}
-    </delete>
-
 </mapper>

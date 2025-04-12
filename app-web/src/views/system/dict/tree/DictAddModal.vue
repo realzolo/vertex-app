@@ -4,72 +4,70 @@
     :title="title"
     :mask-closable="false"
     :esc-to-close="false"
-    :modal-style="{ maxWidth: '520px' }"
-    width="90%"
+    :width="width >= 500 ? 500 : '100%'"
     draggable
     @before-ok="save"
     @close="reset"
   >
-    <GiForm ref="formRef" v-model="form" :options="options" :columns="columns" />
+    <GiForm ref="formRef" v-model="form" :columns="columns" />
   </a-modal>
 </template>
 
 <script setup lang="ts">
 import { Message } from '@arco-design/web-vue'
-import { addDict, getDict, updateDict } from '@/apis/system'
-import { type Columns, GiForm } from '@/components/GiForm'
-import { useForm } from '@/hooks'
+import { useWindowSize } from '@vueuse/core'
+import { addDict, getDict, updateDict } from '@/apis/system/dict'
+import { type ColumnItem, GiForm } from '@/components/GiForm'
+import { useResetReactive } from '@/hooks'
 
 const emit = defineEmits<{
   (e: 'save-success'): void
 }>()
-const dataId = ref('')
+
+const { width } = useWindowSize()
+
+const dataId = ref()
+const visible = ref(false)
 const isUpdate = computed(() => !!dataId.value)
 const title = computed(() => (isUpdate.value ? '修改字典' : '新增字典'))
 const formRef = ref<InstanceType<typeof GiForm>>()
 
-const options: Options = {
-  form: { size: 'large' },
-  btns: { hide: true },
-}
+const [form, resetForm] = useResetReactive({})
 
-const columns: Columns = reactive([
-  { label: '名称', field: 'name', type: 'input', rules: [{ required: true, message: '请输入名称' }] },
-  { label: '编码', field: 'value', type: 'input', disabled: () => isUpdate.value, rules: [{ required: true, message: '请输入编码' }] },
+const columns: ColumnItem[] = reactive([
+  {
+    label: '名称',
+    field: 'name',
+    type: 'input',
+    span: 24,
+    required: true,
+    props: {
+      maxLength: 30,
+    },
+  },
+  {
+    label: '编码',
+    field: 'value',
+    type: 'input',
+    span: 24,
+    required: true,
+    props: {
+      maxLength: 30,
+    },
+    disabled: () => isUpdate.value,
+  },
   {
     label: '描述',
     field: 'remark',
     type: 'textarea',
-    props: {
-      maxLength: 200,
-      autoSize: { minRows: 3, maxRows: 5 },
-    },
+    span: 24,
   },
 ])
-
-const { form, resetForm } = useForm({})
 
 // 重置
 const reset = () => {
   formRef.value?.formRef?.resetFields()
   resetForm()
-}
-
-const visible = ref(false)
-// 新增
-const onAdd = () => {
-  reset()
-  dataId.value = ''
-  visible.value = true
-}
-
-// 修改
-const onUpdate = async (id: string) => {
-  reset()
-  dataId.value = id
-  const res = await getDict(id)
-  Object.assign(form, res.data)
-  visible.value = true
 }
 
 // 保存
@@ -91,5 +89,23 @@ const save = async () => {
   }
 }
 
+// 新增
+const onAdd = () => {
+  reset()
+  dataId.value = ''
+  visible.value = true
+}
+
+// 修改
+const onUpdate = async (id: number) => {
+  reset()
+  dataId.value = id
+  const { data } = await getDict(id)
+  Object.assign(form, data)
+  visible.value = true
+}
+
 defineExpose({ onAdd, onUpdate })
 </script>
+
+<style scoped lang="scss"></style>

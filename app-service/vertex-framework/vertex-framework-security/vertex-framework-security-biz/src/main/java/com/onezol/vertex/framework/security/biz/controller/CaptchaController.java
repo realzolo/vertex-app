@@ -33,12 +33,12 @@ public class CaptchaController {
         String uuid = UUID.randomUUID().toString();
         String cacheKey = RedisKeyHelper.buildCacheKey(CacheKey.CAPTCHA, uuid);
         redisCache.setCacheObject(cacheKey, captcha.text(), 60, TimeUnit.SECONDS);
-        long expires = TimeUnit.MINUTES.toSeconds(60);
+        long expireTime = System.currentTimeMillis() + 60 * 1000;
 
         Map<String, Object> result = Map.of(
                 "uuid", uuid,
                 "image", captcha.toBase64(),
-                "expires", expires
+                "expireTime", expireTime
         );
         return ResponseHelper.buildSuccessfulResponse(result);
     }

@@ -1,7 +1,6 @@
 package com.onezol.vertex.framework.security.api.model.dto;
 
 import com.onezol.vertex.framework.common.annotation.Dictionary;
-import com.onezol.vertex.framework.common.model.LabelValue;
 import com.onezol.vertex.framework.common.model.dto.BaseDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -10,7 +9,6 @@ import lombok.EqualsAndHashCode;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 @Schema(description = "用户信息")
 @Data
@@ -42,8 +40,11 @@ public class User extends BaseDTO {
     @Schema(description = "电子邮箱")
     private String email;
 
+    @Schema(description = "部门")
+    private SimpleDepartment department;
+
     @Schema(description = "角色列表")
-    private List<LabelValue<String, String>> roles = Collections.emptyList();
+    private List<SimpleRole> roles = Collections.emptyList();
 
     @Schema(description = "权限列表")
     private List<String> permissions = Collections.emptyList();

@@ -345,7 +345,7 @@ export default {
 
     function init() {
       text.value = explain.value
-      getPicture()
+      // getPicture()
       nextTick(() => {
         const { imgHeight, imgWidth, barHeight, barWidth } = resetSize(proxy)
         setSize.imgHeight = imgHeight

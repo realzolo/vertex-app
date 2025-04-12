@@ -1,13 +1,12 @@
 package com.onezol.vertex.framework.security.biz.service;
 
-import com.onezol.vertex.framework.common.model.LabelValue;
+import com.onezol.vertex.framework.security.api.model.dto.Department;
+import com.onezol.vertex.framework.security.api.model.dto.SimpleDepartment;
+import com.onezol.vertex.framework.security.api.model.dto.SimpleRole;
 import com.onezol.vertex.framework.security.api.model.entity.RoleEntity;
 import com.onezol.vertex.framework.security.api.model.entity.UserEntity;
 import com.onezol.vertex.framework.security.api.model.pojo.LoginUser;
-import com.onezol.vertex.framework.security.api.service.PermissionService;
-import com.onezol.vertex.framework.security.api.service.RolePermissionService;
-import com.onezol.vertex.framework.security.api.service.UserAuthService;
-import com.onezol.vertex.framework.security.api.service.UserRoleService;
+import com.onezol.vertex.framework.security.api.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -18,23 +17,23 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 public class SecurityUserDetailsServiceImpl implements UserDetailsService {
 
     private final UserAuthService userAuthService;
+    private final UserDepartmentService userDepartmentService;
     private final UserRoleService userRoleService;
     private final PermissionService permissionService;
 
     @Autowired
-    public SecurityUserDetailsServiceImpl(@Lazy UserAuthService userAuthService, UserRoleService userRoleService, RolePermissionService rolePermissionService, PermissionService permissionService) {
+    public SecurityUserDetailsServiceImpl(@Lazy UserAuthService userAuthService, UserRoleService userRoleService, RolePermissionService rolePermissionService, UserDepartmentService userDepartmentService, PermissionService permissionService) {
         this.userAuthService = userAuthService;
         this.userRoleService = userRoleService;
+        this.userDepartmentService = userDepartmentService;
         this.permissionService = permissionService;
     }
 
@@ -52,20 +51,27 @@ public class SecurityUserDetailsServiceImpl implements UserDetailsService {
         }
 
         LoginUser user = new LoginUser(userEntity);
-        List<RoleEntity> roleEntities = userRoleService.getUserRoles(user.getDetails().getId());
-        if (roleEntities != null && !roleEntities.isEmpty()) {
-            // 获取用户角色
-            List<LabelValue<String,String>> roles = new ArrayList<>();
-            for (RoleEntity roleEntity : roleEntities) {
-                roles.add(LabelValue.of(roleEntity.getCode(), roleEntity.getCode()));
-            }
-            user.setRoles(roles);
-            // 获取用户权限
-            List<Long> roleIds = roleEntities.stream().map(RoleEntity::getId).toList();
-            Set<String> rolePermissionKeys = permissionService.getRolePermissionKeys(roleIds);
-            List<String> permissions = rolePermissionKeys.stream().toList();
-            user.setPermissions(permissions);
+
+        // 获取用户部门
+        Department department = userDepartmentService.getUserDepartment(user.getDetails().getId());
+        if (department != null) {
+            user.setDepartment(SimpleDepartment.of(department.getId(), department.getName()));
         }
+
+        // 获取用户角色
+        List<RoleEntity> roleEntities = userRoleService.getUserRoles(user.getDetails().getId());
+        List<SimpleRole> roles = new ArrayList<>();
+        for (RoleEntity roleEntity : roleEntities) {
+            SimpleRole role = SimpleRole.of(roleEntity.getId(), roleEntity.getName(), roleEntity.getCode());
+            roles.add(role);
+        }
+        user.setRoles(roles);
+
+        // 获取用户权限
+        List<Long> roleIds = roleEntities.stream().map(RoleEntity::getId).toList();
+        Set<String> rolePermissionKeys = permissionService.getRolePermissionKeys(roleIds);
+        List<String> permissions = rolePermissionKeys.stream().toList();
+        user.setPermissions(permissions);
 
         return user;
     }

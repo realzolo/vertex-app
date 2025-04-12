@@ -1,8 +1,7 @@
 <template>
-  <div class="table-page">
+  <GiPageLayout>
     <GiTable
       ref="tableRef"
-      title="菜单管理"
       row-key="id"
       :data="dataList"
       :columns="columns"
@@ -17,7 +16,7 @@
         <IconRight v-else />
       </template>
       <template #toolbar-left>
-        <a-input v-model="title" placeholder="请输入菜单标题" allow-clear @change="search">
+        <a-input v-model="title" placeholder="搜索菜单标题" allow-clear>
           <template #prefix><icon-search /></template>
         </a-input>
         <a-button @click="reset">
@@ -26,18 +25,24 @@
         </a-button>
       </template>
       <template #toolbar-right>
-        <a-button v-permission="['system:menu:add']" type="primary" @click="onAdd()">
+        <a-button v-permission="['system:menu:create']" type="primary" @click="onAdd()">
           <template #icon><icon-plus /></template>
           <template #default>新增</template>
         </a-button>
-        <a-tooltip content="展开/折叠">
-          <a-button @click="onExpanded">
-            <template #icon>
-              <icon-list v-if="!isExpanded" />
-              <icon-mind-mapping v-else />
-            </template>
-          </a-button>
-        </a-tooltip>
+        <a-button v-permission="['system:menu:clearCache']" type="outline" status="warning" @click="onClearCache">
+          <template #icon><icon-delete /></template>
+          <template #default>清除缓存</template>
+        </a-button>
+        <a-button @click="onExpanded">
+          <template #icon>
+            <icon-list v-if="isExpanded" />
+            <icon-mind-mapping v-else />
+          </template>
+          <template #default>
+            <span v-if="!isExpanded">展开</span>
+            <span v-else>折叠</span>
+          </template>
+        </a-button>
       </template>
       <template #title="{ record }">
         <GiSvgIcon :name="record.icon" :size="15" />
@@ -49,7 +54,7 @@
         <a-tag v-if="record.data.type === 3">按钮</a-tag>
       </template>
       <template #status="{ record }">
-        <GiCellStatus :status="record.data.status" />
+        <GiCellStatus :status="record.status" />
       </template>
       <template #isExternal="{ record }">
         <a-tag v-if="record.data.isExternal" color="arcoblue" size="small">是</a-tag>
@@ -65,31 +70,38 @@
       </template>
       <template #action="{ record }">
         <a-space>
-          <a-link v-permission="['system:menu:update']" @click="onUpdate(record)">修改</a-link>
-          <a-link v-permission="['system:menu:add']" :disabled="![1, 2].includes(record.data.type)" @click="onAdd(record.id)">
+          <a-link v-permission="['system:menu:update']" title="修改" @click="onUpdate(record)">修改</a-link>
+          <a-link v-permission="['system:menu:delete']" status="danger" title="删除" @click="onDelete(record)">删除</a-link>
+          <a-link
+            v-permission="['system:menu:create']"
+            :disabled="![1, 2].includes(record.data.type)"
+            :title="![1, 2].includes(record.data.type) ? '不可添加下级菜单' : '新增'"
+            @click="onAdd(record.data.id)"
+          >
             新增
           </a-link>
-          <a-link v-permission="['system:menu:delete']" status="danger" @click="onDelete(record)">删除</a-link>
         </a-space>
       </template>
     </GiTable>
 
     <MenuAddModal ref="MenuAddModalRef" :menus="dataList" @save-success="search" />
-  </div>
+  </GiPageLayout>
 </template>
 
 <script setup lang="ts">
+import type { TableInstance } from '@arco-design/web-vue'
+import { Message, Modal } from '@arco-design/web-vue'
 import MenuAddModal from './MenuAddModal.vue'
-import { type MenuQuery, type MenuResp, deleteMenu, listMenu } from '@/apis/system'
+import { type MenuQuery, type MenuResp, clearMenuCache, deleteMenu, listMenu } from '@/apis/system/menu'
 import type GiTable from '@/components/GiTable/index.vue'
-import type { TableInstanceColumns } from '@/components/GiTable/type'
+import { useTable } from '@/hooks'
 import { isMobile } from '@/utils'
 import has from '@/utils/has'
-import { useTable } from '@/hooks'
 
 defineOptions({ name: 'SystemMenu' })
 
 const queryForm = reactive<MenuQuery>({})
+
 const {
   tableData,
   loading,
@@ -98,7 +110,6 @@ const {
 } = useTable(() => listMenu(queryForm), { immediate: true })
 
 // 过滤树
-const title = ref('')
 const searchData = (title: string) => {
   const loop = (data: MenuResp[]) => {
     const result = [] as MenuResp[]
@@ -120,34 +131,36 @@ const searchData = (title: string) => {
   return loop(tableData.value)
 }
 
+const title = ref('')
 const dataList = computed(() => {
   if (!title.value) return tableData.value
   return searchData(title.value)
 })
 
-const columns: TableInstanceColumns[] = [
-  { title: '菜单标题', dataIndex: 'title', slotName: 'title', minWidth: 170, fixed: !isMobile() ? 'left' : undefined },
-  { title: '类型', slotName: 'type', align: 'center' },
-  { title: '状态', slotName: 'status', align: 'center' },
+const columns: TableInstance['columns'] = [
+  { title: '菜单标题', dataIndex: 'title', slotName: 'title', width: 170, fixed: !isMobile() ? 'left' : undefined },
+  { title: '类型', dataIndex: 'type', slotName: 'type', align: 'center' },
+  { title: '状态', dataIndex: 'status', slotName: 'status', align: 'center' },
   { title: '排序', dataIndex: 'sort', align: 'center', show: false },
-  { title: '路由地址', dataIndex: 'path', render: ({record}) => record.data.path, ellipsis: true, tooltip: true },
+  { title: '路由地址', dataIndex: 'path', render: ({ record }) => record.data.path, ellipsis: true, tooltip: true },
   { title: '组件名称', dataIndex: 'name', ellipsis: true, tooltip: true },
-  { title: '组件路径', dataIndex: 'component', render: ({record}) => record.data.component, minWidth: 180, ellipsis: true, tooltip: true },
-  { title: '权限标识', dataIndex: 'permission', render: ({record}) => record.data.permission, minWidth: 180, ellipsis: true, tooltip: true },
-  { title: '外链', slotName: 'isExternal', align: 'center' },
-  { title: '隐藏', slotName: 'isHidden', align: 'center' },
-  { title: '缓存', slotName: 'isCache', align: 'center' },
+  { title: '组件路径', dataIndex: 'component', render: ({ record }) => record.data.component, minWidth: 180, ellipsis: true, tooltip: true },
+  { title: '权限标识', dataIndex: 'permission', render: ({ record }) => record.data.permission, minWidth: 180, ellipsis: true, tooltip: true },
+  { title: '外链', dataIndex: 'isExternal', slotName: 'isExternal', align: 'center' },
+  { title: '隐藏', dataIndex: 'isHidden', slotName: 'isHidden', align: 'center' },
+  { title: '缓存', dataIndex: 'isCache', slotName: 'isCache', align: 'center' },
   // { title: '创建人', dataIndex: 'createUserString', ellipsis: true, tooltip: true, show: false },
-  { title: '创建时间', dataIndex: 'createTime', render: ({record}) => record.data.createTime, width: 180 },
+  { title: '创建时间', dataIndex: 'createTime', render: ({ record }) => record.data.createTime, width: 180 },
   // { title: '修改人', dataIndex: 'updateUserString', ellipsis: true, tooltip: true, show: false },
-  { title: '修改时间', dataIndex: 'updateTime', width: 180, show: false },
+  { title: '修改时间', dataIndex: 'updateTime', render: ({ record }) => record.data.updateTime, width: 180, show: false },
   {
     title: '操作',
+    dataIndex: 'action',
     slotName: 'action',
-    width: 180,
+    width: 160,
     align: 'center',
     fixed: !isMobile() ? 'right' : undefined,
-    show: has.hasPermOr(['system:menu:update', 'system:menu:delete', 'system:menu:add']),
+    show: has.hasPermOr(['system:menu:update', 'system:menu:delete', 'system:menu:create']),
   },
 ]
 
@@ -158,9 +171,23 @@ const reset = () => {
 
 // 删除
 const onDelete = (record: MenuResp) => {
-  return handleDelete(() => deleteMenu(record.id), {
-    content: `是否确定删除 [${record.title}]？`,
+  return handleDelete(() => deleteMenu(record.data.id), {
+    content: `是否确定菜单「${record.title}」？`,
     showModal: true,
+  })
+}
+
+// 清除缓存
+const onClearCache = () => {
+  Modal.warning({
+    title: '提示',
+    content: `是否确定清除全部菜单缓存？`,
+    hideCancel: false,
+    maskClosable: false,
+    onOk: async () => {
+      await clearMenuCache()
+      Message.success('清除成功')
+    },
   })
 }
 
@@ -184,4 +211,4 @@ const onUpdate = (record: MenuResp) => {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped lang="scss"></style>

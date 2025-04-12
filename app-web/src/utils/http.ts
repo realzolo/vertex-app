@@ -1,16 +1,12 @@
 import axios from 'axios'
 import qs from 'query-string'
-import type { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
-import NProgress from 'nprogress'
+import type { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 import { useUserStore } from '@/stores'
 import { getToken } from '@/utils/auth'
 import modalErrorWrapper from '@/utils/modal-error-wrapper'
 import messageErrorWrapper from '@/utils/message-error-wrapper'
 import notificationErrorWrapper from '@/utils/notification-error-wrapper'
-import 'nprogress/nprogress.css'
 import router from '@/router'
-
-NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
 interface ICodeMessage {
   [propName: number]: string
@@ -38,10 +34,22 @@ const http: AxiosInstance = axios.create({
   timeout: 30 * 1000,
 })
 
+const handleError = (message: string) => {
+  if (message.length >= 15) {
+    return notificationErrorWrapper({
+      content: message || '服务器端错误',
+      duration: 5 * 1000,
+    })
+  }
+  return messageErrorWrapper({
+    content: message || '服务器端错误',
+    duration: 5 * 1000,
+  })
+}
+
 // 请求拦截器
 http.interceptors.request.use(
   (config: AxiosRequestConfig) => {
-    NProgress.start() // 进度条
     const token = getToken()
     if (token) {
       if (!config.headers) {
@@ -49,14 +57,9 @@ http.interceptors.request.use(
       }
       config.headers.Authorization = `Bearer ${token}`
     }
-    if (!config.headers) {
-      config.headers = {}
-    }
     return config
   },
-  (error) => {
-    return Promise.reject(error)
-  },
+  (error) => Promise.reject(error),
 )
 
 // 响应拦截器
@@ -64,18 +67,30 @@ http.interceptors.response.use(
   (response: AxiosResponse) => {
     const { data } = response
     const { success, code, message } = data
+
     if (response.request.responseType === 'blob') {
-      NProgress.done()
-      return response
+      const contentType = data.type
+      if (contentType.startsWith('application/json')) {
+        const reader = new FileReader()
+        reader.readAsText(data)
+        reader.onload = () => {
+          const { success, message } = JSON.parse(reader.result as string)
+          if (!success) {
+            handleError(message)
+          }
+        }
+        return Promise.reject(message)
+      } else {
+        return response
+      }
     }
-    // 成功
+
     if (success) {
-      NProgress.done()
       return response
     }
 
     // Token 失效
-    if (code === '401' && response.config.url !== '/auth/user/info') {
+    if (code === '10401' && response.config.url !== '/auth/user/info') {
       modalErrorWrapper({
         title: '提示',
         content: message,
@@ -83,113 +98,74 @@ http.interceptors.response.use(
         escToClose: false,
         okText: '重新登录',
         async onOk() {
-          NProgress.done()
           const userStore = useUserStore()
-          userStore.logoutCallBack()
-          router.replace('/login')
+          await userStore.logoutCallBack()
+          await router.replace('/login')
         },
       })
     } else {
-      NProgress.done()
-      // 如果错误信息长度过长，使用 Notification 进行提示
-      if (message.length <= 15) {
-        messageErrorWrapper({
-          content: message || '服务器端错误',
-          duration: 5 * 1000,
-        })
-      } else {
-        notificationErrorWrapper(message || '服务器端错误')
-      }
+      handleError(message)
     }
     return Promise.reject(new Error(message || '服务器端错误'))
   },
-  (error) => {
-    NProgress.done()
-    const response = Object.assign({}, error.response)
-    response
-    && messageErrorWrapper({
-      content: StatusCodeMessage[response.status] || '服务器暂时未响应，请刷新页面并重试。',
-      duration: 5 * 1000,
-    })
+  (error: AxiosError) => {
+    if (!error.response) {
+      handleError('网络连接失败，请检查您的网络')
+      return Promise.reject(error)
+    }
+    const status = error.response?.status
+    const errorMsg = StatusCodeMessage[status] || '服务器暂时未响应，请刷新页面并重试。若无法解决，请联系管理员'
+    handleError(errorMsg)
     return Promise.reject(error)
   },
 )
 
-const request = <T = unknown>(config: AxiosRequestConfig): Promise<ApiRes<T>> => {
-  return new Promise((resolve, reject) => {
-    http
-      .request<T>(config)
-      .then((res: AxiosResponse) => resolve(res.data))
-      .catch((err: { msg: string }) => reject(err))
-  })
+const request = async <T = unknown>(config: AxiosRequestConfig): Promise<ApiRes<T>> => {
+  return http.request<T>(config)
+    .then((res: AxiosResponse) => res.data)
+    .catch((err: { message: string }) => Promise.reject(err))
 }
 
-const requestNative = <T = unknown>(config: AxiosRequestConfig): Promise<AxiosResponse> => {
-  return new Promise((resolve, reject) => {
-    http
-      .request<T>(config)
-      .then((res: AxiosResponse) => resolve(res))
-      .catch((err: { msg: string }) => reject(err))
-  })
+const requestNative = async <T = unknown>(config: AxiosRequestConfig): Promise<AxiosResponse> => {
+  return http.request<T>(config)
+    .then((res: AxiosResponse) => res)
+    .catch((err: { message: string }) => Promise.reject(err))
 }
 
-const get = <T = any>(url: string, params?: object, config?: AxiosRequestConfig): Promise<ApiRes<T>> => {
-  return request({
-    method: 'get',
-    url,
-    params,
-    paramsSerializer: (obj) => {
-      return qs.stringify(obj)
-    },
-    ...config,
-  })
+const createRequest = (method: string) => {
+  return <T = any>(url: string, params?: object, config?: AxiosRequestConfig): Promise<ApiRes<T>> => {
+    return request({
+      method,
+      url,
+      [method === 'get' ? 'params' : 'data']: params,
+      ...(method === 'get'
+        ? {
+            paramsSerializer: (obj) => qs.stringify(obj),
+          }
+        : {}),
+      ...config,
+    })
+  }
 }
 
-const post = <T = any>(url: string, params?: object, config?: AxiosRequestConfig): Promise<ApiRes<T>> => {
-  return request({
-    method: 'post',
-    url,
-    data: params,
-    ...config,
-  })
-}
-
-const put = <T = any>(url: string, params?: object, config?: AxiosRequestConfig): Promise<ApiRes<T>> => {
-  return request({
-    method: 'put',
-    url,
-    data: params,
-    ...config,
-  })
-}
-
-const patch = <T = any>(url: string, params?: object, config?: AxiosRequestConfig): Promise<ApiRes<T>> => {
-  return request({
-    method: 'patch',
-    url,
-    data: params,
-    ...config,
-  })
-}
-
-const del = <T = any>(url: string, params?: object, config?: AxiosRequestConfig): Promise<ApiRes<T>> => {
-  return request({
-    method: 'delete',
-    url,
-    data: params,
-    ...config,
-  })
-}
 const download = (url: string, params?: object, config?: AxiosRequestConfig): Promise<AxiosResponse> => {
   return requestNative({
     method: 'get',
     url,
     responseType: 'blob',
     params,
-    paramsSerializer: (obj) => {
-      return qs.stringify(obj)
-    },
+    paramsSerializer: (obj) => qs.stringify(obj),
     ...config,
   })
 }
-export default { get, post, put, patch, del, request, requestNative, download }
+
+export default {
+  get: createRequest('get'),
+  post: createRequest('post'),
+  put: createRequest('put'),
+  patch: createRequest('patch'),
+  del: createRequest('delete'),
+  request,
+  requestNative,
+  download,
+}

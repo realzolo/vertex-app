@@ -24,4 +24,7 @@ public final class GenericConstants {
     /** 全部权限 */
     public static String ALL_PERMISSION = "*:*:*";
 
+    /** 根级对象父级ID */
+    public static Long ROOT_OBJECT_PARENT_ID = 0L;
+
 }

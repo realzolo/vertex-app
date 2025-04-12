@@ -1,5 +1,6 @@
 package com.onezol.vertex.framework.common.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -11,6 +12,9 @@ public class TreeNode {
 
     @Schema(name = "ID")
     private Long id;
+
+    @Schema(name = "ID")
+    private Long key;
 
     @Schema(name = "父ID")
     private Long parentId;
@@ -28,6 +32,7 @@ public class TreeNode {
     private List<TreeNode> children;
 
     @Schema(name = "节点数据")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Object data;
     
 }

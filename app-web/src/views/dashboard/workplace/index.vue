@@ -48,7 +48,7 @@ import Docs from './components/Docs.vue'
 defineOptions({ name: 'Workplace' })
 </script>
 
-<style lang="scss" scoped>
+<style scoped lang="scss">
 .container {
   display: flex;
 }
