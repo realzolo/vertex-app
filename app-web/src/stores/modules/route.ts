@@ -113,6 +113,7 @@ const storeSetup = () => {
       // 向后端请求路由数据 这个接口已经根据用户角色过滤了没权限的路由(后端根据用户角色过滤路由显得比较安全些)
       getUserRoute().then((res) => {
         const asyncRoutes = formatAsyncRoutes(res.data)
+        console.log(asyncRoutes);
         setRoutes(asyncRoutes)
         const cloneRoutes = cloneDeep(asyncRoutes)
         const flatRoutes = flatMultiLevelRoutes(cloneRoutes as RouteRecordRaw[])

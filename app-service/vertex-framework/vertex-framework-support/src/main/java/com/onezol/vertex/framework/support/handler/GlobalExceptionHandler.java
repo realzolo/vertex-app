@@ -70,6 +70,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value = ServiceException.class)
     public GenericResponse<?> handleServiceException(HttpServletRequest req, ServiceException ex) {
+        log.error(ex.getMessage(), ex);
         return ResponseHelper.buildFailedResponse(ex.getCode(), ex.getMessage());
     }
 

@@ -18,4 +18,8 @@ public class LabelValue<L, V> implements Serializable {
 
     private V value;
 
+    public static <L, V> LabelValue<L, V> of(L label, V value) {
+        return new LabelValue<>(label, value);
+    }
+
 }

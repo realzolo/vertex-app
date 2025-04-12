@@ -50,27 +50,36 @@ CREATE TABLE IF NOT EXISTS vx_permission
 (
     id          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
     -- 自定义字段开始 --
-    name        VARCHAR(25)  COMMENT '权限名称',
-    code        VARCHAR(25)  COMMENT '权限Code',
-    sort        INT UNSIGNED DEFAULT 0 COMMENT '排序号',
+    title       VARCHAR(25)     COMMENT '标题',
+    parent_id   BIGINT          COMMENT '上级ID',
+    type        INT  COMMENT    '类型',
+    path        VARCHAR(100)    COMMENT '路由地址',
+    name        VARCHAR(25)     COMMENT '组件名称',
+    component   VARCHAR(100)    COMMENT '组件路径',
+    redirect    VARCHAR(100)    COMMENT '重定向地址',
+    icon        VARCHAR(1024)   COMMENT '图标',
+    is_external INT  UNSIGNED DEFAULT 0 COMMENT '是否外链',
+    is_cache    INT  UNSIGNED DEFAULT 0 COMMENT '是否缓存',
+    is_hidden   INT  UNSIGNED DEFAULT 0 COMMENT '是否隐藏',
+    permission  INT  UNSIGNED DEFAULT 0 COMMENT '权限标识',
+    sort        INT  UNSIGNED DEFAULT 0 COMMENT '排序号',
+    status      INT  UNSIGNED DEFAULT 0 COMMENT '账号状态',
     -- 自定义字段结束 --
     creator        BIGINT           DEFAULT NULL COMMENT '创建人',
     create_time    DATETIME         DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     updater        BIGINT           DEFAULT NULL COMMENT '更新人',
     update_time    DATETIME         DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
-    version        INT UNSIGNED     DEFAULT 0 COMMENT '版本号',
-    INDEX (code),
-    UNIQUE (code)
+    version        INT UNSIGNED     DEFAULT 0 COMMENT '版本号'
 ) ENGINE = InnoDB
     DEFAULT CHARSET = utf8mb4
-    AUTO_INCREMENT = 10000 COMMENT = '权限';
+    AUTO_INCREMENT = 10000 COMMENT = '权限(菜单)';
 
 CREATE TABLE IF NOT EXISTS vx_user_role
 (
     id          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
     -- 自定义字段开始 --
-    user_id     BIGINT          COMMENT '用户ID',
-    role_id     BIGINT          COMMENT '角色ID',
+    user_id     BIGINT          NOT NUll COMMENT '用户ID',
+    role_id     BIGINT          NOT NUll COMMENT '角色ID',
     -- 自定义字段结束 --
     creator        BIGINT       DEFAULT NULL COMMENT '创建人',
     create_time    DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -87,8 +96,8 @@ CREATE TABLE IF NOT EXISTS vx_role_permission
 (
     id             BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
     -- 自定义字段开始 --
-    role_id        BIGINT       COMMENT '角色ID',
-    permission_id  BIGINT       COMMENT '权限ID',
+    role_id        BIGINT       NOT NUll COMMENT '角色ID',
+    permission_id  BIGINT       NOT NUll COMMENT '权限ID',
     -- 自定义字段结束 --
     creator        BIGINT       DEFAULT NULL COMMENT '创建人',
     create_time    DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',

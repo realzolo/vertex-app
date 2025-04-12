@@ -46,4 +46,5 @@ public enum GenderEnum implements Enumeration<Integer> {
 
     @EnumValue
     private final Integer value;
+
 }

@@ -57,7 +57,7 @@ public class SecurityUserDetailsServiceImpl implements UserDetailsService {
             // 获取用户角色
             List<LabelValue<String,String>> roles = new ArrayList<>();
             for (RoleEntity roleEntity : roleEntities) {
-                roles.add(new LabelValue<>(roleEntity.getName(), roleEntity.getCode()));
+                roles.add(LabelValue.of(roleEntity.getCode(), roleEntity.getCode()));
             }
             user.setRoles(roles);
             // 获取用户权限

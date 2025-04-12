@@ -21,4 +21,7 @@ public final class GenericConstants {
     /** * Authorization header 前缀 */
     public static String AUTHORIZATION_HEADER = "Bearer ";
 
+    /** 全部权限 */
+    public static String ALL_PERMISSION = "*:*:*";
+
 }

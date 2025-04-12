@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.util.Objects;
@@ -22,7 +23,7 @@ import java.util.Objects;
  * 初始化
  */
 @Slf4j
-//@Component
+@Component
 public class InitializationRunner implements ApplicationRunner {
 
     private final RoleService roleService;
@@ -48,7 +49,7 @@ public class InitializationRunner implements ApplicationRunner {
         this.initUsers();
         this.initRoles();
         this.initUserRole();
-        this.initRolePermissions();
+//        this.initRolePermissions();
     }
 
     /**

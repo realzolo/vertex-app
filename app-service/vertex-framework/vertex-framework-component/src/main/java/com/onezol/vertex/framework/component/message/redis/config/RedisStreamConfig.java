@@ -17,7 +17,7 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 @Slf4j
-@Configuration
+//@Configuration
 public class RedisStreamConfig {
 
     public final ApplicationContext applicationContext;
