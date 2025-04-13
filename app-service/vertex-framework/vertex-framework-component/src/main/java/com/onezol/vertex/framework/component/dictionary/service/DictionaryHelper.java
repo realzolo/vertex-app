@@ -6,6 +6,7 @@ import com.onezol.vertex.framework.common.constant.CacheKey;
 import com.onezol.vertex.framework.common.model.LabelValue;
 import com.onezol.vertex.framework.common.util.SpringUtils;
 import com.onezol.vertex.framework.common.util.StringUtils;
+import com.onezol.vertex.framework.component.dictionary.model.SimpleDictionary;
 import com.onezol.vertex.framework.support.cache.RedisCache;
 import lombok.extern.slf4j.Slf4j;
 
@@ -17,26 +18,29 @@ import java.util.Objects;
 @Slf4j
 public class DictionaryHelper {
 
-    private static RedisCache redisCache;
+    private static final RedisCache redisCache;
 
-    public static List<LabelValue<String, String>> get(String code) {
+    static {
+        redisCache = SpringUtils.getBean(RedisCache.class);
+    }
+
+    public static List<SimpleDictionary> get(String code) {
         if (StringUtils.isBlank(code)) {
             return Collections.emptyList();
-        }
-        if (Objects.isNull(redisCache)) {
-            redisCache = SpringUtils.getBean(RedisCache.class);
         }
         Object cacheMapValue = redisCache.getCacheMapValue(CacheKey.DICTIONARY, code);
         if (Objects.isNull(cacheMapValue)) {
             return Collections.emptyList();
         }
         JSONArray objects = JSONArray.parse(cacheMapValue.toString());
-        List<LabelValue<String, String>> dictionaries = new ArrayList<>();
+        List<SimpleDictionary> dictionaries = new ArrayList<>();
         for (Object object : objects) {
             if (object instanceof JSONObject jsonObject) {
-                String label = jsonObject.getString("label");
-                String value = jsonObject.getString("value");
-                LabelValue<String, String> dictionary = new LabelValue<>(label, value);
+                SimpleDictionary dictionary = new SimpleDictionary();
+                dictionary.setLabel(jsonObject.getString("label"));
+                dictionary.setValue(jsonObject.getString("value"));
+                dictionary.setColor(jsonObject.getString("color"));
+                dictionary.setDisabled(jsonObject.getBoolean("disabled"));
                 dictionaries.add(dictionary);
             } else {
                 log.error("非法数据类型，无法解析为字典值");

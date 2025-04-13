@@ -1,5 +1,6 @@
 package com.onezol.vertex.framework.common.constant.enumeration;
 
+import com.onezol.vertex.framework.common.annotation.EnumDictionary;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,6 +8,7 @@ import lombok.Getter;
 @Schema(name = "登录状态")
 @Getter
 @AllArgsConstructor
+@EnumDictionary(name = "登录状态", value = "login_status")
 public enum LoginStatusEnum implements Enumeration<Integer> {
 
     SUCCESS("登录成功", 0),

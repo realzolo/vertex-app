@@ -1,43 +1,50 @@
 package com.onezol.vertex.framework.component.dictionary.service;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.onezol.vertex.framework.common.constant.CacheKey;
+import com.onezol.vertex.framework.common.constant.enumeration.DictionaryTypeEnum;
 import com.onezol.vertex.framework.common.exception.RuntimeServiceException;
 import com.onezol.vertex.framework.common.mvc.service.BaseServiceImpl;
 import com.onezol.vertex.framework.common.util.BeanUtils;
-import com.onezol.vertex.framework.common.util.StringUtils;
 import com.onezol.vertex.framework.component.dictionary.mapper.DictionaryMapper;
+import com.onezol.vertex.framework.component.dictionary.model.Dictionary;
 import com.onezol.vertex.framework.component.dictionary.model.DictionaryEntity;
-import com.onezol.vertex.framework.component.dictionary.model.DictionaryItem;
+import com.onezol.vertex.framework.component.dictionary.model.SimpleDictionary;
+import com.onezol.vertex.framework.support.cache.RedisCache;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 public class DictionaryService extends BaseServiceImpl<DictionaryMapper, DictionaryEntity> {
 
-    public List<DictionaryItem> listGroups() {
+    private final RedisCache redisCache;
+
+    public DictionaryService(RedisCache redisCache) {
+        this.redisCache = redisCache;
+    }
+
+    public List<Dictionary> listGroups() {
         List<DictionaryEntity> entities = this.list(
                 Wrappers.<DictionaryEntity>lambdaQuery()
                         .isNull(DictionaryEntity::getGroup)
                         .orderByDesc(DictionaryEntity::getType)
         );
 
-        List<DictionaryItem> groups = new ArrayList<>(entities.size());
+        List<Dictionary> groups = new ArrayList<>(entities.size());
         for (DictionaryEntity entity : entities) {
-            DictionaryItem group = new DictionaryItem();
+            Dictionary group = new Dictionary();
             group.setId(entity.getId());
             group.setName(entity.getName());
             group.setValue(entity.getValue());
-            group.setIsBuiltIn(this.isBuiltIn(entity.getType()));
+            group.setType(entity.getType().getValue());
+            group.setBuiltin(entity.getBuiltin());
             groups.add(group);
         }
         return groups;
     }
 
-    public List<DictionaryItem> listItems(Long groupId) {
+    public List<Dictionary> listItems(Long groupId) {
         if (Objects.isNull(groupId)) {
             return Collections.emptyList();
         }
@@ -50,58 +57,75 @@ public class DictionaryService extends BaseServiceImpl<DictionaryMapper, Diction
                         .eq(DictionaryEntity::getGroup, group.getValue())
                         .orderByDesc(DictionaryEntity::getCreateTime)
         );
-        List<DictionaryItem> items = new ArrayList<>(entities.size());
+        List<Dictionary> items = new ArrayList<>(entities.size());
         for (DictionaryEntity entity : entities) {
-            DictionaryItem item = BeanUtils.toBean(entity, DictionaryItem.class);
-            item.setIsBuiltIn(this.isBuiltIn(entity.getType()));
+            Dictionary item = BeanUtils.toBean(entity, Dictionary.class);
+            item.setType(entity.getType().getValue());
             items.add(item);
         }
         return items;
     }
 
-    private boolean isBuiltIn(String type) {
-        return Objects.equals("ENUM", type);
-    }
-
-    public void createDictionary(DictionaryItem dictionaryItem) {
+    public void createDictionary(Dictionary dictionary) {
         DictionaryEntity entity;
         // 添加字典分组
-        if (Objects.isNull(dictionaryItem.getGroupId())) {
+        if (Objects.isNull(dictionary.getGroupId())) {
             long count = this.count(
                     Wrappers.<DictionaryEntity>lambdaQuery()
-                            .eq(DictionaryEntity::getName, dictionaryItem.getName())
+                            .eq(DictionaryEntity::getName, dictionary.getName())
                             .or()
-                            .eq(DictionaryEntity::getValue, dictionaryItem.getValue())
+                            .eq(DictionaryEntity::getValue, dictionary.getValue())
             );
             if (count > 0) {
                 throw new RuntimeServiceException("字典已存在");
             }
-            entity = BeanUtils.toBean(dictionaryItem, DictionaryEntity.class);
+            entity = BeanUtils.toBean(dictionary, DictionaryEntity.class);
             entity.setGroup(null);
         }
         // 添加字典项
         else {
             long count = this.count(
                     Wrappers.<DictionaryEntity>lambdaQuery()
-                            .eq(DictionaryEntity::getGroup, dictionaryItem.getGroup())
+                            .eq(DictionaryEntity::getGroup, dictionary.getGroup())
                             .or(
                                     queryWrapper -> queryWrapper
-                                            .eq(DictionaryEntity::getName, dictionaryItem.getName())
+                                            .eq(DictionaryEntity::getName, dictionary.getName())
                                             .or()
-                                            .eq(DictionaryEntity::getValue, dictionaryItem.getValue())
+                                            .eq(DictionaryEntity::getValue, dictionary.getValue())
                             )
             );
-            DictionaryEntity group = this.getById(dictionaryItem.getGroupId());
+            DictionaryEntity group = this.getById(dictionary.getGroupId());
             if (count > 0) {
                 throw new RuntimeServiceException("字典项已存在");
             }
-            entity = BeanUtils.toBean(dictionaryItem, DictionaryEntity.class);
+            entity = BeanUtils.toBean(dictionary, DictionaryEntity.class);
             entity.setGroup(group.getValue());
         }
-        entity.setType("DICT");
+        entity.setType(DictionaryTypeEnum.DICT);
         boolean ok = this.save(entity);
         if (!ok) {
             throw new RuntimeServiceException("添加字典失败");
         }
+    }
+
+    public void syncDictionaryToRedis() {
+        redisCache.deleteObject(CacheKey.DICTIONARY);
+
+        List<DictionaryEntity> entities = this.list();
+        Map<String, List<SimpleDictionary>> dictionaryMap = new HashMap<>();
+        for (DictionaryEntity entity : entities) {
+            if (Objects.isNull(entity.getGroup())) {
+                dictionaryMap.put(entity.getValue(), new ArrayList<>());
+                continue;
+            }
+            SimpleDictionary item = new SimpleDictionary();
+            item.setLabel(entity.getName());
+            item.setValue(entity.getValue());
+            item.setColor(entity.getColor());
+            item.setDisabled(entity.getStatus().getValue() == 0);
+            dictionaryMap.computeIfAbsent(entity.getGroup(), k -> new ArrayList<>()).add(item);
+        }
+
+        redisCache.setCacheMap(CacheKey.DICTIONARY, dictionaryMap);
     }
 }

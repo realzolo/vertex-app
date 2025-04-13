@@ -14,12 +14,4 @@ public interface Enumeration<T extends Serializable> {
 
     T getValue();
 
-    default String getColor() {
-        return null;
-    }
-
-    default String getDescription() {
-        return null;
-    }
-
 }

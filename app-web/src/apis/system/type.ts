@@ -144,7 +144,7 @@ export interface DeptResp {
     name: string
     sort: number
     status: 0 | 1
-    builtIn: boolean
+    builtin: boolean
     description: string
     createUserString: string
     createTime: string
@@ -164,7 +164,8 @@ export interface DictResp {
   id: number
   name: string
   value: string
-  builtIn: boolean
+  builtin: boolean
+  type: number
   remark: string
   createTime: string
   // updateUserString: string
@@ -185,7 +186,7 @@ export interface DictItemResp {
   remark: string
   type: string
   status: 0 | 1
-  builtIn: boolean
+  builtin: boolean
   groupId: number
   createTime: string
   // updateUserString: string

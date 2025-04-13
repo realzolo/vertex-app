@@ -25,8 +25,8 @@ export function listRoleDict(query?: { name: string, status: number }) {
 }
 
 /** @desc 查询字典列表 */
-export function listCommonDict(code: string) {
-  return http.get<LabelValueState[]>(`${BASE_URL}/dict/${code}`)
+export function listCommonDict(group: string) {
+  return http.get<LabelValueState[]>(`/dictionary`, { group })
 }
 
 /** @desc 查询系统配置参数 */

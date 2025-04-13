@@ -4,26 +4,26 @@ const storeSetup = () => {
   const dictData = ref<Record<string, App.DictItem[]>>({})
 
   // 设置字典
-  const setDict = (code: string, items: App.DictItem[]) => {
-    if (code) {
-      dictData.value[code] = items
+  const setDict = (group: string, items: App.DictItem[]) => {
+    if (group) {
+      dictData.value[group] = items
     }
   }
 
   // 获取字典
-  const getDict = (code: string) => {
-    if (!code) {
+  const getDict = (group: string) => {
+    if (!group) {
       return null
     }
-    return dictData.value[code] || null
+    return dictData.value[group] || null
   }
 
   // 删除字典
-  const deleteDict = (code: string) => {
-    if (!code || !(code in dictData.value)) {
+  const deleteDict = (group: string) => {
+    if (!group || !(group in dictData.value)) {
       return false
     }
-    delete dictData.value[code]
+    delete dictData.value[group]
     return true
   }
 

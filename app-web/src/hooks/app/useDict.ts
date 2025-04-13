@@ -4,38 +4,38 @@ import { useDictStore } from '@/stores'
 
 const pendingRequests = new Map<string, Promise<any>>()
 
-export function useDict(...codes: string[]) {
+export function useDict(...groups: string[]) {
   const dictStore = useDictStore()
   const dictData = ref<Record<string, App.DictItem[]>>({})
 
-  codes.forEach(async (code) => {
-    dictData.value[code] = []
+  groups.forEach(async (group) => {
+    dictData.value[group] = []
 
-    const cached = dictStore.getDict(code)
+    const cached = dictStore.getDict(group)
     if (cached) {
-      dictData.value[code] = cached
+      dictData.value[group] = cached
       return
     }
 
-    if (!pendingRequests.has(code)) {
-      const request = listCommonDict(code)
+    if (!pendingRequests.has(group)) {
+      const request = listCommonDict(group)
         .then(({ data }) => {
-          dictStore.setDict(code, data)
+          dictStore.setDict(group, data)
           return data
         })
         .catch((error) => {
-          console.error(`Failed to load dict: ${code}`, error)
+          console.error(`Failed to load dict: ${group}`, error)
           return []
         })
         .finally(() => {
-          pendingRequests.delete(code)
+          pendingRequests.delete(group)
         })
 
-      pendingRequests.set(code, request)
+      pendingRequests.set(group, request)
     }
 
-    pendingRequests.get(code)!.then((data) => {
-      dictData.value[code] = data
+    pendingRequests.get(group)!.then((data) => {
+      dictData.value[group] = data
     })
   })
 

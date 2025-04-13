@@ -199,9 +199,9 @@ CREATE TABLE IF NOT EXISTS vx_dictionary
     color       VARCHAR(25)   COMMENT '颜色值',
     `group`     VARCHAR(25)   COMMENT '分组',
     remark      VARCHAR(50)   COMMENT '字典备注',
-    builtIn     BIT           DEFAULT b'0' COMMENT '是否内置',
-    sort        INT UNSIGNED  DEFAULT 0   COMMENT '排序',
-    type        VARCHAR(25)   COMMENT '字典类型(字典/枚举)',
+    builtin     BIT           DEFAULT b'0' COMMENT '是否内置',
+    sort        INT UNSIGNED  DEFAULT 0    COMMENT '排序',
+    type        BIT           DEFAULT b'0' COMMENT '字典类型(字典/枚举)',
     status      BIT           DEFAULT b'0' COMMENT '字典状态(0: 启用，1: 禁用)',
     -- 自定义字段结束 --
     creator     BIGINT       DEFAULT NULL COMMENT '创建人',

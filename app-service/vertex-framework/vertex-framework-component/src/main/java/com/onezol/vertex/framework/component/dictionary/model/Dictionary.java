@@ -1,13 +1,12 @@
 package com.onezol.vertex.framework.component.dictionary.model;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.onezol.vertex.framework.common.model.vo.VO;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
-public class DictionaryItem implements VO {
+public class Dictionary implements VO {
 
     private Long id;
 
@@ -21,13 +20,13 @@ public class DictionaryItem implements VO {
 
     private String group;
 
-    private Boolean builtIn;
+    private Integer type;
+
+    private Boolean builtin;
 
     private Integer sort;
 
     private Integer status;
-
-    private Boolean isBuiltIn;
 
     private String remark;
 

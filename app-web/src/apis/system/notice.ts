@@ -1,5 +1,6 @@
 import type * as T from './type'
 import http from '@/utils/http'
+import type { PageRes } from '@/types/api'
 
 export type * from './type'
 

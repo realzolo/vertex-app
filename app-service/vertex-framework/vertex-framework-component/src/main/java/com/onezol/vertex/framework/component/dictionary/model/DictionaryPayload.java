@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class DictionaryPayload {
+
     private String name;
 
     private String value;
@@ -15,4 +16,5 @@ public class DictionaryPayload {
     private String color;
 
     private String type;
+
 }

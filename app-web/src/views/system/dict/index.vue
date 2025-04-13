@@ -33,21 +33,18 @@
               <template #default>清除缓存</template>
             </a-button>
           </template>
-          <template #label="{ record }">
-            <a-tag v-if="record.color === 'primary'" color="arcoblue">{{ record.name }}</a-tag>
-            <a-tag v-else-if="record.color === 'success'" color="green">{{ record.name }}</a-tag>
-            <a-tag v-else-if="record.color === 'warning'" color="orangered">{{ record.name }}</a-tag>
-            <a-tag v-else-if="record.color === 'error'" color="red">{{ record.name }}</a-tag>
-            <a-tag v-else-if="record.color === 'default'" color="gray">{{ record.name }}</a-tag>
+          <template #name="{ record }">
+            <a-tag :color="record.color">{{ record.name }}</a-tag>
           </template>
           <template #status="{ record }">
             <GiCellStatus :status="record.status" />
           </template>
           <template #action="{ record }">
             <a-space>
-              <a-link v-permission="['system:dict:item:update']" title="修改" @click="onUpdate(record)">修改</a-link>
+              <a-link v-permission="['system:dict:item:update']" :disabled="record.builtin" title="修改" @click="onUpdate(record)">修改</a-link>
               <a-link
                 v-permission="['system:dict:item:delete']"
+                :disabled="record.builtin"
                 status="danger"
                 title="删除"
                 @click="onDelete(record)"
@@ -95,7 +92,7 @@ const columns: TableInstance['columns'] = [
     align: 'center',
     render: ({ rowIndex }) => h('span', {}, rowIndex + 1 + (pagination.current - 1) * pagination.pageSize),
   },
-  { title: '字典名称', dataIndex: 'label', slotName: 'label', minWidth: 100, align: 'center' },
+  { title: '字典名称', dataIndex: 'name', slotName: 'name', minWidth: 100, align: 'center' },
   { title: '字典值', dataIndex: 'value', minWidth: 100, align: 'center', ellipsis: true, tooltip: true },
   { title: '状态', dataIndex: 'status', slotName: 'status', align: 'center' },
   {

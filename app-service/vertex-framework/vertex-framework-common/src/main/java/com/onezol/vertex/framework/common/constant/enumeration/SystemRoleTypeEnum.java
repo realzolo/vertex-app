@@ -1,5 +1,6 @@
 package com.onezol.vertex.framework.common.constant.enumeration;
 
+import com.onezol.vertex.framework.common.annotation.EnumDictionary;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -7,11 +8,12 @@ import lombok.RequiredArgsConstructor;
 @Schema(name = "系统角色类型")
 @Getter
 @RequiredArgsConstructor
+@EnumDictionary(name = "系统角色类型", value = "system_role_type")
 public enum SystemRoleTypeEnum implements Enumeration<String> {
 
-    SUPER("super", "super"),
+    SUPER("超级管理员", "super"),
 
-    ADMIN("admin", "admin");
+    ADMIN("系统管理员", "admin");
 
 
     private final String name;

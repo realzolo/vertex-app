@@ -6,11 +6,11 @@
 //import liquibase.integration.spring.SpringLiquibase;
 //import lombok.extern.slf4j.Slf4j;
 //import org.springframework.beans.BeansException;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.beans.factory.annotation.Value;
+//import org.springframework.beans.factory.enumeration.Autowired;
+//import org.springframework.beans.factory.enumeration.Value;
 //import org.springframework.beans.factory.config.BeanPostProcessor;
 //import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
-//import org.springframework.context.annotation.DependsOn;
+//import org.springframework.context.enumeration.DependsOn;
 //import org.springframework.jdbc.BadSqlGrammarException;
 //import org.springframework.stereotype.Component;
 //
