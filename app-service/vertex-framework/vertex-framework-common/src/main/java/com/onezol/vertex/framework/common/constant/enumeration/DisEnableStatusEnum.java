@@ -22,7 +22,6 @@ public enum DisEnableStatusEnum implements Enumeration<Integer> {
     @EnumValue
     private final Integer value;
 
-
     private final String color;
 
 }

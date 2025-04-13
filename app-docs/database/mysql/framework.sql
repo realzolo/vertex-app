@@ -298,3 +298,25 @@ CREATE TABLE IF NOT EXISTS vx_user_department
 ) ENGINE = InnoDB
     DEFAULT CHARSET = utf8mb4
     AUTO_INCREMENT = 10000 COMMENT = '用户-部门';
+
+CREATE TABLE IF NOT EXISTS vx_notice
+(
+    id          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
+    -- 自定义字段开始 --
+    title       VARCHAR(255)  COMMENT '标题',
+    content     LONGTEXT      COMMENT '内容',
+    type        INT UNSIGNED  DEFAULT 0 COMMENT '类型',
+    effective_time            datetime COMMENT '生效时间',
+    terminate_time            datetime COMMENT '终止时间',
+    notice_scope   INT  UNSIGNED COMMENT '通知范围',
+    notice_users   JSON COMMENT '通知用户',
+    -- 自定义字段结束 --
+    creator     BIGINT       DEFAULT NULL COMMENT '创建人',
+    create_time DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    updater     BIGINT       DEFAULT NULL COMMENT '更新人',
+    update_time DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+    version     INT UNSIGNED DEFAULT 0 COMMENT '版本号',
+    deleted     BIT          DEFAULT b'0' COMMENT '是否删除'
+) ENGINE = InnoDB
+    DEFAULT CHARSET = utf8mb4
+    AUTO_INCREMENT = 10000 COMMENT = '通知公告';

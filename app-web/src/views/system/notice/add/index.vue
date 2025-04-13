@@ -4,7 +4,7 @@
       <a-affix :target="(containerRef as HTMLElement)">
         <a-page-header title="通知公告" :subtitle="title" @back="onBack">
           <template #extra>
-            <a-button type="primary" @click="save">
+            <a-button type="primary" :loading="loading" @click="save">
               <template #icon>
                 <icon-save v-if="isUpdate" />
                 <icon-send v-else />
@@ -77,6 +77,7 @@ const isUpdate = computed(() => type === 'update')
 const title = computed(() => (isUpdate.value ? '修改' : '新增'))
 const containerRef = ref<HTMLElement | null>()
 const formRef = ref<InstanceType<typeof GiForm>>()
+const loading = ref<boolean>(false)
 const { notice_type } = useDict('notice_type')
 
 const [form, resetForm] = useResetReactive({
@@ -162,6 +163,7 @@ const save = async () => {
   const isInvalid = await formRef.value?.formRef?.validate()
   if (isInvalid) return false
   try {
+    loading.value = true
     // 通知范围 所有人 去除指定用户
     form.noticeUsers = form.noticeScope === 1 ? null : form.noticeUsers
     if (isUpdate.value) {
@@ -176,6 +178,8 @@ const save = async () => {
   } catch (error) {
     console.error(error)
     return false
+  } finally {
+    loading.value = false
   }
 }
 

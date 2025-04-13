@@ -35,6 +35,6 @@ declare namespace App {
     disabled?: boolean
     extra?: string
     label: string
-    value: string
+    value: string | number
   }
 }

@@ -36,7 +36,7 @@
         <GiCellTag :value="record.type" :dict="notice_type" />
       </template>
       <template #status="{ record }">
-        <GiCellTag :value="record.status" :dict="notice_status_enum" />
+        <GiCellTag :value="record.status" :dict="notice_status" />
       </template>
       <template #action="{ record }">
         <a-space>
@@ -59,7 +59,7 @@ import has from '@/utils/has'
 
 defineOptions({ name: 'SystemNotice' })
 
-const { notice_type, notice_status_enum } = useDict('notice_type', 'notice_status_enum')
+const { notice_type, notice_status } = useDict('notice_type', 'notice_status')
 
 const router = useRouter()
 const queryForm = reactive<NoticeQuery>({

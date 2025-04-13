@@ -104,6 +104,7 @@ public class DictionaryListener {
         DictionaryEntity dictionaryItem = new DictionaryEntity();
         dictionaryItem.setName(aEnum.getName());
         dictionaryItem.setValue(String.valueOf(aEnum.getValue()));
+        dictionaryItem.setColor(aEnum.getColor());
         dictionaryItem.setGroup(groupCode);
         dictionaryItem.setType(DictionaryTypeEnum.ENUM);
         dictionaryItem.setRemark("系统内置");

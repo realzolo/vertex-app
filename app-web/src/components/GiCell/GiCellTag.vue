@@ -1,12 +1,5 @@
 <template>
-  <span v-if="!dictItem"></span>
-  <span v-else-if="!dictItem.extra">{{ dictItem.label }}</span>
-  <a-tag v-else-if="dictItem.extra === 'primary'" color="arcoblue">{{ dictItem.label }}</a-tag>
-  <a-tag v-else-if="dictItem.extra === 'success'" color="green">{{ dictItem.label }}</a-tag>
-  <a-tag v-else-if="dictItem.extra === 'warning'" color="orangered">{{ dictItem.label }}</a-tag>
-  <a-tag v-else-if="dictItem.extra === 'error'" color="red">{{ dictItem.label }}</a-tag>
-  <a-tag v-else-if="dictItem.extra === 'default'" color="gray">{{ dictItem.label }}</a-tag>
-  <a-tag v-else :color="dictItem.extra">{{ dictItem.label }}</a-tag>
+  <a-tag :color="dictItem.color">{{ dictItem.label }}</a-tag>
 </template>
 
 <script setup lang="ts">

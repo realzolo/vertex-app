@@ -1,6 +1,7 @@
 package com.onezol.vertex.framework.common.model.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -13,6 +14,7 @@ import lombok.EqualsAndHashCode;
 public abstract class LogicalBaseEntity extends BaseEntity {
 
     @Schema(description = "逻辑删除标志")
+    @TableLogic
     @TableField("deleted")
     private boolean deleted = false;
 
