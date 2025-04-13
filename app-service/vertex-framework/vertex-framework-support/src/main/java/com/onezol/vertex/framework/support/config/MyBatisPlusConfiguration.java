@@ -1,6 +1,7 @@
 package com.onezol.vertex.framework.support.config;
 
-import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
+import com.baomidou.mybatisplus.autoconfigure.MybatisPlusPropertiesCustomizer;
+import com.baomidou.mybatisplus.core.incrementer.IdentifierGenerator;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.BlockAttackInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInterceptor;
@@ -8,36 +9,21 @@ import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerIntercept
 import com.baomidou.mybatisplus.extension.toolkit.JdbcUtils;
 import com.onezol.vertex.framework.security.api.context.AuthenticationContext;
 import com.onezol.vertex.framework.security.api.model.dto.AuthUser;
+import com.onezol.vertex.framework.support.support.CompactSnowflakeIdGenerator;
 import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Configuration
-public class MyBatisPlusConfiguration implements MetaObjectHandler {
+public class MyBatisPlusConfiguration {
 
     @Value("${spring.datasource.url}")
     private String dataSourceUrl;
-
-    @Override
-    public void insertFill(MetaObject metaObject) {
-        AuthUser authUser = AuthenticationContext.get();
-        this.strictInsertFill(metaObject, "creator", Long.class, Objects.nonNull(authUser) ? authUser.getUserId() : null);
-        this.strictInsertFill(metaObject, "createTime", LocalDateTime.class, LocalDateTime.now());
-        this.strictInsertFill(metaObject, "updater", Long.class, Objects.nonNull(authUser) ? authUser.getUserId() : null);
-        this.strictInsertFill(metaObject, "updateTime", LocalDateTime.class, LocalDateTime.now());
-        this.strictInsertFill(metaObject, "deleted", Boolean.class, Boolean.FALSE);
-    }
-
-    @Override
-    public void updateFill(MetaObject metaObject) {
-        AuthUser authUser = AuthenticationContext.get();
-        this.strictUpdateFill(metaObject, "updater", Long.class, Objects.nonNull(authUser) ? authUser.getUserId() : null);
-        this.strictUpdateFill(metaObject, "updateTime", LocalDateTime.class, LocalDateTime.now());
-    }
 
     @Bean
     public MybatisPlusInterceptor mybatisPlusInterceptor() {
@@ -51,6 +37,47 @@ public class MyBatisPlusConfiguration implements MetaObjectHandler {
         interceptor.addInnerInterceptor(new BlockAttackInnerInterceptor());
 
         return interceptor;
+    }
+
+    @Bean
+    public MybatisPlusPropertiesCustomizer mybatisPlusPropertiesCustomizer(SnowflakeIdGenerator idGenerator) {
+        return properties -> {
+            properties.getGlobalConfig().setIdentifierGenerator(idGenerator);
+        };
+    }
+
+    @Component
+    public static class SnowflakeIdGenerator implements IdentifierGenerator {
+        private final CompactSnowflakeIdGenerator snowflakeGenerator;
+
+        public SnowflakeIdGenerator(@Value("${application.snowflake.machine-id:1}") Long machineId) {
+            this.snowflakeGenerator = new CompactSnowflakeIdGenerator(machineId);
+        }
+
+        @Override
+        public Long nextId(Object entity) {
+            return snowflakeGenerator.nextId();
+        }
+    }
+
+    @Component
+    public static class MetaObjectHandler implements com.baomidou.mybatisplus.core.handlers.MetaObjectHandler {
+        @Override
+        public void insertFill(MetaObject metaObject) {
+            AuthUser authUser = AuthenticationContext.get();
+            this.strictInsertFill(metaObject, "creator", Long.class, Objects.nonNull(authUser) ? authUser.getUserId() : null);
+            this.strictInsertFill(metaObject, "createTime", LocalDateTime.class, LocalDateTime.now());
+            this.strictInsertFill(metaObject, "updater", Long.class, Objects.nonNull(authUser) ? authUser.getUserId() : null);
+            this.strictInsertFill(metaObject, "updateTime", LocalDateTime.class, LocalDateTime.now());
+            this.strictInsertFill(metaObject, "deleted", Boolean.class, Boolean.FALSE);
+        }
+
+        @Override
+        public void updateFill(MetaObject metaObject) {
+            AuthUser authUser = AuthenticationContext.get();
+            this.strictUpdateFill(metaObject, "updater", Long.class, Objects.nonNull(authUser) ? authUser.getUserId() : null);
+            this.strictUpdateFill(metaObject, "updateTime", LocalDateTime.class, LocalDateTime.now());
+        }
     }
 
 }

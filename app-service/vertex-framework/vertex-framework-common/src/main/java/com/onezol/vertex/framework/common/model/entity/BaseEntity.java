@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 public abstract class BaseEntity implements Entity {
 
     @Schema(description = "主键")
-    @TableId(type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.ASSIGN_ID)
     private Long id;
 
     @Schema(description = "创建人ID")

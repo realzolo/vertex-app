@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS vx_user
     UNIQUE (username)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
-  AUTO_INCREMENT = 10000 COMMENT = '用户';
+  COMMENT = '用户';
 
 CREATE TABLE IF NOT EXISTS vx_role
 (
@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS vx_role
     version        INT UNSIGNED     DEFAULT 0 COMMENT '版本号'
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
-  AUTO_INCREMENT = 10000 COMMENT = '用户角色';
+  COMMENT = '用户角色';
 
 CREATE TABLE IF NOT EXISTS vx_permission
 (
@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS vx_permission
     version        INT UNSIGNED     DEFAULT 0 COMMENT '版本号'
 ) ENGINE = InnoDB
     DEFAULT CHARSET = utf8mb4
-    AUTO_INCREMENT = 10000 COMMENT = '权限(菜单)';
+    COMMENT = '权限(菜单)';
 
 CREATE TABLE IF NOT EXISTS vx_user_role
 (
@@ -90,7 +90,7 @@ CREATE TABLE IF NOT EXISTS vx_user_role
     UNIQUE (user_id, role_id)
 ) ENGINE = InnoDB
     DEFAULT CHARSET = utf8mb4
-    AUTO_INCREMENT = 10000 COMMENT = '用户-角色';
+    COMMENT = '用户-角色';
 
 CREATE TABLE IF NOT EXISTS vx_role_permission
 (
@@ -108,7 +108,7 @@ CREATE TABLE IF NOT EXISTS vx_role_permission
     UNIQUE (role_id, permission_id)
 ) ENGINE = InnoDB
     DEFAULT CHARSET = utf8mb4
-    AUTO_INCREMENT = 10000 COMMENT = '角色-权限';
+    COMMENT = '角色-权限';
 
 CREATE TABLE IF NOT EXISTS vx_exception_log
 (
@@ -137,7 +137,7 @@ CREATE TABLE IF NOT EXISTS vx_exception_log
     INDEX (user_id)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
-  AUTO_INCREMENT = 10000 COMMENT = 'API错误日志';
+  COMMENT = 'API错误日志';
 
 CREATE TABLE IF NOT EXISTS vx_operation_log
 (
@@ -168,7 +168,7 @@ CREATE TABLE IF NOT EXISTS vx_operation_log
     INDEX (user_id)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
-  AUTO_INCREMENT = 10000 COMMENT = '操作日志';
+  COMMENT = '操作日志';
 
 CREATE TABLE IF NOT EXISTS vx_runtime_configuration
 (
@@ -188,7 +188,7 @@ CREATE TABLE IF NOT EXISTS vx_runtime_configuration
     version     INT UNSIGNED DEFAULT 0 COMMENT '版本号'
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
-  AUTO_INCREMENT = 10000 COMMENT = '运行时配置';
+  COMMENT = '运行时配置';
 
 CREATE TABLE IF NOT EXISTS vx_dictionary
 (
@@ -211,7 +211,7 @@ CREATE TABLE IF NOT EXISTS vx_dictionary
     version     INT UNSIGNED DEFAULT 0 COMMENT '版本号'
 ) ENGINE = InnoDB
     DEFAULT CHARSET = utf8mb4
-    AUTO_INCREMENT = 10000 COMMENT = '数据字典';
+    COMMENT = '数据字典';
 
 CREATE TABLE IF NOT EXISTS vx_storage_strategy
 (
@@ -238,7 +238,7 @@ CREATE TABLE IF NOT EXISTS vx_storage_strategy
     version     INT UNSIGNED DEFAULT 0 COMMENT '版本号'
 ) ENGINE = InnoDB
     DEFAULT CHARSET = utf8mb4
-    AUTO_INCREMENT = 10000 COMMENT = '存储策略';
+    COMMENT = '存储策略';
 
 CREATE TABLE IF NOT EXISTS vx_file_record
 (
@@ -260,7 +260,7 @@ CREATE TABLE IF NOT EXISTS vx_file_record
     version     INT UNSIGNED DEFAULT 0 COMMENT '版本号'
 ) ENGINE = InnoDB
     DEFAULT CHARSET = utf8mb4
-    AUTO_INCREMENT = 10000 COMMENT = '文件记录';
+    COMMENT = '文件记录';
 
 CREATE TABLE IF NOT EXISTS vx_department
 (
@@ -281,7 +281,7 @@ CREATE TABLE IF NOT EXISTS vx_department
     version     INT UNSIGNED DEFAULT 0 COMMENT '版本号'
 ) ENGINE = InnoDB
     DEFAULT CHARSET = utf8mb4
-    AUTO_INCREMENT = 10000 COMMENT = '部门';
+    COMMENT = '部门';
 
 CREATE TABLE IF NOT EXISTS vx_user_department
 (
@@ -297,7 +297,7 @@ CREATE TABLE IF NOT EXISTS vx_user_department
     version     INT UNSIGNED DEFAULT 0 COMMENT '版本号'
 ) ENGINE = InnoDB
     DEFAULT CHARSET = utf8mb4
-    AUTO_INCREMENT = 10000 COMMENT = '用户-部门';
+    COMMENT = '用户-部门';
 
 CREATE TABLE IF NOT EXISTS vx_notice
 (
@@ -319,4 +319,4 @@ CREATE TABLE IF NOT EXISTS vx_notice
     deleted     BIT          DEFAULT b'0' COMMENT '是否删除'
 ) ENGINE = InnoDB
     DEFAULT CHARSET = utf8mb4
-    AUTO_INCREMENT = 10000 COMMENT = '通知公告';
+    COMMENT = '通知公告';

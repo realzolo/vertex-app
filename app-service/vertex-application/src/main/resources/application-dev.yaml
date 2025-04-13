@@ -28,6 +28,8 @@ spring:
 
 # 应用配置
 application:
+  snowflake:
+    machine-id: 0
   jwt:
     secret-key: C61270901C4A455A89A0196CBCED9803
     expiration-time: 3600  # token有效期, 1小时

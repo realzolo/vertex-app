@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Value;
  * <b>注意: 不要在业务中使用此类<b><br>
  * <b>注意: 不要在业务中使用此类<b><br>
  */
-//@Configuration
 @SuppressWarnings("unused")
 public class NoNavigatedVariableProperties {
 
