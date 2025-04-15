@@ -305,13 +305,13 @@ const fetchRole = async (id: string) => {
     }
     isCascade.value = data.menuCheckStrictly
     // 更新选中键集合
-    selectedKeys.value = new Set(data.menuIds)
+    selectedKeys.value = new Set(data.permissionIds)
     // 更新表格数据的选中状态
-    updateTableDataCheckedStatus(tableData.value, data.menuIds)
+    updateTableDataCheckedStatus(tableData.value, data.permissionIds)
     // 手动设置表格行的选中状态，确保组件响应
     await nextTick(() => {
       tableRef.value?.tableRef?.selectAll(false)
-      tableRef.value?.tableRef?.select(data.menuIds, true)
+      tableRef.value?.tableRef?.select(data.permissionIds, true)
       showCheckedAll.value = !disabled.value
     })
   } finally {
