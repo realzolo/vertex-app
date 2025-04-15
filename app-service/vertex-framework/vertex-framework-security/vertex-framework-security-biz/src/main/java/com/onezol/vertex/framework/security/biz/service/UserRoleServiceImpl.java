@@ -22,9 +22,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -223,20 +221,42 @@ public class UserRoleServiceImpl extends BaseServiceImpl<UserRoleMapper, UserRol
     @Transactional
     public void bindRolePermissions(Long roleId, List<Long> permissionIds) {
         if (Objects.isNull(roleId) || Objects.isNull(permissionIds) || permissionIds.isEmpty()) {
-            throw new RuntimeServiceException(ServiceStatusEnum.BAD_REQUEST, "角色ID或用户权限ID列表不能为空");
+            throw new RuntimeServiceException(ServiceStatusEnum.BAD_REQUEST, "角色ID或权限ID列表不能为空");
         }
 
-        // 删除旧绑定关系
-        rolePermissionService.removePermissionsByRole(roleId);
+        Set<Long> permissionIdsSet = new HashSet<>(permissionIds);
 
-        // 创建新绑定关系
-        List<RolePermissionEntity> shouldCreateEntities = new ArrayList<>();
-        for (Long permissionId : permissionIds) {
+        // 获取已存在的关联关系
+        List<RolePermissionEntity> rolePermissionEntities = rolePermissionService.list(
+                Wrappers.<RolePermissionEntity>lambdaQuery()
+                        .select(RolePermissionEntity::getId, RolePermissionEntity::getPermissionId)
+                        .eq(RolePermissionEntity::getRoleId, roleId)
+        );
+
+        // 计算需要删除的关联关系 与 需要创建的关联关系
+        List<Long> willDeleteRelationIds = new ArrayList<>(permissionIds.size() >> 1);
+        for (RolePermissionEntity rolePermissionEntity : rolePermissionEntities) {
+            if (!permissionIdsSet.contains(rolePermissionEntity.getPermissionId())) {
+                willDeleteRelationIds.add(rolePermissionEntity.getId());
+            } else {
+                permissionIdsSet.remove(rolePermissionEntity.getPermissionId());
+            }
+        }
+        List<Long> willCreateRelationPermissionIds = permissionIdsSet.stream().toList();
+
+        // 删除被解除的关联关系
+        if (!willDeleteRelationIds.isEmpty()) {
+            rolePermissionService.removeByIds(willDeleteRelationIds);
+        }
+
+        // 创建新的关联关系
+        List<RolePermissionEntity> willCreateEntities = new ArrayList<>();
+        for (Long permissionId : willCreateRelationPermissionIds) {
             RolePermissionEntity entity = new RolePermissionEntity();
             entity.setRoleId(roleId);
             entity.setPermissionId(permissionId);
-            shouldCreateEntities.add(entity);
+            willCreateEntities.add(entity);
         }
-        rolePermissionService.saveBatch(shouldCreateEntities);
+        rolePermissionService.saveBatch(willCreateEntities);
     }
 }
