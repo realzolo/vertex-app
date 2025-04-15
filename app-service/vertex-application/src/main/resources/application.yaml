@@ -46,9 +46,10 @@ spring:
       lettuce:
         pool:
           max-active: 8
-          max-wait: 4
           max-idle: 8
           min-idle: 2
+          max-wait: 200ms
+          time-between-eviction-runs: 30s
   liquibase:
     enabled: false
     change-log: classpath:changelog/mysql/changelog-application.xml
@@ -73,3 +74,8 @@ management:
   endpoint:
     health:
       show-details: always
+    prometheus:
+      enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}

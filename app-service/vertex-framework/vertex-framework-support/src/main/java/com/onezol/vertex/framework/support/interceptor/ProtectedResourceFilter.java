@@ -19,7 +19,7 @@ import static com.onezol.vertex.framework.support.interceptor.RequestInterceptio
  * 受保护资源拦截器<br>
  * 此处拦截系统中禁止对外暴露的资源(一般拦截第三方jar包提供的接口)
  */
-@Component
+//@Component
 @Order(PROTECTED_RESOURCE_FILTER_ORDER)
 public class ProtectedResourceFilter implements Filter {
 

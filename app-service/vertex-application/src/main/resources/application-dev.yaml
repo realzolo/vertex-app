@@ -8,7 +8,7 @@ spring:
   # Redis配置
   data:
     redis:
-      host: 127.0.0.1
+      host: redis.onezol.com
       port: 6379
       password: 123456
       database: 5
