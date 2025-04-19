@@ -31,7 +31,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
      * 配置错误页面 <br/>
      * 集成React前端项目时，前端路由会导致后端404错误，这里配置404错误页面跳转到index.html
      */
-    @Bean
+//    @Bean
     public WebServerFactoryCustomizer<ConfigurableWebServerFactory> webServerFactoryCustomizer() {
         return factory -> {
             ErrorPage error404Page = new ErrorPage(HttpStatus.NOT_FOUND, "/index.html");

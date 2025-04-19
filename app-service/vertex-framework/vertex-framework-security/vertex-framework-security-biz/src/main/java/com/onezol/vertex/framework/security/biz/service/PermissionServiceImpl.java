@@ -2,8 +2,7 @@ package com.onezol.vertex.framework.security.biz.service;
 
 import com.onezol.vertex.framework.common.mvc.service.BaseServiceImpl;
 import com.onezol.vertex.framework.common.util.StringUtils;
-import com.onezol.vertex.framework.security.api.mapper.PermissionMapper;
-import com.onezol.vertex.framework.security.api.model.dto.Permission;
+import com.onezol.vertex.framework.security.biz.mapper.PermissionMapper;
 import com.onezol.vertex.framework.security.api.model.entity.PermissionEntity;
 import com.onezol.vertex.framework.security.api.service.PermissionService;
 import lombok.extern.slf4j.Slf4j;
@@ -18,12 +17,6 @@ import java.util.Set;
 @Service
 public class PermissionServiceImpl extends BaseServiceImpl<PermissionMapper, PermissionEntity> implements PermissionService {
 
-    private final PermissionMapper permissionMapper;
-
-    public PermissionServiceImpl(PermissionMapper permissionMapper) {
-        this.permissionMapper = permissionMapper;
-    }
-
     /**
      * 获取用户权限
      *
@@ -34,7 +27,7 @@ public class PermissionServiceImpl extends BaseServiceImpl<PermissionMapper, Per
         if (roleId == null) {
             return "";
         }
-        return permissionMapper.queryRolePermission(roleId);
+        return this.baseMapper.queryRolePermission(roleId);
     }
 
     /**
@@ -47,7 +40,7 @@ public class PermissionServiceImpl extends BaseServiceImpl<PermissionMapper, Per
         if (roleIds == null || roleIds.isEmpty()) {
             return Collections.emptySet();
         }
-        List<PermissionEntity> permissions = permissionMapper.queryRolePermissions(roleIds);
+        List<PermissionEntity> permissions = this.baseMapper.queryRolePermissions(roleIds);
         Set<String> permissionKeys = new HashSet<>();
         for (PermissionEntity permission : permissions) {
             if (!StringUtils.isBlank(permission.getPermission())) {
@@ -67,7 +60,7 @@ public class PermissionServiceImpl extends BaseServiceImpl<PermissionMapper, Per
         if (roleIds == null || roleIds.isEmpty()) {
             return Collections.emptySet();
         }
-        List<PermissionEntity> permissions = permissionMapper.queryRolePermissions(roleIds);
+        List<PermissionEntity> permissions = this.baseMapper.queryRolePermissions(roleIds);
         Set<Long> permissionIds = new HashSet<>();
         for (PermissionEntity permission : permissions) {
             permissionIds.add(permission.getId());

@@ -3,7 +3,7 @@ package com.onezol.vertex.framework.security.biz.service;
 import com.onezol.vertex.framework.common.mvc.service.BaseServiceImpl;
 import com.onezol.vertex.framework.common.util.Asserts;
 import com.onezol.vertex.framework.common.util.BeanUtils;
-import com.onezol.vertex.framework.security.api.mapper.DepartmentMapper;
+import com.onezol.vertex.framework.security.biz.mapper.DepartmentMapper;
 import com.onezol.vertex.framework.security.api.model.dto.Department;
 import com.onezol.vertex.framework.security.api.model.entity.DepartmentEntity;
 import com.onezol.vertex.framework.security.api.model.payload.DepartmentSavePayload;

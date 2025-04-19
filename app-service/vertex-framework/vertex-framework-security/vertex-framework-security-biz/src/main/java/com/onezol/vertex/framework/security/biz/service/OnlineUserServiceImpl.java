@@ -1,22 +1,17 @@
 package com.onezol.vertex.framework.security.biz.service;
 
 import com.onezol.vertex.framework.common.constant.CacheKey;
-import com.onezol.vertex.framework.common.util.DateUtils;
+import com.onezol.vertex.framework.security.api.model.LoginUserDetails;
 import com.onezol.vertex.framework.security.api.model.dto.OnlineUser;
-import com.onezol.vertex.framework.security.api.model.dto.User;
-import com.onezol.vertex.framework.security.api.model.pojo.LoginUser;
 import com.onezol.vertex.framework.security.api.service.OnlineUserService;
 import com.onezol.vertex.framework.support.cache.RedisCache;
+import com.onezol.vertex.framework.support.support.JWTHelper;
 import com.onezol.vertex.framework.support.support.RedisKeyHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -36,17 +31,20 @@ public class OnlineUserServiceImpl implements OnlineUserService {
     /**
      * 添加在线用户
      *
-     * @param loginUser      登录用户
+     * @param loginUserDetails 登录用户信息
+     * @param token            token
      */
     @Override
-    public void addOnlineUser(LoginUser loginUser) {
-        Assert.notNull(loginUser, "user must not be null");
+    public void addOnlineUser(LoginUserDetails loginUserDetails, String token) {
+        String subject = JWTHelper.getSubjectFromToken(token);
 
-        User user = loginUser.getDetails();
+        // Redis存储用户Token
+        String redisTokenKey = RedisKeyHelper.buildCacheKey(CacheKey.USER_TOKEN, subject);
+        redisCache.setCacheObject(redisTokenKey, token, expirationTime, TimeUnit.SECONDS);
 
-        // 存储用户信息
-        String infoKey = RedisKeyHelper.buildCacheKey(CacheKey.USER_INFO, String.valueOf(user.getId()));
-        redisCache.setCacheObject(infoKey, loginUser, expirationTime, TimeUnit.SECONDS);
+        // Redis存储用户信息
+        String redisInfoKey = RedisKeyHelper.buildCacheKey(CacheKey.USER_INFO, String.valueOf(loginUserDetails.getId()));
+        redisCache.setCacheObject(redisInfoKey, loginUserDetails, expirationTime, TimeUnit.SECONDS);
     }
 
     /**
@@ -56,7 +54,9 @@ public class OnlineUserServiceImpl implements OnlineUserService {
      */
     @Override
     public void removeOnlineUser(Long userId) {
-        Assert.notNull(userId, "userId must not be null");
+        if (userId == null) {
+            return;
+        }
 
         // 移除用户Token
         String tokenKey = RedisKeyHelper.buildCacheKey(CacheKey.USER_TOKEN, String.valueOf(userId));
@@ -76,44 +76,45 @@ public class OnlineUserServiceImpl implements OnlineUserService {
      */
     @Override
     public List<OnlineUser> getOnlineUsers(int pageNumber, int pageSize) {
-        int startIndex = (pageNumber - 1) * pageSize;
-        int endIndex = pageNumber * pageSize - 1;
-
-        // 获取在线用户ID集合
-        Collection<String> keys = redisCache.keys(RedisKeyHelper.getWildcardKey(CacheKey.USER_TOKEN));
-        if (keys == null || keys.isEmpty()) {
-            return Collections.emptyList();
-        }
-
-        // 获取在线用户信息
-        List<LoginUser> loginUsers = redisCache.getCacheList(keys.stream().toList());
-        if (loginUsers.isEmpty()) {
-            return Collections.emptyList();
-        }
-
-        loginUsers = loginUsers.subList(startIndex, Math.min(endIndex, loginUsers.size()));
-
-        // 用户信息转换
-        List<OnlineUser> onlineUsers = new ArrayList<>(loginUsers.size());
-        for (LoginUser loginUser : loginUsers) {
-            User user = loginUser.getDetails();
-            OnlineUser ou = OnlineUser.builder()
-                    .userId(user.getId())
-                    .username(user.getUsername())
-                    .nickname(user.getNickname())
-                    .avatar(user.getAvatar())
-                    .ip(loginUser.getIp())
-                    .browser(loginUser.getBrowser())
-                    .os(loginUser.getOs())
-                    .location(loginUser.getLocation())
-                    .loginTime(loginUser.getLoginTime())
-                    .onlineTime(loginUser.getLocation())
-                    .onlineTime(DateUtils.shortTimeDifference(loginUser.getLoginTime(), LocalDateTime.now()))
-                    .build();
-            onlineUsers.add(ou);
-        }
-
-        return onlineUsers;
+//        int startIndex = (pageNumber - 1) * pageSize;
+//        int endIndex = pageNumber * pageSize - 1;
+//
+//        // 获取在线用户ID集合
+//        Collection<String> keys = redisCache.keys(RedisKeyHelper.getWildcardKey(CacheKey.USER_TOKEN));
+//        if (keys == null || keys.isEmpty()) {
+//            return Collections.emptyList();
+//        }
+//
+//        // 获取在线用户信息
+//        List<LoginUser> loginUsers = redisCache.getCacheList(keys.stream().toList());
+//        if (loginUsers.isEmpty()) {
+//            return Collections.emptyList();
+//        }
+//
+//        loginUsers = loginUsers.subList(startIndex, Math.min(endIndex, loginUsers.size()));
+//
+//        // 用户信息转换
+//        List<OnlineUser> onlineUsers = new ArrayList<>(loginUsers.size());
+//        for (LoginUser loginUser : loginUsers) {
+//            User user = loginUser.getDetails();
+//            OnlineUser ou = OnlineUser.builder()
+//                    .userId(user.getId())
+//                    .username(user.getUsername())
+//                    .nickname(user.getNickname())
+//                    .avatar(user.getAvatar())
+//                    .ip(loginUser.getIp())
+//                    .browser(loginUser.getBrowser())
+//                    .os(loginUser.getOs())
+//                    .location(loginUser.getLocation())
+//                    .loginTime(loginUser.getLoginTime())
+//                    .onlineTime(loginUser.getLocation())
+//                    .onlineTime(DateUtils.shortTimeDifference(loginUser.getLoginTime(), LocalDateTime.now()))
+//                    .build();
+//            onlineUsers.add(ou);
+//        }
+//
+//        return onlineUsers;
+        return null;
     }
 
     /**

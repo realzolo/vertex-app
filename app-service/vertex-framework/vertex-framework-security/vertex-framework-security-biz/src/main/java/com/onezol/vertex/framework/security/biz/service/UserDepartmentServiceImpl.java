@@ -3,7 +3,7 @@ package com.onezol.vertex.framework.security.biz.service;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.onezol.vertex.framework.common.mvc.service.BaseServiceImpl;
 import com.onezol.vertex.framework.common.util.BeanUtils;
-import com.onezol.vertex.framework.security.api.mapper.UserDepartmentMapper;
+import com.onezol.vertex.framework.security.biz.mapper.UserDepartmentMapper;
 import com.onezol.vertex.framework.security.api.model.dto.Department;
 import com.onezol.vertex.framework.security.api.model.entity.DepartmentEntity;
 import com.onezol.vertex.framework.security.api.model.entity.UserDepartmentEntity;

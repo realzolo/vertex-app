@@ -10,7 +10,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 /**
- * FastJson序列化器(主要用于序列化Redis)
+ * FastJson序列化器(主要用于Java对象的Redis序列化与反序列化)
  */
 public class FastJson2JsonRedisSerializer<T> implements RedisSerializer<T> {
 

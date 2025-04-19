@@ -7,7 +7,7 @@ import com.onezol.vertex.framework.common.exception.RuntimeServiceException;
 import com.onezol.vertex.framework.common.model.PageModel;
 import com.onezol.vertex.framework.common.mvc.service.BaseServiceImpl;
 import com.onezol.vertex.framework.common.util.BeanUtils;
-import com.onezol.vertex.framework.security.api.mapper.UserMapper;
+import com.onezol.vertex.framework.security.biz.mapper.UserMapper;
 import com.onezol.vertex.framework.security.api.model.dto.Department;
 import com.onezol.vertex.framework.security.api.model.dto.SimpleDepartment;
 import com.onezol.vertex.framework.security.api.model.dto.SimpleRole;

@@ -5,20 +5,23 @@ import com.onezol.vertex.framework.common.constant.CacheKey;
 import com.onezol.vertex.framework.common.constant.enumeration.GenderEnum;
 import com.onezol.vertex.framework.common.exception.RuntimeServiceException;
 import com.onezol.vertex.framework.common.mvc.service.BaseServiceImpl;
-import com.onezol.vertex.framework.common.util.*;
+import com.onezol.vertex.framework.common.util.Asserts;
+import com.onezol.vertex.framework.common.util.BeanUtils;
+import com.onezol.vertex.framework.common.util.CodecUtils;
+import com.onezol.vertex.framework.common.util.StringUtils;
 import com.onezol.vertex.framework.security.api.context.AuthenticationContext;
-import com.onezol.vertex.framework.security.api.mapper.UserMapper;
+import com.onezol.vertex.framework.security.api.enumeration.LoginTypeEnum;
+import com.onezol.vertex.framework.security.api.model.LoginUserDetails;
 import com.onezol.vertex.framework.security.api.model.dto.AuthUser;
 import com.onezol.vertex.framework.security.api.model.dto.User;
 import com.onezol.vertex.framework.security.api.model.entity.*;
 import com.onezol.vertex.framework.security.api.model.payload.UserSavePayload;
-import com.onezol.vertex.framework.security.api.model.pojo.LoginUser;
 import com.onezol.vertex.framework.security.api.model.vo.UserAuthenticationVO;
 import com.onezol.vertex.framework.security.api.service.*;
+import com.onezol.vertex.framework.security.biz.mapper.UserMapper;
 import com.onezol.vertex.framework.support.cache.RedisCache;
 import com.onezol.vertex.framework.support.support.JWTHelper;
 import com.onezol.vertex.framework.support.support.RedisKeyHelper;
-import eu.bitwalker.useragentutils.UserAgent;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -29,11 +32,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 import static com.onezol.vertex.framework.common.constant.enumeration.ServiceStatusEnum.BAD_REQUEST;
 
@@ -41,33 +42,28 @@ import static com.onezol.vertex.framework.common.constant.enumeration.ServiceSta
 public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity> implements UserAuthService {
 
     private final AuthenticationManager authenticationManager;
-
-    private final OnlineUserService onlineUserService;
-
     private final PasswordEncoder passwordEncoder;
-
     private final RedisCache redisCache;
-
     private final DepartmentService departmentService;
-
     private final RoleService roleService;
-
-    private final UserDepartmentService userDepartmentService;
-
     private final UserRoleService userRoleService;
+    private final UserDepartmentService userDepartmentService;
+    private final LoginHistoryService loginHistoryService;
+    private final OnlineUserService onlineUserService;
 
     @Value("${spring.jwt.expiration-time:3600}")
     private Integer expirationTime;
 
-    public UserAuthServiceImpl(AuthenticationManager authenticationManager, OnlineUserService onlineUserService, PasswordEncoder passwordEncoder, RedisCache redisCache, DepartmentService departmentService, RoleService roleService, UserDepartmentService userDepartmentService, UserRoleService userRoleService) {
+    public UserAuthServiceImpl(AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, RedisCache redisCache, DepartmentService departmentService, RoleService roleService, UserRoleService userRoleService, UserDepartmentService userDepartmentService, LoginHistoryService loginHistoryService, OnlineUserService onlineUserService) {
         this.authenticationManager = authenticationManager;
-        this.onlineUserService = onlineUserService;
         this.passwordEncoder = passwordEncoder;
         this.redisCache = redisCache;
         this.departmentService = departmentService;
         this.roleService = roleService;
-        this.userDepartmentService = userDepartmentService;
         this.userRoleService = userRoleService;
+        this.userDepartmentService = userDepartmentService;
+        this.loginHistoryService = loginHistoryService;
+        this.onlineUserService = onlineUserService;
     }
 
     /**
@@ -143,7 +139,7 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
 
         // 构建返回结果
         User user = BeanUtils.toBean(entity, User.class);
-        String token = JWTHelper.generateToken(CodecUtils.encodeBase64(String.valueOf(user.getId())));
+        String token = JWTHelper.generateToken(String.valueOf(user.getId()));
         return UserAuthenticationVO.builder()
                 .user(user)
                 .jwt(
@@ -166,10 +162,10 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
     public UserAuthenticationVO loginByIdPassword(String username, String password, String sessionId, String captcha) throws RuntimeServiceException {
         // 参数校验
         if (StringUtils.isBlank(sessionId)) {
-            throw new RuntimeServiceException("会话ID不能为空");
+            throw new RuntimeServiceException(BAD_REQUEST, "会话ID不能为空");
         }
         if (StringUtils.isAnyBlank(username, password)) {
-            throw new RuntimeServiceException("用户名或密码不能为空");
+            throw new RuntimeServiceException(BAD_REQUEST, "用户名或密码不能为空");
         }
 
         // 校验验证码
@@ -179,7 +175,7 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
             throw new RuntimeServiceException("验证码错误");
         }
 
-        // 调用SpringSecurity的AuthenticationManager处理登录验证
+        // 调用 SpringSecurity 的 AuthenticationManager 处理登录验证
         Authentication authentication = new UsernamePasswordAuthenticationToken(username, password);
         try {
             authentication = authenticationManager.authenticate(authentication);
@@ -198,10 +194,10 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
 
         // 获取用户信息
         Object principal = authentication.getPrincipal();
-        LoginUser loginUser = (LoginUser) principal;
+        LoginUserDetails loginUserDetails = (LoginUserDetails) principal;
 
         // 处理登录成功后的逻辑
-        return afterLoginSuccess(loginUser);
+        return afterLoginSuccess(loginUserDetails, LoginTypeEnum.PBA);
     }
 
     /**
@@ -283,28 +279,22 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
     /**
      * 登录成功后的处理
      *
-     * @param loginUser 登录用户身份信息
+     * @param loginUserDetails 登录用户身份信息
      * @return 登录成功后的处理结果
      */
-    private UserAuthenticationVO afterLoginSuccess(final LoginUser loginUser) {
-        // 设置用户登录信息
-        this.setLoginUserDetails(loginUser);
-
+    private UserAuthenticationVO afterLoginSuccess(LoginUserDetails loginUserDetails, final LoginTypeEnum loginType) {
         // 生成token
-        String subject = String.valueOf(loginUser.getDetails().getId());
-        String token = JWTHelper.generateToken(subject);
+        String token = JWTHelper.generateToken(loginUserDetails.getId().toString());
 
-        // Redis存储用户Token
-        String tokenKey = RedisKeyHelper.buildCacheKey(CacheKey.USER_TOKEN, subject);
-        redisCache.setCacheObject(tokenKey, token, expirationTime, TimeUnit.SECONDS);
+        // 缓存用户数据
+        onlineUserService.addOnlineUser(loginUserDetails, token);
 
-        // Redis存储用户信息
-        onlineUserService.addOnlineUser(loginUser);
+        // 存储登录日志
+        loginHistoryService.createLoginRecord(loginUserDetails, loginType);
 
         // 返回结果
-        User user = loginUser.getDetails();
         return UserAuthenticationVO.builder()
-                .user(user)
+                .user(loginUserDetails)
                 .jwt(
                         UserAuthenticationVO.UserAuthenticationJWT.builder()
                                 .token(token)
@@ -333,26 +323,6 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
         entity.setEmail("");
         entity.setPwdExpDate(LocalDate.now().plusMonths(3));
         return entity;
-    }
-
-    /**
-     * 设置用户登录信息
-     *
-     * @param user 用户信息
-     */
-    private void setLoginUserDetails(final LoginUser user) {
-        LocalDateTime loginTime = LocalDateTime.now();
-        String ip = NetworkUtils.getHostIp();
-        String location = NetworkUtils.getAddressByIP(ip);
-        UserAgent userAgent = ServletUtils.getUserAgent();
-        String browser = userAgent.getBrowser().getName();
-        String os = userAgent.getOperatingSystem().getName();
-
-        user.setLoginTime(loginTime);
-        user.setIp(ip);
-        user.setLocation(location);
-        user.setBrowser(browser);
-        user.setOs(os);
     }
 
     /**

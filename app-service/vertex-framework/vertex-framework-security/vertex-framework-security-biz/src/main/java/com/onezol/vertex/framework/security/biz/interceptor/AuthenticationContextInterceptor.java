@@ -2,9 +2,7 @@ package com.onezol.vertex.framework.security.biz.interceptor;
 
 import com.onezol.vertex.framework.security.api.context.AuthenticationContext;
 import com.onezol.vertex.framework.security.api.model.dto.AuthUser;
-import com.onezol.vertex.framework.common.util.BeanUtils;
-import com.onezol.vertex.framework.security.api.model.dto.User;
-import com.onezol.vertex.framework.security.api.model.pojo.LoginUser;
+import com.onezol.vertex.framework.security.api.model.LoginUserDetails;
 import lombok.NonNull;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.core.Authentication;
@@ -28,16 +26,14 @@ public class AuthenticationContextInterceptor implements WebRequestInterceptor {
     public void preHandle(@NonNull WebRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Object principal = authentication.getPrincipal();
-        if (principal instanceof LoginUser loginUser) {
-            User user = BeanUtils.toBean(loginUser.getDetails(), User.class);
-
+        if (principal instanceof LoginUserDetails loginUserDetails) {
             AuthUser model = AuthUser.builder()
-                    .userId(user.getId())
-                    .username(user.getUsername())
-                    .nickname(user.getNickname())
-                    .department(user.getDepartment())
-                    .roles(user.getRoles())
-                    .permissions(user.getPermissions())
+                    .userId(loginUserDetails.getId())
+                    .username(loginUserDetails.getUsername())
+                    .nickname(loginUserDetails.getNickname())
+                    .department(loginUserDetails.getDepartment())
+                    .roles(loginUserDetails.getRoles())
+                    .permissions(loginUserDetails.getPermissions())
                     .build();
             AuthenticationContext.set(model);
         }

@@ -2,7 +2,7 @@ package com.onezol.vertex.framework.security.biz.interceptor;
 
 import com.onezol.vertex.framework.common.constant.CacheKey;
 import com.onezol.vertex.framework.common.util.StringUtils;
-import com.onezol.vertex.framework.security.api.model.pojo.LoginUser;
+import com.onezol.vertex.framework.security.api.model.LoginUserDetails;
 import com.onezol.vertex.framework.support.cache.RedisCache;
 import com.onezol.vertex.framework.support.support.JWTHelper;
 import com.onezol.vertex.framework.support.support.RedisKeyHelper;
@@ -37,18 +37,14 @@ import static com.onezol.vertex.framework.common.constant.GenericConstants.AUTHO
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
     private final RedisCache redisCache;
-    /**
-     * token过期时间: 默认1小时 （单位秒）
-     */
+
+    // token过期时间: 默认1小时 （单位秒）
     @Value("${spring.jwt.expiration-time:3600}")
     private Integer expirationTime;
 
-    /**
-     * token续期的阈值: 默认15分钟 （单位秒, 距离过期时间小于该阈值时, 进行续期操作）
-     */
+    // token续期的阈值: 默认15分钟 （单位秒, 距离过期时间小于该阈值时, 进行续期操作）
     @Value("${spring.jwt.renew-threshold:900}")
     private Integer renewThreshold;
-
 
     public JwtAuthenticationTokenFilter(RedisCache redisCache) {
         this.redisCache = redisCache;
@@ -71,8 +67,8 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             // 从Redis中获取用户信息, 并验证用户信息是否存在
             String subject = JWTHelper.getSubjectFromToken(token);
             String redisKey = RedisKeyHelper.buildCacheKey(CacheKey.USER_INFO, subject);
-            LoginUser loginUser = redisCache.getCacheObject(redisKey);
-            if (Objects.isNull(loginUser)) {
+            LoginUserDetails loginUserDetails = redisCache.getCacheObject(redisKey);
+            if (Objects.isNull(loginUserDetails)) {
                 filterChain.doFilter(request, response);
                 return;
             }
@@ -90,7 +86,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             }
 
             // 将用户信息存入SecurityContext中, 以便后续使用
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginUser, null, loginUser.getAuthorities());
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginUserDetails, null, loginUserDetails.getAuthorities());
             authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         }
@@ -122,7 +118,6 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
      */
     private String renewToken(Claims claims) {
         String subject = claims.getSubject();
-        // 进行JWT续期操作(重新生成一个)
         return JWTHelper.generateToken(subject);
     }
 

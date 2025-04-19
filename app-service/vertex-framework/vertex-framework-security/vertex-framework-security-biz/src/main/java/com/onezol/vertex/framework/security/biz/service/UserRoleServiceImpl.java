@@ -7,7 +7,7 @@ import com.onezol.vertex.framework.common.exception.RuntimeServiceException;
 import com.onezol.vertex.framework.common.model.PageModel;
 import com.onezol.vertex.framework.common.mvc.service.BaseServiceImpl;
 import com.onezol.vertex.framework.common.util.Asserts;
-import com.onezol.vertex.framework.security.api.mapper.UserRoleMapper;
+import com.onezol.vertex.framework.security.biz.mapper.UserRoleMapper;
 import com.onezol.vertex.framework.security.api.model.dto.User;
 import com.onezol.vertex.framework.security.api.model.entity.RoleEntity;
 import com.onezol.vertex.framework.security.api.model.entity.RolePermissionEntity;
@@ -32,14 +32,11 @@ public class UserRoleServiceImpl extends BaseServiceImpl<UserRoleMapper, UserRol
 
     private final UserInfoService userInfoService;
 
-    private final UserRoleMapper userRoleMapper;
-
     private final RolePermissionService rolePermissionService;
 
-    public UserRoleServiceImpl(@Lazy RoleService roleService, @Lazy UserInfoService userInfoService, UserRoleMapper userRoleMapper, RolePermissionService rolePermissionService) {
+    public UserRoleServiceImpl(@Lazy RoleService roleService, @Lazy UserInfoService userInfoService, RolePermissionService rolePermissionService) {
         this.roleService = roleService;
         this.userInfoService = userInfoService;
-        this.userRoleMapper = userRoleMapper;
         this.rolePermissionService = rolePermissionService;
     }
 
@@ -54,7 +51,7 @@ public class UserRoleServiceImpl extends BaseServiceImpl<UserRoleMapper, UserRol
         if (userId == null) {
             return null;
         }
-        return userRoleMapper.queryUserRoles(userId);
+        return this.baseMapper.queryUserRoles(userId);
     }
 
     /**

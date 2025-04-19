@@ -320,3 +320,24 @@ CREATE TABLE IF NOT EXISTS vx_notice
 ) ENGINE = InnoDB
     DEFAULT CHARSET = utf8mb4
     COMMENT = '通知公告';
+
+CREATE TABLE IF NOT EXISTS vx_login_history
+(
+    id          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
+    -- 自定义字段开始 --
+    user_id           BIGINT        COMMENT '用户ID',
+    login_type        VARCHAR(25)   COMMENT '登录类型',
+    login_time        DATETIME      COMMENT '更新时间',
+    ip                VARCHAR(25)   COMMENT '登录IP',
+    browser           VARCHAR(255)  COMMENT '浏览器',
+    os                VARCHAR(255)  COMMENT '操作系统',
+    location          VARCHAR(255)  COMMENT '登录地址',
+    -- 自定义字段结束 --
+    creator     BIGINT       DEFAULT NULL COMMENT '创建人',
+    create_time DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    updater     BIGINT       DEFAULT NULL COMMENT '更新人',
+    update_time DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+    version     INT UNSIGNED DEFAULT 0 COMMENT '版本号'
+) ENGINE = InnoDB
+    DEFAULT CHARSET = utf8mb4
+    COMMENT = '用户登录历史';

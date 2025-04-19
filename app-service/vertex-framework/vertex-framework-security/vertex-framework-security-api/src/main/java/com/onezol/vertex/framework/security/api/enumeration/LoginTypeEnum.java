@@ -7,21 +7,21 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-@Schema(name = "权限类型")
+@Schema(name = "登录类型")
 @Getter
 @RequiredArgsConstructor
-@EnumDictionary(name = "权限类型", value = "permission_type")
-public enum PermissionTypeEnum implements Enumeration<Integer> {
+@EnumDictionary(name = "登录类型", value = "login_type")
+public enum LoginTypeEnum implements Enumeration<String> {
 
-    DIR("目录", 1),
+    PBA("用户名密码登录", "PBA"),
 
-    MENU("菜单", 2),
+    EMAIL("邮箱登录", "EMAIL"),
 
-    BUTTON("按钮/权限", 3);
+    SMS("短信登录", "SMS");
 
     private final String name;
 
     @EnumValue
-    private final Integer value;
+    private final String value;
 
 }

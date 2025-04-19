@@ -1,4 +1,4 @@
-package com.onezol.vertex.framework.security.api.mapper;
+package com.onezol.vertex.framework.security.biz.mapper;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.onezol.vertex.framework.common.mvc.mapper.BaseMapper;

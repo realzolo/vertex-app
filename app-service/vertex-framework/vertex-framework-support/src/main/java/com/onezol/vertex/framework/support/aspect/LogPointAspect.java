@@ -2,14 +2,18 @@ package com.onezol.vertex.framework.support.aspect;
 
 import com.baomidou.mybatisplus.extension.toolkit.Db;
 import com.onezol.vertex.framework.common.annotation.LogPoint;
+import com.onezol.vertex.framework.common.constant.StringConstants;
+import com.onezol.vertex.framework.common.constant.enumeration.SuccessFailureStatusEnum;
 import com.onezol.vertex.framework.common.model.SharedHttpServletRequest;
 import com.onezol.vertex.framework.common.model.entity.OperationLogEntity;
+import com.onezol.vertex.framework.common.util.EnumUtils;
 import com.onezol.vertex.framework.common.util.JsonUtils;
 import com.onezol.vertex.framework.common.util.NetworkUtils;
 import com.onezol.vertex.framework.common.util.ServletUtils;
-import com.onezol.vertex.framework.security.api.model.dto.User;
-import com.onezol.vertex.framework.security.api.model.pojo.LoginUser;
+import com.onezol.vertex.framework.security.api.context.AuthenticationContext;
+import com.onezol.vertex.framework.security.api.model.dto.AuthUser;
 import com.onezol.vertex.framework.support.manager.async.AsyncTaskManager;
+import eu.bitwalker.useragentutils.UserAgent;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,8 +27,6 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.core.annotation.AnnotationUtils;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 
@@ -58,10 +60,9 @@ public class LogPointAspect {
         // 处理日志
         HttpServletRequest request = ServletUtils.getRequest();
         SharedHttpServletRequest sharedHttpServletRequest = SharedHttpServletRequest.of(request);
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Object finalResult = result;
         Exception finalException = exception;
-        AsyncTaskManager.getInstance().execute(() -> this.handleLog(joinPoint, sharedHttpServletRequest, authentication, finalResult, time, finalException));
+        AsyncTaskManager.getInstance().execute(() -> this.handleLog(joinPoint, sharedHttpServletRequest, finalResult, time, finalException));
 
         if (exception != null) {
             throw exception;
@@ -74,17 +75,16 @@ public class LogPointAspect {
      *
      * @param joinPoint                切点
      * @param sharedHttpServletRequest 请求
-     * @param authentication           认证信息
      * @param result                   返回结果
      * @param time                     耗时(单位：毫秒)
      * @param ex                       异常
      */
-    private void handleLog(final JoinPoint joinPoint, final SharedHttpServletRequest sharedHttpServletRequest, final Authentication authentication, final Object result, final long time, final Exception ex) {
-        if (!isLogPoint(joinPoint) || Objects.isNull(authentication)) {
+    private void handleLog(final JoinPoint joinPoint, final SharedHttpServletRequest sharedHttpServletRequest, final Object result, final long time, final Exception ex) {
+        if (!isLogPoint(joinPoint)) {
             return;
         }
         try {
-            this.submitLog(joinPoint, sharedHttpServletRequest, authentication, result, time, ex);
+            this.submitLog(joinPoint, sharedHttpServletRequest, result, time, ex);
         } catch (Exception exp) {
             log.error("记录访问日志失败", exp);
         }
@@ -95,25 +95,12 @@ public class LogPointAspect {
      *
      * @param joinPoint                切点
      * @param sharedHttpServletRequest 请求
-     * @param authentication           认证信息
      * @param result                   返回结果
      * @param time                     耗时(单位：毫秒)
      * @param ex                       异常
      */
-    private void submitLog(final JoinPoint joinPoint, final SharedHttpServletRequest sharedHttpServletRequest, final Authentication authentication, final Object result, final long time, final Exception ex) {
-        //设置用户信息
-        if (Objects.isNull(authentication)) {
-            return;
-        }
-
-        Object principal = authentication.getPrincipal();
-        if (!(principal instanceof LoginUser loginUser)) {
-            return;
-        }
-        User user = loginUser.getDetails();
-        if (Objects.isNull(user)) {
-            return;
-        }
+    private void submitLog(final JoinPoint joinPoint, final SharedHttpServletRequest sharedHttpServletRequest, final Object result, final long time, final Exception ex) {
+        AuthUser user = AuthenticationContext.get();
 
         // 请求参数
         Object[] args = joinPoint.getArgs();
@@ -128,32 +115,40 @@ public class LogPointAspect {
         // 请求路径
         String requestURI = sharedHttpServletRequest.getRequestURI();
 
-        // 获取异常信息
-        String failureReason = "";
-        boolean success = true;
-        if (Objects.nonNull(ex)) {
-            success = false;
-            failureReason = ExceptionUtils.getStackTrace(ex);
-        }
+        // 请求信息(IP、地址、浏览器、操作系统)
+        String ip = NetworkUtils.getHostIp();
+        String location = NetworkUtils.getAddressByIP(ip);
+        UserAgent userAgent = ServletUtils.getUserAgent();
+        String jsonUserAgent = JsonUtils.toJsonString(userAgent);
+        String browser = userAgent.getBrowser().getName();
+        String os = userAgent.getOperatingSystem().getName();
+
+        // 异常信息
+        String failureReason = Objects.nonNull(ex) ? ExceptionUtils.getStackTrace(ex) : StringConstants.EMPTY;
+
+        // 操作状态
+        boolean success = !Objects.nonNull(ex);
+        Integer successFailureStatusValue = Integer.valueOf(String.valueOf(success));
+        SuccessFailureStatusEnum successFailureStatus = EnumUtils.getEnumByValue(SuccessFailureStatusEnum.class, successFailureStatusValue);
 
         OperationLogEntity entity = OperationLogEntity.builder()
-                .userId(user.getId())
+                .userId(user.getUserId())
                 .requestMethod(operateMethod)
                 .requestUrl(requestURI)
                 .requestParams(params)
                 .requestResult(response)
-                .userIp(loginUser.getIp())
-                .userAgent(JsonUtils.toJsonString(sharedHttpServletRequest.getUserAgent()))
-                .location(NetworkUtils.getAddressByIP(loginUser.getIp()))
-                .browser(loginUser.getBrowser())
-                .os(loginUser.getOs())
-                .status(success ? 0 : 1)
+                .userIp(ip)
+                .userAgent(jsonUserAgent)
+                .location(location)
+                .browser(browser)
+                .os(os)
+                .status(successFailureStatus)
                 .failureReason(failureReason)
                 .time(time)
                 .build();
 
-        entity.setCreator(user.getId());
-        entity.setUpdater(user.getId());
+        entity.setCreator(user.getUserId());
+        entity.setUpdater(user.getUserId());
 
         Operation operation = this.getOperation(joinPoint);
         if (Objects.nonNull(operation)) {

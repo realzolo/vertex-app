@@ -8,12 +8,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Component
 @SuppressWarnings("ALL")
 public class RedisCache {
 
-    public final RedisTemplate redisTemplate;
+    public final RedisTemplate<String, Object> redisTemplate;
 
     public RedisCache(RedisTemplate redisTemplate) {
         this.redisTemplate = redisTemplate;
@@ -93,7 +94,7 @@ public class RedisCache {
      * @return 缓存键值对应的数据
      */
     public <T> T getCacheObject(final String key) {
-        ValueOperations<String, T> operation = redisTemplate.opsForValue();
+        ValueOperations<String, T> operation = (ValueOperations<String, T>) redisTemplate.opsForValue();
         return operation.get(key);
     }
 
@@ -137,7 +138,7 @@ public class RedisCache {
      * @return 缓存键值对应的数据
      */
     public <T> List<T> getCacheList(final String key) {
-        return redisTemplate.opsForList().range(key, 0, -1);
+        return (List<T>) redisTemplate.opsForList().range(key, 0, -1);
     }
 
     /**
@@ -147,7 +148,7 @@ public class RedisCache {
      * @return 缓存键值对应的数据
      */
     public <T> List<T> getCacheList(final List<String> keys) {
-        return redisTemplate.opsForValue().multiGet(keys);
+        return (List<T>) redisTemplate.opsForValue().multiGet(keys);
     }
 
     /**
@@ -158,7 +159,7 @@ public class RedisCache {
      * @return 缓存数据的对象
      */
     public <T> BoundSetOperations<String, T> setCacheSet(final String key, final Set<T> dataSet) {
-        BoundSetOperations<String, T> setOperation = redisTemplate.boundSetOps(key);
+        BoundSetOperations<String, T> setOperation = (BoundSetOperations<String, T>) redisTemplate.boundSetOps(key);
         for (T t : dataSet) {
             setOperation.add(t);
         }
@@ -172,7 +173,7 @@ public class RedisCache {
      * @return 值
      */
     public <T> Set<T> getCacheSet(final String key) {
-        return redisTemplate.opsForSet().members(key);
+        return (Set<T>) redisTemplate.opsForSet().members(key);
     }
 
     /**
@@ -183,7 +184,7 @@ public class RedisCache {
      * @return 缓存数据的对象
      */
     public <T> BoundZSetOperations<String, T> setCacheZSet(final String key, final Map<T, Double> values) {
-        BoundZSetOperations<String, T> zSetOperation = redisTemplate.boundZSetOps(key);
+        BoundZSetOperations<String, T> zSetOperation = (BoundZSetOperations<String, T>) redisTemplate.boundZSetOps(key);
         for (Map.Entry<T, Double> entry : values.entrySet()) {
             zSetOperation.add(entry.getKey(), entry.getValue());
         }
@@ -199,7 +200,7 @@ public class RedisCache {
      * @return 有序集合的成员和分值
      */
     public <T> Set<T> getCacheZSet(final String key, long start, long end) {
-        return redisTemplate.opsForZSet().range(key, start, end);
+        return (Set<T>) redisTemplate.opsForZSet().range(key, start, end);
     }
 
 
@@ -232,7 +233,8 @@ public class RedisCache {
      * @return 值
      */
     public <T> Map<String, T> getCacheMap(final String key) {
-        return redisTemplate.opsForHash().entries(key);
+        Map<Object, Object> entries = redisTemplate.opsForHash().entries(key);
+        return (Map<String, T>) entries.entrySet().stream().collect(Collectors.toMap(e -> (String) e.getKey(), e -> (T) e.getValue()));
     }
 
     /**
@@ -266,7 +268,7 @@ public class RedisCache {
      * @return Hash对象集合
      */
     public <T> List<T> getMultiCacheMapValue(final String key, final Collection<Object> hKeys) {
-        return redisTemplate.opsForHash().multiGet(key, hKeys);
+        return (List<T>) redisTemplate.opsForHash().multiGet(key, hKeys);
     }
 
     /**

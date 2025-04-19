@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.onezol.vertex.framework.security.api.mapper.UserMapper">
+<mapper namespace="com.onezol.vertex.framework.security.biz.mapper.UserMapper">
 
     <select id="queryUserPage" resultType="com.onezol.vertex.framework.security.api.model.entity.UserEntity">
         SELECT
