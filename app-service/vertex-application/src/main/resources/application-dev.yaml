@@ -1,17 +1,33 @@
 # Develop Environment Configurations
+
 spring:
   # 数据源配置
   datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
     url: jdbc:mysql://db.onezol.com:3306/vertex?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
     username: vertex
     password: XrZZNKcDJhwEbaYF
+    druid:
+      initial-size: 5
+      min-idle: 5
+      max-active: 20
+      max-wait: 60000
   # Redis配置
-  data:
-    redis:
-      host: redis.onezol.com
-      port: 6379
-      password: 123456
-      database: 5
+  data.redis:
+    host: redis.onezol.com
+    port: 6379
+    password: 123456
+    database: 5
+    timeout: 10s
+    connect-timeout: 15s
+    lettuce:
+      pool:
+        max-active: 8
+        max-idle: 8
+        min-idle: 2
+        max-wait: 200ms
+        time-between-eviction-runs: 30s
   # 邮件配置
   mail:
     host: smtp.exmail.qq.com
@@ -22,7 +38,7 @@ spring:
   mqtt:
     enabled: true
     broker-url: tcp://onezol.com:1883
-    client-id: ${spring.application.name}
+    client-id: ${spring.application.name}-${spring.profiles.active}-${application.snowflake.machine-id}
     username: admin
     password: public
 
@@ -32,7 +48,7 @@ application:
     machine-id: 0
   jwt:
     secret-key: C61270901C4A455A89A0196CBCED9803
-    expiration-time: 3600  # token有效期, 1小时
+    expiration-time: 3600
 
 # 日志配置
 logging:
