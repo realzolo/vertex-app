@@ -54,7 +54,7 @@
         <a-tag v-if="record.data.type === 3">按钮</a-tag>
       </template>
       <template #status="{ record }">
-        <GiCellStatus :status="record.status" />
+        <GiCellStatus :status="record.data.status" />
       </template>
       <template #isExternal="{ record }">
         <a-tag v-if="record.data.isExternal" color="arcoblue" size="small">是</a-tag>

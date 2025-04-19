@@ -9,6 +9,7 @@ import com.onezol.vertex.framework.security.api.model.payload.UserQueryPayload;
 import com.onezol.vertex.framework.security.api.model.payload.UserSavePayload;
 
 import java.util.List;
+import java.util.Set;
 
 public interface UserInfoService extends BaseService<UserEntity> {
 
@@ -25,7 +26,7 @@ public interface UserInfoService extends BaseService<UserEntity> {
      * @param userIds 用户ID列表
      * @return 用户信息列表
      */
-    List<User> getUsersInfo(Long[] userIds);
+    List<User> getUsersInfo(List<Long> userIds);
 
     /**
      * 修改用户信息

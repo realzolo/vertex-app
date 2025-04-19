@@ -6,7 +6,7 @@ const BASE_URL = '/common'
 
 /** @desc 查询部门树 */
 export function listDeptTree(query: { description: string | unknown }) {
-  return http.get<TreeNodeData[]>(`/department/tree`, query)
+  return http.get<TreeNodeData[]>(`/department/public/tree`, query)
 }
 
 /** @desc 查询菜单树 */

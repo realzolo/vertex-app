@@ -24,11 +24,11 @@
             </a-button>
           </template>
           <template #toolbar-right>
-            <a-button v-permission="['system:dict:item:create']" type="primary" @click="onAdd">
+            <a-button v-permission="['system:dict:item:create']" :disabled="builtin" type="primary" @click="onAdd">
               <template #icon><icon-plus /></template>
               <template #default>新增</template>
             </a-button>
-            <a-button v-permission="['system:dict:item:clearCache']" type="outline" status="warning" @click="onClearCache">
+            <a-button v-permission="['system:dict:item:clearCache']" :disabled="builtin" type="outline" status="warning" @click="onClearCache">
               <template #icon><icon-delete /></template>
               <template #default>清除缓存</template>
             </a-button>
@@ -136,6 +136,7 @@ const onDelete = (record: DictItemResp) => {
 
 const dictName = ref()
 const dictValue = ref()
+const builtin = ref(false)
 // 清除缓存
 const onClearCache = () => {
   if (!dictValue.value) {
@@ -154,10 +155,11 @@ const onClearCache = () => {
 }
 
 // 根据选中字典查询
-const handleSelectDict = (dict: { dictId: number, dictName: string, dictValue: string }) => {
+const handleSelectDict = (dict: { dictId: number, dictName: string, dictValue: string, builtin: boolean }) => {
   queryForm.groupId = dict.dictId
   dictName.value = dict.dictName
   dictValue.value = dict.dictValue
+  builtin.value = dict.builtin
   search()
 }
 

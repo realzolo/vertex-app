@@ -71,7 +71,7 @@ const columns: ColumnItem[] = reactive([
     props: {
       type: 'round',
       checkedValue: 1,
-      uncheckedValue: 2,
+      uncheckedValue: 0,
       checkedText: '启用',
       uncheckedText: '禁用',
     },

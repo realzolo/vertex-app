@@ -19,6 +19,11 @@ public final class CacheKey {
     public static final String USER_INFO = "user:info:{userId}";
 
     /**
+     * 用户信息
+     */
+    public static final String ONLINE_USER = "user:online_users";
+
+    /**
      * 验证码
      */
     public static final String CAPTCHA = "captcha:{uuid}";

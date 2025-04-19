@@ -34,6 +34,7 @@ const storeSetup = () => {
     roles: [],
     permissions: [],
   })
+  const userId = computed(() => userInfo.id)
   const nickname = computed(() => userInfo.nickname)
   const username = computed(() => userInfo.username)
   const avatar = computed(() => userInfo.avatar)
@@ -111,6 +112,7 @@ const storeSetup = () => {
   }
 
   return {
+    userId,
     userInfo,
     nickname,
     username,

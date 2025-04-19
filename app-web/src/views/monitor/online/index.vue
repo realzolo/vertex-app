@@ -25,13 +25,13 @@
             type="warning"
             content="是否确定强退该用户？"
             :ok-button-props="{ status: 'danger' }"
-            @ok="handleKickout(record.token)"
+            @ok="handleKickout(record.userId)"
           >
             <a-link
               v-permission="['monitor:online:kickout']"
               status="danger"
-              :title="currentToken === record.token ? '不能强退自己' : '强退'"
-              :disabled="currentToken === record.token"
+              :title="currentUserId === record.userId ? '不能强退自己' : '强退'"
+              :disabled="currentUserId === record.userId"
             >
               强退
             </a-link>
@@ -55,7 +55,7 @@ import has from '@/utils/has'
 defineOptions({ name: 'MonitorOnline' })
 
 const userStore = useUserStore()
-const currentToken = userStore.token
+const currentUserId = userStore.userId
 
 const queryForm = reactive<OnlineUserQuery>({
   sort: ['createTime,desc'],
@@ -76,11 +76,11 @@ const columns: TableInstance['columns'] = [
   },
   { title: '用户昵称', dataIndex: 'nickname', slotName: 'nickname', ellipsis: true, tooltip: true },
   { title: '登录 IP', dataIndex: 'ip', ellipsis: true, tooltip: true },
-  { title: '登录地点', dataIndex: 'address', ellipsis: true, tooltip: true },
+  { title: '登录地点', dataIndex: 'location', ellipsis: true, tooltip: true },
   { title: '浏览器', dataIndex: 'browser', ellipsis: true, tooltip: true },
   { title: '终端系统', dataIndex: 'os', ellipsis: true, tooltip: true },
-  { title: '登录时间', dataIndex: 'loginTime', width: 180 },
-  { title: '最后活跃时间', dataIndex: 'lastActiveTime', width: 180 },
+  { title: '登录时间', dataIndex: 'loginTime' },
+  { title: '在线时长', dataIndex: 'onlineTime' },
   {
     title: '操作',
     dataIndex: 'action',
@@ -99,8 +99,8 @@ const reset = () => {
 }
 
 // 强退
-const handleKickout = (token: string) => {
-  kickout(token).then(() => {
+const handleKickout = (userId: number) => {
+  kickout(userId).then(() => {
     search()
     Message.success('强退成功')
   })

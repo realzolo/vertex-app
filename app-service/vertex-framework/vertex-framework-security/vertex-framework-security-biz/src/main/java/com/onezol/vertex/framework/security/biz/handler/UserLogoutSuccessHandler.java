@@ -1,9 +1,12 @@
 package com.onezol.vertex.framework.security.biz.handler;
 
-import com.onezol.vertex.framework.security.api.service.OnlineUserService;
+import com.onezol.vertex.framework.common.util.CodecUtils;
+import com.onezol.vertex.framework.common.util.JsonUtils;
+import com.onezol.vertex.framework.common.util.ServletUtils;
+import com.onezol.vertex.framework.common.util.StringUtils;
+import com.onezol.vertex.framework.security.api.service.LoginUserService;
 import com.onezol.vertex.framework.support.support.JWTHelper;
 import com.onezol.vertex.framework.support.support.ResponseHelper;
-import com.onezol.vertex.framework.common.util.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpHeaders;
@@ -20,11 +23,11 @@ import static com.onezol.vertex.framework.common.constant.GenericConstants.AUTHO
 @Component
 public class UserLogoutSuccessHandler implements LogoutSuccessHandler {
 
-        private final OnlineUserService onlineUserService;
+    private final LoginUserService loginUserService;
 
-        public UserLogoutSuccessHandler(OnlineUserService onlineUserService) {
-            this.onlineUserService = onlineUserService;
-        }
+    public UserLogoutSuccessHandler(LoginUserService loginUserService) {
+        this.loginUserService = loginUserService;
+    }
 
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
@@ -37,7 +40,7 @@ public class UserLogoutSuccessHandler implements LogoutSuccessHandler {
             Long userId = Long.valueOf(CodecUtils.decodeBase64(subject));
 
             // 清除Redis缓存
-            onlineUserService.removeOnlineUser(userId);
+            loginUserService.removeLoginUser(userId);
         }
         // 清除上下文
         SecurityContextHolder.clearContext();

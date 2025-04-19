@@ -7,7 +7,6 @@ import com.onezol.vertex.framework.common.exception.RuntimeServiceException;
 import com.onezol.vertex.framework.common.mvc.service.BaseServiceImpl;
 import com.onezol.vertex.framework.common.util.Asserts;
 import com.onezol.vertex.framework.common.util.BeanUtils;
-import com.onezol.vertex.framework.common.util.CodecUtils;
 import com.onezol.vertex.framework.common.util.StringUtils;
 import com.onezol.vertex.framework.security.api.context.AuthenticationContext;
 import com.onezol.vertex.framework.security.api.enumeration.LoginTypeEnum;
@@ -49,12 +48,12 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
     private final UserRoleService userRoleService;
     private final UserDepartmentService userDepartmentService;
     private final LoginHistoryService loginHistoryService;
-    private final OnlineUserService onlineUserService;
+    private final LoginUserService loginUserService;
 
     @Value("${spring.jwt.expiration-time:3600}")
     private Integer expirationTime;
 
-    public UserAuthServiceImpl(AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, RedisCache redisCache, DepartmentService departmentService, RoleService roleService, UserRoleService userRoleService, UserDepartmentService userDepartmentService, LoginHistoryService loginHistoryService, OnlineUserService onlineUserService) {
+    public UserAuthServiceImpl(AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, RedisCache redisCache, DepartmentService departmentService, RoleService roleService, UserRoleService userRoleService, UserDepartmentService userDepartmentService, LoginHistoryService loginHistoryService, LoginUserService loginUserService) {
         this.authenticationManager = authenticationManager;
         this.passwordEncoder = passwordEncoder;
         this.redisCache = redisCache;
@@ -63,7 +62,7 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
         this.userRoleService = userRoleService;
         this.userDepartmentService = userDepartmentService;
         this.loginHistoryService = loginHistoryService;
-        this.onlineUserService = onlineUserService;
+        this.loginUserService = loginUserService;
     }
 
     /**
@@ -287,7 +286,7 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
         String token = JWTHelper.generateToken(loginUserDetails.getId().toString());
 
         // 缓存用户数据
-        onlineUserService.addOnlineUser(loginUserDetails, token);
+        loginUserService.addLoginUser(loginUserDetails, token);
 
         // 存储登录日志
         loginHistoryService.createLoginRecord(loginUserDetails, loginType);

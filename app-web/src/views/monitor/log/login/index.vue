@@ -50,6 +50,7 @@ import type { TableInstance } from '@arco-design/web-vue'
 import { type LogQuery, exportLoginLog, listLog } from '@/apis/monitor'
 import DateRangePicker from '@/components/DateRangePicker/index.vue'
 import { useDownload, useTable } from '@/hooks'
+import { useDict } from '@/hooks/app'
 
 defineOptions({ name: 'LoginLog' })
 
@@ -69,6 +70,8 @@ const {
   search,
 } = useTable((page) => listLog({ ...queryForm, ...page }), { immediate: true })
 
+const { login_type } = useDict('login_type')
+
 const columns: TableInstance['columns'] = [
   {
     title: '序号',
@@ -76,32 +79,32 @@ const columns: TableInstance['columns'] = [
     align: 'center',
     render: ({ rowIndex }) => h('span', {}, rowIndex + 1 + (pagination.current - 1) * pagination.pageSize),
   },
-  { title: '登录时间', dataIndex: 'createTime', width: 180 },
-  { title: '用户昵称', dataIndex: 'createUserString', ellipsis: true, tooltip: true },
-  { title: '登录行为', dataIndex: 'description' },
-  {
-    title: '状态',
-    slotName: 'status',
-    align: 'center',
-    filterable: {
-      filters: [
-        {
-          text: '成功',
-          value: '1',
-        },
-        {
-          text: '失败',
-          value: '2',
-        },
-      ],
-      filter: () => {
-        return true
-      },
-      alignLeft: true,
-    },
-  },
+  { title: '登录时间', dataIndex: 'loginTime', width: 180 },
+  { title: '用户昵称', dataIndex: 'nickname', ellipsis: true, tooltip: true },
+  { title: '登录类型', dataIndex: 'loginType', render: ({ record }) => login_type.value.find((item) => item.value === record.loginType)?.label },
+  // {
+  //   title: '状态',
+  //   slotName: 'status',
+  //   align: 'center',
+  //   filterable: {
+  //     filters: [
+  //       {
+  //         text: '成功',
+  //         value: '1',
+  //       },
+  //       {
+  //         text: '失败',
+  //         value: '2',
+  //       },
+  //     ],
+  //     filter: () => {
+  //       return true
+  //     },
+  //     alignLeft: true,
+  //   },
+  // },
   { title: '登录 IP', dataIndex: 'ip', ellipsis: true, tooltip: true },
-  { title: '登录地点', dataIndex: 'address', ellipsis: true, tooltip: true },
+  { title: '登录地点', dataIndex: 'location', ellipsis: true, tooltip: true },
   { title: '浏览器', dataIndex: 'browser', ellipsis: true, tooltip: true },
   { title: '终端系统', dataIndex: 'os', ellipsis: true, tooltip: true },
 ]

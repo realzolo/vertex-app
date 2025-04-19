@@ -6,7 +6,7 @@ const storeSetup = () => {
   // 设置字典
   const setDict = (group: string, items: App.DictItem[]) => {
     items.forEach((item) => {
-      if (typeof item.value === 'string' && !Number.isNaN(item.value) && item.value.trim() !== '') {
+      if (typeof item.value === 'string' && /^-?\d+$/.test(item.value)) {
         item.value = Number.parseInt(item.value)
       }
     })

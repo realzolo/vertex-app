@@ -87,7 +87,9 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
      * @return 用户信息列表
      */
     @Override
-    public List<User> getUsersInfo(Long[] userIds) {
+    public List<User> getUsersInfo(List<Long> userIds) {
+        userIds = userIds.stream().distinct().toList();
+
         List<User> users = new ArrayList<>();
         for (Long userId : userIds) {
             User user = this.getUserInfo(userId);

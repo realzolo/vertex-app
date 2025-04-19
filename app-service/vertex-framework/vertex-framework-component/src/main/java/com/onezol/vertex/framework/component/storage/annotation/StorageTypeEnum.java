@@ -15,7 +15,7 @@ public enum StorageTypeEnum implements Enumeration<Integer> {
 
     LOCAL("本地存储", 1),
 
-    S3("兼容S3协议存储", 2);
+    S3("S3协议存储", 2);
 
     private final String name;
 

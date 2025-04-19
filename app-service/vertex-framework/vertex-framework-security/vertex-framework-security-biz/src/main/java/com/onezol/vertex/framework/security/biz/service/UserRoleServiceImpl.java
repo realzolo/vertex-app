@@ -184,7 +184,7 @@ public class UserRoleServiceImpl extends BaseServiceImpl<UserRoleMapper, UserRol
             return PageModel.empty();
         }
 
-        List<User> users = userInfoService.getUsersInfo(userIds.toArray(Long[]::new));
+        List<User> users = userInfoService.getUsersInfo(userIds);
 
         return PageModel.of(users, page.getTotal(), page.getCurrent(), page.getSize());
     }

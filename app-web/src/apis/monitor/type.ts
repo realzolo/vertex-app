@@ -1,11 +1,13 @@
+import type { PageQuery } from '@/types/api'
+
 /** 在线用户类型 */
 export interface OnlineUserResp {
-  id: string
+  id: number
   description: string
   module: string
   timeTaken: number
   ip: string
-  address: string
+  location: string
   browser: string
   os: string
   status: number
@@ -22,12 +24,12 @@ export interface OnlineUserPageQuery extends OnlineUserQuery, PageQuery {}
 
 /** 系统日志类型 */
 export interface LogResp {
-  id: string
+  id: number
   description: string
   module: string
   timeTaken: number
   ip: string
-  address: string
+  location: string
   browser: string
   os: string
   status: number

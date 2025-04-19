@@ -1,5 +1,7 @@
 package com.onezol.vertex.framework.security.biz.controller;
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.onezol.vertex.framework.common.constant.enumeration.DisEnableStatusEnum;
 import com.onezol.vertex.framework.common.model.GenericResponse;
 import com.onezol.vertex.framework.common.model.TreeNode;
 import com.onezol.vertex.framework.common.mvc.controller.BaseController;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/department")
@@ -69,6 +72,28 @@ public class DepartmentController extends BaseController<DepartmentEntity> {
     @GetMapping("/tree")
     public GenericResponse<List<TreeNode>> getDepartmentTree() {
         List<DepartmentEntity> list = departmentService.list();
+        list.sort(Comparator.comparing(DepartmentEntity::getSort));
+        List<Department> departments = BeanUtils.toList(list, Department.class);
+        List<TreeNode> nodes = departments.stream().map(department -> {
+            TreeNode treeNode = new TreeNode();
+            treeNode.setId(department.getId());
+            treeNode.setKey(department.getId());
+            treeNode.setParentId(department.getParentId());
+            treeNode.setTitle(department.getName());
+            treeNode.setData(department);
+            return treeNode;
+        }).toList();
+        List<TreeNode> treeNodes = TreeUtils.buildTree(nodes, 0L);
+        return ResponseHelper.buildSuccessfulResponse(treeNodes);
+    }
+
+    @Operation(summary = "获取部门树")
+    @GetMapping("/public/tree")
+    public GenericResponse<List<TreeNode>> getPublicDepartmentTree() {
+        List<DepartmentEntity> list = departmentService.list(
+                Wrappers.<DepartmentEntity>lambdaQuery()
+                        .eq(DepartmentEntity::getStatus, DisEnableStatusEnum.ENABLE.getValue())
+        );
         list.sort(Comparator.comparing(DepartmentEntity::getSort));
         List<Department> departments = BeanUtils.toList(list, Department.class);
         List<TreeNode> nodes = departments.stream().map(department -> {

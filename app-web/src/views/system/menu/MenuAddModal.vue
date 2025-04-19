@@ -130,7 +130,7 @@
           v-model="form.status"
           type="round"
           :checked-value="1"
-          :unchecked-value="2"
+          :unchecked-value="0"
           checked-text="启用"
           unchecked-text="禁用"
         />

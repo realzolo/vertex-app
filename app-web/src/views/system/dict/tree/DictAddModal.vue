@@ -51,6 +51,17 @@ const columns: ColumnItem[] = reactive([
     type: 'input',
     span: 24,
     required: true,
+    rules: [
+      {
+        validator: (value, callback) => {
+          if (!/^[a-z0-9_]+$/.test(value)) {
+            callback('字典编码只能包含小写字母以及下划线！')
+          } else {
+            callback()
+          }
+        },
+      },
+    ],
     props: {
       maxLength: 30,
     },

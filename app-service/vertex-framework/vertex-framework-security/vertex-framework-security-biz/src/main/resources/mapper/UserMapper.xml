@@ -11,6 +11,7 @@
             LEFT JOIN vx_department d ON d.id = ud.dept_id
         <where>
             u.deleted = false
+            AND d.status = 1
             <if test="param != null">
                 <if test="param.id != null">
                     AND u.id = #{param.id}

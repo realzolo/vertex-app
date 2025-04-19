@@ -79,7 +79,7 @@ const {
   tableData: dataList,
   pagination,
   search,
-} = useTable((page) => listLog({ ...queryForm, ...page }), { immediate: true })
+} = useTable((page) => listLog({ ...queryForm, ...page }), { immediate: false })
 const columns: TableInstance['columns'] = [
   {
     title: '序号',
