@@ -18,6 +18,12 @@ import '@/styles/css/transition.css'
 // 导入全局scss主文件
 import '@/styles/index.scss'
 
+// Vue Flow 全局央视
+import '@vue-flow/core/dist/style.css'
+import '@vue-flow/core/dist/theme-default.css'
+import '@vue-flow/controls/dist/style.css'
+import '@vue-flow/minimap/dist/style.css'
+
 // 支持SVG
 import 'virtual:svg-icons-register'
 
