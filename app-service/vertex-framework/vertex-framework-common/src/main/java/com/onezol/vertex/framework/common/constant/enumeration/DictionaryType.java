@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 @Schema(name = "字典值类型")
 @Getter
 @RequiredArgsConstructor
-public enum DictionaryTypeEnum implements Enumeration<Integer> {
+public enum DictionaryType implements StandardEnumeration<Integer> {
 
     DICT("用户字典", 0),
 

@@ -1,7 +1,7 @@
 package com.onezol.vertex.framework.support.aspect;
 
 import com.onezol.vertex.framework.common.annotation.RateLimit;
-import com.onezol.vertex.framework.common.constant.enumeration.ServiceStatusEnum;
+import com.onezol.vertex.framework.common.constant.enumeration.ServiceStatus;
 import com.onezol.vertex.framework.common.exception.RuntimeServiceException;
 import com.onezol.vertex.framework.common.util.EncryptUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -54,7 +54,7 @@ public class RateLimitAspect {
 
         long count = atomicLong.incrementAndGet();
         if (count > maxCount) {
-            throw new RuntimeServiceException(ServiceStatusEnum.TOO_MANY_REQUESTS, rateLimit.message());
+            throw new RuntimeServiceException(ServiceStatus.TOO_MANY_REQUESTS, rateLimit.message());
         }
 
         // 继续执行目标方法

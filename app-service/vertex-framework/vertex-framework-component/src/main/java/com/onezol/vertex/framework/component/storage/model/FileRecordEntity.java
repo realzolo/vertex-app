@@ -3,7 +3,7 @@ package com.onezol.vertex.framework.component.storage.model;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.onezol.vertex.framework.common.constant.StringConstants;
-import com.onezol.vertex.framework.common.constant.enumeration.FileTypeEnum;
+import com.onezol.vertex.framework.common.constant.enumeration.FileType;
 import com.onezol.vertex.framework.common.model.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -36,7 +36,7 @@ public class FileRecordEntity extends BaseEntity {
     /**
      * 类型
      */
-    private FileTypeEnum type;
+    private FileType type;
 
     /**
      * 缩略图大小（字节)

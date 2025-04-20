@@ -3,8 +3,6 @@ package com.onezol.vertex.framework.component.notice.model;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.onezol.vertex.framework.common.model.dto.BaseDTO;
-import com.onezol.vertex.framework.common.model.entity.BaseEntity;
-import com.onezol.vertex.framework.component.notice.enumeration.NoticeTypeEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

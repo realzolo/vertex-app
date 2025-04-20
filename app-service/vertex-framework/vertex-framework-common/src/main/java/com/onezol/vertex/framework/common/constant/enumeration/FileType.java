@@ -15,7 +15,7 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @EnumDictionary(name = "文件类型", value = "file_type")
-public enum FileTypeEnum implements Enumeration<Integer> {
+public enum FileType implements StandardEnumeration<Integer> {
 
     /**
      * 其他
@@ -57,13 +57,14 @@ public enum FileTypeEnum implements Enumeration<Integer> {
      * @param extension 扩展名
      * @return 文件类型
      */
-    public static FileTypeEnum getByExtension(String extension) {
+    public static FileType getByExtension(String extension) {
         if (StringUtils.isBlank(extension)) {
             return UNKNOWN;
         }
-        return Arrays.stream(FileTypeEnum.values())
+        return Arrays.stream(FileType.values())
                 .filter(t -> t.getExtensions().contains(extension.toLowerCase()))
                 .findFirst()
-                .orElse(FileTypeEnum.UNKNOWN);
+                .orElse(FileType.UNKNOWN);
     }
+
 }

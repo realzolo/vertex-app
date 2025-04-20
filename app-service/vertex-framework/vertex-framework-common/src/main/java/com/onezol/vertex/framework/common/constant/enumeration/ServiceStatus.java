@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 @Schema(name = "服务状态码")
 @Getter
 @AllArgsConstructor
-public enum ServiceStatusEnum {
+public enum ServiceStatus {
 
     /**
      * 操作或请求成功<br>

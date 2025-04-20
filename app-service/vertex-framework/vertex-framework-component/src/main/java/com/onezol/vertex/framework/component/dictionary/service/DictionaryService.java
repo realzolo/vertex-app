@@ -2,7 +2,7 @@ package com.onezol.vertex.framework.component.dictionary.service;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.onezol.vertex.framework.common.constant.CacheKey;
-import com.onezol.vertex.framework.common.constant.enumeration.DictionaryTypeEnum;
+import com.onezol.vertex.framework.common.constant.enumeration.DictionaryType;
 import com.onezol.vertex.framework.common.exception.RuntimeServiceException;
 import com.onezol.vertex.framework.common.mvc.service.BaseServiceImpl;
 import com.onezol.vertex.framework.common.util.BeanUtils;
@@ -101,7 +101,7 @@ public class DictionaryService extends BaseServiceImpl<DictionaryMapper, Diction
             entity = BeanUtils.toBean(dictionary, DictionaryEntity.class);
             entity.setGroup(group.getValue());
         }
-        entity.setType(DictionaryTypeEnum.DICT);
+        entity.setType(DictionaryType.DICT);
         boolean ok = this.save(entity);
         if (!ok) {
             throw new RuntimeServiceException("添加字典失败");

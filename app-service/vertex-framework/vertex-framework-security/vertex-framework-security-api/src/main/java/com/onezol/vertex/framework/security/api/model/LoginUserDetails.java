@@ -1,7 +1,7 @@
 package com.onezol.vertex.framework.security.api.model;
 
 import com.alibaba.fastjson2.annotation.JSONField;
-import com.onezol.vertex.framework.common.constant.enumeration.AccountStatusEnum;
+import com.onezol.vertex.framework.common.constant.enumeration.AccountStatus;
 import com.onezol.vertex.framework.security.api.model.dto.SimpleDepartment;
 import com.onezol.vertex.framework.security.api.model.dto.SimpleRole;
 import com.onezol.vertex.framework.security.api.model.dto.User;
@@ -73,13 +73,13 @@ public class LoginUserDetails extends User implements UserDetails {
     @Override
     @JSONField(serialize = false)
     public boolean isAccountNonExpired() {
-        return !Objects.equals(super.getStatus(), AccountStatusEnum.EXPIRED.getValue());
+        return !Objects.equals(super.getStatus(), AccountStatus.EXPIRED.getValue());
     }
 
     @Override
     @JSONField(serialize = false)
     public boolean isAccountNonLocked() {
-        return !Objects.equals(super.getStatus(), AccountStatusEnum.LOCKED.getValue());
+        return !Objects.equals(super.getStatus(), AccountStatus.LOCKED.getValue());
     }
 
     @Override
@@ -91,7 +91,7 @@ public class LoginUserDetails extends User implements UserDetails {
     @Override
     @JSONField(serialize = false)
     public boolean isEnabled() {
-        return !Objects.equals(super.getStatus(), AccountStatusEnum.DISABLED.getValue());
+        return !Objects.equals(super.getStatus(), AccountStatus.DISABLED.getValue());
     }
 
 }

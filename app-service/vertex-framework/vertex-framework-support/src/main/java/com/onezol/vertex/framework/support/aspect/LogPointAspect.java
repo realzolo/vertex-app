@@ -3,7 +3,7 @@ package com.onezol.vertex.framework.support.aspect;
 import com.baomidou.mybatisplus.extension.toolkit.Db;
 import com.onezol.vertex.framework.common.annotation.LogPoint;
 import com.onezol.vertex.framework.common.constant.StringConstants;
-import com.onezol.vertex.framework.common.constant.enumeration.SuccessFailureStatusEnum;
+import com.onezol.vertex.framework.common.constant.enumeration.SuccessFailureStatus;
 import com.onezol.vertex.framework.common.model.SharedHttpServletRequest;
 import com.onezol.vertex.framework.common.model.entity.OperationLogEntity;
 import com.onezol.vertex.framework.common.util.EnumUtils;
@@ -129,7 +129,7 @@ public class LogPointAspect {
         // 操作状态
         boolean success = !Objects.nonNull(ex);
         Integer successFailureStatusValue = Integer.valueOf(String.valueOf(success));
-        SuccessFailureStatusEnum successFailureStatus = EnumUtils.getEnumByValue(SuccessFailureStatusEnum.class, successFailureStatusValue);
+        SuccessFailureStatus successFailureStatus = EnumUtils.getEnumByValue(SuccessFailureStatus.class, successFailureStatusValue);
 
         OperationLogEntity entity = OperationLogEntity.builder()
                 .userId(user.getUserId())

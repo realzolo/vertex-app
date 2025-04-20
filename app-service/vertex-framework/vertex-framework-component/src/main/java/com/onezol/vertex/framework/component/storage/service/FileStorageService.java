@@ -2,10 +2,10 @@ package com.onezol.vertex.framework.component.storage.service;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.onezol.vertex.framework.common.constant.StringConstants;
-import com.onezol.vertex.framework.common.constant.enumeration.ServiceStatusEnum;
-import com.onezol.vertex.framework.common.constant.enumeration.FileTypeEnum;
+import com.onezol.vertex.framework.common.constant.enumeration.ServiceStatus;
+import com.onezol.vertex.framework.common.constant.enumeration.FileType;
 import com.onezol.vertex.framework.common.exception.RuntimeServiceException;
-import com.onezol.vertex.framework.component.storage.annotation.StorageTypeEnum;
+import com.onezol.vertex.framework.component.storage.annotation.StorageType;
 import com.onezol.vertex.framework.component.storage.mapper.FileRecordMapper;
 import com.onezol.vertex.framework.component.storage.mapper.StorageStrategyMapper;
 import com.onezol.vertex.framework.component.storage.model.FileRecordEntity;
@@ -81,7 +81,7 @@ public class FileStorageService {
                 .setSaveFilename(fileName + extSuffix)
                 .setSaveThFilename(fileName)
                 .putAttr("storageStrategy", storageStrategy);
-        if (FileTypeEnum.IMAGE.getExtensions().contains(extName)) {
+        if (FileType.IMAGE.getExtensions().contains(extName)) {
             uploadPretreatment.thumbnail(image -> image.size(128, 128));
         }
         uploadPretreatment.setProgressMonitor(this.buildProgressListener());
@@ -89,10 +89,10 @@ public class FileStorageService {
         try {
             uploadPretreatment.upload();
         } catch (Exception e) {
-            throw new RuntimeServiceException(ServiceStatusEnum.INTERNAL_SERVER_ERROR, "文件上传失败");
+            throw new RuntimeServiceException(ServiceStatus.INTERNAL_SERVER_ERROR, "文件上传失败");
         }
 
-        if (Objects.equals(storageStrategy.getType(), StorageTypeEnum.S3)) {
+        if (Objects.equals(storageStrategy.getType(), StorageType.S3)) {
             return String.format("%s/%s%s%s%s%s", fixDomain(storageStrategy.getDomain()), storageStrategy.getBucketName(), fixRootPath(storageStrategy.getRootPath()), filePath, fileName, extSuffix);
         }
         return String.format("%s%s%s%s", fixDomain(storageStrategy.getDomain()), filePath, fileName, extSuffix);
@@ -123,7 +123,7 @@ public class FileStorageService {
      */
     private StorageStrategyEntity loadStrategy(StorageStrategyEntity strategy) {
         CopyOnWriteArrayList<FileStorage> fileStorageList = fileStorageService.getFileStorageList();
-        if (StorageTypeEnum.LOCAL.equals(strategy.getType())) {
+        if (StorageType.LOCAL.equals(strategy.getType())) {
             FileStorageProperties.LocalPlusConfig config = new FileStorageProperties.LocalPlusConfig();
             config.setPlatform(strategy.getCode());
             config.setStoragePath(fixRootPath(strategy.getRootPath()));
@@ -131,7 +131,7 @@ public class FileStorageService {
             fileStorageList.addAll(
                     FileStorageServiceBuilder.buildLocalPlusFileStorage(Collections.singletonList(config))
             );
-        } else if (StorageTypeEnum.S3.equals(strategy.getType())) {
+        } else if (StorageType.S3.equals(strategy.getType())) {
             FileStorageProperties.AmazonS3Config config = new FileStorageProperties.AmazonS3Config();
             config.setPlatform(strategy.getCode());
             config.setAccessKey(strategy.getAccessKey());
@@ -192,7 +192,7 @@ public class FileStorageService {
             fileRecord.setUrl(fileInfo.getUrl());
             fileRecord.setSize(fileInfo.getSize());
             fileRecord.setExtension(fileInfo.getExt());
-            fileRecord.setType(FileTypeEnum.getByExtension(fileRecord.getExtension()));
+            fileRecord.setType(FileType.getByExtension(fileRecord.getExtension()));
             fileRecord.setThumbnailUrl(fileInfo.getThUrl());
             fileRecord.setThumbnailSize(fileInfo.getThSize());
             StorageStrategyEntity storageStrategy = (StorageStrategyEntity) fileInfo.getAttr().get("storageStrategy");

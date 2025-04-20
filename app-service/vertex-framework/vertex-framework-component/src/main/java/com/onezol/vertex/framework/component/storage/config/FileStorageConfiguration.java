@@ -1,7 +1,7 @@
 package com.onezol.vertex.framework.component.storage.config;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.onezol.vertex.framework.component.storage.annotation.StorageTypeEnum;
+import com.onezol.vertex.framework.component.storage.annotation.StorageType;
 import com.onezol.vertex.framework.component.storage.mapper.StorageStrategyMapper;
 import com.onezol.vertex.framework.component.storage.model.StorageStrategyEntity;
 import org.dromara.x.file.storage.spring.EnableFileStorage;
@@ -42,7 +42,7 @@ public class FileStorageConfiguration {
     private StorageStrategyEntity getLocalStorageStrategy() {
         return storageStrategyMapper.selectOne(
                 Wrappers.<StorageStrategyEntity>lambdaQuery()
-                        .eq(StorageStrategyEntity::getType, StorageTypeEnum.LOCAL)
+                        .eq(StorageStrategyEntity::getType, StorageType.LOCAL)
                         .eq(StorageStrategyEntity::getIsDefault, true)
         );
     }

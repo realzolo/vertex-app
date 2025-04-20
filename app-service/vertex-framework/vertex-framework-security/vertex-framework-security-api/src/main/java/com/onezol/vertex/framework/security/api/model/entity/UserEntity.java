@@ -2,8 +2,8 @@ package com.onezol.vertex.framework.security.api.model.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.onezol.vertex.framework.common.constant.enumeration.AccountStatusEnum;
-import com.onezol.vertex.framework.common.constant.enumeration.GenderEnum;
+import com.onezol.vertex.framework.common.constant.enumeration.AccountStatus;
+import com.onezol.vertex.framework.common.constant.enumeration.Gender;
 import com.onezol.vertex.framework.common.model.entity.BaseEntity;
 import com.onezol.vertex.framework.common.model.entity.LogicalBaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -45,7 +45,7 @@ public class UserEntity extends LogicalBaseEntity {
 
     @Schema(description = "性别")
     @TableField("gender")
-    private GenderEnum gender;
+    private Gender gender;
 
     @Schema(description = "生日")
     @TableField("birthday")
@@ -65,6 +65,6 @@ public class UserEntity extends LogicalBaseEntity {
 
     @Schema(description = "账号状态")
     @TableField("status")
-    private AccountStatusEnum status;
+    private AccountStatus status;
 
 }

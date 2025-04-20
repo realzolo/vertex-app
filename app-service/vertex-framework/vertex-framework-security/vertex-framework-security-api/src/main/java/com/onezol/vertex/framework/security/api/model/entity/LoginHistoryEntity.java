@@ -2,7 +2,7 @@ package com.onezol.vertex.framework.security.api.model.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.onezol.vertex.framework.common.model.entity.BaseEntity;
-import com.onezol.vertex.framework.security.api.enumeration.LoginTypeEnum;
+import com.onezol.vertex.framework.security.api.enumeration.LoginType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -20,7 +20,7 @@ public class LoginHistoryEntity extends BaseEntity {
     private Long userId;
 
     @Schema(name = "登陆方式")
-    private LoginTypeEnum loginType;
+    private LoginType loginType;
 
     @Schema(name = "登录时间")
     private LocalDateTime loginTime;

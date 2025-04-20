@@ -2,7 +2,7 @@ package com.onezol.vertex.framework.support.handler;
 
 import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.extension.toolkit.Db;
-import com.onezol.vertex.framework.common.constant.enumeration.ServiceStatusEnum;
+import com.onezol.vertex.framework.common.constant.enumeration.ServiceStatus;
 import com.onezol.vertex.framework.common.exception.ServiceException;
 import com.onezol.vertex.framework.security.api.context.AuthenticationContext;
 import com.onezol.vertex.framework.support.support.ResponseHelper;
@@ -45,7 +45,7 @@ public class GlobalExceptionHandler {
         if (Objects.nonNull(fieldError)) {
             message = fieldError.getDefaultMessage();
         }
-        return ResponseHelper.buildFailedResponse(ServiceStatusEnum.BAD_REQUEST, message);
+        return ResponseHelper.buildFailedResponse(ServiceStatus.BAD_REQUEST, message);
     }
 
     /**
@@ -53,7 +53,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value = NoResourceFoundException.class)
     public Object handleNoResourceFoundException(HttpServletRequest req, NoResourceFoundException ex) throws NoResourceFoundException {
-        return ResponseHelper.buildFailedResponse(ServiceStatusEnum.NOT_FOUND, ex.getMessage());
+        return ResponseHelper.buildFailedResponse(ServiceStatus.NOT_FOUND, ex.getMessage());
     }
 
     /**
@@ -62,7 +62,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = MaxUploadSizeExceededException.class)
     public GenericResponse<?> handleNullPointerException(HttpServletRequest req, MaxUploadSizeExceededException ex) {
         log.error(ex.getMessage(), ex);
-        return ResponseHelper.buildFailedResponse(ServiceStatusEnum.INTERNAL_SERVER_ERROR, "上传文件大小超限！");
+        return ResponseHelper.buildFailedResponse(ServiceStatus.INTERNAL_SERVER_ERROR, "上传文件大小超限！");
     }
 
     /**
@@ -83,7 +83,7 @@ public class GlobalExceptionHandler {
         // API异常日志持久化
         SharedHttpServletRequest request = SharedHttpServletRequest.of(req);
         AsyncTaskManager.getInstance().execute(() -> this.createExceptionLog(request, ex));
-        return ResponseHelper.buildFailedResponse(ServiceStatusEnum.INTERNAL_SERVER_ERROR.getValue(), ex.getMessage());
+        return ResponseHelper.buildFailedResponse(ServiceStatus.INTERNAL_SERVER_ERROR.getValue(), ex.getMessage());
     }
 
     /**

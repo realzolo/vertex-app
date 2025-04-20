@@ -1,23 +1,27 @@
 package com.onezol.vertex.framework.common.constant.enumeration;
 
+import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.onezol.vertex.framework.common.annotation.EnumDictionary;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-@Schema(name = "系统角色类型")
+@Schema(name = "性别")
 @Getter
 @RequiredArgsConstructor
-@EnumDictionary(name = "系统角色类型", value = "system_role_type")
-public enum SystemRoleTypeEnum implements Enumeration<String> {
+@EnumDictionary(name = "性别", value = "gender")
+public enum Gender implements StandardEnumeration<Integer> {
 
-    SUPER("超级管理员", "super"),
+    UNKNOWN("未知", 0),
 
-    ADMIN("系统管理员", "admin");
+    MALE("男", 1),
+
+    FEMALE("女", 2);
 
 
     private final String name;
 
-    private final String value;
+    @EnumValue
+    private final Integer value;
 
 }

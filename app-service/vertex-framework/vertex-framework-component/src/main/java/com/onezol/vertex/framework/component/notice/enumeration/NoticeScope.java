@@ -2,7 +2,7 @@ package com.onezol.vertex.framework.component.notice.enumeration;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.onezol.vertex.framework.common.annotation.EnumDictionary;
-import com.onezol.vertex.framework.common.constant.enumeration.Enumeration;
+import com.onezol.vertex.framework.common.constant.enumeration.StandardEnumeration;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 @EnumDictionary(name = "通知范围", value = "notice_scope")
-public enum NoticeScopeEnum implements Enumeration<Integer> {
+public enum NoticeScope implements StandardEnumeration<Integer> {
 
     ALL_USERS("所有人", 0),
 

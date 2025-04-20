@@ -7,7 +7,7 @@ import com.onezol.vertex.framework.common.constant.CacheKey;
 import com.onezol.vertex.framework.common.exception.RuntimeServiceException;
 import com.onezol.vertex.framework.common.model.PageModel;
 import com.onezol.vertex.framework.common.util.DateUtils;
-import com.onezol.vertex.framework.security.api.enumeration.LoginTypeEnum;
+import com.onezol.vertex.framework.security.api.enumeration.LoginType;
 import com.onezol.vertex.framework.security.api.model.LoginUserDetails;
 import com.onezol.vertex.framework.security.api.model.dto.LoginUser;
 import com.onezol.vertex.framework.security.api.model.entity.LoginHistoryEntity;
@@ -142,7 +142,7 @@ public class LoginUserServiceImpl implements LoginUserService {
         IPage<LoginUser> loginUserIPage = userEntityPage.convert(
                 entity -> {
                     LoginHistoryEntity loginHistory = loginHistoryMap.get(entity.getId());
-                    LoginTypeEnum loginType = loginHistory.getLoginType();
+                    LoginType loginType = loginHistory.getLoginType();
                     long loginTime = Long.parseLong(cacheMap.get(String.valueOf(entity.getId())).toString());
                     String onlineTime = DateUtils.shortTimeDifference(LocalDateTime.ofInstant(Instant.ofEpochMilli(loginTime), ZoneId.of("Asia/Shanghai")), LocalDateTime.now());
                     LoginUser loginUser = new LoginUser();

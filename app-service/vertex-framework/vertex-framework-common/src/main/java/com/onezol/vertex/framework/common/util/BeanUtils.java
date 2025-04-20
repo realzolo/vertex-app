@@ -1,6 +1,6 @@
 package com.onezol.vertex.framework.common.util;
 
-import com.onezol.vertex.framework.common.constant.enumeration.Enumeration;
+import com.onezol.vertex.framework.common.constant.enumeration.StandardEnumeration;
 import org.springframework.cglib.beans.BeanCopier;
 
 import java.lang.reflect.Constructor;
@@ -31,13 +31,13 @@ public final class BeanUtils extends org.springframework.beans.BeanUtils {
             Constructor<T> constructor = targetType.getDeclaredConstructor();
             T newInstance = constructor.newInstance();
             copier.copy(source, newInstance, (value, target, context) -> {
-                if (value instanceof Enumeration<?> && target != Enumeration.class) {
-                    return ((Enumeration<?>) value).getValue();
+                if (value instanceof StandardEnumeration<?> && target != StandardEnumeration.class) {
+                    return ((StandardEnumeration<?>) value).getValue();
                 }
-                if (Arrays.stream(target.getInterfaces()).toList().contains(Enumeration.class) && !(value instanceof Enumeration<?>)) {
+                if (Arrays.stream(target.getInterfaces()).toList().contains(StandardEnumeration.class) && !(value instanceof StandardEnumeration<?>)) {
                     Object[] enumConstants = target.getEnumConstants();
                     for (Object enumConstant : enumConstants) {
-                        Enumeration<?> aEnum = (Enumeration<?>) enumConstant;
+                        StandardEnumeration<?> aEnum = (StandardEnumeration<?>) enumConstant;
                         if (aEnum.getValue().equals(value)) {
                             return aEnum;
                         }

@@ -2,35 +2,26 @@ package com.onezol.vertex.framework.common.constant.enumeration;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.onezol.vertex.framework.common.annotation.EnumDictionary;
+import com.onezol.vertex.framework.common.constant.ColorConstants;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-@Schema(name = "性别")
+@Schema(name = "启用/禁用状态")
 @Getter
 @RequiredArgsConstructor
-@EnumDictionary(name = "性别", value = "gender")
-public enum GenderEnum implements Enumeration<Integer> {
+@EnumDictionary(name = "启用/禁用状态", value = "dis_enable_status")
+public enum DisEnableStatus implements StandardEnumeration<Integer> {
 
-    /**
-     * 未知
-     */
-    UNKNOWN("未知", 0),
+    DISABLE("禁用", 0, ColorConstants.COLOR_ERROR),
 
-    /**
-     * 男
-     */
-    MALE("男", 1),
-
-    /**
-     * 女
-     */
-    FEMALE("女", 2);
-
+    ENABLE("启用", 1, ColorConstants.COLOR_SUCCESS);
 
     private final String name;
 
     @EnumValue
     private final Integer value;
+
+    private final String color;
 
 }

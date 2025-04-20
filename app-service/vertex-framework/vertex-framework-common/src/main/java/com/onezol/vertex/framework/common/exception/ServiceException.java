@@ -1,7 +1,7 @@
 package com.onezol.vertex.framework.common.exception;
 
 
-import com.onezol.vertex.framework.common.constant.enumeration.ServiceStatusEnum;
+import com.onezol.vertex.framework.common.constant.enumeration.ServiceStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -21,16 +21,16 @@ public abstract class ServiceException extends RuntimeException {
     private final String message;
 
     public ServiceException(String message) {
-        this.code = ServiceStatusEnum.INTERNAL_SERVER_ERROR.getValue();
+        this.code = ServiceStatus.INTERNAL_SERVER_ERROR.getValue();
         this.message = message;
     }
 
-    public ServiceException(ServiceStatusEnum serviceStatus) {
+    public ServiceException(ServiceStatus serviceStatus) {
         this.code = serviceStatus.getValue();
         this.message = serviceStatus.getDescription();
     }
 
-    public ServiceException(ServiceStatusEnum serviceStatus, String message) {
+    public ServiceException(ServiceStatus serviceStatus, String message) {
         this.code = serviceStatus.getValue();
         this.message = message;
     }

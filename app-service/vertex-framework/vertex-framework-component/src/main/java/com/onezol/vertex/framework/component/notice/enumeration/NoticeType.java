@@ -2,7 +2,7 @@ package com.onezol.vertex.framework.component.notice.enumeration;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.onezol.vertex.framework.common.annotation.EnumDictionary;
-import com.onezol.vertex.framework.common.constant.enumeration.Enumeration;
+import com.onezol.vertex.framework.common.constant.enumeration.StandardEnumeration;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 @EnumDictionary(name = "通知公告类型", value = "notice_type")
-public enum NoticeTypeEnum implements Enumeration<Integer> {
+public enum NoticeType implements StandardEnumeration<Integer> {
 
     SUPER("系统通知", 0);
 

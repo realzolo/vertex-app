@@ -1,14 +1,14 @@
 package com.onezol.vertex.framework.component.notice.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.onezol.vertex.framework.common.constant.enumeration.ServiceStatusEnum;
+import com.onezol.vertex.framework.common.constant.enumeration.ServiceStatus;
 import com.onezol.vertex.framework.common.exception.RuntimeServiceException;
 import com.onezol.vertex.framework.common.model.LabelValue;
 import com.onezol.vertex.framework.common.model.PageModel;
 import com.onezol.vertex.framework.common.util.BeanUtils;
 import com.onezol.vertex.framework.common.util.EnumUtils;
-import com.onezol.vertex.framework.component.notice.enumeration.NoticeStatusEnum;
-import com.onezol.vertex.framework.component.notice.enumeration.NoticeTypeEnum;
+import com.onezol.vertex.framework.component.notice.enumeration.NoticeStatus;
+import com.onezol.vertex.framework.component.notice.enumeration.NoticeType;
 import com.onezol.vertex.framework.component.notice.mapper.NoticeMapper;
 import com.onezol.vertex.framework.component.notice.model.Notice;
 import com.onezol.vertex.framework.component.notice.model.NoticeEntity;
@@ -31,7 +31,7 @@ public class NoticeService {
     }
 
     public List<LabelValue<String, Integer>> getDict() {
-        NoticeTypeEnum[] values = NoticeTypeEnum.values();
+        NoticeType[] values = NoticeType.values();
         return Arrays.stream(values).map(value -> LabelValue.of(value.getName(), value.getValue())).toList();
     }
 
@@ -45,7 +45,7 @@ public class NoticeService {
         LocalDateTime terminateTime = payload.getTerminateTime();
         // 生效时间 不能大于 终止时间
         if (effectiveTime != null && terminateTime != null && effectiveTime.isAfter(terminateTime)) {
-            throw new RuntimeServiceException(ServiceStatusEnum.BAD_REQUEST, "生效时间不能大于终止时间");
+            throw new RuntimeServiceException(ServiceStatus.BAD_REQUEST, "生效时间不能大于终止时间");
         }
         NoticeEntity entity = BeanUtils.toBean(payload, NoticeEntity.class);
         if (entity.getId() == null) {
@@ -89,18 +89,18 @@ public class NoticeService {
      */
     public Integer calculateStatus(LocalDateTime effectiveTime, LocalDateTime terminateTime) {
         if (Objects.isNull(effectiveTime)) {
-            return NoticeStatusEnum.PENDING.getValue();
+            return NoticeStatus.PENDING.getValue();
         }
         LocalDateTime now = LocalDateTime.now();
         if (now.isBefore(effectiveTime)) {
             // 待发布
-            return NoticeStatusEnum.PENDING.getValue();
+            return NoticeStatus.PENDING.getValue();
         } else if (now.isAfter(terminateTime)) {
             // 已过期
-            return NoticeStatusEnum.EXPIRED.getValue();
+            return NoticeStatus.EXPIRED.getValue();
         } else {
             // 已发布(生效中)
-            return NoticeStatusEnum.PUBLISHED.getValue();
+            return NoticeStatus.PUBLISHED.getValue();
         }
     }
 

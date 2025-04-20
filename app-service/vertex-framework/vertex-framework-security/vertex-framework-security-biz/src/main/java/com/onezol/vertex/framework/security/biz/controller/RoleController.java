@@ -2,7 +2,7 @@ package com.onezol.vertex.framework.security.biz.controller;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.onezol.vertex.framework.common.constant.enumeration.DisEnableStatusEnum;
+import com.onezol.vertex.framework.common.constant.enumeration.DisEnableStatus;
 import com.onezol.vertex.framework.common.model.GenericResponse;
 import com.onezol.vertex.framework.common.model.LabelValue;
 import com.onezol.vertex.framework.common.model.PageModel;
@@ -57,7 +57,7 @@ public class RoleController extends BaseController<RoleEntity> {
         ).stream().map(RolePermissionEntity::getPermissionId).collect(Collectors.toSet());
         List<PermissionEntity> permissions = permissionService.list(
                 Wrappers.<PermissionEntity>lambdaQuery()
-                        .eq(PermissionEntity::getStatus, DisEnableStatusEnum.ENABLE)
+                        .eq(PermissionEntity::getStatus, DisEnableStatus.ENABLE)
                         .ne(PermissionEntity::getType, PermissionTypeEnum.BUTTON)
                         .in(!permissionIds.isEmpty(), PermissionEntity::getId, permissionIds)
         );

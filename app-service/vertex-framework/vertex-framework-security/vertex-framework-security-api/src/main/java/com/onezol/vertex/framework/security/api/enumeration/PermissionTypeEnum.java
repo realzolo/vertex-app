@@ -2,7 +2,7 @@ package com.onezol.vertex.framework.security.api.enumeration;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.onezol.vertex.framework.common.annotation.EnumDictionary;
-import com.onezol.vertex.framework.common.constant.enumeration.Enumeration;
+import com.onezol.vertex.framework.common.constant.enumeration.StandardEnumeration;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 @EnumDictionary(name = "权限类型", value = "permission_type")
-public enum PermissionTypeEnum implements Enumeration<Integer> {
+public enum PermissionTypeEnum implements StandardEnumeration<Integer> {
 
     DIR("目录", 1),
 

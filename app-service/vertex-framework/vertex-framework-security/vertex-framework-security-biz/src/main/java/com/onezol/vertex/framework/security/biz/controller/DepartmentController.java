@@ -1,7 +1,7 @@
 package com.onezol.vertex.framework.security.biz.controller;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.onezol.vertex.framework.common.constant.enumeration.DisEnableStatusEnum;
+import com.onezol.vertex.framework.common.constant.enumeration.DisEnableStatus;
 import com.onezol.vertex.framework.common.model.GenericResponse;
 import com.onezol.vertex.framework.common.model.TreeNode;
 import com.onezol.vertex.framework.common.mvc.controller.BaseController;
@@ -92,7 +92,7 @@ public class DepartmentController extends BaseController<DepartmentEntity> {
     public GenericResponse<List<TreeNode>> getPublicDepartmentTree() {
         List<DepartmentEntity> list = departmentService.list(
                 Wrappers.<DepartmentEntity>lambdaQuery()
-                        .eq(DepartmentEntity::getStatus, DisEnableStatusEnum.ENABLE.getValue())
+                        .eq(DepartmentEntity::getStatus, DisEnableStatus.ENABLE.getValue())
         );
         list.sort(Comparator.comparing(DepartmentEntity::getSort));
         List<Department> departments = BeanUtils.toList(list, Department.class);

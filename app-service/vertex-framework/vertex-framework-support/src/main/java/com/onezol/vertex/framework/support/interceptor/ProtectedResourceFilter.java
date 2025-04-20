@@ -1,6 +1,6 @@
 package com.onezol.vertex.framework.support.interceptor;
 
-import com.onezol.vertex.framework.common.constant.enumeration.ServiceStatusEnum;
+import com.onezol.vertex.framework.common.constant.enumeration.ServiceStatus;
 import com.onezol.vertex.framework.support.support.ResponseHelper;
 import com.onezol.vertex.framework.common.model.GenericResponse;
 import com.onezol.vertex.framework.common.util.ServletUtils;
@@ -34,7 +34,7 @@ public class ProtectedResourceFilter implements Filter {
 
         // 拦截actuator接口
         if (requestUri.startsWith(contextPath + "/actuator") && !remoteHost.equals("127.0.0.1")) {
-            GenericResponse<Object> genericResponse = ResponseHelper.buildFailedResponse(ServiceStatusEnum.FORBIDDEN, "受保护资源, 禁止使用当前接口访问");
+            GenericResponse<Object> genericResponse = ResponseHelper.buildFailedResponse(ServiceStatus.FORBIDDEN, "受保护资源, 禁止使用当前接口访问");
             ServletUtils.writeJSON((HttpServletResponse) response, genericResponse);
             return;
         }

@@ -1,7 +1,7 @@
 package com.onezol.vertex.framework.security.biz.runner;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.onezol.vertex.framework.common.constant.enumeration.GenderEnum;
+import com.onezol.vertex.framework.common.constant.enumeration.Gender;
 import com.onezol.vertex.framework.security.api.model.entity.RoleEntity;
 import com.onezol.vertex.framework.security.api.model.entity.RolePermissionEntity;
 import com.onezol.vertex.framework.security.api.model.entity.UserEntity;
@@ -163,7 +163,7 @@ public class InitializationRunner implements ApplicationRunner {
         user.setName(nickname);
         user.setIntroduction("");
         user.setAvatar("");
-        user.setGender(GenderEnum.MALE);
+        user.setGender(Gender.MALE);
         user.setBirthday(LocalDate.now());
         user.setPhone("");
         user.setEmail("");

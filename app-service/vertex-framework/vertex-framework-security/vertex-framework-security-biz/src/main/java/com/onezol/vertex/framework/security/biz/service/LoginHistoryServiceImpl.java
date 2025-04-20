@@ -6,7 +6,7 @@ import com.onezol.vertex.framework.common.mvc.service.BaseServiceImpl;
 import com.onezol.vertex.framework.common.util.BeanUtils;
 import com.onezol.vertex.framework.common.util.NetworkUtils;
 import com.onezol.vertex.framework.common.util.ServletUtils;
-import com.onezol.vertex.framework.security.api.enumeration.LoginTypeEnum;
+import com.onezol.vertex.framework.security.api.enumeration.LoginType;
 import com.onezol.vertex.framework.security.api.model.dto.LoginUser;
 import com.onezol.vertex.framework.security.api.model.dto.User;
 import com.onezol.vertex.framework.security.api.model.entity.LoginHistoryEntity;
@@ -14,13 +14,11 @@ import com.onezol.vertex.framework.security.api.service.LoginHistoryService;
 import com.onezol.vertex.framework.security.api.service.UserInfoService;
 import com.onezol.vertex.framework.security.biz.mapper.LoginHistoryMapper;
 import eu.bitwalker.useragentutils.UserAgent;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -39,7 +37,7 @@ public class LoginHistoryServiceImpl extends BaseServiceImpl<LoginHistoryMapper,
      * @param user 用户信息
      */
     @Override
-    public void createLoginRecord(User user, final LoginTypeEnum loginType) {
+    public void createLoginRecord(User user, final LoginType loginType) {
         Long userId = user.getId();
         LocalDateTime loginTime = LocalDateTime.now();
         String ip = NetworkUtils.getHostIp();

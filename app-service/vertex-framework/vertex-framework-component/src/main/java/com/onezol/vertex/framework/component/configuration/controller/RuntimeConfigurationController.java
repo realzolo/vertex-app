@@ -1,6 +1,6 @@
 package com.onezol.vertex.framework.component.configuration.controller;
 
-import com.onezol.vertex.framework.common.constant.enumeration.ServiceStatusEnum;
+import com.onezol.vertex.framework.common.constant.enumeration.ServiceStatus;
 import com.onezol.vertex.framework.common.model.GenericResponse;
 import com.onezol.vertex.framework.common.model.LabelValue;
 import com.onezol.vertex.framework.common.model.SimpleModel;
@@ -33,7 +33,7 @@ public class RuntimeConfigurationController {
         if (!Objects.equals("SITE", subject)) {
             AuthUser authUser = AuthenticationContext.get();
             if (Objects.isNull(authUser)) {
-                return ResponseHelper.buildFailedResponse(ServiceStatusEnum.UNAUTHORIZED);
+                return ResponseHelper.buildFailedResponse(ServiceStatus.UNAUTHORIZED);
             }
         }
         configurations = runtimeConfigurationService.listConfigurationsAsLabelValue(subject);
@@ -46,7 +46,7 @@ public class RuntimeConfigurationController {
         if (!Objects.equals("SITE", subject)) {
             AuthUser authUser = AuthenticationContext.get();
             if (Objects.isNull(authUser)) {
-                return ResponseHelper.buildFailedResponse(ServiceStatusEnum.UNAUTHORIZED);
+                return ResponseHelper.buildFailedResponse(ServiceStatus.UNAUTHORIZED);
             }
         }
         configurations = runtimeConfigurationService.listConfigurationsAsSimpleModel(subject);

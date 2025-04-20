@@ -10,7 +10,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 @EnumDictionary(name = "账号状态", value = "account_status")
-public enum AccountStatusEnum implements Enumeration<Integer> {
+public enum AccountStatus implements StandardEnumeration<Integer> {
 
     ACTIVE("正常", 0),
 

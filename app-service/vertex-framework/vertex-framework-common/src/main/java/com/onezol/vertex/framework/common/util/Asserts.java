@@ -1,11 +1,10 @@
 package com.onezol.vertex.framework.common.util;
 
-import com.onezol.vertex.framework.common.constant.enumeration.ServiceStatusEnum;
+import com.onezol.vertex.framework.common.constant.enumeration.ServiceStatus;
 import com.onezol.vertex.framework.common.exception.RuntimeServiceException;
 import com.onezol.vertex.framework.common.exception.ServiceException;
 
 import java.util.Collection;
-import java.util.Collections;
 
 public final class Asserts {
 
@@ -39,8 +38,9 @@ public final class Asserts {
 
     /**
      * 判断集合是否为空
+     *
      * @param collection 集合
-     * @param message 错误信息
+     * @param message    错误信息
      */
     public static void notEmpty(Collection<?> collection, String message) {
         if (collection == null || collection.isEmpty()) {
@@ -78,11 +78,11 @@ public final class Asserts {
 
 
     private static ServiceException generateException() {
-        return new RuntimeServiceException(ServiceStatusEnum.BAD_REQUEST);
+        return new RuntimeServiceException(ServiceStatus.BAD_REQUEST);
     }
 
     private static ServiceException generateException(String message) {
-        return new RuntimeServiceException(ServiceStatusEnum.BAD_REQUEST, message);
+        return new RuntimeServiceException(ServiceStatus.BAD_REQUEST, message);
     }
 
 }

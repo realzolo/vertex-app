@@ -1,6 +1,6 @@
 package com.onezol.vertex.framework.security.api.exception;
 
-import com.onezol.vertex.framework.common.constant.enumeration.ServiceStatusEnum;
+import com.onezol.vertex.framework.common.constant.enumeration.ServiceStatus;
 import com.onezol.vertex.framework.common.exception.ServiceException;
 
 /**
@@ -9,11 +9,11 @@ import com.onezol.vertex.framework.common.exception.ServiceException;
 public class AccessDeniedException extends ServiceException {
 
     public AccessDeniedException() {
-        super(ServiceStatusEnum.FORBIDDEN);
+        super(ServiceStatus.FORBIDDEN);
     }
 
     public AccessDeniedException(String message) {
-        super(ServiceStatusEnum.FORBIDDEN, message);
+        super(ServiceStatus.FORBIDDEN, message);
     }
 
 }

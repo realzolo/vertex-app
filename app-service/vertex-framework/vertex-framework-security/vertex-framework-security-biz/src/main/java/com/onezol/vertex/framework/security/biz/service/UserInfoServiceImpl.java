@@ -2,7 +2,7 @@ package com.onezol.vertex.framework.security.biz.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.onezol.vertex.framework.common.constant.CacheKey;
-import com.onezol.vertex.framework.common.constant.enumeration.SystemRoleTypeEnum;
+import com.onezol.vertex.framework.common.constant.enumeration.SystemRoleType;
 import com.onezol.vertex.framework.common.exception.RuntimeServiceException;
 import com.onezol.vertex.framework.common.model.PageModel;
 import com.onezol.vertex.framework.common.mvc.service.BaseServiceImpl;
@@ -64,7 +64,7 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
         user.setRoles(roles);
         // 获取用户权限
         Set<String> roleCodes = roleEntities.stream().map(RoleEntity::getCode).collect(Collectors.toSet());
-        if (roleCodes.contains(SystemRoleTypeEnum.SUPER.getValue()) || roleCodes.contains(SystemRoleTypeEnum.ADMIN.getValue())) {
+        if (roleCodes.contains(SystemRoleType.SUPER.getValue()) || roleCodes.contains(SystemRoleType.ADMIN.getValue())) {
             user.setPermissions(List.of("*:*:*"));
         } else {
             List<Long> roleIds = roleEntities.stream().map(RoleEntity::getId).toList();

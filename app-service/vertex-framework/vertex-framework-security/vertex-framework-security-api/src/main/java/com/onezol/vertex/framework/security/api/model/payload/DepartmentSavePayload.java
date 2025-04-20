@@ -1,10 +1,6 @@
 package com.onezol.vertex.framework.security.api.model.payload;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.onezol.vertex.framework.common.constant.enumeration.DisEnableStatusEnum;
 import com.onezol.vertex.framework.common.model.dto.BaseDTO;
-import com.onezol.vertex.framework.common.model.entity.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

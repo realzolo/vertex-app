@@ -11,18 +11,11 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 @EnumDictionary(name = "成功/失败状态", value = "success_failure_status")
-public enum SuccessFailureStatusEnum implements Enumeration<Integer> {
+public enum SuccessFailureStatus implements StandardEnumeration<Integer> {
 
-    /**
-     * 成功
-     */
     SUCCESS("成功", 1, ColorConstants.COLOR_SUCCESS),
 
-    /**
-     * 失败
-     */
     FAILURE("失败", 0, ColorConstants.COLOR_ERROR);
-
 
     private final String name;
 

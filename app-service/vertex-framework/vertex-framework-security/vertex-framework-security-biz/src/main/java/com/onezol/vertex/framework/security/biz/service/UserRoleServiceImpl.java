@@ -2,7 +2,7 @@ package com.onezol.vertex.framework.security.biz.service;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.onezol.vertex.framework.common.constant.enumeration.ServiceStatusEnum;
+import com.onezol.vertex.framework.common.constant.enumeration.ServiceStatus;
 import com.onezol.vertex.framework.common.exception.RuntimeServiceException;
 import com.onezol.vertex.framework.common.model.PageModel;
 import com.onezol.vertex.framework.common.mvc.service.BaseServiceImpl;
@@ -64,13 +64,13 @@ public class UserRoleServiceImpl extends BaseServiceImpl<UserRoleMapper, UserRol
     @Transactional
     public void assignToUsers(Long roleId, List<Long> userIds) {
         if (Objects.isNull(roleId) || Objects.isNull(userIds) || userIds.isEmpty()) {
-            throw new RuntimeServiceException(ServiceStatusEnum.BAD_REQUEST, "角色ID或用户ID列表不能为空");
+            throw new RuntimeServiceException(ServiceStatus.BAD_REQUEST, "角色ID或用户ID列表不能为空");
         }
 
         // 角色校验
         RoleEntity role = roleService.getById(roleId);
         if (Objects.isNull(role)) {
-            throw new RuntimeServiceException(ServiceStatusEnum.BAD_REQUEST, "角色不存在");
+            throw new RuntimeServiceException(ServiceStatus.BAD_REQUEST, "角色不存在");
         }
 
         // 用户校验
@@ -79,7 +79,7 @@ public class UserRoleServiceImpl extends BaseServiceImpl<UserRoleMapper, UserRol
                         .in(UserEntity::getId, userIds)
         );
         if (count != userIds.size()) {
-            throw new RuntimeServiceException(ServiceStatusEnum.BAD_REQUEST, "部分用户不存在, 无法绑定角色");
+            throw new RuntimeServiceException(ServiceStatus.BAD_REQUEST, "部分用户不存在, 无法绑定角色");
         }
 
         // 角色绑定
@@ -126,13 +126,13 @@ public class UserRoleServiceImpl extends BaseServiceImpl<UserRoleMapper, UserRol
     @Transactional
     public void updateUserRoles(Long userId, List<String> roleCodes) {
         if (Objects.isNull(userId) || Objects.isNull(roleCodes) || roleCodes.isEmpty()) {
-            throw new RuntimeServiceException(ServiceStatusEnum.BAD_REQUEST, "用户ID或用户角色编码列表不能为空");
+            throw new RuntimeServiceException(ServiceStatus.BAD_REQUEST, "用户ID或用户角色编码列表不能为空");
         }
 
         // 用户校验
         UserEntity user = userInfoService.getById(userId);
         if (Objects.isNull(user)) {
-            throw new RuntimeServiceException(ServiceStatusEnum.BAD_REQUEST, "用户不存在");
+            throw new RuntimeServiceException(ServiceStatus.BAD_REQUEST, "用户不存在");
         }
 
         // 角色校验
@@ -141,7 +141,7 @@ public class UserRoleServiceImpl extends BaseServiceImpl<UserRoleMapper, UserRol
                         .in(RoleEntity::getCode, roleCodes)
         );
         if (roleEntities.size() != roleCodes.size()) {
-            throw new RuntimeServiceException(ServiceStatusEnum.BAD_REQUEST, "部分角色不存在, 无法绑定用户");
+            throw new RuntimeServiceException(ServiceStatus.BAD_REQUEST, "部分角色不存在, 无法绑定用户");
         }
 
         // 删除旧绑定关系
@@ -218,7 +218,7 @@ public class UserRoleServiceImpl extends BaseServiceImpl<UserRoleMapper, UserRol
     @Transactional
     public void bindRolePermissions(Long roleId, List<Long> permissionIds) {
         if (Objects.isNull(roleId) || Objects.isNull(permissionIds) || permissionIds.isEmpty()) {
-            throw new RuntimeServiceException(ServiceStatusEnum.BAD_REQUEST, "角色ID或权限ID列表不能为空");
+            throw new RuntimeServiceException(ServiceStatus.BAD_REQUEST, "角色ID或权限ID列表不能为空");
         }
 
         Set<Long> permissionIdsSet = new HashSet<>(permissionIds);

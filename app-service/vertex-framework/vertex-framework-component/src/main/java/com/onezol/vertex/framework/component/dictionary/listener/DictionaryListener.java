@@ -2,9 +2,9 @@ package com.onezol.vertex.framework.component.dictionary.listener;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.onezol.vertex.framework.common.annotation.EnumDictionary;
-import com.onezol.vertex.framework.common.constant.enumeration.DictionaryTypeEnum;
-import com.onezol.vertex.framework.common.constant.enumeration.DisEnableStatusEnum;
-import com.onezol.vertex.framework.common.constant.enumeration.Enumeration;
+import com.onezol.vertex.framework.common.constant.enumeration.DictionaryType;
+import com.onezol.vertex.framework.common.constant.enumeration.DisEnableStatus;
+import com.onezol.vertex.framework.common.constant.enumeration.StandardEnumeration;
 import com.onezol.vertex.framework.common.util.StringUtils;
 import com.onezol.vertex.framework.component.dictionary.model.DictionaryEntity;
 import com.onezol.vertex.framework.component.dictionary.service.DictionaryService;
@@ -38,7 +38,7 @@ public class DictionaryListener {
         root:
         for (Class<?> clazz : classes) {
             EnumDictionary annotation = clazz.getAnnotation(EnumDictionary.class);
-            if (Enumeration.class.isAssignableFrom(clazz) && clazz.isEnum() && Objects.nonNull(annotation)) {
+            if (StandardEnumeration.class.isAssignableFrom(clazz) && clazz.isEnum() && Objects.nonNull(annotation)) {
                 String groupName = annotation.name();
                 String groupCode = annotation.value();
                 if (groupCodeSet.contains(groupCode)) {
@@ -56,7 +56,7 @@ public class DictionaryListener {
                 Object[] enumConstants = clazz.getEnumConstants();
                 for (Object enumConstant : enumConstants) {
                     // 获取枚举值的name和value
-                    Enumeration<?> aEnum = (Enumeration<?>) enumConstant;
+                    StandardEnumeration<?> aEnum = (StandardEnumeration<?>) enumConstant;
                     // 跳过非字典类型的枚举值
                     if (Objects.isNull(aEnum.getName()) || Objects.isNull(aEnum.getValue())) {
                         continue root;
@@ -68,7 +68,7 @@ public class DictionaryListener {
 
         log.info("正在清除枚举类字典表数据");
 
-        dictionaryService.remove(Wrappers.<DictionaryEntity>lambdaQuery().eq(DictionaryEntity::getType, DictionaryTypeEnum.ENUM.getValue()));
+        dictionaryService.remove(Wrappers.<DictionaryEntity>lambdaQuery().eq(DictionaryEntity::getType, DictionaryType.ENUM.getValue()));
 
         log.info("开始同步枚举类到字典表");
 
@@ -90,26 +90,26 @@ public class DictionaryListener {
         DictionaryEntity group = new DictionaryEntity();
         group.setName(name);
         group.setValue(value);
-        group.setType(DictionaryTypeEnum.ENUM);
+        group.setType(DictionaryType.ENUM);
         group.setRemark("系统内置");
         group.setBuiltin(Boolean.TRUE);
-        group.setStatus(DisEnableStatusEnum.ENABLE);
+        group.setStatus(DisEnableStatus.ENABLE);
         dictionaries.add(group);
     }
 
     /**
      * 创建字典项
      */
-    private void createDictionaryItem(List<DictionaryEntity> dictionaries, String groupCode, Enumeration<?> aEnum) {
+    private void createDictionaryItem(List<DictionaryEntity> dictionaries, String groupCode, StandardEnumeration<?> aEnum) {
         DictionaryEntity dictionaryItem = new DictionaryEntity();
         dictionaryItem.setName(aEnum.getName());
         dictionaryItem.setValue(String.valueOf(aEnum.getValue()));
         dictionaryItem.setColor(aEnum.getColor());
         dictionaryItem.setGroup(groupCode);
-        dictionaryItem.setType(DictionaryTypeEnum.ENUM);
+        dictionaryItem.setType(DictionaryType.ENUM);
         dictionaryItem.setRemark("系统内置");
         dictionaryItem.setBuiltin(Boolean.TRUE);
-        dictionaryItem.setStatus(DisEnableStatusEnum.ENABLE);
+        dictionaryItem.setStatus(DisEnableStatus.ENABLE);
         dictionaries.add(dictionaryItem);
     }
 

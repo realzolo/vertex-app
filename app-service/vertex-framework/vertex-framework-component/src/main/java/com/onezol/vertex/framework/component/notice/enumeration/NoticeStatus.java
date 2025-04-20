@@ -3,7 +3,7 @@ package com.onezol.vertex.framework.component.notice.enumeration;
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.onezol.vertex.framework.common.annotation.EnumDictionary;
 import com.onezol.vertex.framework.common.constant.ColorConstants;
-import com.onezol.vertex.framework.common.constant.enumeration.Enumeration;
+import com.onezol.vertex.framework.common.constant.enumeration.StandardEnumeration;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 @EnumDictionary(name = "通知公告状态", value = "notice_status")
-public enum NoticeStatusEnum implements Enumeration<Integer> {
+public enum NoticeStatus implements StandardEnumeration<Integer> {
 
     PENDING("待发布", 0, ColorConstants.COLOR_DEFAULT),
 

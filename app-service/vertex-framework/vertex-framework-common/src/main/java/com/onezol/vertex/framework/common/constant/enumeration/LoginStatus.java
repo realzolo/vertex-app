@@ -9,7 +9,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 @EnumDictionary(name = "登录状态", value = "login_status")
-public enum LoginStatusEnum implements Enumeration<Integer> {
+public enum LoginStatus implements StandardEnumeration<Integer> {
 
     SUCCESS("登录成功", 0),
 

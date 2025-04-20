@@ -2,9 +2,9 @@ package com.onezol.vertex.framework.component.storage.model;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.onezol.vertex.framework.common.constant.enumeration.DisEnableStatusEnum;
+import com.onezol.vertex.framework.common.constant.enumeration.DisEnableStatus;
 import com.onezol.vertex.framework.common.model.entity.BaseEntity;
-import com.onezol.vertex.framework.component.storage.annotation.StorageTypeEnum;
+import com.onezol.vertex.framework.component.storage.annotation.StorageType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -20,7 +20,7 @@ public class StorageStrategyEntity extends BaseEntity {
     private String code;
 
     @TableField("type")
-    private StorageTypeEnum type;
+    private StorageType type;
 
     @TableField("access_key")
     private String accessKey;
@@ -50,6 +50,6 @@ public class StorageStrategyEntity extends BaseEntity {
     private String remark;
 
     @TableField("status")
-    private DisEnableStatusEnum status;
+    private DisEnableStatus status;
 
 }

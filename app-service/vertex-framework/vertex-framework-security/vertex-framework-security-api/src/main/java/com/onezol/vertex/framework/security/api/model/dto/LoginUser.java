@@ -1,9 +1,7 @@
 package com.onezol.vertex.framework.security.api.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.onezol.vertex.framework.security.api.enumeration.LoginTypeEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;

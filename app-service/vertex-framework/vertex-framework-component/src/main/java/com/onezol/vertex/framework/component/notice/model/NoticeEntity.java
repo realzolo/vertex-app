@@ -4,8 +4,8 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import com.onezol.vertex.framework.common.model.entity.LogicalBaseEntity;
-import com.onezol.vertex.framework.component.notice.enumeration.NoticeScopeEnum;
-import com.onezol.vertex.framework.component.notice.enumeration.NoticeTypeEnum;
+import com.onezol.vertex.framework.component.notice.enumeration.NoticeScope;
+import com.onezol.vertex.framework.component.notice.enumeration.NoticeType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -28,7 +28,7 @@ public class NoticeEntity extends LogicalBaseEntity {
 
     @Schema(name = "类型")
     @TableField("type")
-    private NoticeTypeEnum type;
+    private NoticeType type;
 
     @Schema(name = "生效时间")
     @TableField("effective_time")
@@ -40,7 +40,7 @@ public class NoticeEntity extends LogicalBaseEntity {
 
     @Schema(name = "通知范围")
     @TableField("notice_scope")
-    private NoticeScopeEnum noticeScope;
+    private NoticeScope noticeScope;
 
     @Schema(name = "通知用户")
     @TableField(value = "notice_users", typeHandler = JacksonTypeHandler.class)

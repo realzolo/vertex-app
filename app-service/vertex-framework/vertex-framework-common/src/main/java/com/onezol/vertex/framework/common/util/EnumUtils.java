@@ -1,10 +1,7 @@
 package com.onezol.vertex.framework.common.util;
 
-import com.onezol.vertex.framework.common.constant.enumeration.Enumeration;
-import com.onezol.vertex.framework.common.constant.enumeration.SystemRoleTypeEnum;
+import com.onezol.vertex.framework.common.constant.enumeration.StandardEnumeration;
 
-import java.io.Serializable;
-import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -16,7 +13,7 @@ public final class EnumUtils {
         throw new IllegalStateException("Utility class cannot be instantiated");
     }
 
-    public static <T extends Enumeration<?>> T getEnumByValue(Class<T> enumClass, Object value) {
+    public static <T extends StandardEnumeration<?>> T getEnumByValue(Class<T> enumClass, Object value) {
         T[] enumConstants = enumClass.getEnumConstants();
         for (T enumConstant : enumConstants) {
             if (Objects.equals(enumConstant.getValue(), String.valueOf(value))) {

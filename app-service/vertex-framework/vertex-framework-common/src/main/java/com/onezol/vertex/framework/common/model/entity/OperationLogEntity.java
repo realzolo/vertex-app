@@ -2,7 +2,7 @@ package com.onezol.vertex.framework.common.model.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.onezol.vertex.framework.common.constant.enumeration.SuccessFailureStatusEnum;
+import com.onezol.vertex.framework.common.constant.enumeration.SuccessFailureStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
@@ -69,7 +69,7 @@ public class OperationLogEntity extends BaseEntity {
 
     @Schema(name ="操作状态")
     @TableField(value = "status")
-    private SuccessFailureStatusEnum status;
+    private SuccessFailureStatus status;
 
     @Schema(name ="失败原因")
     @TableField(value = "failure_reason")

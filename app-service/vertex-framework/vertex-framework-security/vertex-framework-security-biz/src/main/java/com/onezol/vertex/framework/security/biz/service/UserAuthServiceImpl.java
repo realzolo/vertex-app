@@ -2,14 +2,14 @@ package com.onezol.vertex.framework.security.biz.service;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.onezol.vertex.framework.common.constant.CacheKey;
-import com.onezol.vertex.framework.common.constant.enumeration.GenderEnum;
+import com.onezol.vertex.framework.common.constant.enumeration.Gender;
 import com.onezol.vertex.framework.common.exception.RuntimeServiceException;
 import com.onezol.vertex.framework.common.mvc.service.BaseServiceImpl;
 import com.onezol.vertex.framework.common.util.Asserts;
 import com.onezol.vertex.framework.common.util.BeanUtils;
 import com.onezol.vertex.framework.common.util.StringUtils;
 import com.onezol.vertex.framework.security.api.context.AuthenticationContext;
-import com.onezol.vertex.framework.security.api.enumeration.LoginTypeEnum;
+import com.onezol.vertex.framework.security.api.enumeration.LoginType;
 import com.onezol.vertex.framework.security.api.model.LoginUserDetails;
 import com.onezol.vertex.framework.security.api.model.dto.AuthUser;
 import com.onezol.vertex.framework.security.api.model.dto.User;
@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static com.onezol.vertex.framework.common.constant.enumeration.ServiceStatusEnum.BAD_REQUEST;
+import static com.onezol.vertex.framework.common.constant.enumeration.ServiceStatus.BAD_REQUEST;
 
 @Service
 public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity> implements UserAuthService {
@@ -196,7 +196,7 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
         LoginUserDetails loginUserDetails = (LoginUserDetails) principal;
 
         // 处理登录成功后的逻辑
-        return afterLoginSuccess(loginUserDetails, LoginTypeEnum.PBA);
+        return afterLoginSuccess(loginUserDetails, LoginType.PBA);
     }
 
     /**
@@ -281,7 +281,7 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
      * @param loginUserDetails 登录用户身份信息
      * @return 登录成功后的处理结果
      */
-    private UserAuthenticationVO afterLoginSuccess(LoginUserDetails loginUserDetails, final LoginTypeEnum loginType) {
+    private UserAuthenticationVO afterLoginSuccess(LoginUserDetails loginUserDetails, final LoginType loginType) {
         // 生成token
         String token = JWTHelper.generateToken(loginUserDetails.getId().toString());
 
@@ -316,7 +316,7 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
         entity.setName("张三");
         entity.setIntroduction("");
         entity.setAvatar("");
-        entity.setGender(GenderEnum.MALE);
+        entity.setGender(Gender.MALE);
         entity.setBirthday(LocalDate.now());
         entity.setPhone("");
         entity.setEmail("");

@@ -3,7 +3,7 @@ package com.onezol.vertex.framework.security.api.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.onezol.vertex.framework.common.model.PageModel;
 import com.onezol.vertex.framework.common.mvc.service.BaseService;
-import com.onezol.vertex.framework.security.api.enumeration.LoginTypeEnum;
+import com.onezol.vertex.framework.security.api.enumeration.LoginType;
 import com.onezol.vertex.framework.security.api.model.dto.LoginUser;
 import com.onezol.vertex.framework.security.api.model.dto.User;
 import com.onezol.vertex.framework.security.api.model.entity.LoginHistoryEntity;
@@ -17,7 +17,7 @@ public interface LoginHistoryService extends BaseService<LoginHistoryEntity> {
      *
      * @param user 用户信息
      */
-    void createLoginRecord(User user, LoginTypeEnum loginType);
+    void createLoginRecord(User user, LoginType loginType);
 
     /**
      * 获取用户登录信息
