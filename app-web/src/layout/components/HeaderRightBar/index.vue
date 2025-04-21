@@ -116,12 +116,12 @@ const initWebSocket = (token: string) => {
 
 // 查询未读消息数量
 const getMessageCount = async () => {
-  const { data } = await getUnreadMessageCount()
-  unreadMessageCount.value = data.total
-  const token = getToken()
-  if (token) {
-    initWebSocket(token)
-  }
+  // const { data } = await getUnreadMessageCount()
+  // unreadMessageCount.value = data.total
+  // const token = getToken()
+  // if (token) {
+  //   initWebSocket(token)
+  // }
 }
 
 const { isFullscreen, toggle } = useFullscreen()

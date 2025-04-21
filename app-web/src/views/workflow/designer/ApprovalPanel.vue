@@ -113,6 +113,8 @@ import {
 } from './support'
 import { useResetReactive } from '@/hooks'
 
+defineOptions({ name: 'ApprovalPanel' })
+
 const selectedNode = ref()
 const formRef = ref<FormInstance>()
 const rules: FormInstance['rules'] = {

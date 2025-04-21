@@ -1,3 +1,5 @@
+import {NodeType} from "@/views/workflow/type";
+
 export const STRATEGIES = [
   { label: '指定成员', value: 1 },
   { label: '发起人自己', value: 2 },
@@ -22,4 +24,8 @@ export const EMPTY_PERSON_STRATEGY = [
   { label: '自动通过', value: 1 },
   { label: '自动转交管理员', value: 2 },
   { label: '指定人员审批', value: 3 },
+]
+export const FLOW_NODE_CHOICES = [
+  { name: '审批人', value: NodeType.APPROVER },
+  { name: '抄送人', value: NodeType.CC },
 ]

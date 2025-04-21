@@ -9,7 +9,7 @@
         transform: `translate(-50%, -50%) translate(${path[1]}px,${path[2]}px)`,
       }"
     >
-      <a-popover position="rt" content="">
+      <a-popover v-if="!isInteractive" position="rt" content="">
         <a-button shape="circle" type="secondary">
           <icon-plus />
         </a-button>
@@ -27,37 +27,33 @@
 </template>
 
 <script setup lang="ts">
-import { BaseEdge, EdgeLabelRenderer, type EdgeProps, type Node, getBezierPath, useEdge } from '@vue-flow/core'
+import {
+  BaseEdge,
+  EdgeLabelRenderer,
+  type EdgeProps,
+  getBezierPath,
+} from '@vue-flow/core'
 import { computed } from 'vue'
-import { NodeType } from '../type'
+import { FLOW_NODE_CHOICES } from '@/views/workflow/designer/support'
 
-defineOptions({ name: 'SpecialEdge' })
+defineOptions({ name: 'ApprovalEdge' })
 
 const props = defineProps<EdgeProps>()
 
-const parentCreateNode: any = inject('createNode')
+const emit = defineEmits(['add-node-on-edge'])
 
 const path = computed(() => getBezierPath(props))
 
-const { edge } = useEdge()
-const FLOW_NODE_CHOICES = [
-  { name: '审批人', value: NodeType.APPROVER },
-  { name: '抄送人', value: NodeType.CC },
-]
+const isInteractive = inject<boolean>('isInteractive')
 
 const createNode = (item: { name: string, value: string }) => {
-  console.log("edge", edge)
-  const node: Node = {
-    id: `INTERMEDIATE_NODE_${Date.now()}`,
-    type: 'special',
-    position: { x: (edge.sourceX + edge.targetX) / 2 - 110, y: (edge.sourceY + edge.targetY) / 2 },
-    data: {
-      label: item.name,
-      type: item.value,
-      index: edge.data.index,
-    },
-  }
-  parentCreateNode(node)
+  emit('add-node-on-edge', {
+    edgeId: props.id,
+    source: props.source,
+    target: props.target,
+    position: { x: (props.sourceX + props.targetX) / 2 - 110, y: (props.sourceY + props.targetY) / 2 },
+    type: item.value,
+  })
 }
 </script>
 

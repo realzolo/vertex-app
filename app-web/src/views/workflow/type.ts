@@ -4,3 +4,11 @@ export enum NodeType {
   APPROVER = 2,
   END,
 }
+
+export interface EdgeEmitData {
+  edgeId: string
+  source: string
+  target: string
+  position: { x: number, y: number }
+  type: number
+}

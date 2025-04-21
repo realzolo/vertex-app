@@ -1,6 +1,6 @@
 <template>
-  <div class="vue-flow__node-default flow-node-default">
-    <div v-if="data.type !== NodeType.END" class="flow-node flow-process">
+  <div class="vue-flow__node-default approval-node-default">
+    <div v-if="data.type !== NodeType.END" class="approval-node approval-process">
       <div class="node-title" :style="{ background: COLOR_MAP[data.type] }">
         <span>{{ data.label }}</span>
       </div>
@@ -14,7 +14,7 @@
       </div>
     </div>
 
-    <div v-if="data.type === NodeType.END" class="flow-node flow-end">
+    <div v-if="data.type === NodeType.END" class="approval-node approval-end">
       <span>流程结束</span>
     </div>
   </div>
@@ -24,9 +24,9 @@
 import type { NodeProps } from '@vue-flow/core'
 import { NodeType } from '../type'
 
-defineOptions({ name: 'SpecialNode' })
+defineOptions({ name: 'ApprovalNode' })
 
-defineProps<NodeProps>()
+const props = defineProps<NodeProps>()
 
 const COLOR_MAP = {
   0: 'rgb(87, 106, 149)',
@@ -37,7 +37,7 @@ const COLOR_MAP = {
 </script>
 
 <style scoped lang="scss">
-.flow-node-default {
+.approval-node-default {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -49,7 +49,7 @@ const COLOR_MAP = {
   padding: 0;
   align-items: center;
 
-  .flow-node.flow-process {
+  .approval-node.approval-process {
     width: 220px;
     min-height: 72px;
     background: #FFFFFF;
@@ -92,7 +92,7 @@ const COLOR_MAP = {
     }
   }
 
-  .flow-node.flow-end {
+  .approval-node.approval-end {
     border-radius: 24px;
     padding: 10px 28px;
     font-size: 14px;
@@ -103,8 +103,7 @@ const COLOR_MAP = {
 </style>
 
 <style lang="scss">
-.vue-flow__node-special.selected .flow-node-default:not(:has(.flow-node.flow-end)) {
-  border: 1px solid rgb(var(--primary-6));
+.vue-flow__node-approval.selected .approval-node-default:not(:has(.approval-node.approval-end)) {
   box-shadow: 1px 3px 32px 0 rgba(50,73,198,.08),6px 16px 48px 0 rgba(50,73,198,.12);
 }
 </style>
