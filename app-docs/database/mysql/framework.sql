@@ -341,3 +341,22 @@ CREATE TABLE IF NOT EXISTS vx_login_history
 ) ENGINE = InnoDB
     DEFAULT CHARSET = utf8mb4
     COMMENT = '用户登录历史';
+
+CREATE TABLE IF NOT EXISTS vx_flow_graph
+(
+    id          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
+    -- 自定义字段开始 --
+    name        VARCHAR(255)  COMMENT '流程名称',
+    content     LONGTEXT      COMMENT '流程内容',
+    status      INT UNSIGNED  DEFAULT 0 COMMENT '流程状态',
+    remark      VARCHAR(255)  COMMENT '备注',
+    -- 自定义字段结束 --
+    creator     BIGINT       DEFAULT NULL COMMENT '创建人',
+    create_time DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    updater     BIGINT       DEFAULT NULL COMMENT '更新人',
+    update_time DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+    version     INT UNSIGNED DEFAULT 0 COMMENT '版本号',
+    deleted     BIT          DEFAULT b'0' COMMENT '是否删除'
+) ENGINE = InnoDB
+    DEFAULT CHARSET = utf8mb4
+    COMMENT = '流程图';

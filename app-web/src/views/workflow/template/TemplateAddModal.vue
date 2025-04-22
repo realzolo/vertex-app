@@ -19,6 +19,7 @@ import { Message } from '@arco-design/web-vue'
 import { useWindowSize } from '@vueuse/core'
 import { type ColumnItem, GiForm } from '@/components/GiForm'
 import { useResetReactive } from '@/hooks'
+import { createFlowGraph, updateFlowGraph } from '@/apis/flow'
 
 const emit = defineEmits<{
   (e: 'save-success'): void
@@ -33,6 +34,7 @@ const title = computed(() => (isUpdate.value ? '修改流程' : '新增流程'))
 const formRef = ref<InstanceType<typeof GiForm>>()
 
 const [form, resetForm] = useResetReactive({
+  id: null,
   sort: 999,
   status: 1,
 })
@@ -68,10 +70,11 @@ const save = async () => {
     const isInvalid = await formRef.value?.formRef?.validate()
     if (isInvalid) return false
     if (isUpdate.value) {
-      // await updateDictItem(form, dataId.value)
+      form.id = flowId.value
+      await updateFlowGraph(form)
       Message.success('修改成功')
     } else {
-      // await addDictItem({ ...form, groupId: dictId.value })
+      await createFlowGraph(form)
       Message.success('新增成功')
     }
     emit('save-success')

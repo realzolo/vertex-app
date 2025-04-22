@@ -1,5 +1,6 @@
 <template>
   <GiPageLayout>
+    <a-button @click="saveFlow">保存</a-button>
     <VueFlow
       :nodes="nodes"
       :edges="edges"
@@ -13,17 +14,17 @@
       </template>
 
       <template #edge-approval="props">
-        <ApprovalEdge v-bind="props" @add-node-on-edge="handleAddNodeOnEdge" />
+        <ApprovalEdge v-bind="props" @add-node-on-edge="handleAddNodeOnEdge"/>
       </template>
 
-      <Background pattern-color="#aaa" :gap="16" />
+      <Background pattern-color="#aaa" :gap="16"/>
 
-      <Controls position="top-left" @interaction-change="handleInteractionChange" />
+      <Controls position="top-left" @interaction-change="handleInteractionChange"/>
 
-      <MiniMap position="bottom-left" />
+      <MiniMap position="bottom-left"/>
 
       <Panel position="top-right">
-        <ApprovalPanel ref="ApprovalPanelRef" />
+        <ApprovalPanel ref="ApprovalPanelRef"/>
       </Panel>
     </VueFlow>
   </GiPageLayout>
@@ -36,11 +37,13 @@ import { Panel, VueFlow, useVueFlow } from '@vue-flow/core'
 import { Background } from '@vue-flow/background'
 import { Controls } from '@vue-flow/controls'
 import { MiniMap } from '@vue-flow/minimap'
+import { Message } from '@arco-design/web-vue'
 import { type EdgeEmitData, NodeType } from '../type'
 import ApprovalNode from './ApprovalNode.vue'
 import ApprovalEdge from './ApprovalEdge.vue'
 import ApprovalPanel from './ApprovalPanel.vue'
 import { FLOW_NODE_CHOICES } from '@/views/workflow/designer/support'
+import { getFlowGraph, updateFlowGraph } from '@/apis/flow'
 
 const nodeTypes = {
   approval: markRaw(ApprovalNode),
@@ -48,11 +51,13 @@ const nodeTypes = {
 const edgeTypes = {
   approval: markRaw(ApprovalEdge),
 }
-
+const route = useRoute()
 const {
   onNodeDragStop,
   onNodeClick,
   onPaneClick,
+  toObject,
+  fromObject,
 } = useVueFlow()
 
 const ApprovalPanelRef = ref<InstanceType<typeof ApprovalPanel>>()
@@ -137,6 +142,27 @@ const handleInteractionChange = (interactive: boolean) => {
   isInteractive.value = interactive
   toggleApprovalPanel()
 }
+
+const saveFlow = () => {
+  const id = Number(route.query.id)
+  updateFlowGraph({ id, content: JSON.stringify(toObject()) })
+  Message.success('保存成功')
+}
+const fetchData = async (id: number) => {
+  const resp = await getFlowGraph(id)
+  if (resp.success) {
+    const flowGraph = JSON.parse(resp.data.content)
+    if (!flowGraph) return
+    nodes.value = flowGraph.nodes
+    edges.value = flowGraph.edges
+    await fromObject(flowGraph)
+  }
+}
+onMounted(() => {
+  if (route.query.id) {
+    fetchData(Number(route.query.id))
+  }
+})
 
 onNodeDragStop((event) => {
   const currentNode = nodes.value.find((node) => node.id === event.node.id)
