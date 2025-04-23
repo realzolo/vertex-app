@@ -1,0 +1,124 @@
+package com.onezol.vertex.framework.component.approval.service;
+
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.onezol.vertex.framework.common.constant.enumeration.ServiceStatus;
+import com.onezol.vertex.framework.common.exception.RuntimeServiceException;
+import com.onezol.vertex.framework.common.model.PageModel;
+import com.onezol.vertex.framework.common.util.BeanUtils;
+import com.onezol.vertex.framework.common.util.EnumUtils;
+import com.onezol.vertex.framework.common.util.MapUtils;
+import com.onezol.vertex.framework.component.approval.constant.BusinessType;
+import com.onezol.vertex.framework.component.approval.mapper.ApprovalFlowBindingRelationMapper;
+import com.onezol.vertex.framework.component.approval.mapper.ApprovalFlowTemplateMapper;
+import com.onezol.vertex.framework.component.approval.model.dto.ApprovalFlowBindingRelation;
+import com.onezol.vertex.framework.component.approval.model.dto.ApprovalFlowTemplate;
+import com.onezol.vertex.framework.component.approval.model.entity.ApprovalFlowBindingRelationEntity;
+import com.onezol.vertex.framework.component.approval.model.entity.ApprovalFlowTemplateEntity;
+import com.onezol.vertex.framework.component.approval.model.payload.ApprovalFlowBindingRelationPayload;
+import com.onezol.vertex.framework.component.approval.model.payload.FlowTemplateSavePayload;
+import org.bouncycastle.jcajce.provider.symmetric.AES;
+import org.springframework.stereotype.Service;
+
+import java.sql.Wrapper;
+import java.util.List;
+import java.util.Map;
+
+@Service
+public class ApprovalFlowService {
+
+    private final ApprovalFlowTemplateMapper approvalFlowTemplateMapper;
+    private final ApprovalFlowBindingRelationMapper approvalFlowBindingRelationMapper;
+
+    public ApprovalFlowService(ApprovalFlowTemplateMapper approvalFlowTemplateMapper, ApprovalFlowBindingRelationMapper approvalFlowBindingRelationMapper) {
+        this.approvalFlowTemplateMapper = approvalFlowTemplateMapper;
+        this.approvalFlowBindingRelationMapper = approvalFlowBindingRelationMapper;
+    }
+
+    /**
+     * 创建流程模板
+     */
+    public ApprovalFlowTemplate createFlowTemplate(FlowTemplateSavePayload payload) {
+        ApprovalFlowTemplateEntity flowTemplate = BeanUtils.toBean(payload, ApprovalFlowTemplateEntity.class);
+        approvalFlowTemplateMapper.insert(flowTemplate);
+        return BeanUtils.toBean(flowTemplate, ApprovalFlowTemplate.class);
+    }
+
+    /**
+     * 更新流程模板
+     */
+    public ApprovalFlowTemplate updateFlowTemplate(FlowTemplateSavePayload payload) {
+        ApprovalFlowTemplateEntity flowTemplate = BeanUtils.toBean(payload, ApprovalFlowTemplateEntity.class);
+        approvalFlowTemplateMapper.updateById(flowTemplate);
+        return BeanUtils.toBean(flowTemplate, ApprovalFlowTemplate.class);
+    }
+
+    /**
+     * 获取流程模板
+     */
+    public ApprovalFlowTemplate getFlowTemplate(Long id) {
+        if (id == null) return null;
+        ApprovalFlowTemplateEntity flowTemplate = approvalFlowTemplateMapper.selectById(id);
+        return BeanUtils.toBean(flowTemplate, ApprovalFlowTemplate.class);
+    }
+
+    /**
+     * 绑定业务到流程模板
+     */
+    public void bindFlowToBusinessType(ApprovalFlowBindingRelationPayload payload) {
+        ApprovalFlowTemplateEntity flowTemplate = approvalFlowTemplateMapper.selectById(payload.getFlowTemplateId());
+        if (flowTemplate == null) {
+            throw new RuntimeServiceException(ServiceStatus.BAD_REQUEST, "流程模板不存在");
+        }
+        Long count = approvalFlowBindingRelationMapper.selectCount(
+                Wrappers.<ApprovalFlowBindingRelationEntity>lambdaQuery()
+                        .eq(ApprovalFlowBindingRelationEntity::getBusinessTypeCode, payload.getBusinessTypeCode())
+                        .eq(ApprovalFlowBindingRelationEntity::getFlowTemplateId, payload.getFlowTemplateId())
+        );
+        if (count > 0) {
+            throw new RuntimeServiceException(ServiceStatus.BAD_REQUEST, "该业务已绑定流程模板");
+        }
+
+        ApprovalFlowBindingRelationEntity relationEntity = new ApprovalFlowBindingRelationEntity();
+        relationEntity.setBusinessTypeCode(payload.getBusinessTypeCode());
+        relationEntity.setFlowTemplateId(payload.getFlowTemplateId());
+        approvalFlowBindingRelationMapper.insert(relationEntity);
+    }
+
+    /**
+     * 解绑业务流程
+     */
+    public void unbindFlowFromBusinessType(ApprovalFlowBindingRelationPayload payload) {
+        approvalFlowBindingRelationMapper.delete(
+                Wrappers.<ApprovalFlowBindingRelationEntity>lambdaQuery()
+                        .eq(ApprovalFlowBindingRelationEntity::getBusinessTypeCode, payload.getBusinessTypeCode())
+                        .eq(ApprovalFlowBindingRelationEntity::getFlowTemplateId, payload.getFlowTemplateId())
+        );
+    }
+
+    /**
+     * 分页获取业务流程模板绑定关系
+     */
+    public PageModel<ApprovalFlowBindingRelation> getFlowBindingRelation(Page<ApprovalFlowBindingRelationEntity> page) {
+        List<ApprovalFlowTemplateEntity> approvalFlowTemplateEntities = approvalFlowTemplateMapper.selectList(
+                Wrappers.<ApprovalFlowTemplateEntity>lambdaQuery()
+                        .select(ApprovalFlowTemplateEntity::getId, ApprovalFlowTemplateEntity::getName)
+        );
+        Map<Long, ApprovalFlowTemplateEntity> flowTemplateMap = MapUtils.list2Map(approvalFlowTemplateEntities, ApprovalFlowTemplateEntity::getId);
+
+        Page<ApprovalFlowBindingRelationEntity> relationPage = approvalFlowBindingRelationMapper.selectPage(page, null);
+        PageModel<ApprovalFlowBindingRelation> pageModel = PageModel.from(relationPage, ApprovalFlowBindingRelation.class);
+        pageModel.getItems().forEach(item -> {
+            ApprovalFlowTemplateEntity flowTemplate = flowTemplateMap.get(item.getFlowTemplateId());
+            if (flowTemplate != null) {
+                item.setFlowTemplateName(flowTemplate.getName());
+            }
+            BusinessType businessType = EnumUtils.getEnumByValue(BusinessType.class, item.getBusinessTypeCode());
+            if (businessType != null) {
+                item.setBusinessTypeName(businessType.getName());
+            }
+        });
+        return pageModel;
+    }
+
+}

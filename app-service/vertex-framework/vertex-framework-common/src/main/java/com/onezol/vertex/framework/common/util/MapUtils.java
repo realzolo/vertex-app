@@ -1,11 +1,10 @@
 package com.onezol.vertex.framework.common.util;
 
-import com.onezol.vertex.framework.common.model.KeyValue;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * Map 工具类
@@ -36,14 +35,46 @@ public final class MapUtils {
     }
 
     /**
-     * 将 List<KeyValue> 转换成 Map
+     * 将List转换为Map
      *
-     * @param keyValues 键值对数组
-     * @return Map
+     * @param list      源列表
+     * @param keyMapper 生成key的函数
+     * @param <K>       key类型
+     * @param <V>       value类型
+     * @return 转换后的Map
      */
-    public static <K, V> Map<K, V> list2Map(List<KeyValue<K, V>> keyValues) {
-        Map<K, V> map = new HashMap<>();
-        keyValues.forEach(keyValue -> map.put(keyValue.getKey(), keyValue.getValue()));
+    public static <K, V> Map<K, V> list2Map(List<V> list, Function<V, K> keyMapper) {
+        return list2Map(list, keyMapper, Function.identity());
+    }
+
+    /**
+     * 将List转换为Map
+     *
+     * @param list        源列表
+     * @param keyMapper   生成key的函数
+     * @param valueMapper 生成value的函数
+     * @param <K>         key类型
+     * @param <V>         value类型
+     * @param <U>         最终Map的value类型
+     * @return 转换后的Map
+     */
+    public static <K, V, U> Map<K, U> list2Map(
+            List<V> list,
+            Function<V, K> keyMapper,
+            Function<V, U> valueMapper
+    ) {
+        if (list == null) {
+            return new HashMap<>();
+        }
+
+        Map<K, U> map = new HashMap<>(list.size());
+        for (V item : list) {
+            if (item != null) {
+                K key = keyMapper.apply(item);
+                U value = valueMapper.apply(item);
+                map.put(key, value);
+            }
+        }
         return map;
     }
 
