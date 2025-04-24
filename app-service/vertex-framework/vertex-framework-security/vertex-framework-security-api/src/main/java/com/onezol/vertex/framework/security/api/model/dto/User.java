@@ -1,6 +1,5 @@
 package com.onezol.vertex.framework.security.api.model.dto;
 
-import com.onezol.vertex.framework.common.annotation.Dictionary;
 import com.onezol.vertex.framework.common.model.dto.BaseDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -27,7 +26,6 @@ public class User extends BaseDTO {
     @Schema(description = "用户头像")
     private String avatar;
 
-    @Dictionary("gender")
     @Schema(description = "性别")
     private Integer gender;
 
@@ -49,7 +47,6 @@ public class User extends BaseDTO {
     @Schema(description = "权限列表")
     private List<String> permissions = Collections.emptyList();
 
-    @Dictionary("dis_enable_status")
     @Schema(description = "账号状态")
     private Integer status;
 
