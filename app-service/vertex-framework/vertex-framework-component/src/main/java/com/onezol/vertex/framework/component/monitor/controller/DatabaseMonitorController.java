@@ -7,7 +7,7 @@ import com.onezol.vertex.framework.common.constant.enumeration.ServiceStatus;
 import com.onezol.vertex.framework.common.exception.RuntimeServiceException;
 import com.onezol.vertex.framework.support.support.ResponseHelper;
 import com.onezol.vertex.framework.common.model.GenericResponse;
-import com.onezol.vertex.framework.common.model.PageModel;
+import com.onezol.vertex.framework.common.model.PagePack;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
@@ -77,7 +77,7 @@ public class DatabaseMonitorController {
 
     @Operation(summary = "分页查询数据", description = "分页获取Druid数据库连接池监控")
     @GetMapping("/{key}/{orderBy}/{orderType}/{page}/{perPageCount}")
-    public GenericResponse<PageModel<Object>> getPageData(
+    public GenericResponse<PagePack<Object>> getPageData(
             @PathVariable("key") String key,
             @PathVariable("orderBy") String orderBy,
             @PathVariable("orderType") String orderType,
@@ -95,7 +95,7 @@ public class DatabaseMonitorController {
         int start = (page - 1) * perPageCount;
         int end = page * perPageCount;
         if (data.size() < start) {
-            return ResponseHelper.buildSuccessfulResponse(new PageModel<>(data, data.size(), page, perPageCount));
+            return ResponseHelper.buildSuccessfulResponse(new PagePack<>(data, data.size(), page, perPageCount));
         }
         for (int i = start; i < end; i++) {
             if (i >= data.size()) {
@@ -103,8 +103,8 @@ public class DatabaseMonitorController {
             }
             pageData.add(data.get(i));
         }
-        PageModel<Object> PageModel = new PageModel<>(pageData, data.size(), page, perPageCount);
-        return ResponseHelper.buildSuccessfulResponse(PageModel);
+        PagePack<Object> pack = new PagePack<>(pageData, data.size(), page, perPageCount);
+        return ResponseHelper.buildSuccessfulResponse(pack);
     }
 
     /**

@@ -29,6 +29,7 @@ export default defineConfig(({ command, mode }) => {
       include: ['vue-draggable-plus'],
     },
     server: {
+      port: 9000,
       // 服务启动时是否自动打开浏览器
       open: true,
       // 本地跨域代理 -> 代理到服务器的接口地址

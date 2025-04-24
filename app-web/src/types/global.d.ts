@@ -7,11 +7,20 @@ interface Options {
   value: unknown
 }
 
-/** 键值对类型 */
-export interface LabelValueState {
+interface DictionaryEntry {
   label: string
-  value: any
-  extra?: string
+  value: string | number
+  color?: string
+  disabled?: boolean
+  extra?: unknown
+}
+
+interface DataPairRecord {
+  id: string
+  name: string
+  code: string
+  value: string | number
+  description: string
 }
 
 declare global{
@@ -23,3 +32,13 @@ type Status = 1 | 2
 
 /** 性别（1：男；2：女；0：未知） */
 type Gender = 1 | 2 | 0
+
+interface TreeNode<T> {
+  id: number
+  parentId: number
+  path: string
+  title: string
+  icon: string
+  children: TreeNode[]
+  data: T
+}

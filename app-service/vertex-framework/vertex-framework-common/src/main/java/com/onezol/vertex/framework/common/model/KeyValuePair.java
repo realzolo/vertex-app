@@ -7,19 +7,15 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 
 /**
- * Label Value 键值对
+ * Key Value 键值对
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class LabelValue<L, V> implements Serializable {
+public class KeyValuePair<K, V> implements Serializable {
 
-    private L label;
+    private K key;
 
     private V value;
-
-    public static <L, V> LabelValue<L, V> of(L label, V value) {
-        return new LabelValue<>(label, value);
-    }
 
 }

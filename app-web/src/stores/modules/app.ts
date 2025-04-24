@@ -60,7 +60,7 @@ const storeSetup = () => {
   const initSiteConfig = () => {
     listSiteOptionDict().then((res) => {
       const resMap = new Map()
-      res.data.forEach((item) => {
+      res.data.forEach((item: DictionaryEntry) => {
         resMap.set(item.label, item.value)
       })
       siteConfig.SITE_FAVICON = resMap.get('SITE_FAVICON')

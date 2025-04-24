@@ -3,59 +3,57 @@ import http from '@/utils/http'
 
 export type * from './type'
 
-const BASE_URL = '/dictionary'
-
 /** @desc 查询字典列表 */
-export function listDict(query?: T.DictQuery) {
-  return http.get<T.DictResp[]>(`${BASE_URL}/groups`, query)
+export function listDictGroups(query?: T.DictQuery) {
+  return http.get<T.DictResp[]>(`/dictionary/groups`, query)
 }
 
 /** @desc 查询字典详情 */
-export function getDict(id: number) {
-  return http.get<T.DictResp>(`${BASE_URL}/${id}`)
+export function getDictGroup(id: number) {
+  return http.get<T.DictResp>(`/dictionary/${id}`)
 }
 
 /** @desc 新增字典 */
-export function addDict(data: any) {
-  return http.post(`${BASE_URL}`, data)
+export function createDictGroup(data: any) {
+  return http.post(`/dictionary`, data)
 }
 
 /** @desc 修改字典 */
-export function updateDict(data: any, id: number) {
-  return http.put(`${BASE_URL}/${id}`, data)
+export function updateDictGroup(data: any) {
+  return http.put(`/dictionary`, data)
 }
 
 /** @desc 删除字典 */
-export function deleteDict(id: number) {
-  return http.del(`${BASE_URL}/${id}`)
+export function deleteDictGroup(id: number) {
+  return http.del(`/dictionary/${id}`)
 }
 
 /** @desc 清除字典缓存 */
 export function clearDictCache(code: number) {
-  return http.del(`${BASE_URL}/cache/${code}`)
+  return http.del(`/dictionary/cache/${code}`)
 }
 
 /** @desc 查询字典项列表 */
 export function listDictItem(query: T.DictItemPageQuery) {
-  return http.get<PageRes<T.DictItemResp[]>>(`${BASE_URL}/items`, query)
+  return http.get<PagePack<T.DictItemResp[]>>(`/dictionary/items`, query)
 }
 
 /** @desc 查询字典项详情 */
 export function getDictItem(id: number) {
-  return http.get<T.DictItemResp>(`${BASE_URL}/${id}`)
+  return http.get<T.DictItemResp>(`/dictionary/${id}`)
 }
 
 /** @desc 新增字典项 */
 export function addDictItem(data: any) {
-  return http.post(`${BASE_URL}`, data)
+  return http.post(`/dictionary`, data)
 }
 
 /** @desc 修改字典项 */
 export function updateDictItem(data: any, id: number) {
-  return http.put(`${BASE_URL}/${id}`, data)
+  return http.put(`/dictionary/${id}`, data)
 }
 
 /** @desc 删除字典项 */
 export function deleteDictItem(id: number) {
-  return http.del(`${BASE_URL}/${id}`)
+  return http.del(`/dictionary/${id}`)
 }

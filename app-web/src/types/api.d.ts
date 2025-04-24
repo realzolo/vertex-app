@@ -1,5 +1,5 @@
 /** 接口返回数据格式 */
-interface ApiRes<T> {
+interface GenericResponse<T> {
   code: number
   data: T
   message: string
@@ -9,7 +9,7 @@ interface ApiRes<T> {
 }
 
 /** 分页响应数据格式 */
-interface PageRes<T> {
+interface PagePack<T> {
   items: T
   pageNumber: number
   pageSize: number
@@ -20,15 +20,4 @@ interface PageRes<T> {
 interface PageQuery {
   pageNumber: number
   pageSize: number
-}
-
-export interface SimpleRole {
-  id: number
-  name: string
-  code: string
-}
-
-export interface SimpleDepartment {
-  id: number
-  name: string
 }

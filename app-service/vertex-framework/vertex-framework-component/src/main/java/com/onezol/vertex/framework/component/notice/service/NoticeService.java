@@ -3,12 +3,9 @@ package com.onezol.vertex.framework.component.notice.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.onezol.vertex.framework.common.constant.enumeration.ServiceStatus;
 import com.onezol.vertex.framework.common.exception.RuntimeServiceException;
-import com.onezol.vertex.framework.common.model.LabelValue;
-import com.onezol.vertex.framework.common.model.PageModel;
+import com.onezol.vertex.framework.common.model.PagePack;
 import com.onezol.vertex.framework.common.util.BeanUtils;
-import com.onezol.vertex.framework.common.util.EnumUtils;
 import com.onezol.vertex.framework.component.notice.enumeration.NoticeStatus;
-import com.onezol.vertex.framework.component.notice.enumeration.NoticeType;
 import com.onezol.vertex.framework.component.notice.mapper.NoticeMapper;
 import com.onezol.vertex.framework.component.notice.model.Notice;
 import com.onezol.vertex.framework.component.notice.model.NoticeEntity;
@@ -16,7 +13,6 @@ import com.onezol.vertex.framework.component.notice.model.NoticeSavePayload;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -28,11 +24,6 @@ public class NoticeService {
 
     public NoticeService(NoticeMapper noticeMapper) {
         this.noticeMapper = noticeMapper;
-    }
-
-    public List<LabelValue<String, Integer>> getDict() {
-        NoticeType[] values = NoticeType.values();
-        return Arrays.stream(values).map(value -> LabelValue.of(value.getName(), value.getValue())).toList();
     }
 
     /**
@@ -69,21 +60,22 @@ public class NoticeService {
         return BeanUtils.toBean(entity, Notice.class);
     }
 
-    public PageModel<Notice> getPage(Page<NoticeEntity> page) {
+    public PagePack<Notice> getPage(Page<NoticeEntity> page) {
         Page<NoticeEntity> quriedPage = noticeMapper.selectPage(page, null);
         List<Integer> types = quriedPage.getRecords().stream().map(identity -> identity.getType().getValue()).toList();
-        PageModel<Notice> pageModel = PageModel.from(quriedPage, Notice.class);
-        Collection<Notice> items = pageModel.getItems();
+        PagePack<Notice> pack = PagePack.from(quriedPage, Notice.class);
+        Collection<Notice> items = pack.getItems();
         int index = 0;
         for (Notice item : items) {
             item.setType(types.get(index++));
             item.setStatus(calculateStatus(item.getEffectiveTime(), item.getTerminateTime()));
         }
-        return pageModel;
+        return pack;
     }
 
     /**
      * 根据开始时间和终止时间计算状态
+     *
      * @param effectiveTime 开始时间
      * @param terminateTime 终止时间
      */

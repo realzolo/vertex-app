@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.onezol.vertex.framework.common.constant.CacheKey;
 import com.onezol.vertex.framework.common.exception.RuntimeServiceException;
-import com.onezol.vertex.framework.common.model.PageModel;
+import com.onezol.vertex.framework.common.model.PagePack;
 import com.onezol.vertex.framework.common.util.DateUtils;
 import com.onezol.vertex.framework.security.api.enumeration.LoginType;
 import com.onezol.vertex.framework.security.api.model.LoginUserDetails;
@@ -106,13 +106,13 @@ public class LoginUserServiceImpl implements LoginUserService {
      * @return 在线用户信息
      */
     @Override
-    public PageModel<LoginUser> getLoginUserPage(long pageNumber, long pageSize) {
+    public PagePack<LoginUser> getLoginUserPage(long pageNumber, long pageSize) {
         Page<UserEntity> page = new Page<>(pageNumber, pageSize);
 
         // 查询在线用户
         Map<String, Object> cacheMap = redisCache.getCacheMap(CacheKey.ONLINE_USER);
         if (cacheMap == null || cacheMap.isEmpty()) {
-            return PageModel.empty();
+            return PagePack.empty();
         }
 
         // 移除过期的用户
@@ -121,7 +121,7 @@ public class LoginUserServiceImpl implements LoginUserService {
         userIds.removeIf(userId -> !keys.contains(RedisKeyHelper.buildCacheKey(CacheKey.USER_TOKEN, String.valueOf(userId))));
 
         if (userIds.isEmpty()) {
-            return PageModel.empty();
+            return PagePack.empty();
         }
 
         // 查询用户信息
@@ -161,7 +161,7 @@ public class LoginUserServiceImpl implements LoginUserService {
                 }
         );
 
-        return PageModel.from(loginUserIPage);
+        return PagePack.from(loginUserIPage);
     }
 
     /**

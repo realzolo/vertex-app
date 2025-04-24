@@ -1,6 +1,5 @@
 import type * as T from './type'
 import http from '@/utils/http'
-import type { PageRes } from '@/types/api'
 
 export type * from './type'
 
@@ -8,7 +7,7 @@ const BASE_URL = '/system/client'
 
 /** @desc 查询终端列表 */
 export function listClient(query: T.ClientPageQuery) {
-  return http.get<PageRes<T.ClientResp[]>>(`${BASE_URL}`, query)
+  return http.get<PagePack<T.ClientResp[]>>(`${BASE_URL}`, query)
 }
 
 /** @desc 查询终端详情 */

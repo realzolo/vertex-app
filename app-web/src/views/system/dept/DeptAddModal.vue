@@ -22,7 +22,7 @@ import { type ColumnItem, GiForm } from '@/components/GiForm'
 import { useResetReactive } from '@/hooks'
 
 interface Props {
-  depts: DeptResp[]
+  depts: TreeNode<DeptResp>[]
 }
 const props = withDefaults(defineProps<Props>(), {
   depts: () => [],
@@ -42,7 +42,7 @@ const formRef = ref<InstanceType<typeof GiForm>>()
 
 // 转换为部门树
 const deptSelectTree = computed(() => {
-  const data = JSON.parse(JSON.stringify(props.depts)) as DeptResp[]
+  const data = JSON.parse(JSON.stringify(props.depts)) as TreeNode<DeptResp>[]
   return mapTree(data, (i) => ({
     key: i.id,
     title: i.title,

@@ -62,7 +62,6 @@ import AiEditor from './components/index.vue'
 import { addNotice, getNotice, updateNotice } from '@/apis/system/notice'
 import { listUserDict } from '@/apis'
 import { type ColumnItem, GiForm } from '@/components/GiForm'
-import type { LabelValueState } from '@/types/global'
 import { useTabsStore } from '@/stores'
 import { useResetReactive } from '@/hooks'
 import { useDict } from '@/hooks/app'
@@ -201,7 +200,7 @@ const onSelectUser = (value: string[]) => {
   formRef.value?.formRef?.validateField('noticeUsers')
 }
 
-const userList = ref<LabelValueState[]>([])
+const userList = ref<DictionaryEntry[]>([])
 onMounted(async () => {
   // 当id存在与type为update时，执行修改操作
   if (id && isUpdate.value) {

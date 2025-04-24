@@ -2,8 +2,8 @@ package com.onezol.vertex.framework.component.configuration.service;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.onezol.vertex.framework.common.exception.RuntimeServiceException;
-import com.onezol.vertex.framework.common.model.LabelValue;
-import com.onezol.vertex.framework.common.model.SimpleModel;
+import com.onezol.vertex.framework.common.model.DataPairRecord;
+import com.onezol.vertex.framework.common.model.DictionaryEntry;
 import com.onezol.vertex.framework.common.mvc.service.BaseServiceImpl;
 import com.onezol.vertex.framework.common.util.BeanUtils;
 import com.onezol.vertex.framework.common.util.StringUtils;
@@ -13,6 +13,7 @@ import com.onezol.vertex.framework.component.configuration.model.RuntimeConfigur
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -24,14 +25,14 @@ public class RuntimeConfigurationService extends BaseServiceImpl<RuntimeConfigur
      *
      * @param subject 配置主题
      */
-    public List<LabelValue<String, String>> listConfigurationsAsLabelValue(String subject) {
+    public List<DictionaryEntry> listConfigurationToDictionaryEntry(String subject) {
         List<RuntimeConfigurationEntity> configurationEntities = this.list(
                 Wrappers.<RuntimeConfigurationEntity>lambdaQuery()
                         .eq(RuntimeConfigurationEntity::getSubject, subject)
         );
-        return configurationEntities.stream().map(
-                entity -> new LabelValue<>(entity.getCode(), StringUtils.isNotEmpty(entity.getValue()) ? entity.getValue() : entity.getDefaultValue())
-        ).toList();
+        return configurationEntities.stream()
+                .map(entity -> DictionaryEntry.of(entity.getCode(), entity.getValue()))
+                .toList();
     }
 
     /**
@@ -39,30 +40,18 @@ public class RuntimeConfigurationService extends BaseServiceImpl<RuntimeConfigur
      *
      * @param subject 配置主题
      */
-    public List<SimpleModel<String>> listConfigurationsAsSimpleModel(String subject) {
-        List<RuntimeConfigurationEntity> configurationEntities = this.list(
+    public List<DataPairRecord> listConfigurations(String subject) {
+        List<RuntimeConfigurationEntity> entities = this.list(
                 Wrappers.<RuntimeConfigurationEntity>lambdaQuery()
+                        .select(RuntimeConfigurationEntity::getId, RuntimeConfigurationEntity::getName, RuntimeConfigurationEntity::getCode, RuntimeConfigurationEntity::getValue, RuntimeConfigurationEntity::getDescription)
                         .eq(RuntimeConfigurationEntity::getSubject, subject)
         );
-        return configurationEntities.stream().map(
-                entity -> SimpleModel.of(entity.getId(), entity.getName(), entity.getCode(), entity.getValue(), entity.getDescription())
-        ).toList();
-    }
-
-    /**
-     * 获取配置列表
-     *
-     * @param subject 配置主题
-     */
-    public List<RuntimeConfiguration> listConfigurations(String subject) {
-        List<RuntimeConfigurationEntity> configurationEntities = this.list(
-                Wrappers.<RuntimeConfigurationEntity>lambdaQuery()
-                        .eq(RuntimeConfigurationEntity::getSubject, subject)
-        );
-        configurationEntities.forEach(item -> {
-            item.setValue(StringUtils.isNotEmpty(item.getValue()) ? item.getValue() : item.getDefaultValue());
-        });
-        return BeanUtils.toList(configurationEntities, RuntimeConfiguration.class);
+        List<DataPairRecord> dataPairRecords = new ArrayList<>(entities.size());
+        for (RuntimeConfigurationEntity entity : entities) {
+            DataPairRecord dataPairRecord = new DataPairRecord(entity.getId(), entity.getName(), entity.getCode(), entity.getValue(), entity.getDescription());
+            dataPairRecords.add(dataPairRecord);
+        }
+        return dataPairRecords;
     }
 
     /**

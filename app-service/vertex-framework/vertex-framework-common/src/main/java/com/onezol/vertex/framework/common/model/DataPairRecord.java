@@ -6,16 +6,19 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
-/**
- * Key Value 键值对
- */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class KeyValue<K, V> implements Serializable {
+public class DataPairRecord implements Serializable {
 
-    private K key;
+    private Long id;
 
-    private V value;
+    private String name;
+
+    private String code;
+
+    private Object value;
+
+    private String description;
 
 }

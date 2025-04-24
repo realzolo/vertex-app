@@ -149,7 +149,7 @@ import { filterTree, transformPathToName } from '@/utils'
 import { useComponentPaths } from '@/hooks/modules/useComponentPaths'
 
 interface Props {
-  menus: MenuResp[]
+  menus: TreeNode<MenuResp>[]
 }
 const props = withDefaults(defineProps<Props>(), {
   menus: () => [],

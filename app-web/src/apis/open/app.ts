@@ -7,7 +7,7 @@ const BASE_URL = '/open/app'
 
 /** @desc 查询应用列表 */
 export function listApp(query: T.AppPageQuery) {
-  return http.get<PageRes<T.AppResp[]>>(`${BASE_URL}`, query)
+  return http.get<PagePack<T.AppResp[]>>(`${BASE_URL}`, query)
 }
 
 /** @desc 查询应用详情 */

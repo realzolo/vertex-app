@@ -123,7 +123,6 @@ import type { TableInstance } from '@arco-design/web-vue'
 import { Message } from '@arco-design/web-vue'
 import { useWindowSize } from '@vueuse/core'
 import { type FieldConfigResp, type GeneratorConfigResp, getGenConfig, listFieldConfig, listFieldConfigDict, saveGenConfig } from '@/apis/code/generator'
-import type { LabelValueState } from '@/types/global'
 import { type ColumnItem, GiForm } from '@/components/GiForm'
 import { useResetReactive } from '@/hooks'
 import { useDict } from '@/hooks/app'
@@ -139,7 +138,7 @@ const visible = ref(false)
 const activeKey = ref('1')
 const formRef = ref<InstanceType<typeof GiForm>>()
 const { form_type_enum, query_type_enum } = useDict('form_type_enum', 'query_type_enum')
-const dictList = ref<LabelValueState[]>([])
+const dictList = ref<DictionaryEntry[]>([])
 
 const [form, resetForm] = useResetReactive({
   isOverride: false,

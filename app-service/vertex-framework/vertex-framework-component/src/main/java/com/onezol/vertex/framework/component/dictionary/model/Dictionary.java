@@ -1,12 +1,11 @@
 package com.onezol.vertex.framework.component.dictionary.model;
 
-import com.onezol.vertex.framework.common.model.vo.VO;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
-public class Dictionary implements VO {
+public class Dictionary {
 
     private Long id;
 

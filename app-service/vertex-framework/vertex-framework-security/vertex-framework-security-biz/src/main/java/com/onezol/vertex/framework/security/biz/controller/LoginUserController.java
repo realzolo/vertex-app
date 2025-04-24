@@ -1,7 +1,7 @@
 package com.onezol.vertex.framework.security.biz.controller;
 
 import com.onezol.vertex.framework.common.model.GenericResponse;
-import com.onezol.vertex.framework.common.model.PageModel;
+import com.onezol.vertex.framework.common.model.PagePack;
 import com.onezol.vertex.framework.security.api.model.dto.LoginUser;
 import com.onezol.vertex.framework.security.api.service.LoginUserService;
 import com.onezol.vertex.framework.support.support.ResponseHelper;
@@ -22,8 +22,8 @@ public class LoginUserController {
 
     @Operation(summary = "获取登录用户分页列表")
     @GetMapping("/page")
-    public GenericResponse<PageModel<LoginUser>> getLoginUserPage(@RequestParam("pageNumber") Long pageNumber, @RequestParam("pageSize") Long pageSize) {
-        PageModel<LoginUser> loginUserPage = loginUserService.getLoginUserPage(pageNumber, pageSize);
+    public GenericResponse<PagePack<LoginUser>> getLoginUserPage(@RequestParam("pageNumber") Long pageNumber, @RequestParam("pageSize") Long pageSize) {
+        PagePack<LoginUser> loginUserPage = loginUserService.getLoginUserPage(pageNumber, pageSize);
         return ResponseHelper.buildSuccessfulResponse(loginUserPage);
     }
 

@@ -45,7 +45,7 @@
         <GiCellStatus :status="record.data.status" />
       </template>
       <template #builtIn="{ record }">
-        <a-tag v-if="record.data.builtIn" color="red" size="small">是</a-tag>
+        <a-tag v-if="record.data.builtin" color="red" size="small">是</a-tag>
         <a-tag v-else color="arcoblue" size="small">否</a-tag>
       </template>
       <template #action="{ record }">
@@ -54,8 +54,8 @@
           <a-link
             v-permission="['system:dept:delete']"
             status="danger"
-            :disabled="record.data.builtIn"
-            :title="record.data.builtIn ? '系统内置数据不能删除' : '删除'"
+            :disabled="record.data.builtin"
+            :title="record.data.builtin ? '系统内置数据不能删除' : '删除'"
             @click="onDelete(record)"
           >
             删除
@@ -131,9 +131,9 @@ const menus = [
 const nodeExpandAll = ref<boolean>(true)
 // 过滤树
 const searchData = (name: string) => {
-  const loop = (data: DeptResp[]) => {
-    const result = [] as DeptResp[]
-    data.forEach((item: DeptResp) => {
+  const loop = (data: TreeNode<DeptResp>[]) => {
+    const result = [] as TreeNode<DeptResp>[]
+    data.forEach((item: TreeNode<DeptResp>) => {
       if (item.data.name?.toLowerCase().includes(name.toLowerCase())) {
         result.push({ ...item })
       } else if (item.children) {
@@ -148,7 +148,7 @@ const searchData = (name: string) => {
     })
     return result
   }
-    return loop(tableData.value)
+  return loop(tableData.value)
 }
 
 const name = ref('')
@@ -184,7 +184,7 @@ const reset = () => {
 }
 
 // 删除
-const onDelete = (record: DeptResp) => {
+const onDelete = (record: TreeNode<DeptResp>) => {
   return handleDelete(() => deleteDept(record.id), {
     content: `是否确定删除部门「${record.data.name}」？`,
     showModal: true,
@@ -201,11 +201,11 @@ const DeptAddModalRef = ref<InstanceType<typeof DeptAddModal>>()
 const onAdd = (parentId?: number) => {
   DeptAddModalRef.value?.onAdd(parentId)
 }
-const handleAdd = (record: DeptResp) => {
+const handleAdd = (record: TreeNode<DeptResp>) => {
   onAdd(record.id)
 }
 // 修改
-const onUpdate = (record: DeptResp) => {
+const onUpdate = (record: TreeNode<DeptResp>) => {
   DeptAddModalRef.value?.onUpdate(record.id)
 }
 </script>

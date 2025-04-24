@@ -1,22 +1,18 @@
 package com.onezol.vertex.framework.component.dictionary.controller;
 
-import com.onezol.vertex.framework.common.constant.CacheKey;
 import com.onezol.vertex.framework.common.model.GenericResponse;
-import com.onezol.vertex.framework.common.model.LabelValue;
+import com.onezol.vertex.framework.common.model.DictionaryEntry;
 import com.onezol.vertex.framework.common.util.BeanUtils;
 import com.onezol.vertex.framework.component.dictionary.model.Dictionary;
 import com.onezol.vertex.framework.component.dictionary.model.DictionaryEntity;
-import com.onezol.vertex.framework.component.dictionary.model.SimpleDictionary;
 import com.onezol.vertex.framework.component.dictionary.service.DictionaryHelper;
 import com.onezol.vertex.framework.component.dictionary.service.DictionaryService;
-import com.onezol.vertex.framework.support.cache.RedisCache;
 import com.onezol.vertex.framework.support.support.ResponseHelper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @Tag(name = "数据字典")
 @RestController
@@ -24,45 +20,36 @@ import java.util.Map;
 @RequestMapping("/dictionary")
 public class DictionaryController {
 
-    private final RedisCache redisCache;
     private final DictionaryService dictionaryService;
 
-    public DictionaryController(RedisCache redisCache, DictionaryService dictionaryService) {
-        this.redisCache = redisCache;
+    public DictionaryController(DictionaryService dictionaryService) {
         this.dictionaryService = dictionaryService;
     }
 
-    @Operation(summary = "获取字典列表")
-    @GetMapping("/list")
-    public GenericResponse<Map<String, Object>> getDictionaryMap() {
-        Map<String, Object> cacheMap = redisCache.getCacheMap(CacheKey.DICTIONARY);
-        return ResponseHelper.buildSuccessfulResponse(cacheMap);
-    }
-
-    @Operation(summary = "获取字典")
+    @Operation(summary = "获取字典", description = "根据字典分组获取字典项列表")
     @GetMapping
-    public GenericResponse<List<SimpleDictionary>> getDictionaryByCode(@RequestParam("group") String group) {
-        List<SimpleDictionary> dictionary = DictionaryHelper.get(group);
+    public GenericResponse<List<DictionaryEntry>> getDictItemsByGroup(@RequestParam("group") String group) {
+        List<DictionaryEntry> dictionary = DictionaryHelper.get(group);
         return ResponseHelper.buildSuccessfulResponse(dictionary);
     }
 
+    @Operation(summary = "获取字典详情", description = "根据字典ID获取字典详情")
     @GetMapping("/{id}")
-    @Operation(summary = "获取字典")
     public GenericResponse<Dictionary> getDictionaryById(@PathVariable("id") Long id) {
         DictionaryEntity dictionary = dictionaryService.getById(id);
         Dictionary bean = BeanUtils.toBean(dictionary, Dictionary.class);
         return ResponseHelper.buildSuccessfulResponse(bean);
     }
 
-    @Operation(summary = "新增字典")
+    @Operation(summary = "新增字典", description = "新增字典分组/字典项")
     @PostMapping
-    public GenericResponse<Void> addDictionary(@RequestBody Dictionary dictionary) {
+    public GenericResponse<Void> createDictionary(@RequestBody Dictionary dictionary) {
         dictionaryService.createDictionary(dictionary);
         return ResponseHelper.buildSuccessfulResponse();
     }
 
     @Operation(summary = "更新字典")
-    @PutMapping("/{id}")
+    @PutMapping
     public GenericResponse<Void> updateDictionary(@RequestBody Dictionary dictionary) {
         DictionaryEntity entity = BeanUtils.toBean(dictionary, DictionaryEntity.class);
         dictionaryService.updateById(entity);
@@ -79,7 +66,7 @@ public class DictionaryController {
         return ResponseHelper.buildSuccessfulResponse();
     }
 
-    @Operation(summary = "获取字典分组")
+    @Operation(summary = "获取字典分组列表")
     @GetMapping("/groups")
     public GenericResponse<List<Dictionary>> getDictionaryGroups() {
         List<Dictionary> groups = dictionaryService.listGroups();

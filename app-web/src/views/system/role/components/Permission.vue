@@ -64,13 +64,13 @@ import { useTable } from '@/hooks'
 import { getRole, updateRolePermission } from '@/apis'
 import has from '@/utils/has'
 
-const props = withDefaults(defineProps<Props>(), {
-  roleId: '',
-})
-
 interface Props {
-  roleId: string
+  roleId: number
 }
+
+const props = withDefaults(defineProps<Props>(), {
+  roleId: 0,
+})
 
 const tableRef = ref<InstanceType<typeof GiTable>>()
 // 是否父子联动
@@ -90,7 +90,7 @@ const onExpanded = () => {
  *
  * @param menus 菜单数据
  */
-const transformMenu = (menus: MenuResp[]) => {
+const transformMenu = (menus: TreeNode<MenuResp>[]) => {
   return menus.map((item) => {
     // 如果当前项有子项，递归处理子项
     if (item.children && item.children.length > 0) {
@@ -125,7 +125,7 @@ const transformMenu = (menus: MenuResp[]) => {
 }
 
 // 更新表格数据的选中状态
-const updateTableDataCheckedStatus = (data: MenuResp[], selectedKeys: (string | number)[]) => {
+const updateTableDataCheckedStatus = (data: TreeNode<MenuResp>[], selectedKeys: (string | number)[]) => {
   data.forEach((item) => {
     item.disabled = disabled.value
     // 设置菜单项的选中状态
@@ -171,7 +171,7 @@ const columns: TableInstance['columns'] = [
 ]
 
 // 级联选中子项
-const cascadeSelectChild = (record: MenuResp, isCascade: boolean) => {
+const cascadeSelectChild = (record: TreeNode<MenuResp>, isCascade: boolean) => {
   if (isCascade && record.children && record.children.length > 0) {
     record.children.forEach((child) => {
       child.isChecked = record.isChecked
@@ -197,7 +197,7 @@ const cascadeSelectChild = (record: MenuResp, isCascade: boolean) => {
 }
 
 // 查找指定菜单
-const findItem = (id: string, data: MenuResp[]) => {
+const findItem = (id: number, data: TreeNode<MenuResp>[]) => {
   for (const item of data) {
     if (item.id === id) return item
     if (item.children?.length) {
@@ -209,8 +209,8 @@ const findItem = (id: string, data: MenuResp[]) => {
 }
 
 // 级联选中父项目
-const cascadeSelectParent = (record: MenuResp, isCascade: boolean) => {
-  if (isCascade && record.parentId && record.parentId !== '0') {
+const cascadeSelectParent = (record: TreeNode<MenuResp>, isCascade: boolean) => {
+  if (isCascade && record.parentId && record.parentId !== 0) {
     const parent = findItem(record.parentId, tableData.value)
     if (parent) {
       // 如果父项目的某个子项被选中了，它就依然保持选中状态
@@ -294,7 +294,7 @@ const save = async () => {
 
 const showCheckedAll = ref(true)
 // 加载角色详情
-const fetchRole = async (id: string) => {
+const fetchRole = async (id: number) => {
   try {
     loading.value = true
     disabled.value = !has.hasPermOr(['system:role:updatePermission'])

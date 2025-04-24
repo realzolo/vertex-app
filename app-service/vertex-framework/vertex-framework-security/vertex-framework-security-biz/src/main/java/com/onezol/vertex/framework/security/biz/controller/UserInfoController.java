@@ -1,8 +1,9 @@
 package com.onezol.vertex.framework.security.biz.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.onezol.vertex.framework.common.model.DictionaryEntry;
 import com.onezol.vertex.framework.common.model.GenericResponse;
-import com.onezol.vertex.framework.common.model.PageModel;
+import com.onezol.vertex.framework.common.model.PagePack;
 import com.onezol.vertex.framework.common.mvc.controller.BaseController;
 import com.onezol.vertex.framework.security.api.annotation.RestrictAccess;
 import com.onezol.vertex.framework.security.api.context.AuthenticationContext;
@@ -19,6 +20,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Objects;
 
 @Tag(name = "用户信息")
@@ -74,10 +76,18 @@ public class UserInfoController extends BaseController<UserEntity> {
         return ResponseHelper.buildSuccessfulResponse();
     }
 
+    @Operation(summary = "获取用户字典", description = "获取用户字典列表")
+    @RestrictAccess
+    @GetMapping("/dict")
+    public GenericResponse<List<DictionaryEntry>> getUserDict() {
+        List<DictionaryEntry> userDict = userInfoService.getUserDict();
+        return ResponseHelper.buildSuccessfulResponse(userDict);
+    }
+
     @Operation(summary = "获取用户列表", description = "条件查询用户列表")
     @RestrictAccess
     @GetMapping("/page")
-    public GenericResponse<PageModel<User>> getUserPage(
+    public GenericResponse<PagePack<User>> getUserPage(
             @RequestParam(value = "pageNumber", required = false) Long pageNumber,
             @RequestParam(value = "pageSize", required = false) Long pageSize,
             @RequestParam(value = "departmentId", required = false) Long departmentId
@@ -92,7 +102,7 @@ public class UserInfoController extends BaseController<UserEntity> {
     @Operation(summary = "获取用户列表", description = "条件查询用户列表")
     @RestrictAccess
     @GetMapping("/unbound-role/page")
-    public GenericResponse<PageModel<User>> getUserPage(
+    public GenericResponse<PagePack<User>> getUserPage(
             @RequestParam(value = "pageNumber", required = false) Long pageNumber,
             @RequestParam(value = "pageSize", required = false) Long pageSize,
             @RequestParam(value = "departmentId", required = false) Long departmentId,

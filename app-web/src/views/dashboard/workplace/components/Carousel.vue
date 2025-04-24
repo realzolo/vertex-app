@@ -22,7 +22,6 @@
 <script setup lang="ts">
 import axios, { type AxiosRequestConfig, type AxiosResponse } from 'axios'
 import qs from 'query-string'
-import { isHttp } from '@/utils/validate'
 
 export interface DataItem {
   name: string
@@ -30,20 +29,7 @@ export interface DataItem {
   url: string
 }
 
-const images = ref<DataItem[]>([
-  {
-    name: '公众号',
-    img: `https://continew.top/qrcode-text.jpg?${new Date().getTime()}`,
-    url: 'https://continew.top/about/intro.html',
-  },
-  {
-    name: '赞助',
-    img: `https://continew.top/sponsor.jpg?${new Date().getTime()}`,
-    url: 'https://continew.top/sponsor.html',
-  },
-])
-
-const get = <T = unknown>(url: string, params?: object, config?: AxiosRequestConfig): Promise<ApiRes<T>> => {
+const get = <T = unknown>(url: string, params?: object, config?: AxiosRequestConfig): Promise<GenericResponse<T>> => {
   return new Promise((resolve, reject) => {
     axios
       .request<T>({
@@ -64,26 +50,26 @@ const dataList = ref<DataItem[]>([])
 const loading = ref(false)
 // 查询列表数据
 const getDataList = async () => {
-  try {
-    loading.value = true
-    const { data } = await get('https://api.charles7c.top/sponsor/platinum')
-    if (data) {
-      data.forEach((item) => {
-        dataList.value.push({
-          name: item.name,
-          img: isHttp(item.img) ? item.img : `https://continew.top${item.img}`,
-          url: item.url,
-        })
-      })
-      dataList.value = [...dataList.value, ...images.value]
-    } else {
-      dataList.value = images.value
-    }
-  } catch (err) {
-    // console.log(err)
-  } finally {
-    loading.value = false
-  }
+  // try {
+  //   loading.value = true
+  //   const { data } = await get('https://api.charles7c.top/sponsor/platinum')
+  //   if (data) {
+  //     data.forEach((item) => {
+  //       dataList.value.push({
+  //         name: item.name,
+  //         img: isHttp(item.img) ? item.img : `https://continew.top${item.img}`,
+  //         url: item.url,
+  //       })
+  //     })
+  //     dataList.value = [...dataList.value, ...images.value]
+  //   } else {
+  //     dataList.value = images.value
+  //   }
+  // } catch (err) {
+  //   // console.log(err)
+  // } finally {
+  //   loading.value = false
+  // }
 }
 
 onMounted(async () => {

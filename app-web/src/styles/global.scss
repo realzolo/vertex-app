@@ -1,5 +1,5 @@
 /* 全局样式 */
-@import './var.scss';
+@use './var.scss' as *;
 
 .w-full {
   width: 100%;
@@ -253,6 +253,7 @@
 .gi_card_title {
   > .arco-card-header {
     border-bottom: none;
+
     .arco-card-header-title::before {
       content: '';
       width: 4px;
@@ -287,8 +288,10 @@
   display: flex;
   flex-direction: column;
   position: relative;
+
   .header {
     padding: 0 0 10px;
+
     .title {
       color: var(--color-text-1);
       font-size: 18px;
@@ -306,7 +309,7 @@
   display: flex;
   flex-direction: column;
 
-  >.arco-spin {
+  > .arco-spin {
     max-height: 100%;
     height: auto;
     overflow: hidden;
@@ -412,14 +415,16 @@
   }
 }
 
-.detail{
+.detail {
   height: 100%;
   display: flex;
   flex-direction: column;
-  &_header{
+
+  &_header {
     background: var(--color-bg-1);
   }
-  &_content{
+
+  &_content {
     position: relative;
     flex: 1;
     // height: 100%;
@@ -444,6 +449,7 @@
   /* Note: backdrop-filter has minimal browser support */
 
   border-radius: 6px !important;
+
   .content-panel {
     display: flex;
     justify-content: space-between;
@@ -456,12 +462,15 @@
     border-radius: 4px;
     margin-bottom: 4px;
   }
+
   .tooltip-title {
     margin: 0 0 10px 0;
   }
+
   p {
     margin: 0;
   }
+
   .tooltip-title,
   .tooltip-value {
     font-size: 13px;
@@ -472,6 +481,7 @@
     color: #1d2129;
     font-weight: bold;
   }
+
   .tooltip-item-icon {
     display: inline-block;
     margin-right: 8px;
@@ -484,11 +494,13 @@
 // 通用卡片
 .general-card {
   border: none;
+
   & > .arco-card-header {
     height: auto;
     padding: $padding;
     border: none;
   }
+
   & > .arco-card-body {
     padding: 0 $padding $padding $padding;
   }
@@ -498,14 +510,17 @@
 .gradient-card {
   border-radius: 8px;
   border: 1px solid var(--color-neutral-3);
+
   & > .arco-card-header {
     border: none;
     background: linear-gradient(180deg, rgba(232, 244, 255, 0.5), hsla(0, 0%, 100%, 0));
   }
+
   .item {
     align-items: center;
     display: flex;
     margin-bottom: 20px;
+
     .icon-wrapper {
       align-items: center;
       background: var(--color-neutral-2);
@@ -515,37 +530,46 @@
       justify-content: center;
       width: 48px;
     }
+
     .info {
       flex: 1 1;
       margin: 0 16px;
+
       &-top {
         margin-bottom: 4px;
+
         .label {
           font-weight: 500;
           line-height: 22px;
           margin-right: 12px;
         }
+
         .bind {
           font-size: 12px;
           font-weight: 500;
           line-height: 20px;
         }
       }
+
       &-desc {
         color: #86909c;
         font-size: 12px;
         font-weight: 400;
         line-height: 20px;
+
         .value {
           color: #4e5969;
         }
       }
     }
+
     .btn-wrapper {
       align-self: flex-start;
+
       .btn {
         height: 28px;
         width: 56px;
+
         &:hover {
           -webkit-box-shadow: 0 2px 3px rgba(0, 0, 0, .15);
           box-shadow: 0 2px 3px rgba(0, 0, 0, .15);
@@ -560,15 +584,18 @@
     font-size: 12px;
     justify-content: flex-start;
     margin: -5px 0 0 64px;
+
     .sub-text-wrapper {
       width: 100%;
       border-left: 2px solid var(--color-fill-4);
       padding-left: 12px;
+
       .sub-text {
         color: #4e5969;
         font-weight: 400;
         line-height: 20px;
         margin-bottom: 8px;
+
         &-value {
           background: var(--color-neutral-2);
           padding: 1px 5px;
@@ -576,6 +603,7 @@
           border-radius: 3px;
         }
       }
+
       .arco-link.link {
         font-size: 12px;
         padding: 0;
@@ -587,9 +615,11 @@
 // 通用描述
 .general-description {
   position: relative;
+
   .arco-descriptions-title {
     padding-left: 10px;
   }
+
   .arco-descriptions-title::before {
     content: '';
     width: 4px;

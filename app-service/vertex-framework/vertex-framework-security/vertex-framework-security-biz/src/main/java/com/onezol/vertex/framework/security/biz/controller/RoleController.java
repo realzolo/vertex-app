@@ -3,9 +3,9 @@ package com.onezol.vertex.framework.security.biz.controller;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.onezol.vertex.framework.common.constant.enumeration.DisEnableStatus;
+import com.onezol.vertex.framework.common.model.DictionaryEntry;
 import com.onezol.vertex.framework.common.model.GenericResponse;
-import com.onezol.vertex.framework.common.model.LabelValue;
-import com.onezol.vertex.framework.common.model.PageModel;
+import com.onezol.vertex.framework.common.model.PagePack;
 import com.onezol.vertex.framework.common.model.TreeNode;
 import com.onezol.vertex.framework.common.mvc.controller.BaseController;
 import com.onezol.vertex.framework.common.util.BeanUtils;
@@ -78,14 +78,14 @@ public class RoleController extends BaseController<RoleEntity> {
     }
 
     @GetMapping("/page")
-    public GenericResponse<PageModel<RoleEntity>> getRolePage(
+    public GenericResponse<PagePack<RoleEntity>> getRolePage(
             @RequestParam(value = "page", required = false) Long pageNumber,
             @RequestParam(value = "size", required = false) Long pageSize
     ) {
         Page<RoleEntity> page = this.getPage(pageNumber, pageSize);
         Page<RoleEntity> quriedPage = roleService.page(page);
-        PageModel<RoleEntity> resultPage = PageModel.from(quriedPage);
-        return ResponseHelper.buildSuccessfulResponse(resultPage);
+        PagePack<RoleEntity> pack = PagePack.from(quriedPage);
+        return ResponseHelper.buildSuccessfulResponse(pack);
     }
 
     @GetMapping("/list")
@@ -96,13 +96,13 @@ public class RoleController extends BaseController<RoleEntity> {
     }
 
     @GetMapping("/dict")
-    public GenericResponse<List<LabelValue<String, Object>>> getRoleDict() {
+    public GenericResponse<List<DictionaryEntry>> getRoleDict() {
         List<RoleEntity> roles = roleService.list();
-        List<LabelValue<String, Object>> dictionaries = new ArrayList<>(roles.size());
+        List<DictionaryEntry> options = new ArrayList<>(roles.size());
         for (RoleEntity role : roles) {
-            dictionaries.add(new LabelValue<>(role.getName(), role.getCode()));
+            options.add(DictionaryEntry.of(role.getName(), role.getCode()));
         }
-        return ResponseHelper.buildSuccessfulResponse(dictionaries);
+        return ResponseHelper.buildSuccessfulResponse(options);
     }
 
     @GetMapping("/{id}")
@@ -129,14 +129,14 @@ public class RoleController extends BaseController<RoleEntity> {
 
     @Operation(summary = "查询角色下的用户列表")
     @GetMapping("/users/{roleId}")
-    public GenericResponse<PageModel<User>> getRoleUsers(
+    public GenericResponse<PagePack<User>> getRoleUsers(
             @RequestParam("pageNumber") Long pageNumber,
             @RequestParam("pageSize") Long pageSize,
             @PathVariable("roleId") Long roleId
     ) {
         Page<UserRoleEntity> page = new Page<>(pageNumber, pageSize);
-        PageModel<User> users = userRoleService.getRoleUsers(page, roleId);
-        return ResponseHelper.buildSuccessfulResponse(users);
+        PagePack<User> pack = userRoleService.getRoleUsers(page, roleId);
+        return ResponseHelper.buildSuccessfulResponse(pack);
     }
 
     @Operation(summary = "删除用户-角色关系")

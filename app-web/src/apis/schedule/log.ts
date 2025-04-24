@@ -7,7 +7,7 @@ const BASE_URL = '/schedule/log'
 
 /** @desc 查询任务日志列表 */
 export function listJobLog(query: T.JobLogPageQuery) {
-  return http.get<PageRes<T.JobLogResp[]>>(`${BASE_URL}`, query)
+  return http.get<PagePack<T.JobLogResp[]>>(`${BASE_URL}`, query)
 }
 
 /** @desc 查询任务日志详情 */

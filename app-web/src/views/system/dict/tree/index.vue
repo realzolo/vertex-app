@@ -50,7 +50,7 @@ import type { TreeNodeData } from '@arco-design/web-vue'
 import { mapTree } from 'xe-utils'
 import DictAddModal from './DictAddModal.vue'
 import RightMenu from './RightMenu.vue'
-import { type DictResp, deleteDict, listDict } from '@/apis/system/dict'
+import { type DictResp, deleteDictGroup, listDictGroups } from '@/apis/system/dict'
 import has from '@/utils/has'
 
 const emit = defineEmits<{
@@ -83,7 +83,7 @@ const loading = ref(false)
 const getTreeData = async () => {
   try {
     loading.value = true
-    const { data } = await listDict()
+    const { data } = await listDictGroups()
     dataList.value = mapTree(data, (i) => ({
       ...i,
       popupVisible: false,
@@ -137,7 +137,7 @@ const onMenuItemClick = (mode: string, node: DictResp) => {
       okButtonProps: { status: 'danger' },
       onBeforeOk: async () => {
         try {
-          const res = await deleteDict(node.id)
+          const res = await deleteDictGroup(node.id)
           if (res.success) {
             Message.success('删除成功')
             await getTreeData()

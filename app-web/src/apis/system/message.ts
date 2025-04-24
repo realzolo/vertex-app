@@ -7,7 +7,7 @@ const BASE_URL = '/system/message'
 
 /** @desc 查询消息列表 */
 export function listMessage(query: T.MessagePageQuery) {
-  return http.get<PageRes<T.MessageResp[]>>(`${BASE_URL}`, query)
+  return http.get<PagePack<T.MessageResp[]>>(`${BASE_URL}`, query)
 }
 
 /** @desc 删除消息 */

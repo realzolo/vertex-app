@@ -182,7 +182,6 @@
 import { type ColProps, type FormInstance, Message } from '@arco-design/web-vue'
 import { useWindowSize } from '@vueuse/core'
 import { addJob, listGroup, updateJob } from '@/apis/schedule/job'
-import type { LabelValueState } from '@/types/global'
 import { useResetReactive } from '@/hooks'
 import { useDict } from '@/hooks/app'
 
@@ -235,7 +234,7 @@ const visible = ref(false)
 const isUpdate = computed(() => !!dataId.value)
 const title = computed(() => (isUpdate.value ? '修改任务' : '新增任务'))
 const formRef = ref<FormInstance>()
-const groupList = ref<LabelValueState[]>([])
+const groupList = ref<DictionaryEntry[]>([])
 const { job_trigger_type_enum, job_task_type_enum, job_route_strategy_enum, job_block_strategy_enum } = useDict(
   'job_trigger_type_enum',
   'job_task_type_enum',

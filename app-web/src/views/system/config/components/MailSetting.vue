@@ -166,13 +166,12 @@ const handleCancel = () => {
   isUpdate.value = false
 }
 
-const queryForm = {
-  category: 'MAIL',
-}
+const subject = 'MAIL'
+
 // 查询列表数据
 const getDataList = async () => {
   loading.value = true
-  const { data } = await listOption(queryForm)
+  const { data } = await listOption(subject)
   mailConfig.value = data.reduce((obj: MailConfig, option: OptionResp) => {
     obj[option.code] = { ...option, value: ['MAIL_PORT', 'MAIL_SSL_PORT'].includes(option.code) ? Number.parseInt(option.value) : option.value }
     return obj
@@ -196,7 +195,7 @@ const handleSave = async () => {
 
 // 恢复默认
 const handleResetValue = async () => {
-  await resetOptionValue(queryForm)
+  await resetOptionValue(subject)
   Message.success('恢复成功')
   await getDataList()
 }

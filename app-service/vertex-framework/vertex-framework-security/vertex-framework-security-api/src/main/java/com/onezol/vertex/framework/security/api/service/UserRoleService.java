@@ -1,7 +1,7 @@
 package com.onezol.vertex.framework.security.api.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.onezol.vertex.framework.common.model.PageModel;
+import com.onezol.vertex.framework.common.model.PagePack;
 import com.onezol.vertex.framework.common.mvc.service.BaseService;
 import com.onezol.vertex.framework.security.api.model.dto.User;
 import com.onezol.vertex.framework.security.api.model.entity.RoleEntity;
@@ -49,18 +49,20 @@ public interface UserRoleService extends BaseService<UserRoleEntity> {
      * @param roleId 角色ID
      * @return 用户列表
      */
-    PageModel<User> getRoleUsers(Page<UserRoleEntity> page, Long roleId);
+    PagePack<User> getRoleUsers(Page<UserRoleEntity> page, Long roleId);
 
     /**
      * 解绑用户角色
-     * @param roleId 角色ID
+     *
+     * @param roleId  角色ID
      * @param userIds 用户ID列表
      */
     void unbindUserRole(Long roleId, List<Long> userIds);
 
     /**
      * 角色绑定权限
-     * @param roleId 角色ID
+     *
+     * @param roleId        角色ID
      * @param permissionIds 权限ID列表
      */
     void bindRolePermissions(Long roleId, List<Long> permissionIds);

@@ -7,7 +7,7 @@ const BASE_URL = '/system/file'
 
 /** @desc 查询文件列表 */
 export function listFile(query: T.FilePageQuery) {
-  return http.get<PageRes<T.FileItem[]>>(`${BASE_URL}`, query)
+  return http.get<PagePack<T.FileItem[]>>(`${BASE_URL}`, query)
 }
 
 /** @desc 修改文件 */

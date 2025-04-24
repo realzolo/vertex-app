@@ -2,7 +2,7 @@ package com.onezol.vertex.framework.security.biz.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.onezol.vertex.framework.common.model.GenericResponse;
-import com.onezol.vertex.framework.common.model.PageModel;
+import com.onezol.vertex.framework.common.model.PagePack;
 import com.onezol.vertex.framework.common.mvc.controller.BaseController;
 import com.onezol.vertex.framework.security.api.model.dto.LoginUser;
 import com.onezol.vertex.framework.security.api.model.entity.LoginHistoryEntity;
@@ -27,9 +27,9 @@ public class LoginHistoryController extends BaseController<LoginHistoryEntity> {
 
     @Operation(summary = "获取登录用户分页列表")
     @GetMapping("/page")
-    public GenericResponse<PageModel<LoginUser>> getLoginUserPage(@RequestParam("pageNumber") Long pageNumber, @RequestParam("pageSize") Long pageSize) {
+    public GenericResponse<PagePack<LoginUser>> getLoginUserPage(@RequestParam("pageNumber") Long pageNumber, @RequestParam("pageSize") Long pageSize) {
         Page<LoginHistoryEntity> page = this.getPage(pageNumber, pageSize);
-        PageModel<LoginUser> loginUserPage = loginHistoryService.getLoginHistoryPage(page);
+        PagePack<LoginUser> loginUserPage = loginHistoryService.getLoginHistoryPage(page);
         return ResponseHelper.buildSuccessfulResponse(loginUserPage);
     }
 

@@ -98,32 +98,22 @@ export interface RoleUserPageQuery extends RoleUserQuery, PageQuery {
 /** 菜单类型 */
 export interface MenuResp {
   id: number
-  parentId: number
-  path: string
   title: string
+  parentId: number
+  type: 1 | 2 | 3
+  path: string
+  name: string
+  component: string
+  redirect: string
   icon: string
-  children: MenuResp[]
-  data: {
-    id: number
-    title: string
-    parentId: number
-    type: 1 | 2 | 3
-    path: string
-    name: string
-    component: string
-    redirect: string
-    icon: string
-    isExternal: boolean
-    isCache: boolean
-    isHidden: boolean
-    permission: string
-    sort: number
-    status: 0 | 1
-    createUserString: string
-    createTime: string
-    updateUserString: string
-    updateTime: string
-  }
+  isExternal: boolean
+  isCache: boolean
+  isHidden: boolean
+  permission: string
+  sort: number
+  status: 0 | 1
+  createTime: string
+  updateTime: string
 }
 
 export interface MenuQuery {
@@ -134,24 +124,14 @@ export interface MenuQuery {
 /** 部门类型 */
 export interface DeptResp {
   id: number
+  name: string
+  sort: number
+  status: 0 | 1
+  builtin: boolean
+  description: string
+  createTime: string
+  updateTime: string
   parentId: number
-  path: string
-  title: string
-  icon: string
-  children: DeptResp[]
-  data: {
-    id: number
-    name: string
-    sort: number
-    status: 0 | 1
-    builtin: boolean
-    description: string
-    createUserString: string
-    createTime: string
-    updateUserString: string
-    updateTime: string
-    parentId: number
-  }
 }
 
 export interface DeptQuery {
@@ -168,7 +148,6 @@ export interface DictResp {
   type: number
   remark: string
   createTime: string
-  // updateUserString: string
   updateTime: string
 }
 
@@ -189,7 +168,6 @@ export interface DictItemResp {
   builtin: boolean
   groupId: number
   createTime: string
-  // updateUserString: string
   updateTime: string
 }
 
@@ -358,8 +336,7 @@ export interface OptionResp {
 }
 
 export interface OptionQuery {
-  code?: Array<string>
-  category?: string
+  subject: string
 }
 
 /** 基础配置类型 */
@@ -373,40 +350,40 @@ export interface BasicConfig {
 
 /** 基础配置类型 */
 export interface SiteConfig {
-  SITE_FAVICON: OptionResp
-  SITE_LOGO: OptionResp
-  SITE_TITLE: OptionResp
-  SITE_DESCRIPTION: OptionResp
-  SITE_COPYRIGHT: OptionResp
-  SITE_BEIAN: OptionResp
+  SITE_FAVICON: DataPairRecord | string
+  SITE_LOGO: DataPairRecord | string
+  SITE_TITLE: DataPairRecord | string
+  SITE_DESCRIPTION: DataPairRecord | string
+  SITE_COPYRIGHT: DataPairRecord | string
+  SITE_BEIAN: DataPairRecord | string
 }
 
 /** 安全配置类型 */
 export interface SecurityConfig {
-  PASSWORD_ERROR_LOCK_COUNT: OptionResp
-  PASSWORD_ERROR_LOCK_MINUTES: OptionResp
-  PASSWORD_EXPIRATION_DAYS: OptionResp
-  PASSWORD_EXPIRATION_WARNING_DAYS: OptionResp
-  PASSWORD_REPETITION_TIMES: OptionResp
-  PASSWORD_MIN_LENGTH: OptionResp
-  PASSWORD_ALLOW_CONTAIN_USERNAME: OptionResp
-  PASSWORD_REQUIRE_SYMBOLS: OptionResp
+  PASSWORD_ERROR_LOCK_COUNT: DataPairRecord
+  PASSWORD_ERROR_LOCK_MINUTES: DataPairRecord
+  PASSWORD_EXPIRATION_DAYS: DataPairRecord
+  PASSWORD_EXPIRATION_WARNING_DAYS: DataPairRecord
+  PASSWORD_REPETITION_TIMES: DataPairRecord
+  PASSWORD_MIN_LENGTH: DataPairRecord
+  PASSWORD_ALLOW_CONTAIN_USERNAME: DataPairRecord
+  PASSWORD_REQUIRE_SYMBOLS: DataPairRecord
 }
 
 /** 邮箱配置类型 */
 export interface MailConfig {
-  MAIL_PROTOCOL: OptionResp
-  MAIL_HOST: OptionResp
-  MAIL_PORT: OptionResp
-  MAIL_USERNAME: OptionResp
-  MAIL_PASSWORD: OptionResp
-  MAIL_SSL_ENABLED: OptionResp
-  MAIL_SSL_PORT: OptionResp
+  MAIL_PROTOCOL: DataPairRecord
+  MAIL_HOST: DataPairRecord
+  MAIL_PORT: DataPairRecord
+  MAIL_USERNAME: DataPairRecord
+  MAIL_PASSWORD: DataPairRecord
+  MAIL_SSL_ENABLED: DataPairRecord
+  MAIL_SSL_PORT: DataPairRecord
 }
 
 /** 登录配置类型 */
 export interface LoginConfig {
-  LOGIN_CAPTCHA_ENABLED: OptionResp
+  LOGIN_CAPTCHA_ENABLED: DataPairRecord
 }
 
 /** 短信配置类型 */

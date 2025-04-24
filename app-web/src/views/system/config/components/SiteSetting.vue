@@ -122,7 +122,6 @@
 <script setup lang="ts">
 import { type FileItem, type FormInstance, Message, Modal, type RequestOption } from '@arco-design/web-vue'
 import {
-  type OptionResp,
   type SiteConfig,
   listOption,
   resetOptionValue,
@@ -183,18 +182,16 @@ const handleCancel = () => {
   isUpdate.value = false
 }
 
-const queryForm = reactive({
-  category: 'SITE',
-})
+const subject = 'SITE'
+
 // 查询列表数据
 const getDataList = async () => {
   loading.value = true
-  const { data } = await listOption(queryForm)
-  siteConfig.value = data.reduce((obj: SiteConfig, option: OptionResp) => {
+  const { data } = await listOption(subject)
+  siteConfig.value = data.reduce((obj: SiteConfig, option: DataPairRecord) => {
     obj[option.code] = { ...option }
     return obj
   }, {})
-  console.log("siteConfig.value", siteConfig.value)
   handleCancel()
   loading.value = false
 }
@@ -216,7 +213,7 @@ const handleSave = async () => {
 
 // 恢复默认
 const handleResetValue = async () => {
-  await resetOptionValue(queryForm)
+  await resetOptionValue(subject)
   Message.success('恢复成功')
   await getDataList()
   appStore.setSiteConfig(form)

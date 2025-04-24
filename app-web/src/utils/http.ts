@@ -120,7 +120,7 @@ http.interceptors.response.use(
   },
 )
 
-const request = async <T = unknown>(config: AxiosRequestConfig): Promise<ApiRes<T>> => {
+const request = async <T = unknown>(config: AxiosRequestConfig): Promise<GenericResponse<T>> => {
   return http.request<T>(config)
     .then((res: AxiosResponse) => res.data)
     .catch((err: { message: string }) => Promise.reject(err))
@@ -133,7 +133,7 @@ const requestNative = async <T = unknown>(config: AxiosRequestConfig): Promise<A
 }
 
 const createRequest = (method: string) => {
-  return <T = any>(url: string, params?: object, config?: AxiosRequestConfig): Promise<ApiRes<T>> => {
+  return <T = any>(url: string, params?: object, config?: AxiosRequestConfig): Promise<GenericResponse<T>> => {
     return request({
       method,
       url,

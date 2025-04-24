@@ -1,10 +1,13 @@
 package com.onezol.vertex.framework.security.biz.service;
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.onezol.vertex.framework.common.constant.CacheKey;
+import com.onezol.vertex.framework.common.constant.enumeration.AccountStatus;
 import com.onezol.vertex.framework.common.constant.enumeration.SystemRoleType;
 import com.onezol.vertex.framework.common.exception.RuntimeServiceException;
-import com.onezol.vertex.framework.common.model.PageModel;
+import com.onezol.vertex.framework.common.model.DictionaryEntry;
+import com.onezol.vertex.framework.common.model.PagePack;
 import com.onezol.vertex.framework.common.mvc.service.BaseServiceImpl;
 import com.onezol.vertex.framework.common.util.BeanUtils;
 import com.onezol.vertex.framework.security.biz.mapper.UserMapper;
@@ -151,14 +154,25 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
         redisCache.deleteObject(userInfoRedisKey);
     }
 
+    @Override
+    public List<DictionaryEntry> getUserDict() {
+        List<UserEntity> userEntities = this.list(
+                Wrappers.<UserEntity>lambdaQuery()
+                        .eq(UserEntity::getStatus, AccountStatus.ACTIVE)
+        );
+        return userEntities.stream()
+                .map(entity -> DictionaryEntry.of(entity.getNickname(), entity.getId()))
+                .toList();
+    }
+
     /**
      * 获取用户列表
      */
     @Override
-    public PageModel<User> getUserPage(Page<UserEntity> page, UserQueryPayload payload) {
+    public PagePack<User> getUserPage(Page<UserEntity> page, UserQueryPayload payload) {
         Page<UserEntity> userPage = this.baseMapper.queryUserPage(page, payload);
-        PageModel<User> resultPage = PageModel.from(userPage, User.class);
-        Collection<User> users = resultPage.getItems();
+        PagePack<User> pack = PagePack.from(userPage, User.class);
+        Collection<User> users = pack.getItems();
 
         for (User user : users) {
             List<RoleEntity> userRoles = userRoleService.getUserRoles(user.getId());
@@ -175,17 +189,17 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
             }
         }
 
-        return resultPage;
+        return pack;
     }
 
     /**
      * 获取未绑定角色的用户列表
      */
     @Override
-    public PageModel<User> getUnboundRoleUserPage(Page<UserEntity> page, UserQueryPayload payload) {
+    public PagePack<User> getUnboundRoleUserPage(Page<UserEntity> page, UserQueryPayload payload) {
         Page<UserEntity> userPage = this.baseMapper.queryUnboundRoleUserPage(page, payload);
-        PageModel<User> resultPage = PageModel.from(userPage, User.class);
-        Collection<User> users = resultPage.getItems();
+        PagePack<User> pack = PagePack.from(userPage, User.class);
+        Collection<User> users = pack.getItems();
 
         for (User user : users) {
             List<RoleEntity> userRoles = userRoleService.getUserRoles(user.getId());
@@ -202,7 +216,7 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
             }
         }
 
-        return resultPage;
+        return pack;
     }
 
 }

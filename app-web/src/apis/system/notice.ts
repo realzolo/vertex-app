@@ -1,14 +1,11 @@
 import type * as T from './type'
 import http from '@/utils/http'
-import type { PageRes } from '@/types/api'
 
 export type * from './type'
 
-const BASE_URL = '/system/notice'
-
 /** @desc 查询公告列表 */
 export function listNotice(query: T.NoticePageQuery) {
-  return http.get<PageRes<T.NoticeResp[]>>(`/notice/page`, query)
+  return http.get<PagePack<T.NoticeResp[]>>(`/notice/page`, query)
 }
 
 /** @desc 查询公告详情 */

@@ -4,9 +4,9 @@ import com.onezol.vertex.framework.common.constant.enumeration.ServiceStatus;
 import com.onezol.vertex.framework.common.model.GenericResponse;
 import com.onezol.vertex.framework.common.util.StringUtils;
 import com.onezol.vertex.framework.security.api.annotation.RestrictAccess;
+import com.onezol.vertex.framework.security.api.model.dto.AuthIdentity;
 import com.onezol.vertex.framework.security.api.model.payload.UserLoginPayload;
 import com.onezol.vertex.framework.security.api.model.payload.UserSavePayload;
-import com.onezol.vertex.framework.security.api.model.vo.UserAuthenticationVO;
 import com.onezol.vertex.framework.security.api.service.UserAuthService;
 import com.onezol.vertex.framework.support.support.ResponseHelper;
 import io.swagger.v3.oas.annotations.Operation;
@@ -40,14 +40,14 @@ public class UserAuthController {
 
     @Operation(summary = "用户登录", description = "用户登录: 根据用户名密码")
     @PostMapping("/login")
-    public GenericResponse<UserAuthenticationVO> loginByIdPassword(@RequestBody @Valid UserLoginPayload payload) {
+    public GenericResponse<AuthIdentity> loginByIdPassword(@RequestBody @Valid UserLoginPayload payload) {
         if (StringUtils.isBlank(payload.getUuid())) {
             return ResponseHelper.buildFailedResponse(ServiceStatus.BAD_REQUEST, "会话ID不能为空");
         }
         if (StringUtils.isAnyBlank(payload.getUsername(), payload.getPassword())) {
             return ResponseHelper.buildFailedResponse(ServiceStatus.BAD_REQUEST, "用户名或密码不能为空");
         }
-        UserAuthenticationVO userAuthenticationVO = userAuthService.loginByIdPassword(payload.getUsername(), payload.getPassword(), payload.getUuid(), payload.getCaptcha());
+        AuthIdentity userAuthenticationVO = userAuthService.loginByIdPassword(payload.getUsername(), payload.getPassword(), payload.getUuid(), payload.getCaptcha());
 
         return Objects.nonNull(userAuthenticationVO) ?
                 ResponseHelper.buildSuccessfulResponse(userAuthenticationVO) :

@@ -2,7 +2,6 @@ import type { TableData, TableInstance } from '@arco-design/web-vue'
 import { Message, Modal } from '@arco-design/web-vue'
 import type { Options as paginationOptions } from './usePagination'
 import { useBreakpoint, usePagination } from '@/hooks'
-import type { ApiRes, PageRes } from '@/types/api'
 
 interface Options<T, U> {
   formatResult?: (data: T[]) => U[]
@@ -13,7 +12,7 @@ interface Options<T, U> {
 }
 
 interface PaginationParams { pageNumber: number, pageSize: number }
-type Api<T> = (params: PaginationParams) => Promise<ApiRes<PageRes<T[]>>> | Promise<ApiRes<T[]>>
+type Api<T> = (params: PaginationParams) => Promise<GenericResponse<PagePack<T[]>>> | Promise<GenericResponse<T[]>>
 
 export function useTable<T extends U, U = T>(api: Api<T>, options?: Options<T, U>) {
   const { formatResult, onSuccess, immediate, rowKey } = options || {}
@@ -69,7 +68,7 @@ export function useTable<T extends U, U = T>(api: Api<T>, options?: Options<T, U
 
   // 删除
   const handleDelete = async <T>(
-    deleteApi: () => Promise<ApiRes<T>>,
+    deleteApi: () => Promise<GenericResponse<T>>,
     options?: { title?: string, content?: string, successTip?: string, showModal?: boolean, multiple?: boolean },
   ): Promise<boolean | undefined> => {
     const onDelete = async () => {

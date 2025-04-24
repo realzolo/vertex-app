@@ -85,14 +85,13 @@ const handleCancel = () => {
   isUpdate.value = false
 }
 
-const queryForm = {
-  category: 'LOGIN',
-}
+const subject = 'LOGIN'
+
 // 查询列表数据
 const getDataList = async () => {
   try {
     loading.value = true
-    const { data } = await listOption(queryForm)
+    const { data } = await listOption(subject)
     loginConfig.value = data.reduce((obj: LoginConfig, option: OptionResp) => {
       obj[option.code] = { ...option, value: Number.parseInt(option.value) }
       return obj
@@ -118,7 +117,7 @@ const handleSave = async () => {
 
 // 恢复默认
 const handleResetValue = async () => {
-  await resetOptionValue(queryForm)
+  await resetOptionValue(subject)
   Message.success('恢复成功')
   await getDataList()
 }

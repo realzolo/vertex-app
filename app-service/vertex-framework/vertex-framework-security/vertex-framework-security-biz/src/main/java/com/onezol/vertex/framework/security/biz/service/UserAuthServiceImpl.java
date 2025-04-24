@@ -11,11 +11,11 @@ import com.onezol.vertex.framework.common.util.StringUtils;
 import com.onezol.vertex.framework.security.api.context.AuthenticationContext;
 import com.onezol.vertex.framework.security.api.enumeration.LoginType;
 import com.onezol.vertex.framework.security.api.model.LoginUserDetails;
+import com.onezol.vertex.framework.security.api.model.dto.AuthIdentity;
 import com.onezol.vertex.framework.security.api.model.dto.AuthUser;
 import com.onezol.vertex.framework.security.api.model.dto.User;
 import com.onezol.vertex.framework.security.api.model.entity.*;
 import com.onezol.vertex.framework.security.api.model.payload.UserSavePayload;
-import com.onezol.vertex.framework.security.api.model.vo.UserAuthenticationVO;
 import com.onezol.vertex.framework.security.api.service.*;
 import com.onezol.vertex.framework.security.biz.mapper.UserMapper;
 import com.onezol.vertex.framework.support.cache.RedisCache;
@@ -101,7 +101,7 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
      */
     @Override
     @Transactional
-    public UserAuthenticationVO register(UserSavePayload payload) {
+    public AuthIdentity register(UserSavePayload payload) {
 //        if (StringUtils.isAnyBlank(payload.getUsername(), payload.getPassword(), payload.getEmail(), payload.getVerifyCode())) {
 //            throw new RuntimeServiceException("用户名、密码、邮箱、验证码不能为空");
 //        }
@@ -139,10 +139,10 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
         // 构建返回结果
         User user = BeanUtils.toBean(entity, User.class);
         String token = JWTHelper.generateToken(String.valueOf(user.getId()));
-        return UserAuthenticationVO.builder()
+        return AuthIdentity.builder()
                 .user(user)
                 .jwt(
-                        UserAuthenticationVO.UserAuthenticationJWT.builder()
+                        AuthIdentity.Ticket.builder()
                                 .token(token)
                                 .expire(Long.valueOf(expirationTime))
                                 .build()
@@ -158,7 +158,7 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
      * @param captcha  验证码
      */
     @Override
-    public UserAuthenticationVO loginByIdPassword(String username, String password, String sessionId, String captcha) throws RuntimeServiceException {
+    public AuthIdentity loginByIdPassword(String username, String password, String sessionId, String captcha) throws RuntimeServiceException {
         // 参数校验
         if (StringUtils.isBlank(sessionId)) {
             throw new RuntimeServiceException(BAD_REQUEST, "会话ID不能为空");
@@ -206,7 +206,7 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
      * @param verifyCode 验证码
      */
     @Override
-    public UserAuthenticationVO loginByEmail(String email, String verifyCode) {
+    public AuthIdentity loginByEmail(String email, String verifyCode) {
         return null;
     }
 
@@ -281,7 +281,7 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
      * @param loginUserDetails 登录用户身份信息
      * @return 登录成功后的处理结果
      */
-    private UserAuthenticationVO afterLoginSuccess(LoginUserDetails loginUserDetails, final LoginType loginType) {
+    private AuthIdentity afterLoginSuccess(LoginUserDetails loginUserDetails, final LoginType loginType) {
         // 生成token
         String token = JWTHelper.generateToken(loginUserDetails.getId().toString());
 
@@ -292,10 +292,10 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
         loginHistoryService.createLoginRecord(loginUserDetails, loginType);
 
         // 返回结果
-        return UserAuthenticationVO.builder()
+        return AuthIdentity.builder()
                 .user(loginUserDetails)
                 .jwt(
-                        UserAuthenticationVO.UserAuthenticationJWT.builder()
+                        AuthIdentity.Ticket.builder()
                                 .token(token)
                                 .expire(Long.valueOf(expirationTime))
                                 .build()

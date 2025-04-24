@@ -111,9 +111,9 @@ const {
 
 // 过滤树
 const searchData = (title: string) => {
-  const loop = (data: MenuResp[]) => {
-    const result = [] as MenuResp[]
-    data.forEach((item: MenuResp) => {
+  const loop = (data: TreeNode<MenuResp>[]) => {
+    const result = [] as TreeNode<MenuResp>[]
+    data.forEach((item: TreeNode<MenuResp>) => {
       if (item.title?.toLowerCase().includes(title.toLowerCase())) {
         result.push({ ...item })
       } else if (item.children) {
@@ -170,7 +170,7 @@ const reset = () => {
 }
 
 // 删除
-const onDelete = (record: MenuResp) => {
+const onDelete = (record: TreeNode<MenuResp>) => {
   return handleDelete(() => deleteMenu(record.data.id), {
     content: `是否确定菜单「${record.title}」？`,
     showModal: true,

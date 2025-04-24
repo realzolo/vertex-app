@@ -1,17 +1,16 @@
 import type * as T from './type'
 import http from '@/utils/http'
-import type { PageRes } from '@/types/api'
 
 const BASE_URL = '/user'
 
 /** @desc 查询用户列表 */
 export function listUser(query: T.UserPageQuery) {
-  return http.get<PageRes<T.UserResp[]>>(`${BASE_URL}/page`, query)
+  return http.get<PagePack<T.UserResp[]>>(`${BASE_URL}/page`, query)
 }
 
 /** @desc 查询未绑定某个角色的用户列表 */
 export function listUnboundRoleUser(query: T.UserPageQuery) {
-  return http.get<PageRes<T.UserResp[]>>(`${BASE_URL}/unbound-role/page`, query)
+  return http.get<PagePack<T.UserResp[]>>(`${BASE_URL}/unbound-role/page`, query)
 }
 
 /** @desc 查询所有用户列表 */

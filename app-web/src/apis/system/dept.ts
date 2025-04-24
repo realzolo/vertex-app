@@ -7,7 +7,7 @@ const BASE_URL = '/department'
 
 /** @desc 查询部门列表 */
 export function listDept(query: T.DeptQuery) {
-  return http.get<T.DeptResp[]>(`${BASE_URL}/tree`, query)
+  return http.get<TreeNode<T.DeptResp>[]>(`${BASE_URL}/tree`, query)
 }
 
 /** @desc 查询部门详情 */

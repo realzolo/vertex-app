@@ -4,12 +4,12 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.onezol.vertex.framework.common.constant.CacheKey;
 import com.onezol.vertex.framework.common.constant.enumeration.DictionaryType;
 import com.onezol.vertex.framework.common.exception.RuntimeServiceException;
+import com.onezol.vertex.framework.common.model.DictionaryEntry;
 import com.onezol.vertex.framework.common.mvc.service.BaseServiceImpl;
 import com.onezol.vertex.framework.common.util.BeanUtils;
 import com.onezol.vertex.framework.component.dictionary.mapper.DictionaryMapper;
 import com.onezol.vertex.framework.component.dictionary.model.Dictionary;
 import com.onezol.vertex.framework.component.dictionary.model.DictionaryEntity;
-import com.onezol.vertex.framework.component.dictionary.model.SimpleDictionary;
 import com.onezol.vertex.framework.support.cache.RedisCache;
 import org.springframework.stereotype.Service;
 
@@ -112,18 +112,18 @@ public class DictionaryService extends BaseServiceImpl<DictionaryMapper, Diction
         redisCache.deleteObject(CacheKey.DICTIONARY);
 
         List<DictionaryEntity> entities = this.list();
-        Map<String, List<SimpleDictionary>> dictionaryMap = new HashMap<>();
+        Map<String, List<DictionaryEntry>> dictionaryMap = new HashMap<>();
         for (DictionaryEntity entity : entities) {
             if (Objects.isNull(entity.getGroup())) {
                 dictionaryMap.put(entity.getValue(), new ArrayList<>());
                 continue;
             }
-            SimpleDictionary item = new SimpleDictionary();
-            item.setLabel(entity.getName());
-            item.setValue(entity.getValue());
-            item.setColor(entity.getColor());
-            item.setDisabled(entity.getStatus().getValue() == 0);
-            dictionaryMap.computeIfAbsent(entity.getGroup(), k -> new ArrayList<>()).add(item);
+            DictionaryEntry entry = new DictionaryEntry();
+            entry.setLabel(entity.getName());
+            entry.setValue(entity.getValue());
+            entry.setColor(entity.getColor());
+            entry.setDisabled(entity.getStatus().getValue() == 0);
+            dictionaryMap.computeIfAbsent(entity.getGroup(), k -> new ArrayList<>()).add(entry);
         }
 
         redisCache.setCacheMap(CacheKey.DICTIONARY, dictionaryMap);

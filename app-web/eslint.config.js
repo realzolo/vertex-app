@@ -43,6 +43,7 @@ export default antfu(
       'node/prefer-global/process': 'off',
       'antfu/top-level-function': 'off',
       'antfu/if-newline': 'off',
+      'unused-imports/no-unused-vars': 'off',
     },
   },
 )

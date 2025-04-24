@@ -12,7 +12,7 @@ export function listGroup() {
 
 /** @desc 查询任务列表 */
 export function listJob(query: T.JobPageQuery) {
-  return http.get<PageRes<T.JobResp[]>>(`${BASE_URL}`, query)
+  return http.get<PagePack<T.JobResp[]>>(`${BASE_URL}`, query)
 }
 
 /** @desc 新增任务 */

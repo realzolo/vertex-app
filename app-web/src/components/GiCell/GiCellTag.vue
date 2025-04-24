@@ -3,7 +3,6 @@
 </template>
 
 <script setup lang="ts">
-import type { LabelValueState } from '@/types/global'
 import type { GiCellTagType } from '@/components/GiCell/type'
 
 defineOptions({ name: 'GiCellTag' })
@@ -15,7 +14,7 @@ const props = withDefaults(defineProps<Partial<GiCellTagType>>(), {
   value: '',
 })
 
-const dictItem = computed((): LabelValueState => {
+const dictItem = computed((): DictionaryEntry => {
   try {
     return props.dict.find(
       (d) => d.value === String(props.value) || d.value === Number(props.value),

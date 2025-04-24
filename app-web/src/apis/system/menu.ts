@@ -3,11 +3,9 @@ import http from '@/utils/http'
 
 export type * from './type'
 
-const BASE_URL = '/system/menu'
-
 /** @desc 查询菜单列表 */
 export function listMenu(query?: T.MenuQuery) {
-  return http.get<T.MenuResp[]>(`/permission/tree`, query)
+  return http.get<TreeNode<T.MenuResp>[]>(`/permission/tree`, query)
 }
 
 /** @desc 查询菜单详情 */

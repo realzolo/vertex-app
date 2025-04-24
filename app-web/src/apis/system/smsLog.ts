@@ -7,7 +7,7 @@ const BASE_URL = '/system/smsLog'
 
 /** @desc 查询短信日志列表 */
 export function listSmsLog(query: T.SmsLogPageQuery) {
-  return http.get<PageRes<T.SmsLogResp[]>>(`${BASE_URL}`, query)
+  return http.get<PagePack<T.SmsLogResp[]>>(`${BASE_URL}`, query)
 }
 
 /** @desc 查询短信日志详情 */

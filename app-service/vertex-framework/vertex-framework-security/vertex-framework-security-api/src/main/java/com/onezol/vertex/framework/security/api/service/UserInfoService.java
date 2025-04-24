@@ -1,7 +1,8 @@
 package com.onezol.vertex.framework.security.api.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.onezol.vertex.framework.common.model.PageModel;
+import com.onezol.vertex.framework.common.model.DictionaryEntry;
+import com.onezol.vertex.framework.common.model.PagePack;
 import com.onezol.vertex.framework.common.mvc.service.BaseService;
 import com.onezol.vertex.framework.security.api.model.dto.User;
 import com.onezol.vertex.framework.security.api.model.entity.UserEntity;
@@ -38,15 +39,19 @@ public interface UserInfoService extends BaseService<UserEntity> {
      */
     void deleteUser(Long userId);
 
+    /**
+     * 获取用户字典
+     */
+    List<DictionaryEntry> getUserDict();
 
     /**
      * 获取用户列表
      */
-    PageModel<User> getUserPage(Page<UserEntity> page, UserQueryPayload payload);
+    PagePack<User> getUserPage(Page<UserEntity> page, UserQueryPayload payload);
 
     /**
      * 获取未绑定角色的用户列表
      */
-    PageModel<User> getUnboundRoleUserPage(Page<UserEntity> page, UserQueryPayload payload);
+    PagePack<User> getUnboundRoleUserPage(Page<UserEntity> page, UserQueryPayload payload);
 
 }

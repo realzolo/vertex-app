@@ -7,7 +7,7 @@ const BASE_URL = '/system/smsConfig'
 
 /** @desc 查询短信配置列表 */
 export function listSmsConfig(query: T.SmsConfigPageQuery) {
-  return http.get<PageRes<T.SmsConfigResp[]>>(`${BASE_URL}`, query)
+  return http.get<PagePack<T.SmsConfigResp[]>>(`${BASE_URL}`, query)
 }
 
 /** @desc 查询短信配置详情 */

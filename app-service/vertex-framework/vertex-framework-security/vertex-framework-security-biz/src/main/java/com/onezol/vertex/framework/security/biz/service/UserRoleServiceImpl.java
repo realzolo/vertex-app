@@ -4,10 +4,9 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.onezol.vertex.framework.common.constant.enumeration.ServiceStatus;
 import com.onezol.vertex.framework.common.exception.RuntimeServiceException;
-import com.onezol.vertex.framework.common.model.PageModel;
+import com.onezol.vertex.framework.common.model.PagePack;
 import com.onezol.vertex.framework.common.mvc.service.BaseServiceImpl;
 import com.onezol.vertex.framework.common.util.Asserts;
-import com.onezol.vertex.framework.security.biz.mapper.UserRoleMapper;
 import com.onezol.vertex.framework.security.api.model.dto.User;
 import com.onezol.vertex.framework.security.api.model.entity.RoleEntity;
 import com.onezol.vertex.framework.security.api.model.entity.RolePermissionEntity;
@@ -17,6 +16,7 @@ import com.onezol.vertex.framework.security.api.service.RolePermissionService;
 import com.onezol.vertex.framework.security.api.service.RoleService;
 import com.onezol.vertex.framework.security.api.service.UserInfoService;
 import com.onezol.vertex.framework.security.api.service.UserRoleService;
+import com.onezol.vertex.framework.security.biz.mapper.UserRoleMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -170,7 +170,7 @@ public class UserRoleServiceImpl extends BaseServiceImpl<UserRoleMapper, UserRol
      * @return 用户列表
      */
     @Override
-    public PageModel<User> getRoleUsers(Page<UserRoleEntity> page, Long roleId) {
+    public PagePack<User> getRoleUsers(Page<UserRoleEntity> page, Long roleId) {
         page = this.page(
                 page,
                 Wrappers.<UserRoleEntity>lambdaQuery()
@@ -181,12 +181,12 @@ public class UserRoleServiceImpl extends BaseServiceImpl<UserRoleMapper, UserRol
         List<Long> userIds = records.stream().map(UserRoleEntity::getUserId).toList();
 
         if (userIds.isEmpty()) {
-            return PageModel.empty();
+            return PagePack.empty();
         }
 
         List<User> users = userInfoService.getUsersInfo(userIds);
 
-        return PageModel.of(users, page.getTotal(), page.getCurrent(), page.getSize());
+        return PagePack.of(users, page.getTotal(), page.getCurrent(), page.getSize());
     }
 
     /**

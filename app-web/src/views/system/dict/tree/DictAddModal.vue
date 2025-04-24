@@ -16,7 +16,7 @@
 <script setup lang="ts">
 import { Message } from '@arco-design/web-vue'
 import { useWindowSize } from '@vueuse/core'
-import { addDict, getDict, updateDict } from '@/apis/system/dict'
+import { createDictGroup, getDictGroup, updateDictGroup } from '@/apis/system/dict'
 import { type ColumnItem, GiForm } from '@/components/GiForm'
 import { useResetReactive } from '@/hooks'
 
@@ -29,10 +29,12 @@ const { width } = useWindowSize()
 const dataId = ref()
 const visible = ref(false)
 const isUpdate = computed(() => !!dataId.value)
-const title = computed(() => (isUpdate.value ? '修改字典' : '新增字典'))
+const title = computed(() => (isUpdate.value ? '修改字典分组' : '新增字典分组'))
 const formRef = ref<InstanceType<typeof GiForm>>()
 
-const [form, resetForm] = useResetReactive({})
+const [form, resetForm] = useResetReactive({
+  id: null,
+})
 
 const columns: ColumnItem[] = reactive([
   {
@@ -87,10 +89,11 @@ const save = async () => {
   if (isInvalid) return false
   try {
     if (isUpdate.value) {
-      await updateDict(form, dataId.value)
+      form.id = dataId.value
+      await updateDictGroup(form)
       Message.success('修改成功')
     } else {
-      await addDict(form)
+      await createDictGroup(form)
       Message.success('新增成功')
     }
     emit('save-success')
@@ -111,7 +114,7 @@ const onAdd = () => {
 const onUpdate = async (id: number) => {
   reset()
   dataId.value = id
-  const { data } = await getDict(id)
+  const { data } = await getDictGroup(id)
   Object.assign(form, data)
   visible.value = true
 }

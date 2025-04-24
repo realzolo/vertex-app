@@ -1,14 +1,11 @@
 import type * as T from './type'
 import http from '@/utils/http'
-import type { PageRes } from '@/types/api'
 
 export type * from './type'
 
-const BASE_URL = '/monitor/online'
-
 /** @desc 查询在线用户列表 */
 export function listOnlineUser(query: T.OnlineUserPageQuery) {
-  return http.get<PageRes<T.OnlineUserResp[]>>(`/login-user/page`, query)
+  return http.get<PagePack<T.OnlineUserResp[]>>(`/login-user/page`, query)
 }
 
 /** @desc 强退在线用户 */

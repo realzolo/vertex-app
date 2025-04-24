@@ -1,9 +1,9 @@
 package com.onezol.vertex.framework.security.api.service;
 
 import com.onezol.vertex.framework.common.mvc.service.BaseService;
+import com.onezol.vertex.framework.security.api.model.dto.AuthIdentity;
 import com.onezol.vertex.framework.security.api.model.entity.UserEntity;
 import com.onezol.vertex.framework.security.api.model.payload.UserSavePayload;
-import com.onezol.vertex.framework.security.api.model.vo.UserAuthenticationVO;
 
 public interface UserAuthService extends BaseService<UserEntity> {
 
@@ -17,6 +17,7 @@ public interface UserAuthService extends BaseService<UserEntity> {
 
     /**
      * 根据用户邮箱获取用户信息
+     *
      * @param email 用户邮箱
      * @return 用户信息
      */
@@ -27,7 +28,7 @@ public interface UserAuthService extends BaseService<UserEntity> {
      *
      * @param payload UserRegistrationPayload
      */
-    UserAuthenticationVO register(UserSavePayload payload);
+    AuthIdentity register(UserSavePayload payload);
 
     /**
      * 用户登录(根据用户名)
@@ -37,7 +38,7 @@ public interface UserAuthService extends BaseService<UserEntity> {
      * @param sessionId 会话ID
      * @param captcha   验证码
      */
-    UserAuthenticationVO loginByIdPassword(String username, String password, String sessionId, String captcha);
+    AuthIdentity loginByIdPassword(String username, String password, String sessionId, String captcha);
 
 
     /**
@@ -46,7 +47,7 @@ public interface UserAuthService extends BaseService<UserEntity> {
      * @param email      电子邮箱
      * @param verifyCode 验证码
      */
-    UserAuthenticationVO loginByEmail(String email, String verifyCode);
+    AuthIdentity loginByEmail(String email, String verifyCode);
 
     /**
      * 用户登出

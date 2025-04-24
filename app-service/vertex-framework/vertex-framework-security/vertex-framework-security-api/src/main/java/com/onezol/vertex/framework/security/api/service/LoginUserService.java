@@ -1,6 +1,6 @@
 package com.onezol.vertex.framework.security.api.service;
 
-import com.onezol.vertex.framework.common.model.PageModel;
+import com.onezol.vertex.framework.common.model.PagePack;
 import com.onezol.vertex.framework.security.api.model.LoginUserDetails;
 import com.onezol.vertex.framework.security.api.model.dto.LoginUser;
 
@@ -29,7 +29,7 @@ public interface LoginUserService {
      * @param pageSize   每页大小
      * @return 登录用户信息
      */
-    PageModel<LoginUser> getLoginUserPage(long pageNumber, long pageSize);
+    PagePack<LoginUser> getLoginUserPage(long pageNumber, long pageSize);
 
     /**
      * 获取登录用户总数

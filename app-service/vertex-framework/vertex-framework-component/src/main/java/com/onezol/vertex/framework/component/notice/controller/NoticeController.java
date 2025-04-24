@@ -2,8 +2,7 @@ package com.onezol.vertex.framework.component.notice.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.onezol.vertex.framework.common.model.GenericResponse;
-import com.onezol.vertex.framework.common.model.LabelValue;
-import com.onezol.vertex.framework.common.model.PageModel;
+import com.onezol.vertex.framework.common.model.PagePack;
 import com.onezol.vertex.framework.common.mvc.controller.BaseController;
 import com.onezol.vertex.framework.component.notice.model.Notice;
 import com.onezol.vertex.framework.component.notice.model.NoticeEntity;
@@ -14,7 +13,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Objects;
 
 @Tag(name = "通知公告")
@@ -26,12 +24,6 @@ public class NoticeController extends BaseController<NoticeEntity> {
 
     public NoticeController(NoticeService noticeService) {
         this.noticeService = noticeService;
-    }
-
-    @Operation(summary = "通知公告类型")
-    @PostMapping("/dict")
-    public GenericResponse<List<LabelValue<String, Integer>>> getDict() {
-        return ResponseHelper.buildSuccessfulResponse(noticeService.getDict());
     }
 
     @Operation(summary = "新增通知公告")
@@ -66,7 +58,7 @@ public class NoticeController extends BaseController<NoticeEntity> {
 
     @Operation(summary = "获取通知公告列表")
     @GetMapping("/page")
-    public GenericResponse<PageModel<Notice>> page(
+    public GenericResponse<PagePack<Notice>> page(
             @RequestParam("pageNumber") Long pageNumber,
             @RequestParam("pageSize") Long pageSize
     ) {

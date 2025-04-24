@@ -3,7 +3,7 @@ import type { AxiosResponse } from 'axios'
 import { useLoading } from '@/hooks'
 
 export function useRequest<T>(
-  api: () => Promise<AxiosResponse<ApiRes<T>>>,
+  api: () => Promise<AxiosResponse<GenericResponse<T>>>,
   defaultValue = [] as unknown as T,
   isLoading = true,
 ) {

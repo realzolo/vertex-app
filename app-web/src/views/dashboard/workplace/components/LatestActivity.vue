@@ -130,7 +130,7 @@ export interface DataItem {
   createTimeString: string
 }
 
-const get = <T = unknown>(url: string, params?: object, config?: AxiosRequestConfig): Promise<ApiRes<T>> => {
+const get = <T = unknown>(url: string, params?: object, config?: AxiosRequestConfig): Promise<GenericResponse<T>> => {
   return new Promise((resolve, reject) => {
     axios
       .request<T>({
@@ -151,20 +151,20 @@ const dataList = ref<DataItem[]>([])
 const loading = ref(false)
 // 查询列表数据
 const getDataList = async () => {
-  try {
-    loading.value = true
-    const { data } = await get('https://api.charles7c.top/git/orgs/events/continew')
-    data.forEach((item) => {
-      dataList.value.push({
-        ...item,
-        createTimeString: dayjs(new Date(item.createTime)).fromNow(),
-      })
-    })
-  } catch (err) {
-    // console.log(err)
-  } finally {
-    loading.value = false
-  }
+  // try {
+  //   loading.value = true
+  //   const { data } = await get('https://api.charles7c.top/git/orgs/events/continew')
+  //   data.forEach((item) => {
+  //     dataList.value.push({
+  //       ...item,
+  //       createTimeString: dayjs(new Date(item.createTime)).fromNow(),
+  //     })
+  //   })
+  // } catch (err) {
+  //   // console.log(err)
+  // } finally {
+  //   loading.value = false
+  // }
 }
 
 onMounted(() => {

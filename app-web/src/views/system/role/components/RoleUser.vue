@@ -70,7 +70,7 @@ import { isMobile } from '@/utils'
 import has from '@/utils/has'
 
 const props = withDefaults(defineProps<Props>(), {
-  roleId: -1,
+  roleId: 0,
 })
 
 interface Props {

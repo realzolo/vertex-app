@@ -1,7 +1,7 @@
 package com.onezol.vertex.framework.security.biz.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.onezol.vertex.framework.common.model.PageModel;
+import com.onezol.vertex.framework.common.model.PagePack;
 import com.onezol.vertex.framework.common.mvc.service.BaseServiceImpl;
 import com.onezol.vertex.framework.common.util.BeanUtils;
 import com.onezol.vertex.framework.common.util.NetworkUtils;
@@ -78,7 +78,7 @@ public class LoginHistoryServiceImpl extends BaseServiceImpl<LoginHistoryMapper,
      * @return 登录记录
      */
     @Override
-    public PageModel<LoginUser> getLoginHistoryPage(Page<LoginHistoryEntity> page) {
+    public PagePack<LoginUser> getLoginHistoryPage(Page<LoginHistoryEntity> page) {
         page = this.page(page);
 
         List<Long> userIds = page.getRecords().stream().map(LoginHistoryEntity::getUserId).distinct().toList();
@@ -86,8 +86,8 @@ public class LoginHistoryServiceImpl extends BaseServiceImpl<LoginHistoryMapper,
         List<User> usersInfo = userInfoService.getUsersInfo(userIds);
         Map<Long, User> userMap = usersInfo.stream().collect(Collectors.toMap(User::getId, Function.identity()));
 
-        PageModel<LoginUser> pageModel = PageModel.from(page, LoginUser.class);
-        pageModel.getItems().forEach(
+        PagePack<LoginUser> pack = PagePack.from(page, LoginUser.class);
+        pack.getItems().forEach(
                 loginUser -> {
                     User user = userMap.get(loginUser.getUserId());
                     if (user != null) {
@@ -97,7 +97,7 @@ public class LoginHistoryServiceImpl extends BaseServiceImpl<LoginHistoryMapper,
                     }
                 }
         );
-        return pageModel;
+        return pack;
     }
 
     /**
