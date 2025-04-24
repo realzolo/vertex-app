@@ -51,7 +51,7 @@ const createNode = (item: { name: string, value: string }) => {
     edgeId: props.id,
     source: props.source,
     target: props.target,
-    position: { x: (props.sourceX + props.targetX) / 2 - 110, y: (props.sourceY + props.targetY) / 2 },
+    position: { x: (props.sourceX + props.targetX) / 2 - 110, y: (props.sourceY + props.targetY) / 2 - 38 },
     type: item.value,
   })
 }

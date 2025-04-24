@@ -148,8 +148,9 @@ defineExpose({ onVisible })
 <style scoped lang="scss">
 .flow-panel {
   position: relative;
+  top: 24px;
   width: 480px;
-  height: calc(100vh - 224px);
+  height: calc(100vh - 174px);
   border-radius: 4px;
   background-color: var(--color-bg-3);
   border: 1px solid var(--color-border);
