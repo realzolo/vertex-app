@@ -19,21 +19,16 @@ spring:
     port: 6379
     password: 123456
     database: 5
-    timeout: 10s
-    connect-timeout: 15s
+    timeout: 3s
+    connect-timeout: 5s
     lettuce:
       pool:
-        max-active: 8
+        max-active: 16
         max-idle: 8
-        min-idle: 2
-        max-wait: 200ms
+        min-idle: 4
+        max-wait: 500ms
         time-between-eviction-runs: 30s
-  # 邮件配置
-  mail:
-    host: smtp.exmail.qq.com
-    port: 465
-    username: mail@onezol.com
-    password: JYGtUgkah6x89BLc
+      shutdown-timeout: 100ms
   # MQTT配置
   mqtt:
     enabled: true
