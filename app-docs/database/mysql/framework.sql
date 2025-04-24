@@ -342,11 +342,12 @@ CREATE TABLE IF NOT EXISTS vx_login_history
     DEFAULT CHARSET = utf8mb4
     COMMENT = '用户登录历史';
 
-CREATE TABLE IF NOT EXISTS vx_flow_graph
+CREATE TABLE IF NOT EXISTS vx_approval_flow_template
 (
     id          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
     -- 自定义字段开始 --
     name        VARCHAR(255)  COMMENT '流程名称',
+    type        INT UNSIGNED  COMMENT '流程类型',
     content     LONGTEXT      COMMENT '流程内容',
     status      INT UNSIGNED  DEFAULT 0 COMMENT '流程状态',
     remark      VARCHAR(255)  COMMENT '备注',
@@ -359,4 +360,21 @@ CREATE TABLE IF NOT EXISTS vx_flow_graph
     deleted     BIT          DEFAULT b'0' COMMENT '是否删除'
 ) ENGINE = InnoDB
     DEFAULT CHARSET = utf8mb4
-    COMMENT = '流程图';
+    COMMENT = '审批流程模板';
+
+CREATE TABLE IF NOT EXISTS vx_approval_flow_binding_relation
+(
+    id          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
+    -- 自定义字段开始 --
+    flow_template_id     BIGINT       COMMENT '流程模板ID',
+    business_type_code   VARCHAR(255) COMMENT '业务类型编码',
+    -- 自定义字段结束 --
+    creator     BIGINT       DEFAULT NULL COMMENT '创建人',
+    create_time DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    updater     BIGINT       DEFAULT NULL COMMENT '更新人',
+    update_time DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+    version     INT UNSIGNED DEFAULT 0 COMMENT '版本号',
+    deleted     BIT          DEFAULT b'0' COMMENT '是否删除'
+    ) ENGINE = InnoDB
+    DEFAULT CHARSET = utf8mb4
+    COMMENT = '业务流程关联';

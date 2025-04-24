@@ -26,7 +26,7 @@ import { NodeType } from '../type'
 
 defineOptions({ name: 'ApprovalNode' })
 
-const props = defineProps<NodeProps>()
+defineProps<NodeProps>()
 
 const COLOR_MAP = {
   0: 'rgb(87, 106, 149)',

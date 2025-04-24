@@ -42,8 +42,8 @@ import { type EdgeEmitData, NodeType } from '../type'
 import ApprovalNode from './ApprovalNode.vue'
 import ApprovalEdge from './ApprovalEdge.vue'
 import ApprovalPanel from './ApprovalPanel.vue'
-import { FLOW_NODE_CHOICES } from '@/views/workflow/designer/support'
-import { getFlowGraph, updateFlowGraph } from '@/apis/flow'
+import { FLOW_NODE_CHOICES } from './support'
+import { getFlowTemplate, updateFlowTemplate } from '@/apis/approval'
 
 const nodeTypes = {
   approval: markRaw(ApprovalNode),
@@ -145,11 +145,11 @@ const handleInteractionChange = (interactive: boolean) => {
 
 const saveFlow = () => {
   const id = Number(route.query.id)
-  updateFlowGraph({ id, content: JSON.stringify(toObject()) })
+  updateFlowTemplate({ id, content: JSON.stringify(toObject()) })
   Message.success('保存成功')
 }
 const fetchData = async (id: number) => {
-  const resp = await getFlowGraph(id)
+  const resp = await getFlowTemplate(id)
   if (resp.success) {
     const flowGraph = JSON.parse(resp.data.content)
     if (!flowGraph) return

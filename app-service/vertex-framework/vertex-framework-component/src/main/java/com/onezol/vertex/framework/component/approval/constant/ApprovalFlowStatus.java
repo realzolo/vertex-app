@@ -13,10 +13,11 @@ import lombok.Getter;
 @EnumDictionary(name = "审批流程状态", value = "approval_flow_status")
 public enum ApprovalFlowStatus implements StandardEnumeration<Integer> {
 
-    PENDING("待审批", 0),
-    APPROVED("已通过", 1),
-    REJECTED("已驳回", 2),
-    CANCELLED("已撤回", 3);
+    DRAFT("暂存", 0),
+    PENDING("审批中", 0),
+    APPROVED("通过", 1),
+    REJECTED("驳回", 2),
+    CANCELLED("撤回", 3);
 
     private final String name;
 

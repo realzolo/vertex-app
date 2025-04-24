@@ -43,14 +43,13 @@ import type { TableInstance } from '@arco-design/web-vue'
 import TemplateAddModal from './TemplateAddModal.vue'
 import { useTable } from '@/hooks'
 import { isMobile } from '@/utils'
-import { deleteFlowGraph, listFlowGraph } from '@/apis/flow'
-import type { FlowGraphPageQuery } from '@/apis/flow/type'
+import { type FlowTemplatePageQuery, deleteFlowTemplate, listFlowTemplate } from '@/apis/approval'
 
-defineOptions({ name: 'MonitorOnline' })
+defineOptions({ name: 'ApprovalFlowTemplate' })
 const router = useRouter()
 
 const TemplateAddModalRef = ref<InstanceType<typeof TemplateAddModal>>()
-const queryForm = reactive<FlowGraphPageQuery>({
+const queryForm = reactive<FlowTemplatePageQuery>({
   name: '',
   sort: ['createTime,desc'],
 })
@@ -60,7 +59,7 @@ const {
   pagination,
   search,
   handleDelete,
-} = useTable((page) => listFlowGraph({ ...queryForm, ...page }), { immediate: true })
+} = useTable((page) => listFlowTemplate({ ...queryForm, ...page }), { immediate: true })
 
 const columns: TableInstance['columns'] = [
   { title: '流程名称', dataIndex: 'name', ellipsis: true, tooltip: true },
@@ -74,7 +73,7 @@ const onAdd = () => {
   TemplateAddModalRef.value?.onAdd()
 }
 const onDesign = (record: any) => {
-  router.push({ path: `/workflow/designer`, query: { id: record.id } })
+  router.push({ path: `/approval/designer`, query: { id: record.id } })
 }
 // 重置
 const reset = () => {
@@ -82,7 +81,7 @@ const reset = () => {
   search()
 }
 const onDelete = (record: any) => {
-  return handleDelete(() => deleteFlowGraph(record.id), {
+  return handleDelete(() => deleteFlowTemplate(record.id), {
     content: `是否确定删除流程「${record.name}」？`,
     showModal: true,
   })

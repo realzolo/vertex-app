@@ -34,7 +34,7 @@ import {
   getBezierPath,
 } from '@vue-flow/core'
 import { computed } from 'vue'
-import { FLOW_NODE_CHOICES } from '@/views/workflow/designer/support'
+import { FLOW_NODE_CHOICES } from './support'
 
 defineOptions({ name: 'ApprovalEdge' })
 

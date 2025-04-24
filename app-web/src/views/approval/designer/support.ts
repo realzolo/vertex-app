@@ -1,4 +1,4 @@
-import {NodeType} from "@/views/workflow/type";
+import { NodeType } from '@/views/approval/type'
 
 export const STRATEGIES = [
   { label: '指定成员', value: 1 },

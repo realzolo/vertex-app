@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.onezol.vertex.framework.common.constant.enumeration.ServiceStatus;
 import com.onezol.vertex.framework.common.exception.RuntimeServiceException;
+import com.onezol.vertex.framework.common.model.DictionaryEntry;
 import com.onezol.vertex.framework.common.model.PagePack;
 import com.onezol.vertex.framework.common.util.BeanUtils;
 import com.onezol.vertex.framework.common.util.EnumUtils;
@@ -16,11 +17,12 @@ import com.onezol.vertex.framework.component.approval.model.dto.ApprovalFlowTemp
 import com.onezol.vertex.framework.component.approval.model.entity.ApprovalFlowBindingRelationEntity;
 import com.onezol.vertex.framework.component.approval.model.entity.ApprovalFlowTemplateEntity;
 import com.onezol.vertex.framework.component.approval.model.payload.ApprovalFlowBindingRelationPayload;
-import com.onezol.vertex.framework.component.approval.model.payload.FlowTemplateSavePayload;
+import com.onezol.vertex.framework.component.approval.model.payload.ApprovalFlowTemplateSavePayload;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class ApprovalFlowService {
@@ -36,7 +38,7 @@ public class ApprovalFlowService {
     /**
      * 创建流程模板
      */
-    public ApprovalFlowTemplate createFlowTemplate(FlowTemplateSavePayload payload) {
+    public ApprovalFlowTemplate createFlowTemplate(ApprovalFlowTemplateSavePayload payload) {
         ApprovalFlowTemplateEntity flowTemplate = BeanUtils.toBean(payload, ApprovalFlowTemplateEntity.class);
         approvalFlowTemplateMapper.insert(flowTemplate);
         return BeanUtils.toBean(flowTemplate, ApprovalFlowTemplate.class);
@@ -45,7 +47,7 @@ public class ApprovalFlowService {
     /**
      * 更新流程模板
      */
-    public ApprovalFlowTemplate updateFlowTemplate(FlowTemplateSavePayload payload) {
+    public ApprovalFlowTemplate updateFlowTemplate(ApprovalFlowTemplateSavePayload payload) {
         ApprovalFlowTemplateEntity flowTemplate = BeanUtils.toBean(payload, ApprovalFlowTemplateEntity.class);
         approvalFlowTemplateMapper.updateById(flowTemplate);
         return BeanUtils.toBean(flowTemplate, ApprovalFlowTemplate.class);
@@ -58,6 +60,21 @@ public class ApprovalFlowService {
         if (id == null) return null;
         ApprovalFlowTemplateEntity flowTemplate = approvalFlowTemplateMapper.selectById(id);
         return BeanUtils.toBean(flowTemplate, ApprovalFlowTemplate.class);
+    }
+
+    /**
+     * 删除流程模板
+     */
+    public void deleteFlowTemplate(Long id) {
+        approvalFlowTemplateMapper.deleteById(id);
+    }
+
+    /**
+     * 分页获取流程模板
+     */
+    public PagePack<ApprovalFlowTemplate> getFlowTemplatePage(Page<ApprovalFlowTemplateEntity> page) {
+        Page<ApprovalFlowTemplateEntity> flowTemplatePage = approvalFlowTemplateMapper.selectPage(page, null);
+        return PagePack.from(flowTemplatePage, ApprovalFlowTemplate.class);
     }
 
     /**
@@ -119,4 +136,19 @@ public class ApprovalFlowService {
         return pageModel;
     }
 
+    public List<DictionaryEntry> getFlowTemplateDict() {
+        List<ApprovalFlowTemplateEntity> entities = approvalFlowTemplateMapper.selectList(null);
+        return entities.stream().map(entity -> DictionaryEntry.of(entity.getName(), entity.getId())).collect(Collectors.toList());
+    }
+
+    /**
+     * 判断业务是否绑定了流程
+     */
+    public boolean isBusinessTypeBound(String businessTypeCode) {
+        Long count = approvalFlowBindingRelationMapper.selectCount(
+                Wrappers.<ApprovalFlowBindingRelationEntity>lambdaQuery()
+                        .eq(ApprovalFlowBindingRelationEntity::getBusinessTypeCode, businessTypeCode)
+        );
+        return count > 0;
+    }
 }
