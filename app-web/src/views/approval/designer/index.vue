@@ -1,33 +1,31 @@
 <template>
-  <GiPageLayout>
-    <a-button @click="saveFlow">保存</a-button>
-    <VueFlow
-      :nodes="nodes"
-      :edges="edges"
-      :min-zoom="0.5"
-      :max-zoom="1.5"
-      :node-types="nodeTypes"
-      :edge-types="edgeTypes"
-    >
-      <template #node-approval="props">
-        <ApprovalNode v-bind="props" />
-      </template>
+  <Header :flow-data="flowData" />
+  <VueFlow
+    :nodes="nodes"
+    :edges="edges"
+    :min-zoom="0.5"
+    :max-zoom="1.5"
+    :node-types="nodeTypes"
+    :edge-types="edgeTypes"
+  >
+    <template #node-approval="props">
+      <ApprovalNode v-bind="props" />
+    </template>
 
-      <template #edge-approval="props">
-        <ApprovalEdge v-bind="props" @add-node-on-edge="handleAddNodeOnEdge"/>
-      </template>
+    <template #edge-approval="props">
+      <ApprovalEdge v-bind="props" @add-node-on-edge="handleAddNodeOnEdge" />
+    </template>
 
-      <Background pattern-color="#aaa" :gap="16"/>
+    <Background pattern-color="rgb(121, 121, 122)" :size="1.2" :gap="24" />
 
-      <Controls position="top-left" @interaction-change="handleInteractionChange"/>
+    <Controls position="top-left" @interaction-change="handleInteractionChange" />
 
-      <MiniMap position="bottom-left"/>
+    <MiniMap position="bottom-left" />
 
-      <Panel position="top-right">
-        <ApprovalPanel ref="ApprovalPanelRef"/>
-      </Panel>
-    </VueFlow>
-  </GiPageLayout>
+    <Panel position="top-right">
+      <ApprovalPanel ref="ApprovalPanelRef" />
+    </Panel>
+  </VueFlow>
 </template>
 
 <script setup lang="ts">
@@ -37,13 +35,13 @@ import { Panel, VueFlow, useVueFlow } from '@vue-flow/core'
 import { Background } from '@vue-flow/background'
 import { Controls } from '@vue-flow/controls'
 import { MiniMap } from '@vue-flow/minimap'
-import { Message } from '@arco-design/web-vue'
 import { type EdgeEmitData, NodeType } from '../type'
+import Header from './components/Header/index.vue'
 import ApprovalNode from './ApprovalNode.vue'
 import ApprovalEdge from './ApprovalEdge.vue'
 import ApprovalPanel from './ApprovalPanel.vue'
 import { FLOW_NODE_CHOICES } from './support'
-import { getFlowTemplate, updateFlowTemplate } from '@/apis/approval'
+import { getFlowTemplate } from '@/apis/approval'
 
 const nodeTypes = {
   approval: markRaw(ApprovalNode),
@@ -56,20 +54,20 @@ const {
   onNodeDragStop,
   onNodeClick,
   onPaneClick,
-  toObject,
   fromObject,
 } = useVueFlow()
 
 const ApprovalPanelRef = ref<InstanceType<typeof ApprovalPanel>>()
 const isInteractive = ref<boolean>(false)
+const flowData = ref()
 
 const nodes = ref<Node[]>([
   {
     id: 'START_NODE',
     label: '流程开始',
     type: 'input',
-    sourcePosition: Position.Bottom,
-    position: { x: 1000, y: 80 },
+    sourcePosition: Position.Right,
+    position: { x: 500, y: 520 },
     data: {
       label: '流程开始',
       type: NodeType.START,
@@ -79,8 +77,8 @@ const nodes = ref<Node[]>([
     id: 'END_NODE',
     label: '流程结束',
     type: 'output',
-    targetPosition: Position.Top,
-    position: { x: 1000, y: 800 },
+    targetPosition: Position.Left,
+    position: { x: 500, y: 520 },
     data: {
       label: '流程结束',
       type: NodeType.END,
@@ -102,6 +100,8 @@ const createNode = (data: EdgeEmitData) => {
   const node: Node = {
     id: `APPROVAL_NODE_${nodes.value.length - 2}`,
     type: 'approval',
+    sourcePosition: Position.Right,
+    targetPosition: Position.Left,
     position: data.position,
     data: {
       label: choice?.name,
@@ -143,14 +143,10 @@ const handleInteractionChange = (interactive: boolean) => {
   toggleApprovalPanel()
 }
 
-const saveFlow = () => {
-  const id = Number(route.query.id)
-  updateFlowTemplate({ id, content: JSON.stringify(toObject()) })
-  Message.success('保存成功')
-}
 const fetchData = async (id: number) => {
   const resp = await getFlowTemplate(id)
   if (resp.success) {
+    flowData.value = resp.data
     const flowGraph = JSON.parse(resp.data.content)
     if (!flowGraph) return
     nodes.value = flowGraph.nodes

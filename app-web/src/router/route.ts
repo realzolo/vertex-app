@@ -2,6 +2,8 @@ import type { RouteRecordRaw } from 'vue-router'
 
 /** 默认布局 */
 const Layout = () => import('@/layout/index.vue')
+/** 内容布局 */
+const ContentLayout = () => import('@/layout/LayoutContent.vue')
 
 /** 系统路由 */
 export const systemRoutes: RouteRecordRaw[] = [
@@ -65,6 +67,20 @@ export const systemRoutes: RouteRecordRaw[] = [
         name: 'UserNotice',
         component: () => import('@/views/user/message/components/detail/index.vue'),
         meta: { title: '公告详情' },
+      },
+    ],
+  },
+  {
+    path: '/flow',
+    name: 'Flow',
+    component: ContentLayout,
+    meta: { hidden: true },
+    children: [
+      {
+        path: '/flow/designer',
+        name: 'FlowDesigner',
+        component: () => import('@/views/approval/designer/index.vue'),
+        meta: { title: '流程设计器', showInTabs: false },
       },
     ],
   },

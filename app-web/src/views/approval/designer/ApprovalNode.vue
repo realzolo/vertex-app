@@ -1,17 +1,21 @@
 <template>
   <div class="vue-flow__node-default approval-node-default">
     <div v-if="data.type !== NodeType.END" class="approval-node approval-process">
-      <div class="node-title" :style="{ background: COLOR_MAP[data.type] }">
-        <span>{{ data.label }}</span>
-      </div>
-      <div class="node-content">
-        <div class="text">{{ data.user?.name }}</div>
-        <div class="icon">
-          <a-button shape="circle" type="text">
-            <icon-right />
-          </a-button>
+      <Handle type="target" :position="Position.Left" />
+      <div class="node-body">
+        <div class="node-title" :style="{ background: COLOR_MAP[data.type] }">
+          <span>{{ data.label }}</span>
+        </div>
+        <div class="node-content">
+          <div class="text">{{ data.user?.name }}</div>
+          <div class="icon">
+            <a-button shape="circle" type="text">
+              <icon-right />
+            </a-button>
+          </div>
         </div>
       </div>
+      <Handle type="source" :position="Position.Right" />
     </div>
 
     <div v-if="data.type === NodeType.END" class="approval-node approval-end">
@@ -21,7 +25,7 @@
 </template>
 
 <script setup lang="ts">
-import type { NodeProps } from '@vue-flow/core'
+import { Handle, type NodeProps, Position } from '@vue-flow/core'
 import { NodeType } from '../type'
 
 defineOptions({ name: 'ApprovalNode' })
@@ -50,44 +54,51 @@ const COLOR_MAP = {
   align-items: center;
 
   .approval-node.approval-process {
-    width: 220px;
-    min-height: 72px;
-    background: #FFFFFF;
-    border-radius: 4px;
-    border: 1px solid var(--color-border);
-    .node-title {
-      display: flex;
-      align-items: center;
-      height: 24px;
-      line-height: 24px;
-      font-size: 12px;
-      color: #FFFFFF;
-      border-radius: 4px 4px 0 0;
-      text-align: left;
-      padding-left: 16px;
-      padding-right: 30px;
-    }
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 
-    .node-content {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: relative;
-      font-size: 14px;
-      padding: 16px;
+    .node-body {
+      width: 220px;
+      min-height: 72px;
+      background: #FFFFFF;
+      border-radius: 4px;
+      border: 1px solid var(--color-border);
 
-      .text {
-        display: block;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        width: 140px;
+      .node-title {
+        display: flex;
+        align-items: center;
+        height: 24px;
+        line-height: 24px;
+        font-size: 12px;
+        color: #FFFFFF;
+        border-radius: 4px 4px 0 0;
         text-align: left;
+        padding-left: 16px;
+        padding-right: 30px;
       }
 
-      .icon {
-        width: 20px;
-        cursor: pointer;
+      .node-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+        font-size: 14px;
+        padding: 16px;
+
+        .text {
+          display: block;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          width: 140px;
+          text-align: left;
+        }
+
+        .icon {
+          width: 20px;
+          cursor: pointer;
+        }
       }
     }
   }
@@ -100,10 +111,9 @@ const COLOR_MAP = {
     color: var(--color-text-2);
   }
 }
-</style>
 
-<style lang="scss">
-.vue-flow__node-approval.selected .approval-node-default:not(:has(.approval-node.approval-end)) {
+:deep(.vue-flow__node-approval.selected .approval-node-default:not(:has(.approval-node.approval-end))) {
   box-shadow: 1px 3px 32px 0 rgba(50,73,198,.08),6px 16px 48px 0 rgba(50,73,198,.12);
 }
 </style>
+

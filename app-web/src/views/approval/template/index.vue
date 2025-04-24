@@ -73,7 +73,7 @@ const onAdd = () => {
   TemplateAddModalRef.value?.onAdd()
 }
 const onDesign = (record: any) => {
-  router.push({ path: `/approval/designer`, query: { id: record.id } })
+  router.push({ path: `/flow/designer`, query: { id: record.id } })
 }
 // 重置
 const reset = () => {
