@@ -2,7 +2,7 @@
   <Handle id="end" type="target" :position="Position.Left" />
   <div class="flow-node-content">
     <div class="node-icon" v-html="icon" />
-    <span class="node-title">{{ label }}</span>
+    <div class="node-title">{{ label }}</div>
   </div>
 </template>
 

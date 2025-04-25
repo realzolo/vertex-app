@@ -15,9 +15,8 @@
       <OutputNode v-bind="props" />
     </template>
     <template #node-approval="props">
-      <ApprovalNode v-bind="props" />
+      <ApprovalNode v-bind="props" @delete-node="handleDeleteNode" />
     </template>
-
     <template #edge-approval="props">
       <ApprovalEdge v-bind="props" @add-node-on-edge="handleAddNodeOnEdge" />
     </template>
@@ -63,6 +62,8 @@ const {
   onNodeClick,
   onPaneClick,
   fromObject,
+  findNode,
+  findEdge,
 } = useVueFlow()
 
 const ApprovalPanelRef = ref<InstanceType<typeof ApprovalPanel>>()
@@ -79,6 +80,7 @@ const nodes = ref<Node[]>([
     data: {
       label: '开始',
       type: NodeType.START,
+      target: 'END_NODE',
     },
   },
   {
@@ -90,6 +92,7 @@ const nodes = ref<Node[]>([
     data: {
       label: '流程结束',
       type: NodeType.END,
+      source: 'START_NODE',
     },
   },
 ])
@@ -115,13 +118,23 @@ const createNode = (data: EdgeEmitData) => {
     data: {
       label: choice?.name,
       type: choice?.value,
+      source: data.source,
+      target: data.target,
     },
   }
   const targetIndex = nodes.value.findIndex((item) => item.id === data.target)
   if (targetIndex > -1) {
     nodes.value.splice(targetIndex + 1, 0, node)
   }
+  findNode(data.source)!.data.target = node.id
+  findNode(data.target)!.data.source = node.id
   return node.id
+}
+const removeNode = (nodeId: string) => {
+  const nodeIndex = nodes.value.findIndex((item) => item.id === nodeId)
+  if (nodeIndex > -1) {
+    nodes.value.splice(nodeIndex, 1)
+  }
 }
 const createEdge = (sourceId: string, targetId: string) => {
   const edge: Edge = {
@@ -138,15 +151,34 @@ const removeEdge = (edgeId: string) => {
     edges.value.splice(edgeIndex, 1)
   }
 }
+const removeNodeEdges = (node: Node) => {
+  edges.value = edges.value.filter((item) => {
+    return !(item.source === node.id || item.target === node.id)
+  })
+}
+
+const toggleApprovalPanel = (data?: Node) => {
+  ApprovalPanelRef.value?.onVisible(isInteractive.value ? undefined : data)
+}
+
+/** 添加Node */
 const handleAddNodeOnEdge = (data: EdgeEmitData) => {
   const nodeId = createNode(data)
   createEdge(data.source, nodeId)
   createEdge(nodeId, data.target)
   removeEdge(data.edgeId)
 }
-const toggleApprovalPanel = (data?: Node) => {
-  ApprovalPanelRef.value?.onVisible(isInteractive.value ? undefined : data)
+/** 删除Node */
+const handleDeleteNode = (nodeId: string) => {
+  const node = findNode(nodeId)
+  removeNode(nodeId)
+  removeNodeEdges(node!)
+  createEdge(node!.data.source, node!.data.target)
+  findNode(node?.data.source)!.data.target = node!.data.target
+  findNode(node?.data.target)!.data.source = node!.data.source
+  toggleApprovalPanel()
 }
+
 const handleInteractionChange = (interactive: boolean) => {
   isInteractive.value = interactive
   toggleApprovalPanel()
@@ -156,8 +188,8 @@ const fetchData = async (id: number) => {
   const resp = await getFlowTemplate(id)
   if (resp.success) {
     flowData.value = resp.data
+    if (!resp.data.content) return
     const flowGraph = JSON.parse(resp.data.content)
-    if (!flowGraph) return
     nodes.value = flowGraph.nodes
     edges.value = flowGraph.edges
     await fromObject(flowGraph)
