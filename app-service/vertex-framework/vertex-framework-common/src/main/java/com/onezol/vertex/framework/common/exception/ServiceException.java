@@ -6,18 +6,15 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-/**
- * 服务异常: 此类型异常信息需要反馈给前端展示
- */
-@Schema(description = "服务异常")
+@Schema(name = "服务异常", description = "服务异常: 此类型异常信息需要反馈给前端展示")
 @Data
 @EqualsAndHashCode(callSuper = true)
 public abstract class ServiceException extends RuntimeException {
 
-    @Schema(description = "异常状态码", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(name = "异常状态码", requiredMode = Schema.RequiredMode.REQUIRED)
     private final Integer code;
 
-    @Schema(description = "异常信息", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(name = "异常信息", requiredMode = Schema.RequiredMode.REQUIRED)
     private final String message;
 
     public ServiceException(String message) {

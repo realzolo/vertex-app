@@ -5,30 +5,30 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+@Schema(name = "部门")
 @Data
 @EqualsAndHashCode(callSuper = true)
-@Schema(name = "Department", description = "部门")
 public class Department extends BaseDTO {
 
-    @Schema(description = "部门名称")
+    @Schema(name = "部门名称")
     private String name;
 
-    @Schema(description = "父级ID")
+    @Schema(name = "父级ID")
     private Long parentId;
 
-    @Schema(description = "祖级列表")
+    @Schema(name = "祖级列表")
     private String ancestors;
 
-    @Schema(description = "是否内置")
+    @Schema(name = "是否内置")
     private Boolean builtIn;
 
-    @Schema(description = "备注")
+    @Schema(name = "备注")
     private String remark;
 
-    @Schema(description = "排序号")
+    @Schema(name = "排序号")
     private Integer sort;
 
-    @Schema(description = "角色状态")
+    @Schema(name = "角色状态")
     private Integer status;
 
 }

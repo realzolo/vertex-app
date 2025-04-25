@@ -11,39 +11,37 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
-/**
- * 基于MyBatis-Plus的基础实体类
- */
+@Schema(name = "基础实体类", description = "基于MyBatis-Plus的基础实体类")
 @Data
 public abstract class BaseEntity implements Entity {
 
-    @Schema(description = "主键")
+    @Schema(name = "主键")
     @TableId(value = "id", type = IdType.ASSIGN_ID)
     private Long id;
 
-    @Schema(description = "创建人ID")
+    @Schema(name = "创建人ID")
     @TableField(value = "creator", fill = FieldFill.INSERT)
     private Long creator;
 
-    @Schema(description = "创建时间")
+    @Schema(name = "创建时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @TableField(value = "create_time", fill = FieldFill.INSERT)
     private LocalDateTime createTime = LocalDateTime.now();
 
-    @Schema(description = "更新人ID")
+    @Schema(name = "更新人ID")
     @TableField(value = "updater", fill = FieldFill.INSERT_UPDATE)
     private Long updater;
 
-    @Schema(description = "更新时间")
+    @Schema(name = "更新时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime = LocalDateTime.now();
 
-    @Schema(description = "版本号")
+    @Schema(name = "版本号")
     @Version
     @TableField("version")
     private Integer version;

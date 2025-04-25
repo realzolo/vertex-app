@@ -12,25 +12,25 @@ import org.springframework.context.annotation.Configuration;
 @ConditionalOnProperty(prefix = "spring.mqtt", name = "enabled", havingValue = "true")
 public class MQTTProperties {
 
-    @Schema(description = "MQTT Broker URL")
+    @Schema(name = "MQTT Broker URL")
     private String brokerUrl;
 
-    @Schema(description = "MQTT Client ID")
+    @Schema(name = "MQTT Client ID")
     private String clientId;
 
-    @Schema(description = "MQTT Username")
+    @Schema(name = "MQTT Username")
     private String username;
 
-    @Schema(description = "MQTT Password")
+    @Schema(name = "MQTT Password")
     private String password;
 
-    @Schema(description = "默认入站主题")
+    @Schema(name = "默认入站主题")
     private String inboundDefault = "/#";
 
-    @Schema(description = "默认出站主题")
+    @Schema(name = "默认出站主题")
     private String outboundDefault = "/app/default/outbound";
 
-    @Schema(description = "是否启用MQTT")
+    @Schema(name = "是否启用MQTT")
     private Boolean enabled = false;
 
 }

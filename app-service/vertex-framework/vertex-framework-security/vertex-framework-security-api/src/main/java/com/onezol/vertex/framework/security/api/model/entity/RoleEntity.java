@@ -7,29 +7,29 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+@Schema(name = "角色实体")
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName("vx_role")
-@Schema(name = "RoleEntity", description = "$!{table.comment}")
 public class RoleEntity extends BaseEntity {
 
-    @Schema(description = "角色名称")
+    @Schema(name = "角色名称")
     @TableField("name")
     private String name;
 
-    @Schema(description = "角色Code")
+    @Schema(name = "角色Code")
     @TableField("code")
     private String code;
 
-    @Schema(description = "排序号")
+    @Schema(name = "排序号")
     @TableField("sort")
     private Integer sort;
 
-    @Schema(description = "备注")
+    @Schema(name = "备注")
     @TableField("remark")
     private String remark;
 
-    @Schema(description = "角色状态(0: 正常, 1: 禁用)")
+    @Schema(name = "角色状态(0: 正常, 1: 禁用)")
     @TableField("status")
     private Integer status;
 

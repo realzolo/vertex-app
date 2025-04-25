@@ -5,47 +5,36 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.onezol.vertex.framework.common.constant.StringConstants;
 import com.onezol.vertex.framework.common.constant.enumeration.FileType;
 import com.onezol.vertex.framework.common.model.entity.BaseEntity;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.x.file.storage.core.FileInfo;
 
+@Schema(name = "文件记录")
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName("vx_file_record")
 public class FileRecordEntity extends BaseEntity {
-    /**
-     * 名称
-     */
+
+    @Schema(name = "名称")
     private String name;
 
-    /**
-     * 大小（字节）
-     */
+    @Schema(name = "大小（字节）")
     private Long size;
 
-    /**
-     * URL
-     */
+    @Schema(name = "文件URL")
     private String url;
 
-    /**
-     * 扩展名
-     */
+    @Schema(name = "文件扩展名")
     private String extension;
 
-    /**
-     * 类型
-     */
+    @Schema(name = "文件类型")
     private FileType type;
 
-    /**
-     * 缩略图大小（字节)
-     */
+    @Schema(name = "缩略图大小（字节）")
     private Long thumbnailSize;
 
-    /**
-     * 缩略图URL
-     */
+    @Schema(name = "缩略图URL")
     private String thumbnailUrl;
 
     /**

@@ -5,38 +5,38 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 
+@Schema(name = "用户查询参数")
 @Data
-@Schema(name = "用户查询参数", description = "用户查询参数")
 public class UserQueryPayload implements Payload {
 
-    @Schema(description = "用户ID")
+    @Schema(name = "用户ID")
     private Long id;
 
-    @Schema(description = "用户名")
+    @Schema(name = "用户名")
     private String username;
 
-    @Schema(description = "部门ID")
+    @Schema(name = "部门ID")
     private Long departmentId;
 
-    @Schema(description = "角色ID")
+    @Schema(name = "角色ID")
     private Long roleId;
 
-    @Schema(description = "用户昵称")
+    @Schema(name = "用户昵称")
     private String nickname;
 
-    @Schema(description = "用户姓名")
+    @Schema(name = "用户姓名")
     private String name;
 
-    @Schema(description = "性别")
+    @Schema(name = "性别")
     private Integer gender;
 
-    @Schema(description = "电话号码")
+    @Schema(name = "电话号码")
     private String phone;
 
-    @Schema(description = "电子邮箱")
+    @Schema(name = "电子邮箱")
     private String email;
 
-    @Schema(description = "账号状态")
+    @Schema(name = "账号状态")
     private Integer status;
 
 }

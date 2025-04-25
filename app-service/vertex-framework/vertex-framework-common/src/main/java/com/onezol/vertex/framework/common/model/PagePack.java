@@ -8,20 +8,20 @@ import lombok.Data;
 import java.util.Collections;
 import java.util.List;
 
-@Schema(description = "分页对象")
+@Schema(name = "分页对象")
 @Data
 public class PagePack<T> {
 
-    @Schema(description = "数据项", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(name = "数据项", requiredMode = Schema.RequiredMode.REQUIRED)
     private List<T> items;
 
-    @Schema(description = "总量", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(name = "总量", requiredMode = Schema.RequiredMode.REQUIRED)
     private long total;
 
-    @Schema(description = "当前页码", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(name = "当前页码", requiredMode = Schema.RequiredMode.REQUIRED)
     private long pageNumber;
 
-    @Schema(description = "当前页条数", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(name = "当前页条数", requiredMode = Schema.RequiredMode.REQUIRED)
     private long pageSize;
 
     public PagePack() {

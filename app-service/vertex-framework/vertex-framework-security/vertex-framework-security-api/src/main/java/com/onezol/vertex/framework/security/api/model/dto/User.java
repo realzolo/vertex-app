@@ -9,45 +9,45 @@ import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 
-@Schema(description = "用户信息")
+@Schema(name = "用户信息")
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class User extends BaseDTO {
 
-    @Schema(description = "用户名")
+    @Schema(name = "用户名")
     private String username;
 
-    @Schema(description = "用户昵称")
+    @Schema(name = "用户昵称")
     private String nickname;
 
-    @Schema(description = "用户简介")
+    @Schema(name = "用户简介")
     private String introduction;
 
-    @Schema(description = "用户头像")
+    @Schema(name = "用户头像")
     private String avatar;
 
-    @Schema(description = "性别")
+    @Schema(name = "性别")
     private Integer gender;
 
-    @Schema(description = "生日")
+    @Schema(name = "生日")
     private LocalDate birthday;
 
-    @Schema(description = "电话号码")
+    @Schema(name = "电话号码")
     private String phone;
 
-    @Schema(description = "电子邮箱")
+    @Schema(name = "电子邮箱")
     private String email;
 
-    @Schema(description = "部门")
+    @Schema(name = "部门")
     private SimpleDepartment department;
 
-    @Schema(description = "角色列表")
+    @Schema(name = "角色列表")
     private List<SimpleRole> roles = Collections.emptyList();
 
-    @Schema(description = "权限列表")
+    @Schema(name = "权限列表")
     private List<String> permissions = Collections.emptyList();
 
-    @Schema(description = "账号状态")
+    @Schema(name = "账号状态")
     private Integer status;
 
 }

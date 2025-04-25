@@ -7,17 +7,17 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+@Schema(name = "用户角色关联实体")
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName("vx_user_role")
-@Schema(name = "UserRoleEntity", description = "$!{table.comment}")
 public class UserRoleEntity extends BaseEntity {
 
-    @Schema(description = "用户ID")
+    @Schema(name = "用户ID")
     @TableField("user_id")
     private Long userId;
 
-    @Schema(description = "角色ID")
+    @Schema(name = "角色ID")
     @TableField("role_id")
     private Long roleId;
 
