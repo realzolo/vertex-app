@@ -29,9 +29,6 @@
                 <if test="param.nickname != null and param.nickname != ''">
                     AND u.nickname LIKE CONCAT('%', #{param.nickname}, '%')
                 </if>
-                <if test="param.name != null and param.name != ''">
-                    AND u.name LIKE CONCAT('%', #{param.name}, '%')
-                </if>
                 <if test="param.gender != null">
                     AND u.gender = #{gender}
                 </if>
@@ -39,7 +36,22 @@
                     AND u.email LIKE CONCAT('%', #{param.email}, '%')
                 </if>
                 <if test="param.status != null">
-                    AND u.status = #{status}
+                    AND u.status = #{param.status}
+                </if>
+                <if test="param.keyword != null and param.keyword !=''">
+                    AND (
+                    u.username LIKE CONCAT('%', #{param.keyword}, '%')
+                    OR
+                    u.nickname LIKE CONCAT('%', #{param.keyword}, '%')
+                    OR
+                    u.description LIKE CONCAT('%', #{param.keyword}, '%')
+                    )
+                </if>
+                <if test="param.startTime != null and param.startTime != ''">
+                    AND u.create_time >= #{param.startTime}
+                </if>
+                <if test="param.endTime != null and param.endTime != ''">
+                    AND u.create_time &lt;= #{param.endTime}
                 </if>
             </if>
         </where>

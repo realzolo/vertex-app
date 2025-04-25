@@ -21,7 +21,6 @@ import type { Gender, Status } from '@/types/global'
 import { GenderList } from '@/constant/common'
 import { useResetReactive } from '@/hooks'
 import { useDept, useRole } from '@/hooks/app'
-import { encryptByRsa } from '@/utils/encrypt'
 
 const emit = defineEmits<{
   (e: 'save-success'): void
@@ -136,7 +135,7 @@ const columns: ColumnItem[] = reactive([
   },
   {
     label: '描述',
-    field: 'remark',
+    field: 'description',
     type: 'textarea',
     span: 24,
   },

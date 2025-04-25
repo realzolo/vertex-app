@@ -14,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.util.Objects;
@@ -161,7 +160,7 @@ public class InitializationRunner implements ApplicationRunner {
         user.setPassword(passwordEncoder.encode(username));
         user.setNickname(nickname);
         user.setName(nickname);
-        user.setIntroduction("");
+        user.setDescription("");
         user.setAvatar("");
         user.setGender(Gender.MALE);
         user.setBirthday(LocalDate.now());

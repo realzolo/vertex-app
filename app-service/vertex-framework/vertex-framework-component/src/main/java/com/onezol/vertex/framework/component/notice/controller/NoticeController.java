@@ -62,7 +62,7 @@ public class NoticeController extends BaseController<NoticeEntity> {
             @RequestParam("pageNumber") Long pageNumber,
             @RequestParam("pageSize") Long pageSize
     ) {
-        Page<NoticeEntity> page = this.getPage(pageNumber, pageSize);
+        Page<NoticeEntity> page = this.getPageObject(pageNumber, pageSize);
         return ResponseHelper.buildSuccessfulResponse(noticeService.getPage(page));
     }
 

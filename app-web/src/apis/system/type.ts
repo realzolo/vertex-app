@@ -16,7 +16,7 @@ export interface UserResp {
   updateTime: string
   department: SimpleDepartment
   roles: Array<SimpleRole>
-  remark: string
+  description: string
 }
 
 export type UserDetailResp = UserResp & {
@@ -37,7 +37,6 @@ export interface UserQuery {
   status?: number
   createTime?: Array<string>
   departmentId?: number
-  sort: Array<string>
   userIds?: Array<number>
   roleId?: number
 }

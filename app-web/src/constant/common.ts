@@ -3,7 +3,7 @@ interface LabelValueItem { label: string, value: number, color?: string }
 /** @desc 状态 */
 export const DisEnableStatusList: LabelValueItem[] = [
   { label: '启用', value: 1, color: 'green' },
-  { label: '禁用', value: 2, color: 'red' },
+  { label: '禁用', value: 0, color: 'red' },
 ]
 
 /** @desc 性别 */

@@ -2,7 +2,8 @@ package com.onezol.vertex.framework.security.api.model.payload;
 
 import com.onezol.vertex.framework.common.model.payload.Payload;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 import java.util.List;
@@ -18,9 +19,6 @@ public class UserSavePayload implements Payload {
     @NotBlank(message = "用户名不能为空")
     @Size(min = 4, max = 20, message = "用户名长度必须在4-20位之间")
     private String username;
-
-    @Schema(name = "用户姓名")
-    private String name;
 
     @Schema(name = "用户昵称")
     @NotBlank(message = "用户昵称不能为空")
@@ -48,7 +46,7 @@ public class UserSavePayload implements Payload {
     private List<String> roleCodes;
 
     @Schema(name = "备注")
-    private String remark;
+    private String description;
 
     @Schema(name = "账户启用状态")
     private Integer status;

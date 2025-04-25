@@ -22,7 +22,7 @@ public abstract class BaseController<T extends Entity> {
      * @param pageSize   每页显示条数
      * @return 分页对象
      */
-    protected Page<T> getPage(Long pageNumber, Long pageSize) {
+    protected Page<T> getPageObject(Long pageNumber, Long pageSize) {
         if (Objects.isNull(pageNumber)) {
             pageNumber = DEFAULT_PAGE_NUMBER;
         }

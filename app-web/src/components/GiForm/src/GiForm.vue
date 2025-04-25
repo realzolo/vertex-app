@@ -21,9 +21,9 @@
             >
               <template v-if="item.type === 'range-picker'">
                 <DateRangePicker
-                  v-bind="(item.props as A.RangePickerInstance['$props'])"
+                  v-bind="(item.props as RangePickerInstance['$props'])"
                   :model-value="modelValue[item.field as keyof typeof modelValue]"
-                  @update:model-value="valueChange($event, item.field)"
+                  @update:model-value="updateValue($event, item.field)"
                 />
               </template>
               <component
@@ -83,7 +83,7 @@
 
 <script setup lang="ts">
 import { cloneDeep, omit } from 'lodash-es'
-import type { FormInstance, GridItemProps, GridProps } from '@arco-design/web-vue'
+import type { FormInstance, GridItemProps, GridProps, RangePickerInstance } from '@arco-design/web-vue'
 import type { ColumnItem } from './type'
 
 interface Props {
@@ -196,6 +196,13 @@ const getComponentBindProps = (item: ColumnItem) => {
 
 /** 表单数据更新  */
 const updateValue = (value: any, field: string) => {
+  // 处理时间范围选择器
+  if (Array.isArray(value) && field.split(',').length === 2) {
+    const [startTime, endTime] = field.split(',')
+    emit('update:modelValue', Object.assign(props.modelValue, { [startTime]: value[0], [endTime]: value[1] }))
+    return
+  }
+  // 其它类型
   emit('update:modelValue', Object.assign(props.modelValue, { [field]: value }))
 }
 

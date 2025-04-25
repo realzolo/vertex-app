@@ -7,7 +7,6 @@ import com.onezol.vertex.framework.common.mvc.controller.BaseController;
 import com.onezol.vertex.framework.security.api.model.dto.LoginUser;
 import com.onezol.vertex.framework.security.api.model.entity.LoginHistoryEntity;
 import com.onezol.vertex.framework.security.api.service.LoginHistoryService;
-import com.onezol.vertex.framework.security.api.service.LoginUserService;
 import com.onezol.vertex.framework.support.support.ResponseHelper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -28,7 +27,7 @@ public class LoginHistoryController extends BaseController<LoginHistoryEntity> {
     @Operation(summary = "获取登录用户分页列表")
     @GetMapping("/page")
     public GenericResponse<PagePack<LoginUser>> getLoginUserPage(@RequestParam("pageNumber") Long pageNumber, @RequestParam("pageSize") Long pageSize) {
-        Page<LoginHistoryEntity> page = this.getPage(pageNumber, pageSize);
+        Page<LoginHistoryEntity> page = this.getPageObject(pageNumber, pageSize);
         PagePack<LoginUser> loginUserPage = loginHistoryService.getLoginHistoryPage(page);
         return ResponseHelper.buildSuccessfulResponse(loginUserPage);
     }

@@ -12,8 +12,10 @@
         <span v-else>未知</span>
       </a-descriptions-item>
       <a-descriptions-item label="状态">
-        <a-tag v-if="dataDetail?.status === 1" color="green">启用</a-tag>
-        <a-tag v-else color="red">禁用</a-tag>
+        <a-tag v-if="dataDetail?.status === 0" color="green">正常</a-tag>
+        <a-tag v-if="dataDetail?.status === 1" color="orangered">锁定</a-tag>
+        <a-tag v-if="dataDetail?.status === 2" color="orangered">禁用</a-tag>
+        <a-tag v-if="dataDetail?.status === 3" color="orangered">过期</a-tag>
       </a-descriptions-item>
       <a-descriptions-item label="手机号">{{ dataDetail?.phone || '暂无' }}</a-descriptions-item>
       <a-descriptions-item label="邮箱">{{ dataDetail?.email || '暂无' }}</a-descriptions-item>
@@ -21,7 +23,7 @@
       <a-descriptions-item label="角色"><GiCellTags :data="dataDetail?.roles?.map(role => role.name) as string[]" /></a-descriptions-item>
       <a-descriptions-item label="创建时间">{{ dataDetail?.createTime }}</a-descriptions-item>
       <a-descriptions-item label="修改时间">{{ dataDetail?.updateTime }}</a-descriptions-item>
-      <a-descriptions-item label="描述" :span="2">{{ dataDetail?.remark }}</a-descriptions-item>
+      <a-descriptions-item label="描述" :span="2">{{ dataDetail?.description }}</a-descriptions-item>
     </a-descriptions>
   </a-drawer>
 </template>
@@ -46,8 +48,8 @@ const getDataDetail = async () => {
 // 打开
 const onOpen = async (id: string) => {
   dataId.value = id
-  await getDataDetail()
   visible.value = true
+  await getDataDetail()
 }
 
 defineExpose({ onOpen })

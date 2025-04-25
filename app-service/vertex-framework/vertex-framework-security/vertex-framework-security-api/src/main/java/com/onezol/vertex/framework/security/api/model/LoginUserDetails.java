@@ -34,7 +34,7 @@ public class LoginUserDetails extends User implements UserDetails {
         super.setId(entity.getId());
         super.setUsername(entity.getUsername());
         super.setNickname(entity.getNickname());
-        super.setIntroduction(entity.getIntroduction());
+        super.setDescription(entity.getDescription());
         super.setAvatar(entity.getAvatar());
         super.setGender(entity.getGender().getValue());
         super.setBirthday(entity.getBirthday());

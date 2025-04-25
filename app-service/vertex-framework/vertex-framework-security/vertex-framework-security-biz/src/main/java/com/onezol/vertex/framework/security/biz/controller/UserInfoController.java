@@ -90,13 +90,22 @@ public class UserInfoController extends BaseController<UserEntity> {
     public GenericResponse<PagePack<User>> getUserPage(
             @RequestParam(value = "pageNumber", required = false) Long pageNumber,
             @RequestParam(value = "pageSize", required = false) Long pageSize,
-            @RequestParam(value = "departmentId", required = false) Long departmentId
+            @RequestParam(value = "departmentId", required = false) Long departmentId,
+            @RequestParam(value = "keyword", required = false) String keyword,
+            @RequestParam(value = "status", required = false) Integer status,
+            @RequestParam(value = "startTime", required = false) String startTime,
+            @RequestParam(value = "endTime", required = false) String endTime
     ) {
         UserQueryPayload payload = new UserQueryPayload();
-
-        Page<UserEntity> page = this.getPage(pageNumber, pageSize);
         payload.setDepartmentId(departmentId);
-        return ResponseHelper.buildSuccessfulResponse(userInfoService.getUserPage(page, payload));
+        payload.setKeyword(keyword);
+        payload.setStatus(status);
+        payload.setStartTime(startTime);
+        payload.setEndTime(endTime);
+
+        Page<UserEntity> page = this.getPageObject(pageNumber, pageSize);
+        PagePack<User> pack = userInfoService.getUserPage(page, payload);
+        return ResponseHelper.buildSuccessfulResponse(pack);
     }
 
     @Operation(summary = "获取用户列表", description = "条件查询用户列表")
@@ -110,7 +119,7 @@ public class UserInfoController extends BaseController<UserEntity> {
     ) {
         UserQueryPayload payload = new UserQueryPayload();
 
-        Page<UserEntity> page = this.getPage(pageNumber, pageSize);
+        Page<UserEntity> page = this.getPageObject(pageNumber, pageSize);
         payload.setDepartmentId(departmentId);
         payload.setRoleId(roleId);
         return ResponseHelper.buildSuccessfulResponse(userInfoService.getUnboundRoleUserPage(page, payload));

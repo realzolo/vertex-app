@@ -82,7 +82,7 @@ public class RoleController extends BaseController<RoleEntity> {
             @RequestParam(value = "page", required = false) Long pageNumber,
             @RequestParam(value = "size", required = false) Long pageSize
     ) {
-        Page<RoleEntity> page = this.getPage(pageNumber, pageSize);
+        Page<RoleEntity> page = this.getPageObject(pageNumber, pageSize);
         Page<RoleEntity> quriedPage = roleService.page(page);
         PagePack<RoleEntity> pack = PagePack.from(quriedPage);
         return ResponseHelper.buildSuccessfulResponse(pack);

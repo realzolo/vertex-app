@@ -20,8 +20,8 @@ public class User extends BaseDTO {
     @Schema(name = "用户昵称")
     private String nickname;
 
-    @Schema(name = "用户简介")
-    private String introduction;
+    @Schema(name = "用户描述")
+    private String description;
 
     @Schema(name = "用户头像")
     private String avatar;

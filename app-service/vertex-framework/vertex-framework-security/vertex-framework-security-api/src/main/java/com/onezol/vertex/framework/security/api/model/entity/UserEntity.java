@@ -33,9 +33,9 @@ public class UserEntity extends LogicalBaseEntity {
     @TableField("name")
     private String name;
 
-    @Schema(name = "用户简介")
-    @TableField("introduction")
-    private String introduction;
+    @Schema(name = "用户描述")
+    @TableField("description")
+    private String description;
 
     @Schema(name = "用户头像")
     @TableField("avatar")

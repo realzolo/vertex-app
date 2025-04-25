@@ -313,7 +313,7 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
         entity.setPassword("");
         entity.setNickname("");
         entity.setName("张三");
-        entity.setIntroduction("");
+        entity.setDescription("");
         entity.setAvatar("");
         entity.setGender(Gender.MALE);
         entity.setBirthday(LocalDate.now());

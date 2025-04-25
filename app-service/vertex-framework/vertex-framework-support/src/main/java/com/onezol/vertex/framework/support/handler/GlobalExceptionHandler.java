@@ -4,14 +4,14 @@ import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.extension.toolkit.Db;
 import com.onezol.vertex.framework.common.constant.enumeration.ServiceStatus;
 import com.onezol.vertex.framework.common.exception.ServiceException;
-import com.onezol.vertex.framework.security.api.context.AuthenticationContext;
-import com.onezol.vertex.framework.support.support.ResponseHelper;
-import com.onezol.vertex.framework.security.api.model.dto.AuthUser;
 import com.onezol.vertex.framework.common.model.GenericResponse;
 import com.onezol.vertex.framework.common.model.SharedHttpServletRequest;
 import com.onezol.vertex.framework.common.model.entity.ExceptionLogEntity;
 import com.onezol.vertex.framework.common.util.JsonUtils;
+import com.onezol.vertex.framework.security.api.context.AuthenticationContext;
+import com.onezol.vertex.framework.security.api.model.dto.AuthUser;
 import com.onezol.vertex.framework.support.manager.async.AsyncTaskManager;
+import com.onezol.vertex.framework.support.support.ResponseHelper;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -83,7 +83,9 @@ public class GlobalExceptionHandler {
         // API异常日志持久化
         SharedHttpServletRequest request = SharedHttpServletRequest.of(req);
         AsyncTaskManager.getInstance().execute(() -> this.createExceptionLog(request, ex));
-        return ResponseHelper.buildFailedResponse(ServiceStatus.INTERNAL_SERVER_ERROR.getValue(), ex.getMessage());
+
+        String message = Objects.nonNull(ex.getMessage()) ? ex.getMessage() : ServiceStatus.INTERNAL_SERVER_ERROR.getDescription();
+        return ResponseHelper.buildFailedResponse(ServiceStatus.INTERNAL_SERVER_ERROR.getValue(), message);
     }
 
     /**

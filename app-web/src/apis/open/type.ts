@@ -15,7 +15,6 @@ export interface AppResp {
 
 export interface AppQuery {
   description?: string
-  sort: Array<string>
 }
 
 export interface AppPageQuery extends AppQuery, PageQuery {}

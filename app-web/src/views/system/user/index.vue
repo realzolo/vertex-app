@@ -5,7 +5,7 @@
     </template>
     <GiTable
       row-key="id"
-      :data="dataList"
+      :data="tableData"
       :columns="columns"
       :loading="loading"
       :scroll="{ x: '100%', y: '100%', minWidth: 1500 }"
@@ -22,13 +22,13 @@
           <template #icon><icon-plus /></template>
           <template #default>新增</template>
         </a-button>
-        <a-button v-permission="['system:user:import']" @click="onImport">
+        <a-button v-permission="['system:user:import']" @click="onImport" v-if="false">
           <template #icon><icon-upload /></template>
           <template #default>导入</template>
         </a-button>
       </template>
       <template #toolbar-right>
-        <a-button v-permission="['system:user:export']" @click="onExport">
+        <a-button v-permission="['system:user:export']" @click="onExport" v-if="false">
           <template #icon><icon-download /></template>
           <template #default>导出</template>
         </a-button>
@@ -93,9 +93,9 @@ import UserImportDrawer from './UserImportDrawer.vue'
 import UserDetailDrawer from './UserDetailDrawer.vue'
 import UserResetPwdModal from './UserResetPwdModal.vue'
 import UserUpdateRoleModal from './UserUpdateRoleModal.vue'
+import { useDict } from '@/hooks/app'
 import { deleteUser, exportUser, listUser } from '@/apis/system/user'
 import type { UserResp } from '@/apis/system/type'
-import { DisEnableStatusList } from '@/constant/common'
 import { useDownload, useResetReactive, useTable } from '@/hooks'
 import { isMobile } from '@/utils'
 import has from '@/utils/has'
@@ -103,15 +103,16 @@ import type { ColumnItem } from '@/components/GiForm'
 
 defineOptions({ name: 'SystemUser' })
 
+const { account_status } = useDict('account_status')
+
 const [queryForm, resetForm] = useResetReactive({
-  sort: ['t1.id,desc'],
   departmentId: -1,
 })
 const queryFormColumns: ColumnItem[] = reactive([
   {
     type: 'input',
     label: '用户名',
-    field: 'description',
+    field: 'keyword',
     span: { xs: 24, sm: 8, xxl: 8 },
     props: {
       placeholder: '用户名/昵称/描述',
@@ -123,20 +124,21 @@ const queryFormColumns: ColumnItem[] = reactive([
     field: 'status',
     span: { xs: 24, sm: 6, xxl: 8 },
     props: {
-      options: DisEnableStatusList,
+      options: account_status,
       placeholder: '全部状态',
     },
   },
-  {
-    type: 'range-picker',
-    label: '创建时间',
-    field: 'createTime',
-    span: { xs: 24, sm: 10, xxl: 8 },
-  },
+  // TODO: 重置对时间范围筛选失效
+  // {
+  //   type: 'range-picker',
+  //   label: '创建时间',
+  //   field: 'startTime,endTime',
+  //   span: { xs: 24, sm: 10, xxl: 8 },
+  // },
 ])
 
 const {
-  tableData: dataList,
+  tableData,
   loading,
   pagination,
   search,
@@ -168,9 +170,7 @@ const columns: TableInstance['columns'] = [
   { title: '邮箱', dataIndex: 'email', minWidth: 170, ellipsis: true, tooltip: true },
   { title: '系统内置', dataIndex: 'builtin', slotName: 'builtin', width: 100, align: 'center', show: false },
   { title: '描述', dataIndex: 'description', minWidth: 130, ellipsis: true, tooltip: true },
-  { title: '创建人', dataIndex: 'createUserString', width: 140, ellipsis: true, tooltip: true, show: false },
   { title: '创建时间', dataIndex: 'createTime', width: 180 },
-  { title: '修改人', dataIndex: 'updateUserString', width: 140, ellipsis: true, tooltip: true, show: false },
   { title: '修改时间', dataIndex: 'updateTime', width: 180, show: false },
   {
     title: '操作',
