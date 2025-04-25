@@ -13,7 +13,7 @@
           <span>
             <icon-user class="icon" />
             <span class="label">发布人：</span>
-            <span>{{ form?.createUserString }}</span>
+            <span>{{ form?.publisher?.name }}</span>
           </span>
           <a-divider direction="vertical" />
           <span>
@@ -51,10 +51,10 @@ const { id } = route.query
 const containerRef = ref<HTMLElement | null>()
 const [form, resetForm] = useResetReactive({
   title: '',
-  createUserString: '',
+  content: '',
   effectiveTime: '',
   createTime: '',
-  content: '',
+  updateTime: '',
 })
 
 // 回退
@@ -64,14 +64,14 @@ const onBack = () => {
 }
 
 // 打开
-const onOpen = async (id: string) => {
+const onOpen = async (id: number) => {
   resetForm()
   const { data } = await getNotice(id)
   Object.assign(form, data)
 }
 
 onMounted(() => {
-  onOpen(id as string)
+  onOpen(Number(id))
 })
 </script>
 

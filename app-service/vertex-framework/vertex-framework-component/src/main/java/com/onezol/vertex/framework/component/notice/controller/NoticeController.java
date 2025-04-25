@@ -4,16 +4,16 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.onezol.vertex.framework.common.model.GenericResponse;
 import com.onezol.vertex.framework.common.model.PagePack;
 import com.onezol.vertex.framework.common.mvc.controller.BaseController;
+import com.onezol.vertex.framework.common.util.Asserts;
 import com.onezol.vertex.framework.component.notice.model.Notice;
 import com.onezol.vertex.framework.component.notice.model.NoticeEntity;
+import com.onezol.vertex.framework.component.notice.model.NoticeQueryPayload;
 import com.onezol.vertex.framework.component.notice.model.NoticeSavePayload;
 import com.onezol.vertex.framework.component.notice.service.NoticeService;
 import com.onezol.vertex.framework.support.support.ResponseHelper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Objects;
 
 @Tag(name = "通知公告")
 @RestController
@@ -27,18 +27,16 @@ public class NoticeController extends BaseController<NoticeEntity> {
     }
 
     @Operation(summary = "新增通知公告")
-    @PostMapping("/create")
+    @PostMapping
     public GenericResponse<Void> create(@RequestBody NoticeSavePayload payload) {
         noticeService.createOrUpdate(payload);
         return ResponseHelper.buildSuccessfulResponse();
     }
 
-    @Operation(summary = "新增通知公告")
-    @PutMapping("/{id}")
-    public GenericResponse<Void> update(@PathVariable("id") Long id, @RequestBody NoticeSavePayload payload) {
-        if (Objects.isNull(payload.getId())) {
-            payload.setId(id);
-        }
+    @Operation(summary = "更新通知公告")
+    @PutMapping
+    public GenericResponse<Void> update(@RequestBody NoticeSavePayload payload) {
+        Asserts.notNull(payload.getId(), "ID不能为空");
         noticeService.createOrUpdate(payload);
         return ResponseHelper.buildSuccessfulResponse();
     }
@@ -60,10 +58,18 @@ public class NoticeController extends BaseController<NoticeEntity> {
     @GetMapping("/page")
     public GenericResponse<PagePack<Notice>> page(
             @RequestParam("pageNumber") Long pageNumber,
-            @RequestParam("pageSize") Long pageSize
+            @RequestParam("pageSize") Long pageSize,
+            @RequestParam(value = "title", required = false) String title,
+            @RequestParam(value = "type", required = false) Integer type
     ) {
+        NoticeQueryPayload queryPayload = new NoticeQueryPayload();
+        queryPayload.setTitle(title);
+        queryPayload.setType(type);
+
         Page<NoticeEntity> page = this.getPageObject(pageNumber, pageSize);
-        return ResponseHelper.buildSuccessfulResponse(noticeService.getPage(page));
+
+        PagePack<Notice> pack = noticeService.getPage(page, queryPayload);
+        return ResponseHelper.buildSuccessfulResponse(pack);
     }
 
 }

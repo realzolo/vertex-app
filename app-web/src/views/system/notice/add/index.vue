@@ -86,6 +86,7 @@ const [form, resetForm] = useResetReactive({
   terminateTime: '',
   content: '',
   noticeScope: 1,
+  noticeUsers: [] as number[],
 })
 
 const columns: ColumnItem[] = reactive([
@@ -145,7 +146,7 @@ const columns: ColumnItem[] = reactive([
 ])
 
 // 修改
-const onUpdate = async (id: string) => {
+const onUpdate = async (id: number) => {
   resetForm()
   const res = await getNotice(id)
   Object.assign(form, res.data)
@@ -164,9 +165,10 @@ const save = async () => {
   try {
     loading.value = true
     // 通知范围 所有人 去除指定用户
-    form.noticeUsers = form.noticeScope === 1 ? null : form.noticeUsers
+    form.noticeUsers = form.noticeScope === 1 ? [] : form.noticeUsers
     if (isUpdate.value) {
-      await updateNotice(form, id as string)
+      form.id = Number(id)
+      await updateNotice(form)
       Message.success('修改成功')
     } else {
       await addNotice(form)
@@ -195,7 +197,7 @@ const reset = () => {
 }
 
 // 用户选择回调
-const onSelectUser = (value: string[]) => {
+const onSelectUser = (value: number[]) => {
   form.noticeUsers = value
   formRef.value?.formRef?.validateField('noticeUsers')
 }
@@ -204,11 +206,11 @@ const userList = ref<DictionaryEntry[]>([])
 onMounted(async () => {
   // 当id存在与type为update时，执行修改操作
   if (id && isUpdate.value) {
-    await onUpdate(id as string)
+    await onUpdate(Number(id))
   }
   // 获取所有用户
   const { data } = await listUserDict()
-  userList.value = data.map((item) => ({ ...item, value: `${item.value}` }))
+  userList.value = data
 })
 </script>
 

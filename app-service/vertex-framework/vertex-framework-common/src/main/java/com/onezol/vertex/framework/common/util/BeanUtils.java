@@ -31,7 +31,7 @@ public final class BeanUtils extends org.springframework.beans.BeanUtils {
             Constructor<T> constructor = targetType.getDeclaredConstructor();
             T newInstance = constructor.newInstance();
             copier.copy(source, newInstance, (value, target, context) -> {
-                if (value instanceof StandardEnumeration<?> && target != StandardEnumeration.class) {
+                if (value instanceof StandardEnumeration<?> && target.getSuperclass() != StandardEnumeration.class) {
                     return ((StandardEnumeration<?>) value).getValue();
                 }
                 if (Arrays.stream(target.getInterfaces()).toList().contains(StandardEnumeration.class) && !(value instanceof StandardEnumeration<?>)) {

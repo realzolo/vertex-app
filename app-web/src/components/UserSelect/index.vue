@@ -93,13 +93,12 @@ const emit = defineEmits<{
 
 interface Props {
   multiple?: boolean
-  value: string | string[]
+  value: number | number[]
   roleId?: number
 }
 
 // 查询表单
 const queryForm = reactive<UserQuery>({
-  sort: ['t1.createTime,desc', 't1.id,desc'],
   roleId: props.roleId,
 })
 
@@ -152,16 +151,16 @@ const reset = () => {
 }
 
 // 选中用户 ID
-const selectedKeys = ref<string[]>([])
+const selectedKeys = ref<number[]>([])
 // 选中用户信息
-const selectedData = ref<Map<string, UserResp>>(new Map())
+const selectedData = ref<Map<number, UserResp>>(new Map())
 
 const emitSelectUser = () => {
   emit('select-user', selectedKeys.value)
 }
 
 // 单选
-const onSelect = (rowKeys: string[], rowKey: string, record: UserResp) => {
+const onSelect = (rowKeys: number[], rowKey: number, record: UserResp) => {
   if (props.multiple) {
     if (rowKeys.includes(rowKey)) {
       // 选中时，添加到 Map

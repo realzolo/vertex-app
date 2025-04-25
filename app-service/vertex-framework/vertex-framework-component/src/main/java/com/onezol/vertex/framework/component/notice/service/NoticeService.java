@@ -1,28 +1,35 @@
 package com.onezol.vertex.framework.component.notice.service;
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.onezol.vertex.framework.common.exception.InvalidParameterException;
+import com.onezol.vertex.framework.common.model.DataPairRecord;
 import com.onezol.vertex.framework.common.model.PagePack;
 import com.onezol.vertex.framework.common.util.BeanUtils;
+import com.onezol.vertex.framework.common.util.StringUtils;
 import com.onezol.vertex.framework.component.notice.enumeration.NoticeStatus;
 import com.onezol.vertex.framework.component.notice.mapper.NoticeMapper;
 import com.onezol.vertex.framework.component.notice.model.Notice;
 import com.onezol.vertex.framework.component.notice.model.NoticeEntity;
+import com.onezol.vertex.framework.component.notice.model.NoticeQueryPayload;
 import com.onezol.vertex.framework.component.notice.model.NoticeSavePayload;
+import com.onezol.vertex.framework.security.api.model.dto.User;
+import com.onezol.vertex.framework.security.api.service.UserInfoService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 
 @Service
 public class NoticeService {
 
     private final NoticeMapper noticeMapper;
+    private final UserInfoService userInfoService;
 
-    public NoticeService(NoticeMapper noticeMapper) {
+    public NoticeService(NoticeMapper noticeMapper, UserInfoService userInfoService) {
         this.noticeMapper = noticeMapper;
+        this.userInfoService = userInfoService;
     }
 
     /**
@@ -54,19 +61,35 @@ public class NoticeService {
         noticeMapper.deleteById(id);
     }
 
+    /**
+     * 根据ID获取通知公告
+     *
+     * @param id 通知公告ID
+     */
     public Notice getById(Long id) {
         NoticeEntity entity = noticeMapper.selectById(id);
-        return BeanUtils.toBean(entity, Notice.class);
+        Notice notice = BeanUtils.toBean(entity, Notice.class);
+        Long creatorId = entity.getCreator();
+        User user = userInfoService.getUserInfo(creatorId);
+        DataPairRecord userInfo = new DataPairRecord(user.getId(), user.getNickname());
+        notice.setPublisher(userInfo);
+        return notice;
     }
 
-    public PagePack<Notice> getPage(Page<NoticeEntity> page) {
-        Page<NoticeEntity> quriedPage = noticeMapper.selectPage(page, null);
-        List<Integer> types = quriedPage.getRecords().stream().map(identity -> identity.getType().getValue()).toList();
+    /**
+     * 获取通知公告列表
+     */
+    public PagePack<Notice> getPage(Page<NoticeEntity> page, NoticeQueryPayload queryPayload) {
+        Page<NoticeEntity> quriedPage = noticeMapper.selectPage(
+                page,
+                Wrappers.<NoticeEntity>lambdaQuery()
+                        .eq(queryPayload.getId() != null, NoticeEntity::getId, queryPayload.getId())
+                        .like(StringUtils.isNotBlank(queryPayload.getTitle()), NoticeEntity::getTitle, queryPayload.getTitle())
+                        .eq(Objects.nonNull(queryPayload.getType()), NoticeEntity::getType, queryPayload.getType())
+        );
         PagePack<Notice> pack = PagePack.from(quriedPage, Notice.class);
         Collection<Notice> items = pack.getItems();
-        int index = 0;
         for (Notice item : items) {
-            item.setType(types.get(index++));
             item.setStatus(calculateStatus(item.getEffectiveTime(), item.getTerminateTime()));
         }
         return pack;

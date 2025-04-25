@@ -63,7 +63,7 @@ const { notice_type, notice_status } = useDict('notice_type', 'notice_status')
 
 const router = useRouter()
 const queryForm = reactive<NoticeQuery>({
-  sort: ['id,desc'],
+  title: '',
 })
 
 const {
@@ -107,7 +107,7 @@ const reset = () => {
 
 // 删除
 const onDelete = (record: NoticeResp) => {
-  return handleDelete(() => deleteNotice(record.id), {
+  return handleDelete(() => deleteNotice(record!.id), {
     content: `是否确定删除公告「${record.title}」？`,
     showModal: true,
   })

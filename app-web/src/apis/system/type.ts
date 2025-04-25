@@ -1,6 +1,6 @@
 /** 用户类型 */
 export interface UserResp {
-  id: string
+  id: number
   username: string
   nickname: string
   avatar: string
@@ -44,7 +44,7 @@ export interface UserPageQuery extends UserQuery, PageQuery {
 
 /** 角色类型 */
 export interface RoleResp {
-  id: string
+  id: number
   name: string
   code: string
   sort: number
@@ -81,12 +81,10 @@ export interface RoleUserResp {
 
 export interface RoleQuery {
   description?: string
-  sort: Array<string>
 }
 
 export interface RoleUserQuery {
   description?: string
-  sort: Array<string>
 }
 
 export interface RoleUserPageQuery extends RoleUserQuery, PageQuery {
@@ -180,25 +178,23 @@ export interface DictItemPageQuery extends DictItemQuery, PageQuery {
 
 /** 公告类型 */
 export interface NoticeResp {
-  id?: string
+  id: number
   title?: string
   content: string
   status?: number
   type?: string
   effectiveTime?: string
   terminateTime?: string
-  noticeScope?: number
-  noticeUsers?: Array<string>
-  createUserString?: string
+  noticeScope: number
+  noticeUsers: Array<number>
+  publisher?: DataPairRecord
   createTime?: string
-  updateUserString?: string
   updateTime?: string
 }
 
 export interface NoticeQuery {
   title?: string
   type?: string
-  sort: Array<string>
 }
 
 export interface NoticePageQuery extends NoticeQuery, PageQuery {
