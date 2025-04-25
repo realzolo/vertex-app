@@ -1,9 +1,8 @@
 package com.onezol.vertex.framework.security.biz.service;
 
+import com.onezol.vertex.framework.common.model.DataPairRecord;
 import com.onezol.vertex.framework.security.api.model.LoginUserDetails;
 import com.onezol.vertex.framework.security.api.model.dto.Department;
-import com.onezol.vertex.framework.security.api.model.dto.SimpleDepartment;
-import com.onezol.vertex.framework.security.api.model.dto.SimpleRole;
 import com.onezol.vertex.framework.security.api.model.entity.RoleEntity;
 import com.onezol.vertex.framework.security.api.model.entity.UserEntity;
 import com.onezol.vertex.framework.security.api.service.PermissionService;
@@ -52,17 +51,17 @@ public class SecurityUserDetailsServiceImpl implements UserDetailsService {
         }
 
         // 获取用户部门
-        SimpleDepartment simpleDepartment = null;
+        DataPairRecord dept = null;
         Department department = userDepartmentService.getUserDepartment(userEntity.getId());
         if (department != null) {
-            simpleDepartment = SimpleDepartment.of(department.getId(), department.getName());
+            dept = new DataPairRecord(department.getId(), department.getName());
         }
 
         // 获取用户角色
         List<RoleEntity> roleEntities = userRoleService.getUserRoles(userEntity.getId());
-        List<SimpleRole> roles = new ArrayList<>();
+        List<DataPairRecord> roles = new ArrayList<>();
         for (RoleEntity roleEntity : roleEntities) {
-            SimpleRole role = SimpleRole.of(roleEntity.getId(), roleEntity.getName(), roleEntity.getCode());
+            DataPairRecord role = new DataPairRecord(roleEntity.getId(), roleEntity.getName(), roleEntity.getCode(), null);
             roles.add(role);
         }
 
@@ -71,7 +70,7 @@ public class SecurityUserDetailsServiceImpl implements UserDetailsService {
         Set<String> rolePermissionKeys = permissionService.getRolePermissionKeys(roleIds);
         List<String> permissions = rolePermissionKeys.stream().toList();
 
-        return new LoginUserDetails(userEntity, simpleDepartment, roles, permissions);
+        return new LoginUserDetails(userEntity, dept, roles, permissions);
     }
 
 }

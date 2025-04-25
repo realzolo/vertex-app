@@ -18,9 +18,9 @@ interface DictionaryEntry {
 interface DataPairRecord {
   id: string
   name: string
-  code: string
-  value: string | number
-  description: string
+  code?: string
+  value?: string | number
+  description?: string
 }
 
 declare global{

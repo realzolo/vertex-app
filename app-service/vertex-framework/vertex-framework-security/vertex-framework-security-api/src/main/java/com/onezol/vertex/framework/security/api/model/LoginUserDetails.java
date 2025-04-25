@@ -2,8 +2,7 @@ package com.onezol.vertex.framework.security.api.model;
 
 import com.alibaba.fastjson2.annotation.JSONField;
 import com.onezol.vertex.framework.common.constant.enumeration.AccountStatus;
-import com.onezol.vertex.framework.security.api.model.dto.SimpleDepartment;
-import com.onezol.vertex.framework.security.api.model.dto.SimpleRole;
+import com.onezol.vertex.framework.common.model.DataPairRecord;
 import com.onezol.vertex.framework.security.api.model.dto.User;
 import com.onezol.vertex.framework.security.api.model.entity.UserEntity;
 import lombok.Data;
@@ -30,7 +29,7 @@ public class LoginUserDetails extends User implements UserDetails {
     @JSONField(serialize = false)
     private LocalDate pwdExpDate;
 
-    public LoginUserDetails(UserEntity entity, SimpleDepartment department, List<SimpleRole> roles, List<String> permissions) {
+    public LoginUserDetails(UserEntity entity, DataPairRecord department, List<DataPairRecord> roles, List<String> permissions) {
         super.setId(entity.getId());
         super.setUsername(entity.getUsername());
         super.setNickname(entity.getNickname());

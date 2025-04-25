@@ -3,17 +3,17 @@ package com.onezol.vertex.framework.security.biz.controller;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.onezol.vertex.framework.common.constant.enumeration.DisEnableStatus;
-import com.onezol.vertex.framework.common.model.DictionaryEntry;
-import com.onezol.vertex.framework.common.model.GenericResponse;
-import com.onezol.vertex.framework.common.model.PagePack;
-import com.onezol.vertex.framework.common.model.TreeNode;
+import com.onezol.vertex.framework.common.model.*;
 import com.onezol.vertex.framework.common.mvc.controller.BaseController;
 import com.onezol.vertex.framework.common.util.BeanUtils;
 import com.onezol.vertex.framework.common.util.TreeUtils;
 import com.onezol.vertex.framework.security.api.annotation.RestrictAccess;
 import com.onezol.vertex.framework.security.api.context.AuthenticationContext;
 import com.onezol.vertex.framework.security.api.enumeration.PermissionTypeEnum;
-import com.onezol.vertex.framework.security.api.model.dto.*;
+import com.onezol.vertex.framework.security.api.model.dto.AuthUser;
+import com.onezol.vertex.framework.security.api.model.dto.Permission;
+import com.onezol.vertex.framework.security.api.model.dto.Role;
+import com.onezol.vertex.framework.security.api.model.dto.User;
 import com.onezol.vertex.framework.security.api.model.entity.PermissionEntity;
 import com.onezol.vertex.framework.security.api.model.entity.RoleEntity;
 import com.onezol.vertex.framework.security.api.model.entity.RolePermissionEntity;
@@ -48,8 +48,8 @@ public class RoleController extends BaseController<RoleEntity> {
     @GetMapping("/route")
     public GenericResponse<List<TreeNode>> route() {
         AuthUser authUser = AuthenticationContext.get();
-        List<SimpleRole> roles = authUser.getRoles();
-        Set<Long> roleIds = roles.stream().map(SimpleRole::getId).collect(Collectors.toSet());
+        List<DataPairRecord> roles = authUser.getRoles();
+        Set<Long> roleIds = roles.stream().map(DataPairRecord::getId).collect(Collectors.toSet());
         Set<Long> permissionIds = rolePermissionService.list(
                 Wrappers.<RolePermissionEntity>lambdaQuery()
                         .select(RolePermissionEntity::getPermissionId)

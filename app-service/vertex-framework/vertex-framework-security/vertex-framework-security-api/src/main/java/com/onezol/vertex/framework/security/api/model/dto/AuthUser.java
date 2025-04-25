@@ -1,5 +1,6 @@
 package com.onezol.vertex.framework.security.api.model.dto;
 
+import com.onezol.vertex.framework.common.model.DataPairRecord;
 import lombok.Builder;
 import lombok.Data;
 
@@ -15,9 +16,9 @@ public class AuthUser {
 
     private String nickname;
 
-    private SimpleDepartment department;
+    private DataPairRecord department;
 
-    private List<SimpleRole> roles;
+    private List<DataPairRecord> roles;
 
     private List<String> permissions;
 

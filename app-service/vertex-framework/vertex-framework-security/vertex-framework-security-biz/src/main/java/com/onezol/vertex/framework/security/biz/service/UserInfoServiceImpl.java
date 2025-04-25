@@ -7,20 +7,19 @@ import com.onezol.vertex.framework.common.constant.enumeration.AccountStatus;
 import com.onezol.vertex.framework.common.constant.enumeration.SystemRoleType;
 import com.onezol.vertex.framework.common.exception.InvalidParameterException;
 import com.onezol.vertex.framework.common.exception.RuntimeServiceException;
+import com.onezol.vertex.framework.common.model.DataPairRecord;
 import com.onezol.vertex.framework.common.model.DictionaryEntry;
 import com.onezol.vertex.framework.common.model.PagePack;
 import com.onezol.vertex.framework.common.mvc.service.BaseServiceImpl;
 import com.onezol.vertex.framework.common.util.BeanUtils;
-import com.onezol.vertex.framework.security.biz.mapper.UserMapper;
 import com.onezol.vertex.framework.security.api.model.dto.Department;
-import com.onezol.vertex.framework.security.api.model.dto.SimpleDepartment;
-import com.onezol.vertex.framework.security.api.model.dto.SimpleRole;
 import com.onezol.vertex.framework.security.api.model.dto.User;
 import com.onezol.vertex.framework.security.api.model.entity.RoleEntity;
 import com.onezol.vertex.framework.security.api.model.entity.UserEntity;
 import com.onezol.vertex.framework.security.api.model.payload.UserQueryPayload;
 import com.onezol.vertex.framework.security.api.model.payload.UserSavePayload;
 import com.onezol.vertex.framework.security.api.service.*;
+import com.onezol.vertex.framework.security.biz.mapper.UserMapper;
 import com.onezol.vertex.framework.support.cache.RedisCache;
 import com.onezol.vertex.framework.support.support.RedisKeyHelper;
 import org.springframework.stereotype.Service;
@@ -61,9 +60,10 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
         User user = BeanUtils.toBean(entity, User.class);
         // 获取用户角色
         List<RoleEntity> roleEntities = userRoleService.getUserRoles(userId);
-        List<SimpleRole> roles = new ArrayList<>();
+        List<DataPairRecord> roles = new ArrayList<>();
         for (RoleEntity roleEntity : roleEntities) {
-            roles.add(SimpleRole.of(roleEntity.getId(), roleEntity.getName(), roleEntity.getCode()));
+            DataPairRecord roleRecord = new DataPairRecord(roleEntity.getId(), roleEntity.getName(), roleEntity.getCode());
+            roles.add(roleRecord);
         }
         user.setRoles(roles);
         // 获取用户权限
@@ -79,7 +79,8 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
 
         Department department = userDepartmentService.getUserDepartment(userId);
         if (department != null) {
-            user.setDepartment(SimpleDepartment.of(department.getId(), department.getName()));
+            DataPairRecord departmentRecord = new DataPairRecord(department.getId(), department.getName());
+            user.setDepartment(departmentRecord);
         }
         return user;
     }
@@ -178,15 +179,17 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
         for (User user : users) {
             List<RoleEntity> userRoles = userRoleService.getUserRoles(user.getId());
             if (userRoles != null && !userRoles.isEmpty()) {
-                List<SimpleRole> roles = new ArrayList<>();
+                List<DataPairRecord> roles = new ArrayList<>();
                 for (RoleEntity roleEntity : userRoles) {
-                    roles.add(SimpleRole.of(roleEntity.getId(), roleEntity.getName(), roleEntity.getCode()));
+                    DataPairRecord roleRecord = new DataPairRecord(roleEntity.getId(), roleEntity.getName(), roleEntity.getCode());
+                    roles.add(roleRecord);
                 }
                 user.setRoles(roles);
             }
             Department department = userDepartmentService.getUserDepartment(user.getId());
             if (department != null) {
-                user.setDepartment(SimpleDepartment.of(department.getId(), department.getName()));
+                DataPairRecord departmentRecord = new DataPairRecord(department.getId(), department.getName());
+                user.setDepartment(departmentRecord);
             }
         }
 
@@ -205,15 +208,17 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
         for (User user : users) {
             List<RoleEntity> userRoles = userRoleService.getUserRoles(user.getId());
             if (userRoles != null && !userRoles.isEmpty()) {
-                List<SimpleRole> roles = new ArrayList<>();
+                List<DataPairRecord> roles = new ArrayList<>();
                 for (RoleEntity roleEntity : userRoles) {
-                    roles.add(SimpleRole.of(roleEntity.getId(), roleEntity.getName(), roleEntity.getCode()));
+                    DataPairRecord roleRecord = new DataPairRecord(roleEntity.getId(), roleEntity.getName(), roleEntity.getCode());
+                    roles.add(roleRecord);
                 }
                 user.setRoles(roles);
             }
             Department department = userDepartmentService.getUserDepartment(user.getId());
             if (department != null) {
-                user.setDepartment(SimpleDepartment.of(department.getId(), department.getName()));
+                DataPairRecord departmentRecord = new DataPairRecord(department.getId(), department.getName());
+                user.setDepartment(departmentRecord);
             }
         }
 

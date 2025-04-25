@@ -1,5 +1,6 @@
 package com.onezol.vertex.framework.security.api.model.dto;
 
+import com.onezol.vertex.framework.common.model.DataPairRecord;
 import com.onezol.vertex.framework.common.model.dto.BaseDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -39,10 +40,10 @@ public class User extends BaseDTO {
     private String email;
 
     @Schema(name = "部门")
-    private SimpleDepartment department;
+    private DataPairRecord department;
 
     @Schema(name = "角色列表")
-    private List<SimpleRole> roles = Collections.emptyList();
+    private List<DataPairRecord> roles = Collections.emptyList();
 
     @Schema(name = "权限列表")
     private List<String> permissions = Collections.emptyList();

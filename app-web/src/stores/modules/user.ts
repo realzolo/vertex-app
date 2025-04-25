@@ -16,7 +16,6 @@ import {
 } from '@/apis'
 import { clearToken, getToken, setToken } from '@/utils/auth'
 import { resetHasRouteFlag } from '@/router/guard'
-import type { SimpleRole } from '@/types/api'
 
 const storeSetup = () => {
   const userInfo = reactive<UserInfo>({
@@ -41,7 +40,7 @@ const storeSetup = () => {
 
   const token = ref(getToken() || '')
   const pwdExpiredShow = ref<boolean>(true)
-  const roles = ref<Array<SimpleRole>>([]) // 当前用户角色
+  const roles = ref<Array<DataPairRecord>>([]) // 当前用户角色
   const permissions = ref<string[]>([]) // 当前角色权限标识集合
 
   // 重置token

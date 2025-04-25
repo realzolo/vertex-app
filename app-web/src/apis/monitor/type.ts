@@ -1,5 +1,3 @@
-import type { PageQuery } from '@/types/api'
-
 /** 在线用户类型 */
 export interface OnlineUserResp {
   id: number

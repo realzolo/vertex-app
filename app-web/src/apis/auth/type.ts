@@ -1,5 +1,3 @@
-import type { SimpleDepartment, SimpleRole } from '@/types/api'
-
 /** 用户类型 */
 export interface UserInfo {
   id: string
@@ -12,8 +10,8 @@ export interface UserInfo {
   pwdResetTime: string
   pwdExpired: boolean
   registrationDate: string
-  department: SimpleDepartment | null
-  roles: Array<SimpleRole>
+  department: DataPairRecord | null
+  roles: Array<DataPairRecord>
   permissions: string[]
 }
 

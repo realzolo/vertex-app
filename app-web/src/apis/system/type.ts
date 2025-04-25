@@ -1,5 +1,3 @@
-import type { PageQuery, SimpleDepartment, SimpleRole } from '@/types/api'
-
 /** 用户类型 */
 export interface UserResp {
   id: string
@@ -14,8 +12,8 @@ export interface UserResp {
   builtin?: boolean
   createTime: string
   updateTime: string
-  department: SimpleDepartment
-  roles: Array<SimpleRole>
+  department: DataPairRecord
+  roles: Array<DataPairRecord>
   description: string
 }
 
@@ -76,8 +74,8 @@ export interface RoleUserResp {
   status: 0 | 1
   builtin?: boolean
   departmentId: string
-  department: SimpleDepartment
-  roles: Array<SimpleRole>
+  department: DataPairRecord
+  roles: Array<DataPairRecord>
   disabled: boolean
 }
 
