@@ -8,6 +8,12 @@
     :node-types="nodeTypes"
     :edge-types="edgeTypes"
   >
+    <template #node-input="props">
+      <InputNode v-bind="props" />
+    </template>
+    <template #node-output="props">
+      <OutputNode v-bind="props" />
+    </template>
     <template #node-approval="props">
       <ApprovalNode v-bind="props" />
     </template>
@@ -37,10 +43,12 @@ import { Controls } from '@vue-flow/controls'
 import { MiniMap } from '@vue-flow/minimap'
 import { type EdgeEmitData, NodeType } from '../type'
 import Header from './components/Header/index.vue'
+import InputNode from './InputNode.vue'
+import OutputNode from './OutputNode.vue'
 import ApprovalNode from './ApprovalNode.vue'
 import ApprovalEdge from './ApprovalEdge.vue'
 import ApprovalPanel from './ApprovalPanel.vue'
-import { FLOW_NODE_CHOICES } from './support'
+import { FLOW_NODE_OPTIONS } from './support'
 import { getFlowTemplate } from '@/apis/approval'
 
 const nodeTypes = {
@@ -64,21 +72,21 @@ const flowData = ref()
 const nodes = ref<Node[]>([
   {
     id: 'START_NODE',
-    label: '流程开始',
+    label: '开始',
     type: 'input',
     sourcePosition: Position.Right,
     position: { x: 500, y: 520 },
     data: {
-      label: '流程开始',
+      label: '开始',
       type: NodeType.START,
     },
   },
   {
     id: 'END_NODE',
-    label: '流程结束',
+    label: '结束',
     type: 'output',
     targetPosition: Position.Left,
-    position: { x: 500, y: 520 },
+    position: { x: 1500, y: 520 },
     data: {
       label: '流程结束',
       type: NodeType.END,
@@ -96,9 +104,10 @@ const edges = ref<Edge[]>([
 ])
 
 const createNode = (data: EdgeEmitData) => {
-  const choice = FLOW_NODE_CHOICES.find((item) => item.value === data.type)
+  const choice = FLOW_NODE_OPTIONS.find((item) => item.value === data.type)
   const node: Node = {
     id: `APPROVAL_NODE_${nodes.value.length - 2}`,
+    label: choice?.name,
     type: 'approval',
     sourcePosition: Position.Right,
     targetPosition: Position.Left,

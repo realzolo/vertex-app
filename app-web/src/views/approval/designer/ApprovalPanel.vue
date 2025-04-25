@@ -6,7 +6,7 @@
     <div class="flow-panel-content">
       <a-space direction="vertical" size="large">
         <a-radio-group v-model="form.strategy">
-          <a-grid :cols="3" :colGap="24" :rowGap="16">
+          <a-grid :cols="3" :col-gap="24" :row-gap="16">
             <a-grid-item v-for="item in STRATEGIES" :key="item.value">
               <a-radio :value="item.value">{{ item.label }}</a-radio>
             </a-grid-item>
@@ -151,20 +151,22 @@ defineExpose({ onVisible })
   top: 24px;
   width: 480px;
   height: calc(100vh - 174px);
+  min-height: 798px;
   border-radius: 4px;
   background-color: var(--color-bg-3);
   border: 1px solid var(--color-border);
-  //box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.05);
-  box-shadow: 1px 3px 32px 0 rgba(50, 73, 198, 0.08), 6px 16px 48px 0 rgba(50, 73, 198, 0.12);
+  box-shadow: 0 1px 4px 1px rgba(0, 0, 0, 0.08);
   user-select: none;
 
   .flow-panel-content {
     height: calc(100% - 56px);
+
     .form {
       .form-item {
         .item.label {
           color: var(--color-text-2);
         }
+
         .item-help {
           font-weight: 400;
           color: var(--color-text-3);

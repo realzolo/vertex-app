@@ -1,3 +1,5 @@
+import approvalIcon from './assets/icon-node-approver.svg?raw'
+import ccIcon from './assets/icon-node-cc.svg?raw'
 import { NodeType } from '@/views/approval/type'
 
 export const STRATEGIES = [
@@ -25,7 +27,7 @@ export const EMPTY_PERSON_STRATEGY = [
   { label: '自动转交管理员', value: 2 },
   { label: '指定人员审批', value: 3 },
 ]
-export const FLOW_NODE_CHOICES = [
-  { name: '审批人', value: NodeType.APPROVER },
-  { name: '抄送人', value: NodeType.CC },
+export const FLOW_NODE_OPTIONS = [
+  { name: '审批人', value: NodeType.APPROVER, icon: approvalIcon, background: '#875BF7' },
+  { name: '抄送人', value: NodeType.CC, icon: ccIcon, background: '#06AED4' },
 ]

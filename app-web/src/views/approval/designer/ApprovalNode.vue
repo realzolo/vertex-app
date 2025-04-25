@@ -1,119 +1,34 @@
 <template>
-  <div class="vue-flow__node-default approval-node-default">
-    <div v-if="data.type !== NodeType.END" class="approval-node approval-process">
-      <Handle type="target" :position="Position.Left" />
-      <div class="node-body">
-        <div class="node-title" :style="{ background: COLOR_MAP[data.type] }">
-          <span>{{ data.label }}</span>
-        </div>
-        <div class="node-content">
-          <div class="text">{{ data.user?.name }}</div>
-          <div class="icon">
-            <a-button shape="circle" type="text">
-              <icon-right />
-            </a-button>
-          </div>
-        </div>
-      </div>
-      <Handle type="source" :position="Position.Right" />
-    </div>
-
-    <div v-if="data.type === NodeType.END" class="approval-node approval-end">
-      <span>流程结束</span>
-    </div>
+  <Handle type="source" :position="Position.Right" />
+  <Handle type="target" :position="Position.Left" />
+  <div class="flow-node-content">
+    <div v-if="data.type === NodeType.APPROVER" class="node-icon" style="background-color: #875BF7" v-html="approvalIcon" />
+    <div v-if="data.type === NodeType.CC" class="node-icon" style="background-color: #06AED4" v-html="ccIcon" />
+    <span class="node-title">{{ label }}</span>
   </div>
 </template>
 
 <script setup lang="ts">
 import { Handle, type NodeProps, Position } from '@vue-flow/core'
-import { NodeType } from '../type'
+import approvalIcon from './assets/icon-node-approver.svg?raw'
+import ccIcon from './assets/icon-node-cc.svg?raw'
+import { NodeType } from '@/views/approval/type'
 
 defineOptions({ name: 'ApprovalNode' })
 
 defineProps<NodeProps>()
-
-const COLOR_MAP = {
-  0: 'rgb(87, 106, 149)',
-  1: 'rgb(251, 96, 45)',
-  2: 'rgb(50, 150, 250)',
-  3: 'rgb(254, 162, 73)',
-}
 </script>
 
 <style scoped lang="scss">
-.approval-node-default {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  width: unset;
-  background-color: var(--color-bg-2);
-  border: none;
-  border-radius: 4px;
-  padding: 0;
-  align-items: center;
-
-  .approval-node.approval-process {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    .node-body {
-      width: 220px;
-      min-height: 72px;
-      background: #FFFFFF;
-      border-radius: 4px;
-      border: 1px solid var(--color-border);
-
-      .node-title {
-        display: flex;
-        align-items: center;
-        height: 24px;
-        line-height: 24px;
-        font-size: 12px;
-        color: #FFFFFF;
-        border-radius: 4px 4px 0 0;
-        text-align: left;
-        padding-left: 16px;
-        padding-right: 30px;
-      }
-
-      .node-content {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        position: relative;
-        font-size: 14px;
-        padding: 16px;
-
-        .text {
-          display: block;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          width: 140px;
-          text-align: left;
-        }
-
-        .icon {
-          width: 20px;
-          cursor: pointer;
-        }
-      }
-    }
-  }
-
-  .approval-node.approval-end {
-    border-radius: 24px;
-    padding: 10px 28px;
-    font-size: 14px;
-    background: rgba(23, 26, 29, 0.03);
-    color: var(--color-text-2);
-  }
-}
-
-:deep(.vue-flow__node-approval.selected .approval-node-default:not(:has(.approval-node.approval-end))) {
-  box-shadow: 1px 3px 32px 0 rgba(50,73,198,.08),6px 16px 48px 0 rgba(50,73,198,.12);
+.flow-node-content {
+  padding: 0 8px !important;
 }
 </style>
 
+<style lang="scss">
+@use './styles/flow-node.scss' as *;
+
+.vue-flow__node.selectable:hover {
+  box-shadow: 0 1px 4px 1px rgba(0, 0, 0, 0.08);
+}
+</style>
