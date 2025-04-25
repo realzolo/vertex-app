@@ -3,6 +3,7 @@ package com.onezol.vertex.framework.security.biz.service;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.onezol.vertex.framework.common.constant.CacheKey;
 import com.onezol.vertex.framework.common.constant.enumeration.Gender;
+import com.onezol.vertex.framework.common.exception.InvalidParameterException;
 import com.onezol.vertex.framework.common.exception.RuntimeServiceException;
 import com.onezol.vertex.framework.common.mvc.service.BaseServiceImpl;
 import com.onezol.vertex.framework.common.util.Asserts;
@@ -34,8 +35,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
-import static com.onezol.vertex.framework.common.constant.enumeration.ServiceStatus.BAD_REQUEST;
 
 @Service
 public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity> implements UserAuthService {
@@ -103,14 +102,14 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
     @Transactional
     public AuthIdentity register(UserSavePayload payload) {
 //        if (StringUtils.isAnyBlank(payload.getUsername(), payload.getPassword(), payload.getEmail(), payload.getVerifyCode())) {
-//            throw new RuntimeServiceException("用户名、密码、邮箱、验证码不能为空");
+//            throw new InvalidParameterException("用户名、密码、邮箱、验证码不能为空");
 //        }
 //
 //        // 验证码校验 TODO: Redis验证码校验
 //        String verifyCode = payload.getVerifyCode();
 ////        if (StringUtils.isBlank(verifyCode) || verifyCode.length() != 6 || !verifyCode.equalsIgnoreCase(redisCache.getCacheObject("verifyCode:" + captchaKey))) {
 //        if (StringUtils.isBlank(verifyCode) || verifyCode.length() != 6) {
-//            throw new RuntimeServiceException("验证码错误");
+//            throw new InvalidParameterException("验证码错误");
 //        }
 
         UserEntity entity = this.newBlankUser();
@@ -127,9 +126,9 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
         );
         if (Objects.nonNull(entityFromDB)) {
             if (Objects.equals(entityFromDB.getUsername(), entity.getUsername())) {
-                throw new RuntimeServiceException("用户名已存在");
+                throw new InvalidParameterException("用户名已存在");
             } else if (Objects.equals(entityFromDB.getEmail(), entity.getEmail())) {
-                throw new RuntimeServiceException("邮箱已存在");
+                throw new InvalidParameterException("邮箱已存在");
             }
         }
 
@@ -161,17 +160,17 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
     public AuthIdentity loginByIdPassword(String username, String password, String sessionId, String captcha) throws RuntimeServiceException {
         // 参数校验
         if (StringUtils.isBlank(sessionId)) {
-            throw new RuntimeServiceException(BAD_REQUEST, "会话ID不能为空");
+            throw new InvalidParameterException("会话ID不能为空");
         }
         if (StringUtils.isAnyBlank(username, password)) {
-            throw new RuntimeServiceException(BAD_REQUEST, "用户名或密码不能为空");
+            throw new InvalidParameterException("用户名或密码不能为空");
         }
 
         // 校验验证码
         String captchaRedisKey = RedisKeyHelper.buildCacheKey(CacheKey.CAPTCHA, sessionId);
         String captchaInRedis = redisCache.getCacheObject(captchaRedisKey);
         if (StringUtils.isBlank(captcha) || !captcha.equalsIgnoreCase(captchaInRedis)) {
-            throw new RuntimeServiceException("验证码错误");
+            throw new InvalidParameterException("验证码错误");
         }
 
         // 调用 SpringSecurity 的 AuthenticationManager 处理登录验证
@@ -241,11 +240,11 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
 
         // 用户唯一性校验
         if (Objects.nonNull(this.getUserByUsername(username))) {
-            throw new RuntimeServiceException(BAD_REQUEST, "用户名已存在");
+            throw new InvalidParameterException("用户名已存在");
         }
         if (Objects.nonNull(payload.getEmail())) {
             if (Objects.nonNull(this.getUserByEmail(email))) {
-                throw new RuntimeServiceException(BAD_REQUEST, "邮箱已存在");
+                throw new InvalidParameterException("邮箱已存在");
             }
         }
 
@@ -253,7 +252,7 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
         if (Objects.nonNull(payload.getDepartmentId())) {
             DepartmentEntity departmentEntity = departmentService.getById(payload.getDepartmentId());
             if (Objects.isNull(departmentEntity)) {
-                throw new RuntimeServiceException(BAD_REQUEST, "部门不存在");
+                throw new InvalidParameterException("部门不存在");
             }
         }
 
@@ -265,7 +264,7 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
                             .in(RoleEntity::getCode, roleCodes)
             );
             if (roleEntities.size() != roleCodes.size()) {
-                throw new RuntimeServiceException(BAD_REQUEST, "角色不存在");
+                throw new InvalidParameterException("角色不存在");
             }
         }
 

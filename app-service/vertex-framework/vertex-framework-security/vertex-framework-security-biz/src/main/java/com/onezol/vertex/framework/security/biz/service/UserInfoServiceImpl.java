@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.onezol.vertex.framework.common.constant.CacheKey;
 import com.onezol.vertex.framework.common.constant.enumeration.AccountStatus;
 import com.onezol.vertex.framework.common.constant.enumeration.SystemRoleType;
+import com.onezol.vertex.framework.common.exception.InvalidParameterException;
 import com.onezol.vertex.framework.common.exception.RuntimeServiceException;
 import com.onezol.vertex.framework.common.model.DictionaryEntry;
 import com.onezol.vertex.framework.common.model.PagePack;
@@ -55,7 +56,7 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
     public User getUserInfo(long userId) {
         UserEntity entity = this.getById(userId);
         if (Objects.isNull(entity)) {
-            throw new RuntimeServiceException("用户不存在");
+            throw new InvalidParameterException("用户不存在");
         }
         User user = BeanUtils.toBean(entity, User.class);
         // 获取用户角色
@@ -107,7 +108,7 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
     @Override
     public User updateUserInfo(UserSavePayload payload) {
         if (Objects.isNull(payload) || Objects.isNull(payload.getId())) {
-            throw new RuntimeServiceException("用户信息不可为空");
+            throw new InvalidParameterException("用户信息不可为空");
         }
         UserEntity entity = BeanUtils.toBean(payload, UserEntity.class);
         boolean ok = this.updateById(entity);
@@ -132,11 +133,11 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
     @Override
     public void deleteUser(Long userId) {
         if (Objects.isNull(userId)) {
-            throw new RuntimeServiceException("用户ID不可为空");
+            throw new InvalidParameterException("用户ID不可为空");
         }
         UserEntity user = this.getById(userId);
         if (Objects.isNull(user)) {
-            throw new RuntimeServiceException("用户不存在");
+            throw new InvalidParameterException("用户不存在");
         }
 
         // 判断当前用户是否满足删除条件：...

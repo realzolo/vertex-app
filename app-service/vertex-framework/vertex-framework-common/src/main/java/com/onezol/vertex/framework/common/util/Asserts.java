@@ -1,8 +1,6 @@
 package com.onezol.vertex.framework.common.util;
 
-import com.onezol.vertex.framework.common.constant.enumeration.ServiceStatus;
-import com.onezol.vertex.framework.common.exception.RuntimeServiceException;
-import com.onezol.vertex.framework.common.exception.ServiceException;
+import com.onezol.vertex.framework.common.exception.InvalidParameterException;
 
 import java.util.Collection;
 
@@ -20,7 +18,7 @@ public final class Asserts {
      */
     public static void notNull(Object object, String message) {
         if (object == null) {
-            throw generateException(message);
+            throw new InvalidParameterException(message);
         }
     }
 
@@ -32,7 +30,7 @@ public final class Asserts {
      */
     public static void notEmpty(String str, String message) {
         if (str == null || str.isEmpty()) {
-            throw generateException(message);
+            throw new InvalidParameterException(message);
         }
     }
 
@@ -44,7 +42,7 @@ public final class Asserts {
      */
     public static void notEmpty(Collection<?> collection, String message) {
         if (collection == null || collection.isEmpty()) {
-            throw generateException(message);
+            throw new InvalidParameterException(message);
         }
     }
 
@@ -56,33 +54,12 @@ public final class Asserts {
      */
     public static void notBlank(String str, String message) {
         if (str == null || str.isBlank()) {
-            throw generateException(message);
+            throw new InvalidParameterException(message);
         }
     }
 
     public static void notNull(Object object) {
         notNull(object, null);
-    }
-
-    public static void notEmpty(String str) {
-        notEmpty(str, null);
-    }
-
-    public static void notEmpty(Collection<?> collection) {
-        notEmpty(collection, null);
-    }
-
-    public static void notBlank(String str) {
-        notBlank(str, null);
-    }
-
-
-    private static ServiceException generateException() {
-        return new RuntimeServiceException(ServiceStatus.BAD_REQUEST);
-    }
-
-    private static ServiceException generateException(String message) {
-        return new RuntimeServiceException(ServiceStatus.BAD_REQUEST, message);
     }
 
 }

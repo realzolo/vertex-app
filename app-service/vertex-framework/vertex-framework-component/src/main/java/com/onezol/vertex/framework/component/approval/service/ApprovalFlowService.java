@@ -2,8 +2,7 @@ package com.onezol.vertex.framework.component.approval.service;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.onezol.vertex.framework.common.constant.enumeration.ServiceStatus;
-import com.onezol.vertex.framework.common.exception.RuntimeServiceException;
+import com.onezol.vertex.framework.common.exception.InvalidParameterException;
 import com.onezol.vertex.framework.common.model.DictionaryEntry;
 import com.onezol.vertex.framework.common.model.PagePack;
 import com.onezol.vertex.framework.common.util.BeanUtils;
@@ -83,7 +82,7 @@ public class ApprovalFlowService {
     public void bindFlowToBusinessType(ApprovalFlowBindingRelationPayload payload) {
         ApprovalFlowTemplateEntity flowTemplate = approvalFlowTemplateMapper.selectById(payload.getFlowTemplateId());
         if (flowTemplate == null) {
-            throw new RuntimeServiceException(ServiceStatus.BAD_REQUEST, "流程模板不存在");
+            throw new InvalidParameterException("流程模板不存在");
         }
         Long count = approvalFlowBindingRelationMapper.selectCount(
                 Wrappers.<ApprovalFlowBindingRelationEntity>lambdaQuery()
@@ -91,7 +90,7 @@ public class ApprovalFlowService {
                         .eq(ApprovalFlowBindingRelationEntity::getFlowTemplateId, payload.getFlowTemplateId())
         );
         if (count > 0) {
-            throw new RuntimeServiceException(ServiceStatus.BAD_REQUEST, "该业务已绑定流程模板");
+            throw new InvalidParameterException("该业务已绑定流程模板");
         }
 
         ApprovalFlowBindingRelationEntity relationEntity = new ApprovalFlowBindingRelationEntity();

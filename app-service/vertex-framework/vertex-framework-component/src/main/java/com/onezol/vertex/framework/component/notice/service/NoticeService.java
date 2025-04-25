@@ -1,8 +1,7 @@
 package com.onezol.vertex.framework.component.notice.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.onezol.vertex.framework.common.constant.enumeration.ServiceStatus;
-import com.onezol.vertex.framework.common.exception.RuntimeServiceException;
+import com.onezol.vertex.framework.common.exception.InvalidParameterException;
 import com.onezol.vertex.framework.common.model.PagePack;
 import com.onezol.vertex.framework.common.util.BeanUtils;
 import com.onezol.vertex.framework.component.notice.enumeration.NoticeStatus;
@@ -36,7 +35,7 @@ public class NoticeService {
         LocalDateTime terminateTime = payload.getTerminateTime();
         // 生效时间 不能大于 终止时间
         if (effectiveTime != null && terminateTime != null && effectiveTime.isAfter(terminateTime)) {
-            throw new RuntimeServiceException(ServiceStatus.BAD_REQUEST, "生效时间不能大于终止时间");
+            throw new InvalidParameterException("生效时间不能大于终止时间");
         }
         NoticeEntity entity = BeanUtils.toBean(payload, NoticeEntity.class);
         if (entity.getId() == null) {

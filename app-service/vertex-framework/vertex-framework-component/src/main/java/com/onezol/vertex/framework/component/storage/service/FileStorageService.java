@@ -2,7 +2,6 @@ package com.onezol.vertex.framework.component.storage.service;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.onezol.vertex.framework.common.constant.StringConstants;
-import com.onezol.vertex.framework.common.constant.enumeration.ServiceStatus;
 import com.onezol.vertex.framework.common.constant.enumeration.FileType;
 import com.onezol.vertex.framework.common.exception.RuntimeServiceException;
 import com.onezol.vertex.framework.component.storage.annotation.StorageType;
@@ -89,7 +88,7 @@ public class FileStorageService {
         try {
             uploadPretreatment.upload();
         } catch (Exception e) {
-            throw new RuntimeServiceException(ServiceStatus.INTERNAL_SERVER_ERROR, "文件上传失败");
+            throw new RuntimeServiceException("文件上传失败");
         }
 
         if (Objects.equals(storageStrategy.getType(), StorageType.S3)) {
@@ -119,6 +118,7 @@ public class FileStorageService {
 
     /**
      * 加载存储策略
+     *
      * @param strategy 存储策略
      */
     private StorageStrategyEntity loadStrategy(StorageStrategyEntity strategy) {

@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.onezol.vertex.framework.common.constant.CacheKey;
-import com.onezol.vertex.framework.common.exception.RuntimeServiceException;
+import com.onezol.vertex.framework.common.exception.InvalidParameterException;
 import com.onezol.vertex.framework.common.model.PagePack;
 import com.onezol.vertex.framework.common.util.DateUtils;
 import com.onezol.vertex.framework.security.api.enumeration.LoginType;
@@ -81,7 +81,7 @@ public class LoginUserServiceImpl implements LoginUserService {
     @Override
     public void removeLoginUser(Long userId) {
         if (userId == null) {
-            throw new RuntimeServiceException("用户ID不能为空");
+            throw new InvalidParameterException("用户ID不能为空");
         }
 
         String subject = String.valueOf(userId);

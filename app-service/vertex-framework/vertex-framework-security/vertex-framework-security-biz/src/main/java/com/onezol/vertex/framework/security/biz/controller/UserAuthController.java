@@ -1,6 +1,5 @@
 package com.onezol.vertex.framework.security.biz.controller;
 
-import com.onezol.vertex.framework.common.constant.enumeration.ServiceStatus;
 import com.onezol.vertex.framework.common.model.GenericResponse;
 import com.onezol.vertex.framework.common.util.StringUtils;
 import com.onezol.vertex.framework.security.api.annotation.RestrictAccess;
@@ -42,16 +41,16 @@ public class UserAuthController {
     @PostMapping("/login")
     public GenericResponse<AuthIdentity> loginByIdPassword(@RequestBody @Valid UserLoginPayload payload) {
         if (StringUtils.isBlank(payload.getUuid())) {
-            return ResponseHelper.buildFailedResponse(ServiceStatus.BAD_REQUEST, "会话ID不能为空");
+            return ResponseHelper.buildFailedResponse("会话ID不能为空");
         }
         if (StringUtils.isAnyBlank(payload.getUsername(), payload.getPassword())) {
-            return ResponseHelper.buildFailedResponse(ServiceStatus.BAD_REQUEST, "用户名或密码不能为空");
+            return ResponseHelper.buildFailedResponse("用户名或密码不能为空");
         }
         AuthIdentity userAuthenticationVO = userAuthService.loginByIdPassword(payload.getUsername(), payload.getPassword(), payload.getUuid(), payload.getCaptcha());
 
         return Objects.nonNull(userAuthenticationVO) ?
                 ResponseHelper.buildSuccessfulResponse(userAuthenticationVO) :
-                ResponseHelper.buildFailedResponse(ServiceStatus.BAD_REQUEST, "请使用用户名或邮箱登录");
+                ResponseHelper.buildFailedResponse("请使用用户名或邮箱登录");
     }
 
     @Operation(summary = "用户登出", description = "用户登出")
