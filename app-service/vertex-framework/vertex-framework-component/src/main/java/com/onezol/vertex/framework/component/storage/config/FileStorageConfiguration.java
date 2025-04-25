@@ -24,7 +24,7 @@ public class FileStorageConfiguration {
     }
 
     @Bean
-    public WebMvcConfigurer fileStorageWebMvcConfigurer() {
+    public WebMvcConfigurer localStorageWebMvcConfigurer() {
         StorageStrategyEntity localStorageStrategy = this.getLocalStorageStrategy();
         if (Objects.isNull(localStorageStrategy)) {
             return null;
