@@ -104,9 +104,8 @@ import type { ColumnItem } from '@/components/GiForm'
 defineOptions({ name: 'SystemUser' })
 
 const { account_status } = useDict('account_status')
-
+const departmentId = ref()
 const [queryForm, resetForm] = useResetReactive({
-  departmentId: -1,
 })
 const queryFormColumns: ColumnItem[] = reactive([
   {
@@ -143,7 +142,7 @@ const {
   pagination,
   search,
   handleDelete,
-} = useTable((page) => listUser({ ...queryForm, ...page }), { immediate: false })
+} = useTable((page) => listUser({ ...queryForm, ...page, departmentId: departmentId.value }), { immediate: false })
 const columns: TableInstance['columns'] = [
   {
     title: '序号',
@@ -210,7 +209,7 @@ const onExport = () => {
 
 // 根据选中部门查询
 const handleSelectDept = (keys: Array<any>) => {
-  queryForm.departmentId = keys.length === 1 ? keys[0] : undefined
+  departmentId.value = keys.length === 1 ? keys[0] : undefined
   search()
 }
 

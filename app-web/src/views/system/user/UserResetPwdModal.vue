@@ -26,7 +26,7 @@ const emit = defineEmits<{
 }>()
 
 const { width } = useWindowSize()
-const dataId = ref('')
+const dataId = ref()
 const visible = ref(false)
 const formRef = ref<InstanceType<typeof GiForm>>()
 
@@ -57,7 +57,7 @@ const save = async () => {
 }
 
 // 打开
-const onOpen = (id: string) => {
+const onOpen = (id: number) => {
   reset()
   dataId.value = id
   visible.value = true
