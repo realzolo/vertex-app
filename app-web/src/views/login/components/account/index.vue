@@ -125,12 +125,23 @@ const handleLogin = async () => {
     const { redirect, ...othersQuery } = router.currentRoute.value.query
     const { rememberMe } = loginConfig.value
     loginConfig.value.username = rememberMe ? form.username : ''
-    await router.push({
-      path: (redirect as string) || '/',
-      query: {
-        ...othersQuery,
-      },
-    })
+    if (redirect) {
+      const url = new URL(decodeURIComponent(redirect as string), window.location.origin)
+      await router.replace({
+        path: url.pathname,
+        query: {
+          ...Object.fromEntries(url.searchParams.entries()),
+          ...othersQuery,
+        },
+      })
+    } else {
+      await router.replace({
+        path: '/',
+        query: {
+          ...othersQuery,
+        },
+      })
+    }
     Message.success('欢迎使用')
   } catch (error) {
     console.error(error)
