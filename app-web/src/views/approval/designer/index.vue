@@ -40,6 +40,7 @@ import { Panel, VueFlow, useVueFlow } from '@vue-flow/core'
 import { Background } from '@vue-flow/background'
 import { Controls } from '@vue-flow/controls'
 import { MiniMap } from '@vue-flow/minimap'
+import { Message } from '@arco-design/web-vue'
 import { type EdgeEmitData, NodeType } from '../type'
 import Header from './components/Header/index.vue'
 import InputNode from './InputNode.vue'
@@ -47,7 +48,7 @@ import OutputNode from './OutputNode.vue'
 import ApprovalNode from './ApprovalNode.vue'
 import ApprovalEdge from './ApprovalEdge.vue'
 import ApprovalPanel from './ApprovalPanel.vue'
-import { FLOW_NODE_OPTIONS } from './support'
+import { FLOW_NODE_OPTIONS, initialEdges, initialNodes } from './support'
 import { getFlowTemplate } from '@/apis/approval'
 
 const nodeTypes = {
@@ -63,48 +64,13 @@ const {
   onPaneClick,
   fromObject,
   findNode,
-  findEdge,
 } = useVueFlow()
 
 const ApprovalPanelRef = ref<InstanceType<typeof ApprovalPanel>>()
-const isInteractive = ref<boolean>(false)
+const nodes = ref<Node[]>([])
+const edges = ref<Edge[]>([])
 const flowData = ref()
-
-const nodes = ref<Node[]>([
-  {
-    id: 'START_NODE',
-    label: '开始',
-    type: 'input',
-    sourcePosition: Position.Right,
-    position: { x: 500, y: 520 },
-    data: {
-      label: '开始',
-      type: NodeType.START,
-      target: 'END_NODE',
-    },
-  },
-  {
-    id: 'END_NODE',
-    label: '结束',
-    type: 'output',
-    targetPosition: Position.Left,
-    position: { x: 1500, y: 520 },
-    data: {
-      label: '流程结束',
-      type: NodeType.END,
-      source: 'START_NODE',
-    },
-  },
-])
-
-const edges = ref<Edge[]>([
-  {
-    id: 'START_NODE->END_NODE',
-    source: 'START_NODE',
-    target: 'END_NODE',
-    type: 'approval',
-  },
-])
+const isInteractive = ref<boolean>(false)
 
 const createNode = (data: EdgeEmitData) => {
   const choice = FLOW_NODE_OPTIONS.find((item) => item.value === data.type)
@@ -188,7 +154,11 @@ const fetchData = async (id: number) => {
   const resp = await getFlowTemplate(id)
   if (resp.success) {
     flowData.value = resp.data
-    if (!resp.data.content) return
+    if (!resp.data.content) {
+      nodes.value = initialNodes
+      edges.value = initialEdges
+      return
+    }
     const flowGraph = JSON.parse(resp.data.content)
     nodes.value = flowGraph.nodes
     edges.value = flowGraph.edges
@@ -196,9 +166,11 @@ const fetchData = async (id: number) => {
   }
 }
 onMounted(() => {
-  if (route.query.id) {
-    fetchData(Number(route.query.id))
+  if (!route.query.id) {
+    Message.error('未找到流程模板')
+    return
   }
+  fetchData(Number(route.query.id))
 })
 
 onNodeDragStop((event) => {

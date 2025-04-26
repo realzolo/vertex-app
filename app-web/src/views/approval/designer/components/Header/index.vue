@@ -12,12 +12,12 @@
           alt="logo"
         />
       </div>
-      <div class="flow-info">
+      <div v-show="!!flowData.name" class="flow-info">
         <div class="flow-name">
           <span>{{ flowData.name }}</span>
         </div>
         <div class="flow-desc">
-          <span>{{ flowData.remark }}</span>
+          <span>{{ flowData.remark || '审批流程' }}</span>
         </div>
       </div>
       <div v-show="!!flowData.status" class="flow-extra">

@@ -1,6 +1,43 @@
+import { Position } from '@vue-flow/core'
 import approvalIcon from './assets/icon-node-approver.svg?raw'
 import ccIcon from './assets/icon-node-cc.svg?raw'
 import { NodeType } from '@/views/approval/type'
+
+export const initialNodes = [
+  {
+    id: 'START_NODE',
+    label: '开始',
+    type: 'input',
+    sourcePosition: Position.Right,
+    position: { x: 500, y: 520 },
+    data: {
+      label: '开始',
+      type: NodeType.START,
+      target: 'END_NODE',
+    },
+  },
+  {
+    id: 'END_NODE',
+    label: '结束',
+    type: 'output',
+    targetPosition: Position.Left,
+    position: { x: 1500, y: 520 },
+    data: {
+      label: '流程结束',
+      type: NodeType.END,
+      source: 'START_NODE',
+    },
+  },
+]
+
+export const initialEdges = [
+  {
+    id: 'START_NODE->END_NODE',
+    source: 'START_NODE',
+    target: 'END_NODE',
+    type: 'approval',
+  },
+]
 
 export const STRATEGIES = [
   { label: '指定成员', value: 1 },
