@@ -84,7 +84,7 @@ public class PermissionController {
 
     @DeleteMapping("/{id}")
     public GenericResponse<Void> deletePermission(@PathVariable("id") Long id) {
-        boolean ok = permissionService.removeById(id);
+        boolean ok = permissionService.deletePermission(id);
         if (!ok) {
             return ResponseHelper.buildFailedResponse("删除权限失败");
         }

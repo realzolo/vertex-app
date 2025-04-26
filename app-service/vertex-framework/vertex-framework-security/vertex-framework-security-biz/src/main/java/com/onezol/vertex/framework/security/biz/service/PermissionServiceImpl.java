@@ -2,11 +2,13 @@ package com.onezol.vertex.framework.security.biz.service;
 
 import com.onezol.vertex.framework.common.mvc.service.BaseServiceImpl;
 import com.onezol.vertex.framework.common.util.StringUtils;
-import com.onezol.vertex.framework.security.biz.mapper.PermissionMapper;
 import com.onezol.vertex.framework.security.api.model.entity.PermissionEntity;
 import com.onezol.vertex.framework.security.api.service.PermissionService;
+import com.onezol.vertex.framework.security.api.service.RolePermissionService;
+import com.onezol.vertex.framework.security.biz.mapper.PermissionMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -17,17 +19,10 @@ import java.util.Set;
 @Service
 public class PermissionServiceImpl extends BaseServiceImpl<PermissionMapper, PermissionEntity> implements PermissionService {
 
-    /**
-     * 获取用户权限
-     *
-     * @param roleId 角色ID
-     */
-    @Override
-    public String getRolePermissions(Long roleId) {
-        if (roleId == null) {
-            return "";
-        }
-        return this.baseMapper.queryRolePermission(roleId);
+    private final RolePermissionService rolePermissionService;
+
+    public PermissionServiceImpl(RolePermissionService rolePermissionService) {
+        this.rolePermissionService = rolePermissionService;
     }
 
     /**
@@ -51,7 +46,7 @@ public class PermissionServiceImpl extends BaseServiceImpl<PermissionMapper, Per
     }
 
     /**
-     * 获取用户权限
+     * 获取权限ID集合
      *
      * @param roleIds 角色ID
      */
@@ -66,5 +61,18 @@ public class PermissionServiceImpl extends BaseServiceImpl<PermissionMapper, Per
             permissionIds.add(permission.getId());
         }
         return permissionIds;
+    }
+
+    /**
+     * 删除权限
+     *
+     * @param id 权限ID
+     */
+    @Override
+    @Transactional
+    public boolean deletePermission(Long id) {
+        this.removeById(id);
+        rolePermissionService.removePermissionByPermissionId(id);
+        return true;
     }
 }
