@@ -8,19 +8,24 @@ import com.onezol.vertex.framework.common.model.PagePack;
 import com.onezol.vertex.framework.common.util.BeanUtils;
 import com.onezol.vertex.framework.common.util.EnumUtils;
 import com.onezol.vertex.framework.common.util.MapUtils;
-import com.onezol.vertex.framework.component.approval.constant.BusinessType;
+import com.onezol.vertex.framework.component.approval.constant.*;
 import com.onezol.vertex.framework.component.approval.mapper.ApprovalFlowBindingRelationMapper;
+import com.onezol.vertex.framework.component.approval.mapper.ApprovalFlowCandidateMapper;
 import com.onezol.vertex.framework.component.approval.mapper.ApprovalFlowTemplateMapper;
 import com.onezol.vertex.framework.component.approval.model.dto.ApprovalFlowBindingRelation;
 import com.onezol.vertex.framework.component.approval.model.dto.ApprovalFlowTemplate;
 import com.onezol.vertex.framework.component.approval.model.entity.ApprovalFlowBindingRelationEntity;
+import com.onezol.vertex.framework.component.approval.model.entity.ApprovalFlowNodeCandidateEntity;
 import com.onezol.vertex.framework.component.approval.model.entity.ApprovalFlowTemplateEntity;
 import com.onezol.vertex.framework.component.approval.model.payload.ApprovalFlowBindingRelationPayload;
+import com.onezol.vertex.framework.component.approval.model.payload.ApprovalFlowNodeCandidatePayload;
 import com.onezol.vertex.framework.component.approval.model.payload.ApprovalFlowTemplateSavePayload;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,10 +33,14 @@ public class ApprovalFlowService {
 
     private final ApprovalFlowTemplateMapper approvalFlowTemplateMapper;
     private final ApprovalFlowBindingRelationMapper approvalFlowBindingRelationMapper;
+    private final ApprovalFlowCandidateMapper approvalFlowCandidateMapper;
+    private final ApprovalFlowNodeService approvalFlowNodeService;
 
-    public ApprovalFlowService(ApprovalFlowTemplateMapper approvalFlowTemplateMapper, ApprovalFlowBindingRelationMapper approvalFlowBindingRelationMapper) {
+    public ApprovalFlowService(ApprovalFlowTemplateMapper approvalFlowTemplateMapper, ApprovalFlowBindingRelationMapper approvalFlowBindingRelationMapper, ApprovalFlowCandidateMapper approvalFlowCandidateMapper, ApprovalFlowNodeService approvalFlowNodeService) {
         this.approvalFlowTemplateMapper = approvalFlowTemplateMapper;
         this.approvalFlowBindingRelationMapper = approvalFlowBindingRelationMapper;
+        this.approvalFlowCandidateMapper = approvalFlowCandidateMapper;
+        this.approvalFlowNodeService = approvalFlowNodeService;
     }
 
     /**
@@ -46,9 +55,14 @@ public class ApprovalFlowService {
     /**
      * 更新流程模板
      */
+    @Transactional
     public ApprovalFlowTemplate updateFlowTemplate(ApprovalFlowTemplateSavePayload payload) {
         ApprovalFlowTemplateEntity flowTemplate = BeanUtils.toBean(payload, ApprovalFlowTemplateEntity.class);
+
         approvalFlowTemplateMapper.updateById(flowTemplate);
+
+        approvalFlowNodeService.updateFlowNodes(flowTemplate.getId(), flowTemplate.getContent());
+
         return BeanUtils.toBean(flowTemplate, ApprovalFlowTemplate.class);
     }
 
@@ -150,4 +164,101 @@ public class ApprovalFlowService {
         );
         return count > 0;
     }
+
+    /**
+     * 设置流程节点审批候选人
+     */
+    public void setCandidates(ApprovalFlowNodeCandidatePayload payload) {
+        CandidateStrategy candidateStrategy = EnumUtils.getEnumByValue(CandidateStrategy.class, payload.getCandidateStrategy());
+        if (candidateStrategy == null) {
+            throw new InvalidParameterException("无效的候选人选择策略");
+        }
+        switch (candidateStrategy) {
+            case CandidateStrategy.DESIGNATE_USER -> setCandidateByDesignateUser(payload);
+            case CandidateStrategy.DESIGNATE_ROLE -> setCandidateByDesignateRole(payload);
+            case CandidateStrategy.INITIATOR -> setCandidateByInitiator(payload);
+            case CandidateStrategy.SELECTION -> setCandidateBySelection(payload);
+        }
+    }
+
+    /**
+     * 设置审批候选人：指定用户
+     */
+    private void setCandidateByDesignateUser(ApprovalFlowNodeCandidatePayload payload) {
+        ApprovalFlowNodeCandidateEntity candidateEntity = new ApprovalFlowNodeCandidateEntity();
+        candidateEntity.setNodeId(payload.getNodeId());
+        candidateEntity.setCandidateStrategy(CandidateStrategy.DESIGNATE_USER);
+        candidateEntity.setUserIds(payload.getUserIds());
+        ApprovalType approvalType = EnumUtils.getEnumByValue(ApprovalType.class, payload.getApprovalType());
+        if (Objects.isNull(approvalType)) {
+            throw new InvalidParameterException("无效的审批类型");
+        }
+        candidateEntity.setApprovalType(approvalType);
+        UnmannedStrategy unmannedStrategy = EnumUtils.getEnumByValue(UnmannedStrategy.class, payload.getUnmannedStrategy());
+        if (Objects.isNull(unmannedStrategy)) {
+            throw new InvalidParameterException("无效的审批策略");
+        }
+        candidateEntity.setUnmannedStrategy(unmannedStrategy);
+        if (Objects.nonNull(payload.getId())) {
+            approvalFlowCandidateMapper.updateById(candidateEntity);
+        } else {
+            approvalFlowCandidateMapper.insert(candidateEntity);
+        }
+    }
+
+    /**
+     * 设置审批候选人：指定角色
+     */
+    private void setCandidateByDesignateRole(ApprovalFlowNodeCandidatePayload payload) {
+        List<Long> roleIds = payload.getRoleIds();
+        ApprovalFlowNodeCandidateEntity candidateEntity = new ApprovalFlowNodeCandidateEntity();
+        candidateEntity.setNodeId(payload.getNodeId());
+        candidateEntity.setCandidateStrategy(CandidateStrategy.DESIGNATE_ROLE);
+        candidateEntity.setRoleIds(roleIds);
+        ApprovalType approvalType = EnumUtils.getEnumByValue(ApprovalType.class, payload.getApprovalType());
+        if (Objects.isNull(approvalType)) {
+            throw new InvalidParameterException("无效的审批类型");
+        }
+        candidateEntity.setApprovalType(approvalType);
+        UnmannedStrategy unmannedStrategy = EnumUtils.getEnumByValue(UnmannedStrategy.class, payload.getUnmannedStrategy());
+        if (Objects.isNull(unmannedStrategy)) {
+            throw new InvalidParameterException("无效的审批策略");
+        }
+        candidateEntity.setUnmannedStrategy(unmannedStrategy);
+        if (Objects.nonNull(payload.getId())) {
+            approvalFlowCandidateMapper.updateById(candidateEntity);
+        } else {
+            approvalFlowCandidateMapper.insert(candidateEntity);
+        }
+    }
+
+    /**
+     * 设置审批候选人：发起人自己
+     */
+    private void setCandidateByInitiator(ApprovalFlowNodeCandidatePayload payload) {
+        List<Long> userIds = payload.getUserIds();
+        ApprovalFlowNodeCandidateEntity candidateEntity = new ApprovalFlowNodeCandidateEntity();
+        candidateEntity.setNodeId(payload.getNodeId());
+        candidateEntity.setCandidateStrategy(CandidateStrategy.INITIATOR);
+        candidateEntity.setUserIds(userIds);
+        if (Objects.nonNull(payload.getId())) {
+            approvalFlowCandidateMapper.updateById(candidateEntity);
+        } else {
+            approvalFlowCandidateMapper.insert(candidateEntity);
+        }
+    }
+
+    /**
+     * 设置审批候选人：发起人自选
+     */
+    private void setCandidateBySelection(ApprovalFlowNodeCandidatePayload payload) {
+        ApprovalFlowNodeCandidateEntity candidateEntity = new ApprovalFlowNodeCandidateEntity();
+        candidateEntity.setNodeId(payload.getNodeId());
+        CandidateSelectionType candidateSelectionType = EnumUtils.getEnumByValue(CandidateSelectionType.class, payload.getCandidateSelectionType());
+        if (Objects.isNull(candidateSelectionType)) {
+            throw new InvalidParameterException("无效的候选人自选类型");
+        }
+        // TODO: 发起人自选
+    }
+
 }

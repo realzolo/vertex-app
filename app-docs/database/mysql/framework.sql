@@ -374,6 +374,48 @@ CREATE TABLE IF NOT EXISTS vx_approval_flow_binding_relation
     update_time DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
     version     INT UNSIGNED DEFAULT 0 COMMENT '版本号',
     deleted     BIT          DEFAULT b'0' COMMENT '是否删除'
-    ) ENGINE = InnoDB
+) ENGINE = InnoDB
     DEFAULT CHARSET = utf8mb4
     COMMENT = '业务流程关联';
+
+CREATE TABLE IF NOT EXISTS approval_flow_node_candidate
+(
+    id          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
+    -- 自定义字段开始 --
+    node_id                    BIGINT         COMMENT '节点ID',
+    candidate_strategy         INT UNSIGNED   COMMENT '候选人策略',
+    user_ids     JSON COMMENT '候选人ID列表',
+    role_ids     JSON COMMENT '候选人角色ID列表',
+    candidate_selection_type   INT UNSIGNED   COMMENT '候选人选择类型',
+    candidate_selection_scope  INT UNSIGNED   COMMENT '候选人选择范围',
+    approval_type              INT UNSIGNED   COMMENT '审批类型',
+    unmanned_strategy          INT UNSIGNED   COMMENT '无审批人审批策略',
+    -- 自定义字段结束 --
+    creator     BIGINT       DEFAULT NULL COMMENT '创建人',
+    create_time DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    updater     BIGINT       DEFAULT NULL COMMENT '更新人',
+    update_time DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+    version     INT UNSIGNED DEFAULT 0 COMMENT '版本号'
+) ENGINE = InnoDB
+    DEFAULT CHARSET = utf8mb4
+    COMMENT = '审批节点候选人';
+
+CREATE TABLE IF NOT EXISTS approval_flow_node
+(
+    id          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
+    -- 自定义字段开始 --
+    template_id  BIGINT        COMMENT '流程模板ID',
+    node_id      VARCHAR(255)       COMMENT '节点ID',
+    label        VARCHAR(255)  COMMENT '节点名称',
+    type         VARCHAR(255)  COMMENT '节点类型',
+    prev_node_id VARCHAR(255)      COMMENT '上一个节点ID',
+    next_node_id VARCHAR(255)      COMMENT '下一个节点ID',
+    -- 自定义字段结束 --
+    creator     BIGINT       DEFAULT NULL COMMENT '创建人',
+    create_time DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    updater     BIGINT       DEFAULT NULL COMMENT '更新人',
+    update_time DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+    version     INT UNSIGNED DEFAULT 0 COMMENT '版本号'
+) ENGINE = InnoDB
+    DEFAULT CHARSET = utf8mb4
+    COMMENT = '审批流程节点';

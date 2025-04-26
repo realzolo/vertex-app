@@ -5,13 +5,17 @@ import com.onezol.vertex.framework.common.model.DictionaryEntry;
 import com.onezol.vertex.framework.common.model.GenericResponse;
 import com.onezol.vertex.framework.common.model.PagePack;
 import com.onezol.vertex.framework.component.approval.model.dto.ApprovalFlowBindingRelation;
+import com.onezol.vertex.framework.component.approval.model.dto.ApprovalFlowNode;
 import com.onezol.vertex.framework.component.approval.model.dto.ApprovalFlowTemplate;
 import com.onezol.vertex.framework.component.approval.model.entity.ApprovalFlowBindingRelationEntity;
 import com.onezol.vertex.framework.component.approval.model.entity.ApprovalFlowTemplateEntity;
 import com.onezol.vertex.framework.component.approval.model.payload.ApprovalFlowBindingRelationPayload;
+import com.onezol.vertex.framework.component.approval.model.payload.ApprovalFlowNodeCandidatePayload;
 import com.onezol.vertex.framework.component.approval.model.payload.ApprovalFlowTemplateSavePayload;
+import com.onezol.vertex.framework.component.approval.service.ApprovalFlowNodeService;
 import com.onezol.vertex.framework.component.approval.service.ApprovalFlowService;
 import com.onezol.vertex.framework.support.support.ResponseHelper;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,9 +25,11 @@ import java.util.List;
 public class ApprovalFlowController {
 
     private final ApprovalFlowService approvalFlowService;
+    private final ApprovalFlowNodeService approvalFlowNodeService;
 
-    public ApprovalFlowController(ApprovalFlowService approvalFlowService) {
+    public ApprovalFlowController(ApprovalFlowService approvalFlowService, ApprovalFlowNodeService approvalFlowNodeService) {
         this.approvalFlowService = approvalFlowService;
+        this.approvalFlowNodeService = approvalFlowNodeService;
     }
 
     @GetMapping("/{id}")
@@ -82,6 +88,20 @@ public class ApprovalFlowController {
     ) {
         Page<ApprovalFlowBindingRelationEntity> page = new Page<>(pageNumber, pageSize);
         return ResponseHelper.buildSuccessfulResponse(approvalFlowService.getFlowBindingRelation(page));
+    }
+
+    @Operation(summary = "设置候选人", description = "设置流程节点审批候选人")
+    @PostMapping("/candidates")
+    public GenericResponse<Void> setCandidates(@RequestBody ApprovalFlowNodeCandidatePayload payload) {
+        approvalFlowService.setCandidates(payload);
+        return ResponseHelper.buildSuccessfulResponse();
+    }
+
+    @Operation(summary = "获取节点信息", description = "根据节点ID获取节点详情")
+    @GetMapping("/node")
+    public GenericResponse<ApprovalFlowNode> setCandidates(@RequestParam("nodeId") String nodeId) {
+        ApprovalFlowNode node = approvalFlowNodeService.getNodeDetails(nodeId);
+        return ResponseHelper.buildSuccessfulResponse(node);
     }
 
 }
