@@ -6,12 +6,7 @@
           <icon-left />
         </a-button>
       </div>
-      <div class="flow-logo">
-        <img
-          src="https://lf9-appstore-sign.oceancloudapi.com/ocean-cloud-tos/plugin_icon/workflow.png?lk3s=81d4c505&x-expires=1745507938&x-signature=QBOrRkwnVEwA6J05M7D8wE0Pilo%3D"
-          alt="logo"
-        />
-      </div>
+      <div class="flow-logo" v-html="logo" />
       <div v-show="!!flowData.name" class="flow-info">
         <div class="flow-name">
           <span>{{ flowData.name }}</span>
@@ -49,6 +44,7 @@
 <script lang="ts" setup>
 import { Message } from '@arco-design/web-vue'
 import { useVueFlow } from '@vue-flow/core'
+import logo from '../../assets/icon-flow-logo.svg?raw'
 import { updateFlowTemplate } from '@/apis/approval'
 import router from '@/router'
 
@@ -116,16 +112,14 @@ const goBack = () => {
     }
 
     .flow-logo {
+      display: flex;
+      justify-content: center;
+      align-items: center;
       width: 32px;
       height: 32px;
-
-      img {
-        display: block;
-        height: 100%;
-        object-fit: cover;
-        width: 100%;
-        border-radius: 6px;
-      }
+      border: 1px solid #10182814;
+      border-radius: 8px;
+      background-color: #444ce7;
     }
 
     .flow-info {
