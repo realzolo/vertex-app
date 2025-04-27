@@ -21,6 +21,7 @@
     "@codemirror/lang-vue": "^0.1.2",
     "@codemirror/theme-one-dark": "^6.1.2",
     "@ddietr/codemirror-themes": "^1.4.2",
+    "@fingerprintjs/fingerprintjs": "^4.6.2",
     "@vue-flow/background": "^1.3.2",
     "@vue-flow/controls": "^1.1.2",
     "@vue-flow/core": "^1.42.5",

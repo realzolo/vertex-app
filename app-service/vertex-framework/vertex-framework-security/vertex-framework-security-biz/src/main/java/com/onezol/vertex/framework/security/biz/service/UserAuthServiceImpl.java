@@ -150,26 +150,26 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
     }
 
     /**
-     * 用户登录
+     * 用户登录(用户名密码登录)
      *
-     * @param username 用户名
-     * @param password 密码
-     * @param captcha  验证码
+     * @param username         用户名
+     * @param password         密码
+     * @param fingerprint      用户指纹
+     * @param verificationCode 验证码
      */
     @Override
-    public AuthIdentity loginByIdPassword(String username, String password, String sessionId, String captcha) throws RuntimeServiceException {
-        // 参数校验
-        if (StringUtils.isBlank(sessionId)) {
-            throw new InvalidParameterException("会话ID不能为空");
+    public AuthIdentity loginByIdPassword(String username, String password, String fingerprint, String verificationCode) throws RuntimeServiceException {
+        if (StringUtils.isBlank(fingerprint)) {
+            throw new InvalidParameterException("用户指纹不能为空");
         }
         if (StringUtils.isAnyBlank(username, password)) {
             throw new InvalidParameterException("用户名或密码不能为空");
         }
 
         // 校验验证码
-        String captchaRedisKey = RedisKeyHelper.buildCacheKey(CacheKey.CAPTCHA, sessionId);
-        String captchaInRedis = redisCache.getCacheObject(captchaRedisKey);
-        if (StringUtils.isBlank(captcha) || !captcha.equalsIgnoreCase(captchaInRedis)) {
+        String captchaRedisKey = RedisKeyHelper.buildCacheKey(CacheKey.VC_UP, fingerprint);
+        String verificationCodeInRedis = redisCache.getCacheObject(captchaRedisKey);
+        if (!verificationCode.equalsIgnoreCase(verificationCodeInRedis)) {
             throw new InvalidParameterException("验证码错误");
         }
 
@@ -195,7 +195,7 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
         LoginUserDetails loginUserDetails = (LoginUserDetails) principal;
 
         // 处理登录成功后的逻辑
-        return afterLoginSuccess(loginUserDetails, LoginType.PBA);
+        return afterLoginSuccess(loginUserDetails, LoginType.UP);
     }
 
     /**

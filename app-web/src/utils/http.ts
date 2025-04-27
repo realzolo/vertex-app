@@ -114,7 +114,7 @@ http.interceptors.response.use(
       return Promise.reject(error)
     }
     const status = error.response?.status
-    const errorMsg = StatusCodeMessage[status] || '服务器无响应，请稍后后重试。'
+    const errorMsg = StatusCodeMessage[status] || '服务器无响应，请稍后重试。'
     handleError(errorMsg)
     return Promise.reject(error)
   },

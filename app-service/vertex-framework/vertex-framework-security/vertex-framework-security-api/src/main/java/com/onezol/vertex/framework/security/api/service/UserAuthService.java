@@ -31,23 +31,23 @@ public interface UserAuthService extends BaseService<UserEntity> {
     AuthIdentity register(UserSavePayload payload);
 
     /**
-     * 用户登录(根据用户名)
+     * 用户登录(用户名密码登录)
      *
-     * @param username  用户名
-     * @param password  密码
-     * @param sessionId 会话ID
-     * @param captcha   验证码
+     * @param username         用户名
+     * @param password         密码
+     * @param fingerprint      用户指纹
+     * @param verificationCode 验证码
      */
-    AuthIdentity loginByIdPassword(String username, String password, String sessionId, String captcha);
+    AuthIdentity loginByIdPassword(String username, String password, String fingerprint, String verificationCode);
 
 
     /**
      * 用户登录(根据邮箱)
      *
-     * @param email      电子邮箱
-     * @param verifyCode 验证码
+     * @param email            电子邮箱
+     * @param verificationCode 验证码
      */
-    AuthIdentity loginByEmail(String email, String verifyCode);
+    AuthIdentity loginByEmail(String email, String verificationCode);
 
     /**
      * 用户登出

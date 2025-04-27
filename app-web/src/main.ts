@@ -16,6 +16,9 @@ import 'animate.css/animate.min.css'
 // 额外引入 Arco Design Icon图标库
 import ArcoVueIcon from '@arco-design/web-vue/es/icon'
 
+// 引入浏览器指纹
+import FingerprintJS from '@fingerprintjs/fingerprintjs'
+
 import App from './App.vue'
 import router from './router'
 
@@ -33,6 +36,14 @@ import directives from './directives'
 
 // 状态管理
 import pinia from '@/stores'
+
+// 浏览器指纹
+const fpPromise = FingerprintJS.load()
+fpPromise.then((fp) => {
+  fp.get().then((result) => {
+    localStorage.setItem('fingerprint', result.visitorId)
+  })
+})
 
 // 对特定组件进行默认配置
 Card.props.bordered = false

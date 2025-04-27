@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 @EnumDictionary(name = "登录类型", value = "login_type")
 public enum LoginType implements StandardEnumeration<String> {
 
-    PBA("密码", "PBA"),
+    UP("密码", "UP"),
 
     EMAIL("邮箱", "EMAIL"),
 

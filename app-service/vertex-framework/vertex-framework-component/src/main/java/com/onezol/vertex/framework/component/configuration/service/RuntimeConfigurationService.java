@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Properties;
 
 @Service
 public class RuntimeConfigurationService extends BaseServiceImpl<RuntimeConfigurationMapper, RuntimeConfigurationEntity> {
@@ -51,6 +52,22 @@ public class RuntimeConfigurationService extends BaseServiceImpl<RuntimeConfigur
             dataPairRecords.add(dataPairRecord);
         }
         return dataPairRecords;
+    }
+
+    /**
+     * 获取配置
+     */
+    public Properties getConfiguration(String subject) {
+        List<RuntimeConfigurationEntity> entities = this.list(
+                Wrappers.<RuntimeConfigurationEntity>lambdaQuery()
+                        .select(RuntimeConfigurationEntity::getCode, RuntimeConfigurationEntity::getValue)
+                        .eq(RuntimeConfigurationEntity::getSubject, subject)
+        );
+        Properties properties = new Properties();
+        for (RuntimeConfigurationEntity entity : entities) {
+            properties.setProperty(entity.getCode(), entity.getValue());
+        }
+        return properties;
     }
 
     /**

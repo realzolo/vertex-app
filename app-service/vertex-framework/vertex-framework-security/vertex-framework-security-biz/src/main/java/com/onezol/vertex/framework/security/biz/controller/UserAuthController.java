@@ -1,10 +1,9 @@
 package com.onezol.vertex.framework.security.biz.controller;
 
 import com.onezol.vertex.framework.common.model.GenericResponse;
-import com.onezol.vertex.framework.common.util.StringUtils;
 import com.onezol.vertex.framework.security.api.annotation.RestrictAccess;
 import com.onezol.vertex.framework.security.api.model.dto.AuthIdentity;
-import com.onezol.vertex.framework.security.api.model.payload.UserLoginPayload;
+import com.onezol.vertex.framework.security.api.model.payload.UserAccountLoginPayload;
 import com.onezol.vertex.framework.security.api.model.payload.UserSavePayload;
 import com.onezol.vertex.framework.security.api.service.UserAuthService;
 import com.onezol.vertex.framework.support.support.ResponseHelper;
@@ -39,14 +38,10 @@ public class UserAuthController {
 
     @Operation(summary = "用户登录", description = "用户登录: 根据用户名密码")
     @PostMapping("/login")
-    public GenericResponse<AuthIdentity> loginByIdPassword(@RequestBody @Valid UserLoginPayload payload) {
-        if (StringUtils.isBlank(payload.getUuid())) {
-            return ResponseHelper.buildFailedResponse("会话ID不能为空");
-        }
-        if (StringUtils.isAnyBlank(payload.getUsername(), payload.getPassword())) {
-            return ResponseHelper.buildFailedResponse("用户名或密码不能为空");
-        }
-        AuthIdentity userAuthenticationVO = userAuthService.loginByIdPassword(payload.getUsername(), payload.getPassword(), payload.getUuid(), payload.getCaptcha());
+    public GenericResponse<AuthIdentity> loginByIdPassword(@RequestBody @Valid UserAccountLoginPayload payload) {
+        AuthIdentity userAuthenticationVO = userAuthService.loginByIdPassword(
+                payload.getUsername(), payload.getPassword(), payload.getFingerprint(), payload.getVerificationCode()
+        );
 
         return Objects.nonNull(userAuthenticationVO) ?
                 ResponseHelper.buildSuccessfulResponse(userAuthenticationVO) :

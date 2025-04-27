@@ -63,20 +63,20 @@ export interface AuthReq {
 export interface AccountLoginReq extends AuthReq {
   username: string
   password: string
-  captcha: string
-  uuid: string
+  verificationCode: string
+  fingerprint: string
 }
 
 /** 手机号登录请求参数 */
 export interface PhoneLoginReq extends AuthReq {
   phone: string
-  captcha: string
+  verificationCode: string
 }
 
 /** 邮箱登录请求参数 */
 export interface EmailLoginReq extends AuthReq {
   email: string
-  captcha: string
+  verificationCode: string
 }
 
 /** 登录响应类型 */

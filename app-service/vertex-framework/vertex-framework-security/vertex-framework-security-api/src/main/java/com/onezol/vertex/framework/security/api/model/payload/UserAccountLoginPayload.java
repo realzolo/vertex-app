@@ -7,23 +7,23 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-@Schema(name = "用户登录参数", description = "用户名+密码 或 邮箱+验证码")
-public class UserLoginPayload implements Payload {
+@Schema(name = "用户登录参数", description = "用户名密码登录参数")
+public class UserAccountLoginPayload implements Payload {
 
     @Schema(name = "用户名")
+    @NotBlank(message = "用户名不能为空")
     private String username;
 
     @Schema(name = "密码")
+    @NotBlank(message = "密码不能为空")
     private String password;
 
-    @Schema(name = "邮箱")
-    private String email;
-
-    @Schema(name = "会话ID")
-    private String uuid;
+    @Schema(name = "用户指纹")
+    @NotBlank(message = "用户指纹不能为空")
+    private String fingerprint;
 
     @Schema(name = "验证码")
     @NotBlank(message = "验证码不能为空")
-    private String captcha;
+    private String verificationCode;
 
 }

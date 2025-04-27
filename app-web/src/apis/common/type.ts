@@ -1,9 +1,9 @@
 /** 图形验证码类型 */
 export interface ImageCaptchaResp {
-  uuid: string
+  fingerprint: string
   image: string
   expireTime: number
-  isEnabled: boolean
+  enabled: boolean
 }
 
 /** 仪表盘公告类型 */

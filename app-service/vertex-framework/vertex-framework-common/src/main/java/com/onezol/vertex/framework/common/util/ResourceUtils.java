@@ -1,9 +1,9 @@
 package com.onezol.vertex.framework.common.util;
 
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.StreamUtils;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 /**
@@ -37,13 +37,21 @@ public final class ResourceUtils extends org.springframework.util.ResourceUtils 
     /**
      * 从classpath/resource读取文件内容为字符串
      *
-     * @param resourceLocation 文件路径(相对于classpath/resource), 如: static/test.txt
+     * @param classpathLocation 文件路径(相对于classpath/resource), 如: static/test.txt
      * @return 文件内容
      */
-    public static String readClassPathResourceAsText(String resourceLocation) throws IOException {
-        Objects.requireNonNull(resourceLocation, "resource location must not be null");
-        File file = getFile(resourceLocation);
-        return StreamUtils.copyToString(new FileInputStream(file), StandardCharsets.UTF_8);
+    public static String readClassPathResourceAsText(String classpathLocation) throws IOException {
+        Objects.requireNonNull(classpathLocation, "path must not be null");
+
+        InputStream inputStream = new ClassPathResource(classpathLocation).getInputStream();
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+            StringBuilder stringBuilder = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                stringBuilder.append(line).append("\n");
+            }
+            return stringBuilder.toString();
+        }
     }
 
     /**

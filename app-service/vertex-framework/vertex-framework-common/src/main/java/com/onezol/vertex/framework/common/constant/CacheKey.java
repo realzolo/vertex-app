@@ -24,9 +24,14 @@ public final class CacheKey {
     public static final String ONLINE_USER = "user:online_users";
 
     /**
-     * 验证码
+     * 验证码(UP方式)
      */
-    public static final String CAPTCHA = "captcha:{uuid}";
+    public static final String VC_UP = "vc:up:{fingerprint}";
+
+    /**
+     * 验证码(Email方式)
+     */
+    public static final String VC_EMAIL = "vc:email:{email}";
 
     /**
      * 字典
