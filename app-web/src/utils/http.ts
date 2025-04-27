@@ -90,7 +90,7 @@ http.interceptors.response.use(
     }
 
     // Token 失效
-    if (code === '10401' && response.config.url !== '/auth/user/info') {
+    if (code === '10401' && response.config.url !== '/user/me') {
       modalErrorWrapper({
         title: '提示',
         content: message,
@@ -114,7 +114,7 @@ http.interceptors.response.use(
       return Promise.reject(error)
     }
     const status = error.response?.status
-    const errorMsg = StatusCodeMessage[status] || '服务器暂时未响应，请刷新页面并重试。若无法解决，请联系管理员'
+    const errorMsg = StatusCodeMessage[status] || '服务器无响应，请稍后后重试。'
     handleError(errorMsg)
     return Promise.reject(error)
   },

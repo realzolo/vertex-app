@@ -26,3 +26,14 @@ export interface FlowBindingRelationPageQuery {
   name?: string
   sort: Array<string>
 }
+
+export interface FlowNodeCandidatesReq {
+  nodeId?: number
+  candidateStrategy: number
+  userIds: number[]
+  roleIds: number[]
+  candidateSelectionType: number
+  candidateSelectionScope: number
+  approvalType: number
+  unmannedStrategy: number
+}

@@ -2,24 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.onezol.vertex.framework.security.biz.mapper.PermissionMapper">
 
-    <select id="queryRolePermission" resultType="java.lang.String">
-        SELECT
-            rp.permissions
-        FROM
-            vx_role_permission rp
-        WHERE
-            rp.role_id = #{roleId}
-        LIMIT 1
-    </select>
-
     <select id="queryRolePermissions" resultType="com.onezol.vertex.framework.security.api.model.entity.PermissionEntity">
         SELECT
             p.*
         FROM
             vx_role_permission rp
-             LEFT JOIN vx_permission p ON p.id = rp.permission_id
-             LEFT JOIN vx_role r ON r.id = rp.role_id
+                LEFT JOIN vx_permission p ON p.id = rp.permission_id
+                LEFT JOIN vx_role r ON r.id = rp.role_id
         <where>
+            p.id IS NOT NULL AND r.id IS NOT NULL
             <if test="roleIds != null and roleIds.size() > 0">
                 AND
                 <foreach collection="roleIds" item="roleId" open="(" close=")" separator="OR">

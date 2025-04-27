@@ -1,8 +1,8 @@
 export enum NodeType {
   START = 0,
-  CC = 1,
-  APPROVER = 2,
-  END,
+  APPROVER = 1,
+  CC = 2,
+  END = 3,
 }
 
 export interface EdgeEmitData {

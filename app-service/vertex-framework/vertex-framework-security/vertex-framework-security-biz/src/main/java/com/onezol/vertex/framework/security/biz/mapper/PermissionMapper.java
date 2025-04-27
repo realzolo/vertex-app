@@ -10,8 +10,6 @@ import java.util.List;
 @Mapper
 public interface PermissionMapper extends BaseMapper<PermissionEntity> {
 
-    String queryRolePermission(long roleId);
-
     List<PermissionEntity> queryRolePermissions(@Param("roleIds") List<Long> roleIds);
 
 }

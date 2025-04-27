@@ -16,7 +16,7 @@ public final class EnumUtils {
     public static <T extends StandardEnumeration<?>> T getEnumByValue(Class<T> enumClass, Object value) {
         T[] enumConstants = enumClass.getEnumConstants();
         for (T enumConstant : enumConstants) {
-            if (Objects.equals(enumConstant.getValue(), String.valueOf(value))) {
+            if (Objects.equals(enumConstant.getValue(), value)) {
                 return enumConstant;
             }
         }

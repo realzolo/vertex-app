@@ -19,7 +19,7 @@ export function listAllUser(query: Partial<T.UserPageQuery>) {
 }
 
 /** @desc 查询用户详情 */
-export function getUser(id: string) {
+export function getUser(id: number) {
   return http.get<T.UserDetailResp>(`${BASE_URL}/${id}`)
 }
 
@@ -29,12 +29,12 @@ export function addUser(data: any) {
 }
 
 /** @desc 修改用户 */
-export function updateUser(data: any, id: string) {
+export function updateUser(data: any, id: number) {
   return http.put(`${BASE_URL}/${id}`, data)
 }
 
 /** @desc 删除用户 */
-export function deleteUser(ids: string | Array<string>) {
+export function deleteUser(ids: number | Array<number>) {
   return http.del(`${BASE_URL}/${ids}`)
 }
 
@@ -59,11 +59,11 @@ export function importUser(data: any) {
 }
 
 /** @desc 重置密码 */
-export function resetUserPwd(data: any, id: string) {
+export function resetUserPwd(data: any, id: number) {
   return http.patch(`${BASE_URL}/${id}/password`, data)
 }
 
 /** @desc 分配角色 */
-export function updateUserRole(data: { roleIds: string[] }, id: string) {
+export function updateUserRole(data: { roleIds: number[] }, id: number) {
   return http.patch(`${BASE_URL}/${id}/role`, data)
 }

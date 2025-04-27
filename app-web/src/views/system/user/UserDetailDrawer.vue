@@ -35,7 +35,7 @@ import type { UserDetailResp } from '@/apis/system/type'
 
 const { width } = useWindowSize()
 
-const dataId = ref('')
+const dataId = ref()
 const dataDetail = ref<UserDetailResp>()
 const visible = ref(false)
 
@@ -46,7 +46,7 @@ const getDataDetail = async () => {
 }
 
 // 打开
-const onOpen = async (id: string) => {
+const onOpen = async (id: number) => {
   dataId.value = id
   visible.value = true
   await getDataDetail()

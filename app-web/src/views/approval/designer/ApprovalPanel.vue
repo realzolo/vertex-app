@@ -5,8 +5,8 @@
     </template>
     <div class="flow-panel-content">
       <a-space direction="vertical" size="large">
-        <a-radio-group v-model="form.strategy">
-          <a-grid :cols="3" :colGap="24" :rowGap="16">
+        <a-radio-group v-model="form.candidateStrategy">
+          <a-grid :cols="3" :col-gap="24" :row-gap="16">
             <a-grid-item v-for="item in STRATEGIES" :key="item.value">
               <a-radio :value="item.value">{{ item.label }}</a-radio>
             </a-grid-item>
@@ -21,18 +21,28 @@
             layout="vertical"
             class="form"
           >
-            <div v-if="form.strategy === 1">
+            <div v-if="form.candidateStrategy === 0">
               <a-form-item class="form-item" field="userIds" required>
                 <template #label>
                   <a-space>
                     <span class="item-label">指定成员</span>
-                    <span class="item-help">不能超过50人</span>
+                    <span class="item-help">不能超过10人</span>
                   </a-space>
                 </template>
-                <a-select v-model="form.userIds" :options="[]" placeholder="请选择指定成员" />
+                <a-select v-model="form.userIds" :options="users" multiple limit="10" placeholder="请选择指定成员" />
               </a-form-item>
+              <div class="form-extra">
+                <div>
+                  <div class="item-label">多人审批时采用的审批方式</div>
+                  <a-radio-group v-model="form.approvalType" direction="vertical" :options="APPROVAL_TYPES" />
+                </div>
+                <div style="margin-top: 14px">
+                  <div class="item-label">审批人为空时</div>
+                  <a-radio-group v-model="form.unmannedStrategy" direction="vertical" :options="EMPTY_PERSON_STRATEGY" />
+                </div>
+              </div>
             </div>
-            <div v-if="form.strategy === 2">
+            <div v-if="form.candidateStrategy === 1">
               <a-form-item class="form-item">
                 <template #label>
                   <span class="item-label">发起人自己</span><br>
@@ -40,7 +50,7 @@
                 </template>
               </a-form-item>
             </div>
-            <div v-if="form.strategy === 3">
+            <div v-if="form.candidateStrategy === 2">
               <a-form-item class="form-item">
                 <template #label>
                   <span class="item-label">发起人自选</span><br>
@@ -48,26 +58,26 @@
                 <div style="width: 100%">
                   <a-row :gutter="24" style="width: 100%">
                     <a-col :flex="1">
-                      <a-select v-model="form.selectType" :options="SELF_SELECTION" />
+                      <a-select v-model="form.candidateSelectionType" :options="SELF_SELECTION" />
                     </a-col>
                     <a-col :flex="1">
-                      <a-select v-model="form.selectScope" :options="SELECTION_SCOPE" />
+                      <a-select v-model="form.candidateSelectionScope" :options="SELECTION_SCOPE" />
                     </a-col>
                   </a-row>
                 </div>
               </a-form-item>
-              <div v-if="form.selectScope === 2" class="form-extra">
+              <div v-if="form.candidateSelectionScope === 2" class="form-extra">
                 <a-select v-model="form.userIds" :options="[]" placeholder="请选择成员" />
               </div>
-              <div v-if="form.selectScope === 3" class="form-extra">
+              <div v-if="form.candidateSelectionScope === 3" class="form-extra">
                 <a-select v-model="form.roleIds" :options="[]" placeholder="请选择角色" />
               </div>
-              <div v-if="form.selectType === 2" class="form-extra">
+              <div v-if="form.candidateSelectionType === 2" class="form-extra">
                 <div class="item-label">多人审批时采用的审批方式</div>
                 <a-radio-group v-model="form.approvalType" direction="vertical" :options="APPROVAL_TYPES" />
               </div>
             </div>
-            <div v-if="form.strategy === 4">
+            <div v-if="form.candidateStrategy === 3">
               <a-form-item class="form-item" field="roleIds" required>
                 <template #label>
                   <a-space>
@@ -84,7 +94,7 @@
                 </div>
                 <div style="margin-top: 14px">
                   <div class="item-label">审批人为空时</div>
-                  <a-radio-group v-model="form.emptyPersonStrategy" direction="vertical" :options="EMPTY_PERSON_STRATEGY" />
+                  <a-radio-group v-model="form.unmannedStrategy" direction="vertical" :options="EMPTY_PERSON_STRATEGY" />
                 </div>
               </div>
             </div>
@@ -112,58 +122,86 @@ import {
   STRATEGIES,
 } from './support'
 import { useResetReactive } from '@/hooks'
+import { listUserDict } from '@/apis'
+import { getNodeDetails, setCandidates } from '@/apis/approval'
 
 defineOptions({ name: 'ApprovalPanel' })
 
+const users = ref<DictionaryEntry[]>([])
+const roles = ref<DictionaryEntry[]>([])
+
 const selectedNode = ref()
+const selectedNodeDetails = ref()
 const formRef = ref<FormInstance>()
 const rules: FormInstance['rules'] = {
   userIds: [{ required: true, message: '请选择成员' }],
   roleIds: [{ required: true, message: '请选择角色' }],
 }
 const [form] = useResetReactive({
-  strategy: 1,
+  candidateStrategy: 0,
   userIds: [], // 指定成员
   roleIds: [], // 指定角色
-  himself: true, // 发起人自己
-  selectType: 1, // 自选类型
-  selectScope: 1, // 选择范围
+  candidateSelectionType: 1, // 自选类型
+  candidateSelectionScope: 1, // 选择范围
   approvalType: 1, // 审批类型
-  emptyPersonStrategy: 1, // 无审批人策略
+  unmannedStrategy: 1, // 无审批人策略
 })
 
 // 保存
 const handleSave = async () => {
   const isInvalid = await formRef.value?.validate()
   if (isInvalid) return false
+  form.nodeId = selectedNodeDetails.value.id
+  await setCandidates(form)
   Message.success('保存成功')
+}
+const fetchInitialData = () => {
+  listUserDict().then((resp) => {
+    if (!resp.success) return
+    users.value = resp.data
+  })
+}
+const fetchNodeDetails = (nodeId: string) => {
+  getNodeDetails(nodeId).then((resp) => {
+    if (!resp.success) return
+    selectedNodeDetails.value = resp.data
+  })
 }
 
 const onVisible = (node?: Node) => {
   selectedNode.value = node
+  if (node) {
+    fetchNodeDetails(node.id)
+  }
 }
+onMounted(() => {
+  fetchInitialData()
+})
 defineExpose({ onVisible })
 </script>
 
 <style scoped lang="scss">
 .flow-panel {
   position: relative;
+  top: 24px;
   width: 480px;
-  height: calc(100vh - 224px);
+  height: calc(100vh - 174px);
+  min-height: 798px;
   border-radius: 4px;
   background-color: var(--color-bg-3);
   border: 1px solid var(--color-border);
-  //box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.05);
-  box-shadow: 1px 3px 32px 0 rgba(50, 73, 198, 0.08), 6px 16px 48px 0 rgba(50, 73, 198, 0.12);
+  box-shadow: 0 1px 4px 1px rgba(0, 0, 0, 0.08);
   user-select: none;
 
   .flow-panel-content {
     height: calc(100% - 56px);
+
     .form {
       .form-item {
         .item.label {
           color: var(--color-text-2);
         }
+
         .item-help {
           font-weight: 400;
           color: var(--color-text-3);

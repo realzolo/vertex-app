@@ -12,29 +12,20 @@ public interface PermissionService extends BaseService<PermissionEntity> {
     /**
      * 获取用户权限
      *
-     * @param roleId 角色ID
-     */
-    String getRolePermissions(Long roleId);
-
-    /**
-     * 获取用户权限
-     *
-     * @param roleIds 角色ID
-     */
-//    List<Permission> getRolePermissions(List<Long> roleIds);
-
-    /**
-     * 获取用户权限
-     *
      * @param roleIds 角色ID
      */
     Set<String> getRolePermissionKeys(List<Long> roleIds);
 
     /**
-     * 获取用户权限
+     * 获取权限ID集合
      *
      * @param roleIds 角色ID
      */
     Set<Long> getRolePermissionIds(List<Long> roleIds);
+
+    /**
+     * 删除权限
+     */
+    boolean deletePermission(Long id);
 
 }

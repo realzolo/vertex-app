@@ -17,7 +17,7 @@
         >
           <a-menu-item v-for="item in topMenus" :key="item.path">
             <template #icon>
-              <GiSvgIcon :name="getMenuIcon(item)" :size="24" />
+              <GiSvgIcon :name="getMenuIcon(item) as string" :size="24" />
             </template>
             <span>{{ item.meta?.title || item.children?.[0]?.meta?.title || '' }}</span>
           </a-menu-item>

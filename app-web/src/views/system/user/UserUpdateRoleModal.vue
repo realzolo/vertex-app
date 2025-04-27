@@ -26,7 +26,7 @@ const emit = defineEmits<{
 }>()
 
 const { width } = useWindowSize()
-const dataId = ref('')
+const dataId = ref()
 const visible = ref(false)
 const formRef = ref<InstanceType<typeof GiForm>>()
 const { roleList, getRoleList } = useRole()
@@ -70,7 +70,7 @@ const save = async () => {
 }
 
 // 初始化
-const onOpen = async (id: string) => {
+const onOpen = async (id: number) => {
   reset()
   dataId.value = id
   if (!roleList.value.length) {

@@ -17,7 +17,6 @@ import { Message, type TreeNodeData } from '@arco-design/web-vue'
 import { useWindowSize } from '@vueuse/core'
 import { addUser, getUser, updateUser } from '@/apis/system/user'
 import { type ColumnItem, GiForm } from '@/components/GiForm'
-import type { Gender, Status } from '@/types/global'
 import { GenderList } from '@/constant/common'
 import { useResetReactive } from '@/hooks'
 import { useDept, useRole } from '@/hooks/app'
@@ -200,7 +199,7 @@ const onAdd = async () => {
 }
 
 // 修改
-const onUpdate = async (id: string) => {
+const onUpdate = async (id: number) => {
   reset()
   dataId.value = id
   visible.value = true
