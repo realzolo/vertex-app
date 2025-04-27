@@ -20,6 +20,7 @@ import com.onezol.vertex.framework.support.support.JWTHelper;
 import com.onezol.vertex.framework.support.support.RedisKeyHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.time.Clock;
@@ -45,7 +46,7 @@ public class LoginUserServiceImpl implements LoginUserService {
     @Value("${spring.jwt.expiration-time:3600}")
     private Integer expirationTime;
 
-    public LoginUserServiceImpl(RedisCache redisCache, UserInfoService userInfoService, LoginHistoryService loginHistoryService) {
+    public LoginUserServiceImpl(RedisCache redisCache, @Lazy UserInfoService userInfoService, LoginHistoryService loginHistoryService) {
         this.redisCache = redisCache;
         this.userInfoService = userInfoService;
         this.loginHistoryService = loginHistoryService;

@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Objects;
 
-@Tag(name = "用户授权")
+@Tag(name = "用户认证")
 @Validated
 @RestController
 @RequestMapping("/auth")
@@ -53,13 +53,6 @@ public class UserAuthController {
     @PostMapping("/logout")
     public GenericResponse<Void> logout() {
         userAuthService.logout();
-        return ResponseHelper.buildSuccessfulResponse();
-    }
-
-    @Operation(summary = "创建用户", description = "创建用户")
-    @PostMapping("/create")
-    public GenericResponse<Void> create(@RequestBody @Valid UserSavePayload payload) {
-        userAuthService.createOrUpdateUser(payload);
         return ResponseHelper.buildSuccessfulResponse();
     }
 

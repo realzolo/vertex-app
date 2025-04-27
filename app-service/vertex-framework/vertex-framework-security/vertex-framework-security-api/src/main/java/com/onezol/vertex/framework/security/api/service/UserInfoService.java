@@ -20,7 +20,23 @@ public interface UserInfoService extends BaseService<UserEntity> {
      * @param userId 用户ID
      * @return 用户信息
      */
-    User getUserInfo(long userId);
+    User getUserById(long userId);
+
+    /**
+     * 根据用户名获取用户信息
+     *
+     * @param username 用户名
+     * @return 用户信息
+     */
+    User getUserByUsername(String username);
+
+    /**
+     * 根据用户邮箱获取用户信息
+     *
+     * @param email 用户邮箱
+     * @return 用户信息
+     */
+    User getUserByEmail(String email);
 
     /**
      * 根据用户ID列表取用户信息列表
@@ -28,6 +44,13 @@ public interface UserInfoService extends BaseService<UserEntity> {
      * @return 用户信息列表
      */
     List<User> getUsersInfo(List<Long> userIds);
+
+    /**
+     * 创建/更新用户
+     *
+     * @param payload 用户参数
+     */
+    void createOrUpdateUser(UserSavePayload payload);
 
     /**
      * 修改用户信息

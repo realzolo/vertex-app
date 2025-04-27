@@ -1,14 +1,10 @@
 package com.onezol.vertex.framework.security.biz.service;
 
-import com.onezol.vertex.framework.common.model.DataPairRecord;
 import com.onezol.vertex.framework.security.api.model.LoginUserDetails;
-import com.onezol.vertex.framework.security.api.model.dto.Department;
-import com.onezol.vertex.framework.security.api.model.entity.RoleEntity;
-import com.onezol.vertex.framework.security.api.model.entity.UserEntity;
-import com.onezol.vertex.framework.security.api.service.PermissionService;
+import com.onezol.vertex.framework.security.api.model.dto.User;
+import com.onezol.vertex.framework.security.api.model.dto.UserPassword;
 import com.onezol.vertex.framework.security.api.service.UserAuthService;
-import com.onezol.vertex.framework.security.api.service.UserDepartmentService;
-import com.onezol.vertex.framework.security.api.service.UserRoleService;
+import com.onezol.vertex.framework.security.api.service.UserInfoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -17,24 +13,16 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
 @Slf4j
 @Service
 public class SecurityUserDetailsServiceImpl implements UserDetailsService {
 
+    private final UserInfoService userInfoService;
     private final UserAuthService userAuthService;
-    private final UserDepartmentService userDepartmentService;
-    private final UserRoleService userRoleService;
-    private final PermissionService permissionService;
 
-    public SecurityUserDetailsServiceImpl(@Lazy UserAuthService userAuthService, UserRoleService userRoleService, UserDepartmentService userDepartmentService, PermissionService permissionService) {
+    public SecurityUserDetailsServiceImpl(@Lazy UserInfoService userInfoService, @Lazy UserAuthService userAuthService) {
+        this.userInfoService = userInfoService;
         this.userAuthService = userAuthService;
-        this.userRoleService = userRoleService;
-        this.userDepartmentService = userDepartmentService;
-        this.permissionService = permissionService;
     }
 
     /**
@@ -45,32 +33,14 @@ public class SecurityUserDetailsServiceImpl implements UserDetailsService {
      */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserEntity userEntity = userAuthService.getUserByUsername(username);
-        if (userEntity == null) {
+        User user = userInfoService.getUserByUsername(username);
+        if (user == null) {
             throw new BadCredentialsException("用户名或密码错误");
         }
 
-        // 获取用户部门
-        DataPairRecord dept = null;
-        Department department = userDepartmentService.getUserDepartment(userEntity.getId());
-        if (department != null) {
-            dept = new DataPairRecord(department.getId(), department.getName());
-        }
+        UserPassword userPassword = userAuthService.getPassword(user.getId());
 
-        // 获取用户角色
-        List<RoleEntity> roleEntities = userRoleService.getUserRoles(userEntity.getId());
-        List<DataPairRecord> roles = new ArrayList<>();
-        for (RoleEntity roleEntity : roleEntities) {
-            DataPairRecord role = new DataPairRecord(roleEntity.getId(), roleEntity.getName(), roleEntity.getCode(), null);
-            roles.add(role);
-        }
-
-        // 获取用户权限
-        List<Long> roleIds = roleEntities.stream().map(RoleEntity::getId).toList();
-        Set<String> rolePermissionKeys = permissionService.getRolePermissionKeys(roleIds);
-        List<String> permissions = rolePermissionKeys.stream().toList();
-
-        return new LoginUserDetails(userEntity, dept, roles, permissions);
+        return new LoginUserDetails(user, userPassword);
     }
 
 }

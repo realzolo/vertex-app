@@ -70,7 +70,7 @@ public class NoticeService {
         NoticeEntity entity = noticeMapper.selectById(id);
         Notice notice = BeanUtils.toBean(entity, Notice.class);
         Long creatorId = entity.getCreator();
-        User user = userInfoService.getUserInfo(creatorId);
+        User user = userInfoService.getUserById(creatorId);
         DataPairRecord userInfo = new DataPairRecord(user.getId(), user.getNickname());
         notice.setPublisher(userInfo);
         return notice;

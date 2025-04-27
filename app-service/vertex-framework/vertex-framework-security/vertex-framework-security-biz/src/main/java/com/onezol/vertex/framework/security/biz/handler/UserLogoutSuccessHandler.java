@@ -9,6 +9,7 @@ import com.onezol.vertex.framework.support.support.JWTHelper;
 import com.onezol.vertex.framework.support.support.ResponseHelper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,7 +26,7 @@ public class UserLogoutSuccessHandler implements LogoutSuccessHandler {
 
     private final LoginUserService loginUserService;
 
-    public UserLogoutSuccessHandler(LoginUserService loginUserService) {
+    public UserLogoutSuccessHandler(@Lazy LoginUserService loginUserService) {
         this.loginUserService = loginUserService;
     }
 

@@ -2,26 +2,11 @@ package com.onezol.vertex.framework.security.api.service;
 
 import com.onezol.vertex.framework.common.mvc.service.BaseService;
 import com.onezol.vertex.framework.security.api.model.dto.AuthIdentity;
+import com.onezol.vertex.framework.security.api.model.dto.UserPassword;
 import com.onezol.vertex.framework.security.api.model.entity.UserEntity;
 import com.onezol.vertex.framework.security.api.model.payload.UserSavePayload;
 
 public interface UserAuthService extends BaseService<UserEntity> {
-
-    /**
-     * 根据用户名获取用户信息
-     *
-     * @param username 用户名
-     * @return 用户信息
-     */
-    UserEntity getUserByUsername(String username);
-
-    /**
-     * 根据用户邮箱获取用户信息
-     *
-     * @param email 用户邮箱
-     * @return 用户信息
-     */
-    UserEntity getUserByEmail(String email);
 
     /**
      * 用户注册
@@ -55,10 +40,10 @@ public interface UserAuthService extends BaseService<UserEntity> {
     void logout();
 
     /**
-     * 创建/更新用户
+     * 获取用户密码信息
      *
-     * @param payload 用户参数
+     * @param userId 用户ID
      */
-    void createOrUpdateUser(UserSavePayload payload);
+    UserPassword getPassword(Long userId);
 
 }

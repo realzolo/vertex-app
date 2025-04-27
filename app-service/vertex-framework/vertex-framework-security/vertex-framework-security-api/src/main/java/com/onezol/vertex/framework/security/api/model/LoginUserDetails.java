@@ -2,9 +2,8 @@ package com.onezol.vertex.framework.security.api.model;
 
 import com.alibaba.fastjson2.annotation.JSONField;
 import com.onezol.vertex.framework.common.constant.enumeration.AccountStatus;
-import com.onezol.vertex.framework.common.model.DataPairRecord;
 import com.onezol.vertex.framework.security.api.model.dto.User;
-import com.onezol.vertex.framework.security.api.model.entity.UserEntity;
+import com.onezol.vertex.framework.security.api.model.dto.UserPassword;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -29,23 +28,22 @@ public class LoginUserDetails extends User implements UserDetails {
     @JSONField(serialize = false)
     private LocalDate pwdExpDate;
 
-    public LoginUserDetails(UserEntity entity, DataPairRecord department, List<DataPairRecord> roles, List<String> permissions) {
-        super.setId(entity.getId());
-        super.setUsername(entity.getUsername());
-        super.setNickname(entity.getNickname());
-        super.setDescription(entity.getDescription());
-        super.setAvatar(entity.getAvatar());
-        super.setGender(entity.getGender().getValue());
-        super.setBirthday(entity.getBirthday());
-        super.setPhone(entity.getPhone());
-        super.setEmail(entity.getEmail());
-        super.setStatus(entity.getStatus().getValue());
-        this.password = entity.getPassword();
-        this.pwdExpDate = entity.getPwdExpDate();
-
-        super.setDepartment(department);
-        super.setRoles(roles);
-        super.setPermissions(permissions);
+    public LoginUserDetails(User user, UserPassword userPassword) {
+        super.setId(user.getId());
+        super.setUsername(user.getUsername());
+        super.setNickname(user.getNickname());
+        super.setDescription(user.getDescription());
+        super.setAvatar(user.getAvatar());
+        super.setGender(user.getGender());
+        super.setBirthday(user.getBirthday());
+        super.setPhone(user.getPhone());
+        super.setEmail(user.getEmail());
+        super.setStatus(user.getStatus());
+        super.setDepartment(user.getDepartment());
+        super.setRoles(user.getRoles());
+        super.setPermissions(user.getPermissions());
+        this.password = userPassword.getPassword();
+        this.pwdExpDate = userPassword.getPwdExpDate();
     }
 
     @Override

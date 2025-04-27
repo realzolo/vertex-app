@@ -37,7 +37,6 @@ public class SecurityConfiguration {
      * 拒绝访问处理类(权限不足)
      */
     private final UserAccessDeniedHandler userAccessDeniedHandler;
-
     /**
      * 用户注销处理器
      */

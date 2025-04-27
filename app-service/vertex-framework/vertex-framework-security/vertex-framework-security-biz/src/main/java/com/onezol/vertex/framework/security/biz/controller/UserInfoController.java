@@ -13,10 +13,10 @@ import com.onezol.vertex.framework.security.api.model.entity.UserEntity;
 import com.onezol.vertex.framework.security.api.model.payload.UserQueryPayload;
 import com.onezol.vertex.framework.security.api.model.payload.UserSavePayload;
 import com.onezol.vertex.framework.security.api.service.UserInfoService;
-import com.onezol.vertex.framework.security.api.service.UserRoleService;
 import com.onezol.vertex.framework.support.support.ResponseHelper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,11 +30,9 @@ import java.util.Objects;
 public class UserInfoController extends BaseController<UserEntity> {
 
     private final UserInfoService userInfoService;
-    private final UserRoleService userRoleService;
 
-    public UserInfoController(UserInfoService userInfoService, UserRoleService userRoleService) {
+    public UserInfoController(UserInfoService userInfoService) {
         this.userInfoService = userInfoService;
-        this.userRoleService = userRoleService;
     }
 
     @Operation(summary = "获取当前用户信息", description = "获取当前登录用户信息")
@@ -42,16 +40,23 @@ public class UserInfoController extends BaseController<UserEntity> {
     @GetMapping("/me")
     public GenericResponse<User> me() {
         AuthUser authUser = AuthenticationContext.get();
-        long userId = authUser.getUserId();
-        return ResponseHelper.buildSuccessfulResponse(userInfoService.getUserInfo(userId));
+        User user = userInfoService.getUserById(authUser.getUserId());
+        return ResponseHelper.buildSuccessfulResponse(user);
     }
 
     @Operation(summary = "获取用户信息", description = "根据用户ID查询用户信息")
     @RestrictAccess
     @GetMapping("/{id}")
     public GenericResponse<User> getUserInfo(@PathVariable(value = "id") Long userId) {
-        User user = userInfoService.getUserInfo(userId);
+        User user = userInfoService.getUserById(userId);
         return ResponseHelper.buildSuccessfulResponse(user);
+    }
+
+    @Operation(summary = "创建用户", description = "创建用户")
+    @PostMapping("/create")
+    public GenericResponse<Void> create(@RequestBody @Valid UserSavePayload payload) {
+        userInfoService.createOrUpdateUser(payload);
+        return ResponseHelper.buildSuccessfulResponse();
     }
 
     @Operation(summary = "修改用户信息", description = "修改用户信息")

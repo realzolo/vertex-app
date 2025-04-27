@@ -68,7 +68,7 @@ public class CaptchaController {
         String verificationCode = RandomUtil.randomNumbers(6);
 
         // 存储到Redis
-        String cacheKey = RedisKeyHelper.buildCacheKey(CacheKey.VC_EMAIL, email);
+        String cacheKey = RedisKeyHelper.buildCacheKey(CacheKey.VC_EMAIL, email.toLowerCase());
         redisCache.setCacheObject(cacheKey, verificationCode, 60 * 5, TimeUnit.SECONDS);
 
         // 发送验证码

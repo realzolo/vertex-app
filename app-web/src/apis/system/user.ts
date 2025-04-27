@@ -25,7 +25,7 @@ export function getUser(id: number) {
 
 /** @desc 新增用户 */
 export function addUser(data: any) {
-  return http.post(`/auth/create`, data)
+  return http.post(`/user/create`, data)
 }
 
 /** @desc 修改用户 */
