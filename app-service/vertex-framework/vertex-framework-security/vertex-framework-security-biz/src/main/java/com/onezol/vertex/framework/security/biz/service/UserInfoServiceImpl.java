@@ -60,9 +60,7 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
     @Override
     public User getUserById(long userId) {
         UserEntity entity = this.getById(userId);
-        if (Objects.isNull(entity)) {
-            throw new InvalidParameterException("用户不存在");
-        }
+        if (Objects.isNull(entity)) return null;
         User user = BeanUtils.toBean(entity, User.class);
         this.fillUserIdentity(user);
         return user;
@@ -82,6 +80,7 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
                 Wrappers.<UserEntity>lambdaQuery()
                         .eq(UserEntity::getUsername, username)
         );
+        if (Objects.isNull(entity)) return null;
         User user = BeanUtils.toBean(entity, User.class);
         this.fillUserIdentity(user);
         return user;
@@ -102,6 +101,7 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
                 Wrappers.<UserEntity>lambdaQuery()
                         .eq(UserEntity::getEmail, email)
         );
+        if (Objects.isNull(entity)) return null;
         User user = BeanUtils.toBean(entity, User.class);
         this.fillUserIdentity(user);
         return user;

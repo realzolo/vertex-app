@@ -16,12 +16,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class EmailAuthenticationProvider implements AuthenticationProvider {
 
-    private final RedisCache redisCache;
     private final UserDetailsService userDetailsService;
+    private final RedisCache redisCache;
 
-    public EmailAuthenticationProvider(RedisCache redisCache, UserDetailsService userDetailsService) {
-        this.redisCache = redisCache;
+    public EmailAuthenticationProvider(UserDetailsService userDetailsService, RedisCache redisCache) {
         this.userDetailsService = userDetailsService;
+        this.redisCache = redisCache;
     }
 
     @Override
@@ -35,15 +35,13 @@ public class EmailAuthenticationProvider implements AuthenticationProvider {
         if (!code.equalsIgnoreCase(verificationCodeInRedis)) {
             throw new InvalidParameterException("验证码错误或已过期");
         }
+        redisCache.deleteObject(vcRedisKey);
 
         // 校验用户
         UserDetails userDetails = userDetailsService.loadUserByUsername(email);
         if (userDetails == null) {
-            throw new BadCredentialsException("用户不存在");
+            throw new BadCredentialsException("当前邮箱未绑定账号");
         }
-
-        // 删除验证码
-        redisCache.deleteObject(vcRedisKey);
 
         return new EmailAuthenticationToken(userDetails, code, userDetails.getAuthorities());
     }

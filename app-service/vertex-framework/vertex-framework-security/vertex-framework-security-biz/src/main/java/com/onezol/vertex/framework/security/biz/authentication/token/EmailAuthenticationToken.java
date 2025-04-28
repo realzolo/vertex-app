@@ -38,7 +38,7 @@ public class EmailAuthenticationToken extends AbstractAuthenticationToken {
     public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
         if (isAuthenticated) {
             throw new IllegalArgumentException(
-                    "Cannot set this token to trusted - use constructor which takes a GrantedAuthority list instead");
+                    "无法将此令牌设置为受信任，请使用构造函数，该构造函数将接收一个授权列表");
         }
 
         super.setAuthenticated(false);
@@ -49,4 +49,5 @@ public class EmailAuthenticationToken extends AbstractAuthenticationToken {
         super.eraseCredentials();
         credentials = null;
     }
+
 }

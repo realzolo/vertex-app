@@ -4,10 +4,8 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.onezol.vertex.framework.common.constant.CacheKey;
 import com.onezol.vertex.framework.common.constant.enumeration.Gender;
 import com.onezol.vertex.framework.common.exception.InvalidParameterException;
-import com.onezol.vertex.framework.common.exception.RuntimeServiceException;
 import com.onezol.vertex.framework.common.mvc.service.BaseServiceImpl;
 import com.onezol.vertex.framework.common.util.BeanUtils;
-import com.onezol.vertex.framework.common.util.StringUtils;
 import com.onezol.vertex.framework.security.api.context.AuthenticationContext;
 import com.onezol.vertex.framework.security.api.enumeration.LoginType;
 import com.onezol.vertex.framework.security.api.model.LoginUserDetails;
@@ -20,17 +18,14 @@ import com.onezol.vertex.framework.security.api.model.payload.UserSavePayload;
 import com.onezol.vertex.framework.security.api.service.LoginHistoryService;
 import com.onezol.vertex.framework.security.api.service.LoginUserService;
 import com.onezol.vertex.framework.security.api.service.UserAuthService;
-import com.onezol.vertex.framework.security.api.service.UserInfoService;
-import com.onezol.vertex.framework.security.biz.authentication.token.EmailAuthenticationToken;
 import com.onezol.vertex.framework.security.biz.mapper.UserMapper;
+import com.onezol.vertex.framework.security.biz.strategy.LoginStrategy;
+import com.onezol.vertex.framework.security.biz.strategy.LoginStrategyFactory;
 import com.onezol.vertex.framework.support.cache.RedisCache;
 import com.onezol.vertex.framework.support.support.JWTHelper;
 import com.onezol.vertex.framework.support.support.RedisKeyHelper;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
+import org.springframework.context.ApplicationContext;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,21 +36,19 @@ import java.util.Objects;
 @Service
 public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity> implements UserAuthService {
 
-    private final AuthenticationManager authenticationManager;
+    private final ApplicationContext applicationContext;
     private final PasswordEncoder passwordEncoder;
     private final RedisCache redisCache;
-    private final UserInfoService userInfoService;
     private final LoginUserService loginUserService;
     private final LoginHistoryService loginHistoryService;
 
     @Value("${spring.jwt.expiration-time:3600}")
     private Integer expirationTime;
 
-    public UserAuthServiceImpl(AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, RedisCache redisCache, UserInfoService userInfoService, LoginUserService loginUserService, LoginHistoryService loginHistoryService) {
-        this.authenticationManager = authenticationManager;
+    public UserAuthServiceImpl(ApplicationContext applicationContext, PasswordEncoder passwordEncoder, RedisCache redisCache, LoginUserService loginUserService, LoginHistoryService loginHistoryService) {
+        this.applicationContext = applicationContext;
         this.passwordEncoder = passwordEncoder;
         this.redisCache = redisCache;
-        this.userInfoService = userInfoService;
         this.loginUserService = loginUserService;
         this.loginHistoryService = loginHistoryService;
     }
@@ -117,90 +110,19 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
     }
 
     /**
-     * 用户登录(用户名密码登录)
+     * 用户登录
      *
-     * @param username         用户名
-     * @param password         密码
-     * @param fingerprint      用户指纹
-     * @param verificationCode 验证码
+     * @param loginType 登录类型
+     * @param params    登录参数
+     * @return 认证身份信息
      */
     @Override
-    public AuthIdentity loginByIdPassword(String username, String password, String fingerprint, String verificationCode) throws RuntimeServiceException {
-        if (StringUtils.isBlank(fingerprint)) {
-            throw new InvalidParameterException("用户指纹不能为空");
-        }
-        if (StringUtils.isAnyBlank(username, password)) {
-            throw new InvalidParameterException("用户名或密码不能为空");
-        }
-
-        // 校验验证码
-        String vcRedisKey = RedisKeyHelper.buildCacheKey(CacheKey.VC_UP, fingerprint);
-        String verificationCodeInRedis = redisCache.getCacheObject(vcRedisKey);
-        if (!verificationCode.equalsIgnoreCase(verificationCodeInRedis)) {
-            throw new InvalidParameterException("验证码错误");
-        }
-
-        // 调用 SpringSecurity 的 AuthenticationManager 处理登录验证
-        Authentication authentication = new UsernamePasswordAuthenticationToken(username, password);
-        try {
-            authentication = authenticationManager.authenticate(authentication);
-        } catch (AuthenticationException ex) {
-            String message = switch (ex.getClass().getSimpleName()) {
-                case "BadCredentialsException" -> "用户名或密码错误";
-                case "CredentialsExpiredException" -> "密码已过期";
-                case "DisabledException" -> "账号已被禁用";
-                case "LockedException" -> "账号已被锁定";
-                default -> ex.getMessage();
-            };
-            throw new RuntimeServiceException(message);
-        } finally {
-            redisCache.deleteObject(vcRedisKey);
-        }
-
-        // 获取用户信息
-        Object principal = authentication.getPrincipal();
-        LoginUserDetails loginUserDetails = (LoginUserDetails) principal;
-
-        // 处理登录成功后的逻辑
-        return afterLoginSuccess(loginUserDetails, LoginType.UP);
+    public AuthIdentity login(LoginType loginType, Object... params) {
+        Class<? extends LoginStrategy> strategyClass = LoginStrategyFactory.getStrategy(loginType);
+        LoginStrategy loginStrategy = applicationContext.getBean(strategyClass);
+        return loginStrategy.login(params);
     }
 
-    /**
-     * 用户登录(邮箱登录)
-     *
-     * @param email            电子邮箱
-     * @param verificationCode 验证码
-     */
-    @Override
-    public AuthIdentity loginByEmail(String email, String verificationCode) {
-        User user = userInfoService.getUserByEmail(email);
-        if (Objects.isNull(user)) {
-            throw new InvalidParameterException("当前邮箱暂未绑定账号");
-        }
-
-        // 调用 SpringSecurity 的 AuthenticationManager 处理登录验证
-        Authentication authentication = new EmailAuthenticationToken(email, verificationCode);
-        try {
-            authentication = authenticationManager.authenticate(authentication);
-        } catch (AuthenticationException ex) {
-            String message = switch (ex.getClass().getSimpleName()) {
-                case "BadCredentialsException" -> "用户名或密码错误";
-                case "CredentialsExpiredException" -> "密码已过期";
-                case "DisabledException" -> "账号已被禁用";
-                case "LockedException" -> "账号已被锁定";
-                default -> ex.getMessage();
-            };
-            throw new RuntimeServiceException(message);
-        } finally {
-        }
-
-        // 获取用户信息
-        Object principal = authentication.getPrincipal();
-        LoginUserDetails loginUserDetails = (LoginUserDetails) principal;
-
-        // 处理登录成功后的逻辑
-        return afterLoginSuccess(loginUserDetails, LoginType.UP);
-    }
 
     /**
      * 用户登出

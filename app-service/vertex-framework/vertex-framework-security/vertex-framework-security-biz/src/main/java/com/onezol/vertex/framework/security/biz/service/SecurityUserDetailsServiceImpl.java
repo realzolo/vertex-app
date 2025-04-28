@@ -8,7 +8,6 @@ import com.onezol.vertex.framework.security.api.service.UserAuthService;
 import com.onezol.vertex.framework.security.api.service.UserInfoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -29,19 +28,20 @@ public class SecurityUserDetailsServiceImpl implements UserDetailsService {
     /**
      * 根据用户名获取用户信息
      *
-     * @param username 用户名
+     * @param principal 用户名/邮箱/手机号/...
      * @return 用户信息
      */
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = null;
-        if (ValidationUtils.validateEmail(username)) {
-            user = userInfoService.getUserByEmail(username);
+    public UserDetails loadUserByUsername(String principal) throws UsernameNotFoundException {
+        User user;
+        if (ValidationUtils.validateEmail(principal)) {
+            user = userInfoService.getUserByEmail(principal);
         } else {
-            user = userInfoService.getUserByUsername(username);
+            user = userInfoService.getUserByUsername(principal);
         }
+
         if (user == null) {
-            throw new BadCredentialsException("用户名或密码错误");
+            return null;
         }
 
         UserPassword userPassword = userAuthService.getPassword(user.getId());

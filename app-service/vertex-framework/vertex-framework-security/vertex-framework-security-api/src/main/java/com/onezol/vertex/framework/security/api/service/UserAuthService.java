@@ -1,6 +1,7 @@
 package com.onezol.vertex.framework.security.api.service;
 
 import com.onezol.vertex.framework.common.mvc.service.BaseService;
+import com.onezol.vertex.framework.security.api.enumeration.LoginType;
 import com.onezol.vertex.framework.security.api.model.dto.AuthIdentity;
 import com.onezol.vertex.framework.security.api.model.dto.UserPassword;
 import com.onezol.vertex.framework.security.api.model.entity.UserEntity;
@@ -16,23 +17,13 @@ public interface UserAuthService extends BaseService<UserEntity> {
     AuthIdentity register(UserSavePayload payload);
 
     /**
-     * 用户登录(用户名密码登录)
+     * 用户登录
      *
-     * @param username         用户名
-     * @param password         密码
-     * @param fingerprint      用户指纹
-     * @param verificationCode 验证码
+     * @param loginType 登录类型
+     * @param params    登录参数
+     * @return 认证身份信息
      */
-    AuthIdentity loginByIdPassword(String username, String password, String fingerprint, String verificationCode);
-
-
-    /**
-     * 用户登录(根据邮箱)
-     *
-     * @param email            电子邮箱
-     * @param verificationCode 验证码
-     */
-    AuthIdentity loginByEmail(String email, String verificationCode);
+    AuthIdentity login(LoginType loginType, Object... params);
 
     /**
      * 用户登出

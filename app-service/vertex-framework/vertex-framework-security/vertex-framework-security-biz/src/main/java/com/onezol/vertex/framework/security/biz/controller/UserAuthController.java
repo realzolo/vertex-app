@@ -2,6 +2,7 @@ package com.onezol.vertex.framework.security.biz.controller;
 
 import com.onezol.vertex.framework.common.model.GenericResponse;
 import com.onezol.vertex.framework.security.api.annotation.RestrictAccess;
+import com.onezol.vertex.framework.security.api.enumeration.LoginType;
 import com.onezol.vertex.framework.security.api.model.dto.AuthIdentity;
 import com.onezol.vertex.framework.security.api.model.payload.UserAccountLoginPayload;
 import com.onezol.vertex.framework.security.api.model.payload.UserEmailLoginPayload;
@@ -37,16 +38,14 @@ public class UserAuthController {
     @Operation(summary = "用户登录", description = "用户登录: 根据用户名密码")
     @PostMapping({"/login", "/idpassword/login"})
     public GenericResponse<AuthIdentity> loginByIdPassword(@RequestBody @Valid UserAccountLoginPayload payload) {
-        AuthIdentity authIdentity = userAuthService.loginByIdPassword(
-                payload.getUsername(), payload.getPassword(), payload.getFingerprint(), payload.getVerificationCode()
-        );
+        AuthIdentity authIdentity = userAuthService.login(LoginType.UP, payload.getUsername(), payload.getPassword(), payload.getFingerprint(), payload.getVerificationCode());
         return ResponseHelper.buildSuccessfulResponse(authIdentity);
     }
 
     @Operation(summary = "用户登录", description = "用户登录: 邮箱验证码")
     @PostMapping("/email/login")
     public GenericResponse<AuthIdentity> loginByEmail(@RequestBody @Valid UserEmailLoginPayload payload) {
-        AuthIdentity authIdentity = userAuthService.loginByEmail(payload.getEmail().toLowerCase(), payload.getVerificationCode());
+        AuthIdentity authIdentity = userAuthService.login(LoginType.EMAIL, payload.getEmail().toLowerCase(), payload.getVerificationCode());
         return ResponseHelper.buildSuccessfulResponse(authIdentity);
     }
 
