@@ -20,6 +20,8 @@ import com.onezol.vertex.framework.security.api.model.payload.UserSavePayload;
 import com.onezol.vertex.framework.security.api.service.LoginHistoryService;
 import com.onezol.vertex.framework.security.api.service.LoginUserService;
 import com.onezol.vertex.framework.security.api.service.UserAuthService;
+import com.onezol.vertex.framework.security.api.service.UserInfoService;
+import com.onezol.vertex.framework.security.biz.authentication.token.EmailAuthenticationToken;
 import com.onezol.vertex.framework.security.biz.mapper.UserMapper;
 import com.onezol.vertex.framework.support.cache.RedisCache;
 import com.onezol.vertex.framework.support.support.JWTHelper;
@@ -42,16 +44,18 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
     private final RedisCache redisCache;
+    private final UserInfoService userInfoService;
     private final LoginUserService loginUserService;
     private final LoginHistoryService loginHistoryService;
 
     @Value("${spring.jwt.expiration-time:3600}")
     private Integer expirationTime;
 
-    public UserAuthServiceImpl(AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, RedisCache redisCache, LoginUserService loginUserService, LoginHistoryService loginHistoryService) {
+    public UserAuthServiceImpl(AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, RedisCache redisCache, UserInfoService userInfoService, LoginUserService loginUserService, LoginHistoryService loginHistoryService) {
         this.authenticationManager = authenticationManager;
         this.passwordEncoder = passwordEncoder;
         this.redisCache = redisCache;
+        this.userInfoService = userInfoService;
         this.loginUserService = loginUserService;
         this.loginHistoryService = loginHistoryService;
     }
@@ -130,8 +134,8 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
         }
 
         // 校验验证码
-        String captchaRedisKey = RedisKeyHelper.buildCacheKey(CacheKey.VC_UP, fingerprint);
-        String verificationCodeInRedis = redisCache.getCacheObject(captchaRedisKey);
+        String vcRedisKey = RedisKeyHelper.buildCacheKey(CacheKey.VC_UP, fingerprint);
+        String verificationCodeInRedis = redisCache.getCacheObject(vcRedisKey);
         if (!verificationCode.equalsIgnoreCase(verificationCodeInRedis)) {
             throw new InvalidParameterException("验证码错误");
         }
@@ -148,9 +152,9 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
                 case "LockedException" -> "账号已被锁定";
                 default -> ex.getMessage();
             };
-            // 登录失败时移除Redis中的验证码
-            redisCache.deleteObject(captchaRedisKey);
             throw new RuntimeServiceException(message);
+        } finally {
+            redisCache.deleteObject(vcRedisKey);
         }
 
         // 获取用户信息
@@ -162,14 +166,40 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
     }
 
     /**
-     * 用户登录(根据邮箱)
+     * 用户登录(邮箱登录)
      *
-     * @param email      电子邮箱
-     * @param verifyCode 验证码
+     * @param email            电子邮箱
+     * @param verificationCode 验证码
      */
     @Override
-    public AuthIdentity loginByEmail(String email, String verifyCode) {
-        return null;
+    public AuthIdentity loginByEmail(String email, String verificationCode) {
+        User user = userInfoService.getUserByEmail(email);
+        if (Objects.isNull(user)) {
+            throw new InvalidParameterException("当前邮箱暂未绑定账号");
+        }
+
+        // 调用 SpringSecurity 的 AuthenticationManager 处理登录验证
+        Authentication authentication = new EmailAuthenticationToken(email, verificationCode);
+        try {
+            authentication = authenticationManager.authenticate(authentication);
+        } catch (AuthenticationException ex) {
+            String message = switch (ex.getClass().getSimpleName()) {
+                case "BadCredentialsException" -> "用户名或密码错误";
+                case "CredentialsExpiredException" -> "密码已过期";
+                case "DisabledException" -> "账号已被禁用";
+                case "LockedException" -> "账号已被锁定";
+                default -> ex.getMessage();
+            };
+            throw new RuntimeServiceException(message);
+        } finally {
+        }
+
+        // 获取用户信息
+        Object principal = authentication.getPrincipal();
+        LoginUserDetails loginUserDetails = (LoginUserDetails) principal;
+
+        // 处理登录成功后的逻辑
+        return afterLoginSuccess(loginUserDetails, LoginType.UP);
     }
 
     /**

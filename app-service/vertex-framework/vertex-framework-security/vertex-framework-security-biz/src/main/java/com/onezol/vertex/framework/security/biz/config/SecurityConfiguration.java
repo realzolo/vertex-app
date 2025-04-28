@@ -1,6 +1,7 @@
 package com.onezol.vertex.framework.security.biz.config;
 
 import com.onezol.vertex.framework.security.api.annotation.RestrictAccess;
+import com.onezol.vertex.framework.security.biz.authentication.provider.EmailAuthenticationProvider;
 import com.onezol.vertex.framework.security.biz.interceptor.JwtAuthenticationTokenFilter;
 import com.onezol.vertex.framework.security.biz.handler.UserAccessDeniedHandler;
 import com.onezol.vertex.framework.security.biz.handler.UserAuthenticationHandler;
@@ -10,10 +11,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -41,12 +45,16 @@ public class SecurityConfiguration {
      * 用户注销处理器
      */
     private final UserLogoutSuccessHandler userLogoutSuccessHandler;
+    private final EmailAuthenticationProvider emailAuthenticationProvider;
+    private final UserDetailsService userDetailsService;
 
-    public SecurityConfiguration(JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter, UserAuthenticationHandler userAuthenticationHandler, UserAccessDeniedHandler userAccessDeniedHandler, UserLogoutSuccessHandler userLogoutSuccessHandler) {
+    public SecurityConfiguration(JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter, UserAuthenticationHandler userAuthenticationHandler, UserAccessDeniedHandler userAccessDeniedHandler, UserLogoutSuccessHandler userLogoutSuccessHandler, EmailAuthenticationProvider emailAuthenticationProvider, UserDetailsService userDetailsService) {
         this.jwtAuthenticationTokenFilter = jwtAuthenticationTokenFilter;
         this.userAuthenticationHandler = userAuthenticationHandler;
         this.userAccessDeniedHandler = userAccessDeniedHandler;
         this.userLogoutSuccessHandler = userLogoutSuccessHandler;
+        this.emailAuthenticationProvider = emailAuthenticationProvider;
+        this.userDetailsService = userDetailsService;
     }
 
     @Bean
@@ -97,8 +105,19 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public AuthenticationManager authenticationManagerBean(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
+    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
+        authenticationManagerBuilder.authenticationProvider(daoAuthenticationProvider());
+        authenticationManagerBuilder.authenticationProvider(emailAuthenticationProvider);
+        return authenticationManagerBuilder.build();
+    }
+
+    @Bean
+    public DaoAuthenticationProvider daoAuthenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService);
+        authProvider.setPasswordEncoder(passwordEncoder());
+        return authProvider;
     }
 
     /**

@@ -52,14 +52,14 @@ const storeSetup = () => {
 
   // 登录
   const accountLogin = async (req: AccountLoginReq) => {
-    const res = await accountLoginApi({ ...req, clientId: import.meta.env.VITE_CLIENT_ID, authType: AuthTypeConstants.ACCOUNT })
+    const res = await accountLoginApi({ ...req })
     setToken(res.data.jwt.token)
     token.value = res.data.jwt.token
   }
 
   // 邮箱登录
   const emailLogin = async (req: EmailLoginReq) => {
-    const res = await emailLoginApi({ ...req, clientId: import.meta.env.VITE_CLIENT_ID, authType: AuthTypeConstants.EMAIL })
+    const res = await emailLoginApi({ ...req })
     setToken(res.data.jwt.token)
     token.value = res.data.jwt.token
   }

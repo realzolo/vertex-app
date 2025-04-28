@@ -14,10 +14,6 @@ public class UserEmailLoginPayload implements Payload {
     @NotBlank(message = "邮箱不能为空")
     private String email;
 
-    @Schema(name = "用户指纹")
-    @NotBlank(message = "用户指纹不能为空")
-    private String fingerprint;
-
     @Schema(name = "验证码")
     @NotBlank(message = "验证码不能为空")
     private String verificationCode;

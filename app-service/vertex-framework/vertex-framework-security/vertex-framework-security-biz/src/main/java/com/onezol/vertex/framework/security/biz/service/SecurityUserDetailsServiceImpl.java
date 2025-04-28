@@ -1,5 +1,6 @@
 package com.onezol.vertex.framework.security.biz.service;
 
+import com.onezol.vertex.framework.common.util.ValidationUtils;
 import com.onezol.vertex.framework.security.api.model.LoginUserDetails;
 import com.onezol.vertex.framework.security.api.model.dto.User;
 import com.onezol.vertex.framework.security.api.model.dto.UserPassword;
@@ -33,7 +34,12 @@ public class SecurityUserDetailsServiceImpl implements UserDetailsService {
      */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userInfoService.getUserByUsername(username);
+        User user = null;
+        if (ValidationUtils.validateEmail(username)) {
+            user = userInfoService.getUserByEmail(username);
+        } else {
+            user = userInfoService.getUserByUsername(username);
+        }
         if (user == null) {
             throw new BadCredentialsException("用户名或密码错误");
         }

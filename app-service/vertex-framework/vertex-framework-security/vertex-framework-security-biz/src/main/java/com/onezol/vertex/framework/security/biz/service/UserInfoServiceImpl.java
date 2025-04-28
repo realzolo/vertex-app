@@ -135,21 +135,22 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
     public void createOrUpdateUser(UserSavePayload payload) {
         UserEntity userEntity = BeanUtils.toBean(payload, UserEntity.class);
         userEntity.setPassword(passwordEncoder.encode(payload.getPassword()));
+        userEntity.setEmail(Objects.nonNull(payload.getEmail()) ? payload.getEmail().toLowerCase() : null);
 
         String username = payload.getUsername();
         String email = payload.getEmail();
 
         // 用户唯一性校验
         if (Objects.nonNull(this.getUserByUsername(username))) {
-            throw new InvalidParameterException("用户名已存在");
+            throw new InvalidParameterException("当前用户名已存在");
         }
         if (Objects.nonNull(this.getUserByEmail(email))) {
-            throw new InvalidParameterException("邮箱已存在");
+            throw new InvalidParameterException("当前邮箱已绑定其它账号，请更换邮箱");
         }
 
         // 部门信息合法性校验
         if (Objects.isNull(departmentService.getById(payload.getDepartmentId()))) {
-            throw new InvalidParameterException("部门不存在");
+            throw new InvalidParameterException("当前部门不存在，请确认部门信息");
         }
 
         // 角色列表合法性校验
@@ -159,7 +160,7 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
                         .in(RoleEntity::getCode, roleCodes)
         );
         if (roleEntities.size() != roleCodes.size()) {
-            throw new InvalidParameterException("角色不存在");
+            throw new InvalidParameterException("当前角色不存在，请确认角色信息");
         }
 
         // 创建或更新用户信息

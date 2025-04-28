@@ -25,7 +25,7 @@
     </a-form-item>
     <a-form-item>
       <a-space direction="vertical" fill class="w-full">
-        <a-button disabled class="btn" type="primary" :loading="loading" html-type="submit" size="large" long>立即登录</a-button>
+        <a-button class="btn" type="primary" :loading="loading" html-type="submit" size="large" long>立即登录</a-button>
       </a-space>
     </a-form-item>
   </a-form>
@@ -89,11 +89,7 @@ const handleLogin = async () => {
   }
 }
 
-const VerifyRef = ref<InstanceType<any>>()
-const captchaType = ref('blockPuzzle')
-const captchaMode = ref('pop')
 const captchaLoading = ref(false)
-
 const captchaTimer = ref()
 const captchaTime = ref(60)
 const captchaBtnName = ref('获取验证码')
