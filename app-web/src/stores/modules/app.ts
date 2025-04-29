@@ -56,8 +56,20 @@ const storeSetup = () => {
 
   // 系统配置配置
   const siteConfig = reactive({}) as BasicConfig
+
+  // 初始化系统配置（从缓存中读取）
+  const initSiteConfigFromCache = () => {
+    const cachedSiteConfig = JSON.parse(localStorage.getItem('site-config') || '{}')
+    Object.entries(cachedSiteConfig).forEach(([key, value]) => siteConfig[key] = value)
+    document.title = cachedSiteConfig.SITE_TITLE
+    document
+      .querySelector('link[rel="shortcut icon"]')
+      ?.setAttribute('href', cachedSiteConfig.SITE_FAVICON || '/favicon.ico')
+  }
+
   // 初始化系统配置
   const initSiteConfig = () => {
+    initSiteConfigFromCache()
     listSiteOptionDict().then((res) => {
       const resMap = new Map()
       res.data.forEach((item: DictionaryEntry) => {
@@ -68,6 +80,7 @@ const storeSetup = () => {
       siteConfig.SITE_TITLE = resMap.get('SITE_TITLE')
       siteConfig.SITE_COPYRIGHT = resMap.get('SITE_COPYRIGHT')
       siteConfig.SITE_BEIAN = resMap.get('SITE_BEIAN')
+      localStorage.setItem('site-config', JSON.stringify(siteConfig))
       document.title = resMap.get('SITE_TITLE')
       document
         .querySelector('link[rel="shortcut icon"]')

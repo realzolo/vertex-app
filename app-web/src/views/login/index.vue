@@ -2,7 +2,7 @@
   <div v-if="isDesktop" class="login pc">
     <h3 class="login-logo">
       <img v-if="logo" :src="logo" alt="logo" />
-      <img v-else src="/logo.svg" alt="logo" />
+      <img v-else src="/logo.png" alt="logo" />
       <span>{{ title }}</span>
     </h3>
 
@@ -54,7 +54,7 @@
   <div v-else class="login h5">
     <div class="login-logo">
       <img v-if="logo" :src="logo" alt="logo" />
-      <img v-else src="/logo.svg" alt="logo" />
+      <img v-else src="/logo.png" alt="logo" />
       <span>{{ title }}</span>
     </div>
     <a-row align="stretch" class="login-box">
