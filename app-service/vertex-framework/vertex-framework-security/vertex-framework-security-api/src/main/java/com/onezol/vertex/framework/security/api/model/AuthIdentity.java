@@ -1,5 +1,6 @@
-package com.onezol.vertex.framework.security.api.model.dto;
+package com.onezol.vertex.framework.security.api.model;
 
+import com.onezol.vertex.framework.security.api.model.dto.User;
 import lombok.Builder;
 import lombok.Data;
 

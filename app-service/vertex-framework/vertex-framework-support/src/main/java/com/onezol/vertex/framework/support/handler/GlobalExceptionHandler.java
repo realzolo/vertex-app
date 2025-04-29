@@ -9,7 +9,7 @@ import com.onezol.vertex.framework.common.model.SharedHttpServletRequest;
 import com.onezol.vertex.framework.common.model.entity.ExceptionLogEntity;
 import com.onezol.vertex.framework.common.util.JsonUtils;
 import com.onezol.vertex.framework.security.api.context.AuthenticationContext;
-import com.onezol.vertex.framework.security.api.model.dto.AuthUser;
+import com.onezol.vertex.framework.security.api.model.UserIdentity;
 import com.onezol.vertex.framework.support.manager.async.AsyncTaskManager;
 import com.onezol.vertex.framework.support.support.ResponseHelper;
 import jakarta.servlet.http.HttpServletRequest;
@@ -106,12 +106,12 @@ public class GlobalExceptionHandler {
     private ExceptionLogEntity newExceptionLog(SharedHttpServletRequest request, Throwable ex) {
         ExceptionLogEntity exLog = new ExceptionLogEntity();
         // 处理用户信息
-        AuthUser authUser = AuthenticationContext.get();
-        if (Objects.nonNull(authUser)) {
-            exLog.setUserId(authUser.getUserId());
-            exLog.setCreator(authUser.getUserId());
+        UserIdentity userIdentity = AuthenticationContext.get();
+        if (Objects.nonNull(userIdentity)) {
+            exLog.setUserId(userIdentity.getUserId());
+            exLog.setCreator(userIdentity.getUserId());
             exLog.setCreateTime(LocalDateTime.now());
-            exLog.setUpdater(authUser.getUserId());
+            exLog.setUpdater(userIdentity.getUserId());
             exLog.setUpdateTime(LocalDateTime.now());
             exLog.setUserAgent(JSON.toJSONString(request.getUserAgent()));
             exLog.setUserIp(request.getRemoteAddr());

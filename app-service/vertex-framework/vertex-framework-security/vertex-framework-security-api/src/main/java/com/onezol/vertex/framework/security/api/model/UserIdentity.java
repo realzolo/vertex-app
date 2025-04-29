@@ -1,4 +1,4 @@
-package com.onezol.vertex.framework.security.api.model.dto;
+package com.onezol.vertex.framework.security.api.model;
 
 import com.onezol.vertex.framework.common.model.DataPairRecord;
 import lombok.Builder;
@@ -8,7 +8,7 @@ import java.util.List;
 
 @Data
 @Builder
-public class AuthUser {
+public class UserIdentity {
 
     private Long userId;
 

@@ -3,7 +3,7 @@ package com.onezol.vertex.framework.security.biz.controller;
 import com.onezol.vertex.framework.common.model.GenericResponse;
 import com.onezol.vertex.framework.security.api.annotation.RestrictAccess;
 import com.onezol.vertex.framework.security.api.enumeration.LoginType;
-import com.onezol.vertex.framework.security.api.model.dto.AuthIdentity;
+import com.onezol.vertex.framework.security.api.model.AuthIdentity;
 import com.onezol.vertex.framework.security.api.model.payload.UserAccountLoginPayload;
 import com.onezol.vertex.framework.security.api.model.payload.UserEmailLoginPayload;
 import com.onezol.vertex.framework.security.api.service.UserAuthService;

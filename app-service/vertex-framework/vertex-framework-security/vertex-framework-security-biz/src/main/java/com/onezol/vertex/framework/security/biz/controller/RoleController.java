@@ -10,7 +10,7 @@ import com.onezol.vertex.framework.common.util.TreeUtils;
 import com.onezol.vertex.framework.security.api.annotation.RestrictAccess;
 import com.onezol.vertex.framework.security.api.context.AuthenticationContext;
 import com.onezol.vertex.framework.security.api.enumeration.PermissionTypeEnum;
-import com.onezol.vertex.framework.security.api.model.dto.AuthUser;
+import com.onezol.vertex.framework.security.api.model.UserIdentity;
 import com.onezol.vertex.framework.security.api.model.dto.Permission;
 import com.onezol.vertex.framework.security.api.model.dto.Role;
 import com.onezol.vertex.framework.security.api.model.dto.User;
@@ -47,8 +47,8 @@ public class RoleController extends BaseController<RoleEntity> {
 
     @GetMapping("/route")
     public GenericResponse<List<TreeNode>> route() {
-        AuthUser authUser = AuthenticationContext.get();
-        List<DataPairRecord> roles = authUser.getRoles();
+        UserIdentity userIdentity = AuthenticationContext.get();
+        List<DataPairRecord> roles = userIdentity.getRoles();
         Set<Long> roleIds = roles.stream().map(DataPairRecord::getId).collect(Collectors.toSet());
         Set<Long> permissionIds = rolePermissionService.list(
                 Wrappers.<RolePermissionEntity>lambdaQuery()

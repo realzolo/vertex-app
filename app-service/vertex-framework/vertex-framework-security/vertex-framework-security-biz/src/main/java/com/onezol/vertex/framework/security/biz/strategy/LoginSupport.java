@@ -1,8 +1,8 @@
 package com.onezol.vertex.framework.security.biz.strategy;
 
 import com.onezol.vertex.framework.security.api.enumeration.LoginType;
+import com.onezol.vertex.framework.security.api.model.AuthIdentity;
 import com.onezol.vertex.framework.security.api.model.LoginUserDetails;
-import com.onezol.vertex.framework.security.api.model.dto.AuthIdentity;
 import com.onezol.vertex.framework.security.api.service.LoginHistoryService;
 import com.onezol.vertex.framework.security.api.service.LoginUserService;
 import com.onezol.vertex.framework.support.support.JWTHelper;

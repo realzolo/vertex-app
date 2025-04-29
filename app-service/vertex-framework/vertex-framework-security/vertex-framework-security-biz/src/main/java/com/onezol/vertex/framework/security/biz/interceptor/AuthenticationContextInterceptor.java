@@ -1,8 +1,8 @@
 package com.onezol.vertex.framework.security.biz.interceptor;
 
 import com.onezol.vertex.framework.security.api.context.AuthenticationContext;
-import com.onezol.vertex.framework.security.api.model.dto.AuthUser;
 import com.onezol.vertex.framework.security.api.model.LoginUserDetails;
+import com.onezol.vertex.framework.security.api.model.UserIdentity;
 import lombok.NonNull;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.core.Authentication;
@@ -27,7 +27,7 @@ public class AuthenticationContextInterceptor implements WebRequestInterceptor {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Object principal = authentication.getPrincipal();
         if (principal instanceof LoginUserDetails loginUserDetails) {
-            AuthUser model = AuthUser.builder()
+            UserIdentity identity = UserIdentity.builder()
                     .userId(loginUserDetails.getId())
                     .username(loginUserDetails.getUsername())
                     .nickname(loginUserDetails.getNickname())
@@ -35,7 +35,7 @@ public class AuthenticationContextInterceptor implements WebRequestInterceptor {
                     .roles(loginUserDetails.getRoles())
                     .permissions(loginUserDetails.getPermissions())
                     .build();
-            AuthenticationContext.set(model);
+            AuthenticationContext.set(identity);
         }
     }
 

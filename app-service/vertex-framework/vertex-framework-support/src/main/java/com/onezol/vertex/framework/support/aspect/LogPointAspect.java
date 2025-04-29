@@ -11,7 +11,7 @@ import com.onezol.vertex.framework.common.util.JsonUtils;
 import com.onezol.vertex.framework.common.util.NetworkUtils;
 import com.onezol.vertex.framework.common.util.ServletUtils;
 import com.onezol.vertex.framework.security.api.context.AuthenticationContext;
-import com.onezol.vertex.framework.security.api.model.dto.AuthUser;
+import com.onezol.vertex.framework.security.api.model.UserIdentity;
 import com.onezol.vertex.framework.support.manager.async.AsyncTaskManager;
 import eu.bitwalker.useragentutils.UserAgent;
 import io.swagger.v3.oas.annotations.Operation;
@@ -100,7 +100,7 @@ public class LogPointAspect {
      * @param ex                       异常
      */
     private void submitLog(final JoinPoint joinPoint, final SharedHttpServletRequest sharedHttpServletRequest, final Object result, final long time, final Exception ex) {
-        AuthUser user = AuthenticationContext.get();
+        UserIdentity user = AuthenticationContext.get();
 
         // 请求参数
         Object[] args = joinPoint.getArgs();

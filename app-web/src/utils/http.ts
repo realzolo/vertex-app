@@ -2,7 +2,7 @@ import axios from 'axios'
 import qs from 'query-string'
 import type { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 import { useUserStore } from '@/stores'
-import { getToken } from '@/utils/auth'
+import { setToken, getToken } from '@/utils/auth'
 import modalErrorWrapper from '@/utils/modal-error-wrapper'
 import messageErrorWrapper from '@/utils/message-error-wrapper'
 import notificationErrorWrapper from '@/utils/notification-error-wrapper'
@@ -67,6 +67,12 @@ http.interceptors.response.use(
   (response: AxiosResponse) => {
     const { data } = response
     const { success, code, message } = data
+
+    const authorization = response.headers.authorization
+    if (authorization) {
+      const token = authorization.split(' ')[1]
+      setToken(token)
+    }
 
     if (response.request.responseType === 'blob') {
       const contentType = data.type

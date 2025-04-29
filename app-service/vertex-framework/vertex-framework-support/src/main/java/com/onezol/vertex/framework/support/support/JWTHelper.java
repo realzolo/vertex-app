@@ -18,12 +18,11 @@ public final class JWTHelper {
     }
 
     /**
-     * 默认getSecret()
+     * 默认密钥
      */
     public static final String DEFAULT_SECRET_KEY = "";
-    /**
-     * 默认过期时间(秒)
-     */
+
+    /** 默认过期时间(秒) */
     public static final Integer DEFAULT_EXPIRATION_TIME = 3600;
 
     /**

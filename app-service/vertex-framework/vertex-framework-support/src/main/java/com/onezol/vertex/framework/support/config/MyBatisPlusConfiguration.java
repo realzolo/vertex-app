@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInt
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import com.baomidou.mybatisplus.extension.toolkit.JdbcUtils;
 import com.onezol.vertex.framework.security.api.context.AuthenticationContext;
-import com.onezol.vertex.framework.security.api.model.dto.AuthUser;
+import com.onezol.vertex.framework.security.api.model.UserIdentity;
 import com.onezol.vertex.framework.support.support.CompactSnowflakeIdGenerator;
 import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.beans.factory.annotation.Value;
@@ -64,18 +64,18 @@ public class MyBatisPlusConfiguration {
     public static class MetaObjectHandler implements com.baomidou.mybatisplus.core.handlers.MetaObjectHandler {
         @Override
         public void insertFill(MetaObject metaObject) {
-            AuthUser authUser = AuthenticationContext.get();
-            this.strictInsertFill(metaObject, "creator", Long.class, Objects.nonNull(authUser) ? authUser.getUserId() : null);
+            UserIdentity userIdentity = AuthenticationContext.get();
+            this.strictInsertFill(metaObject, "creator", Long.class, Objects.nonNull(userIdentity) ? userIdentity.getUserId() : null);
             this.strictInsertFill(metaObject, "createTime", LocalDateTime.class, LocalDateTime.now());
-            this.strictInsertFill(metaObject, "updater", Long.class, Objects.nonNull(authUser) ? authUser.getUserId() : null);
+            this.strictInsertFill(metaObject, "updater", Long.class, Objects.nonNull(userIdentity) ? userIdentity.getUserId() : null);
             this.strictInsertFill(metaObject, "updateTime", LocalDateTime.class, LocalDateTime.now());
             this.strictInsertFill(metaObject, "deleted", Boolean.class, Boolean.FALSE);
         }
 
         @Override
         public void updateFill(MetaObject metaObject) {
-            AuthUser authUser = AuthenticationContext.get();
-            this.strictUpdateFill(metaObject, "updater", Long.class, Objects.nonNull(authUser) ? authUser.getUserId() : null);
+            UserIdentity userIdentity = AuthenticationContext.get();
+            this.strictUpdateFill(metaObject, "updater", Long.class, Objects.nonNull(userIdentity) ? userIdentity.getUserId() : null);
             this.strictUpdateFill(metaObject, "updateTime", LocalDateTime.class, LocalDateTime.now());
         }
     }

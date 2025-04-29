@@ -8,9 +8,9 @@ import com.onezol.vertex.framework.common.mvc.service.BaseServiceImpl;
 import com.onezol.vertex.framework.common.util.BeanUtils;
 import com.onezol.vertex.framework.security.api.context.AuthenticationContext;
 import com.onezol.vertex.framework.security.api.enumeration.LoginType;
+import com.onezol.vertex.framework.security.api.model.AuthIdentity;
 import com.onezol.vertex.framework.security.api.model.LoginUserDetails;
-import com.onezol.vertex.framework.security.api.model.dto.AuthIdentity;
-import com.onezol.vertex.framework.security.api.model.dto.AuthUser;
+import com.onezol.vertex.framework.security.api.model.UserIdentity;
 import com.onezol.vertex.framework.security.api.model.dto.User;
 import com.onezol.vertex.framework.security.api.model.dto.UserPassword;
 import com.onezol.vertex.framework.security.api.model.entity.UserEntity;
@@ -129,12 +129,12 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
      */
     @Override
     public void logout() {
-        AuthUser authUser = AuthenticationContext.get();
+        UserIdentity userIdentity = AuthenticationContext.get();
         // 移除用户Token
-        String tokenKey = RedisKeyHelper.buildCacheKey(CacheKey.USER_TOKEN, String.valueOf(authUser.getUserId()));
+        String tokenKey = RedisKeyHelper.buildCacheKey(CacheKey.USER_TOKEN, String.valueOf(userIdentity.getUserId()));
         redisCache.deleteObject(tokenKey);
         // 移除用户信息
-        String infoKey = RedisKeyHelper.buildCacheKey(CacheKey.USER_INFO, String.valueOf(authUser.getUserId()));
+        String infoKey = RedisKeyHelper.buildCacheKey(CacheKey.USER_INFO, String.valueOf(userIdentity.getUserId()));
         redisCache.deleteObject(infoKey);
     }
 

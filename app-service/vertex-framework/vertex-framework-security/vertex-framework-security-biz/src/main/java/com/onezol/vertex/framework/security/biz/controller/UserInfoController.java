@@ -7,7 +7,7 @@ import com.onezol.vertex.framework.common.model.PagePack;
 import com.onezol.vertex.framework.common.mvc.controller.BaseController;
 import com.onezol.vertex.framework.security.api.annotation.RestrictAccess;
 import com.onezol.vertex.framework.security.api.context.AuthenticationContext;
-import com.onezol.vertex.framework.security.api.model.dto.AuthUser;
+import com.onezol.vertex.framework.security.api.model.UserIdentity;
 import com.onezol.vertex.framework.security.api.model.dto.User;
 import com.onezol.vertex.framework.security.api.model.entity.UserEntity;
 import com.onezol.vertex.framework.security.api.model.payload.UserQueryPayload;
@@ -39,8 +39,8 @@ public class UserInfoController extends BaseController<UserEntity> {
     @RestrictAccess
     @GetMapping("/me")
     public GenericResponse<User> me() {
-        AuthUser authUser = AuthenticationContext.get();
-        User user = userInfoService.getUserById(authUser.getUserId());
+        UserIdentity userIdentity = AuthenticationContext.get();
+        User user = userInfoService.getUserById(userIdentity.getUserId());
         return ResponseHelper.buildSuccessfulResponse(user);
     }
 

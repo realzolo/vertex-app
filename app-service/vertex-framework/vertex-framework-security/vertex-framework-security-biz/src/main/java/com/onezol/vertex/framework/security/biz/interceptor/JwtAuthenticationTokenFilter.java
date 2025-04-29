@@ -38,13 +38,11 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
     private final RedisCache redisCache;
 
-    // token过期时间: 默认1小时 （单位秒）
     @Value("${spring.jwt.expiration-time:3600}")
-    private Integer expirationTime;
+    private Integer expirationTime;     // token过期时间: 默认1小时 （单位秒）
 
-    // token续期的阈值: 默认15分钟 （单位秒, 距离过期时间小于该阈值时, 进行续期操作）
     @Value("${spring.jwt.renew-threshold:900}")
-    private Integer renewThreshold;
+    private Integer renewThreshold;     // token续期的阈值: 默认15分钟 （单位秒, 距离过期时间小于该阈值时, 进行续期操作）
 
     public JwtAuthenticationTokenFilter(RedisCache redisCache) {
         this.redisCache = redisCache;
@@ -57,32 +55,28 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         if (StringUtils.isNotBlank(authorizationHeader) && authorizationHeader.startsWith(AUTHORIZATION_HEADER)) {
             String token = authorizationHeader.substring(AUTHORIZATION_HEADER.length());
 
-            // 验证token有效性
+            // 1. 校验token
             boolean ok = JWTHelper.validateToken(token);
             if (!ok) {
                 filterChain.doFilter(request, response);
                 return;
             }
 
-            // 从Redis中获取用户信息, 并验证用户信息是否存在
+            // 2. 从Redis中获取用户信息, 并验证用户信息是否存在
             String subject = JWTHelper.getSubjectFromToken(token);
-            String redisKey = RedisKeyHelper.buildCacheKey(CacheKey.USER_INFO, subject);
-            LoginUserDetails loginUserDetails = redisCache.getCacheObject(redisKey);
-            if (Objects.isNull(loginUserDetails)) {
+            String redisTokenKey = RedisKeyHelper.buildCacheKey(CacheKey.USER_TOKEN, subject);
+            String redisInfoKey = RedisKeyHelper.buildCacheKey(CacheKey.USER_INFO, subject);
+            String tokenInRedis = redisCache.getCacheObject(redisTokenKey);
+            LoginUserDetails loginUserDetails = redisCache.getCacheObject(redisInfoKey);
+            if (StringUtils.isBlank(tokenInRedis) || Objects.isNull(loginUserDetails)) {
                 filterChain.doFilter(request, response);
                 return;
             }
 
             // 检查token是否快要过期，进行续期操作
-            Claims claims = JWTHelper.getClaimsFromToken(token);
-            assert claims != null;
-            if (isTokenNearExpiration(claims)) {
-                // 续期JWT
-                String renewedToken = renewToken(claims);
+            if (this.checkTokenIsAboutToExpire(token)) {
+                String renewedToken = this.renewalToken(subject);
                 response.setHeader(HttpHeaders.AUTHORIZATION, AUTHORIZATION_HEADER + renewedToken);
-                // 续期Redis中的用户信息
-                redisCache.expire(redisKey, expirationTime, TimeUnit.SECONDS);
-                log.info("用户[{}]的token已续期", subject);
             }
 
             // 将用户信息存入SecurityContext中, 以便后续使用
@@ -98,27 +92,31 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     /**
      * 检查token是否快要过期
      *
-     * @param claims JWT的Claims对象
+     * @param token JWT
      * @return true: 快要过期, false: 没有快要过期
      */
-    private boolean isTokenNearExpiration(Claims claims) {
-        // 获取token的过期时间
+    private boolean checkTokenIsAboutToExpire(String token) {
+        Claims claims = JWTHelper.getClaimsFromToken(token);
+        assert claims != null;
         Date expirationDate = claims.getExpiration();
-        // 计算token剩余有效时间（单位：毫秒）
         long timeToExpiration = expirationDate.getTime() - System.currentTimeMillis();
-        // 判断token是否快要过期
         return timeToExpiration < renewThreshold * 1000;
     }
 
     /**
      * 续期JWT（重新生成一个）
      *
-     * @param claims JWT的Claims对象
+     * @param userId 用户名
      * @return 续期后的JWT
      */
-    private String renewToken(Claims claims) {
-        String subject = claims.getSubject();
-        return JWTHelper.generateToken(subject);
+    private String renewalToken(String userId) {
+        String renewedToken = JWTHelper.generateToken(userId);
+        String redisTokenKey = RedisKeyHelper.buildCacheKey(CacheKey.USER_TOKEN, userId);
+        String redisInfoKey = RedisKeyHelper.buildCacheKey(CacheKey.USER_INFO, userId);
+        redisCache.setCacheObject(redisTokenKey, renewedToken, expirationTime, TimeUnit.SECONDS);
+        redisCache.expire(redisInfoKey, expirationTime, TimeUnit.SECONDS);
+        log.info("[Security] 用户({})的token已续期", userId);
+        return renewedToken;
     }
 
 }
