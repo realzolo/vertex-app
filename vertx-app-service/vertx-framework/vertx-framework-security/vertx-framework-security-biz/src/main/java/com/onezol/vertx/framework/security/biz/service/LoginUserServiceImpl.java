@@ -71,7 +71,7 @@ public class LoginUserServiceImpl implements LoginUserService {
         redisCache.setCacheObject(redisInfoKey, loginUserDetails, expirationTime, TimeUnit.SECONDS);
 
         // 存储在线用户
-        redisCache.setCacheMapValue(CacheKey.ONLINE_USER, subject, Instant.now(Clock.systemDefaultZone()).toEpochMilli());
+        redisCache.setCacheMapValue(CacheKey.ONLINE_USER, subject, System.currentTimeMillis());
     }
 
     /**
@@ -145,7 +145,7 @@ public class LoginUserServiceImpl implements LoginUserService {
                     LoginHistoryEntity loginHistory = loginHistoryMap.get(entity.getId());
                     LoginType loginType = loginHistory.getLoginType();
                     long loginTime = Long.parseLong(cacheMap.get(String.valueOf(entity.getId())).toString());
-                    String onlineTime = DateUtils.shortTimeDifference(LocalDateTime.ofInstant(Instant.ofEpochMilli(loginTime), ZoneId.of("Asia/Shanghai")), LocalDateTime.now());
+                    String onlineTime = DateUtils.shortTimeDifference(LocalDateTime.ofInstant(Instant.ofEpochMilli(loginTime), ZoneId.systemDefault()), LocalDateTime.now());
                     LoginUser loginUser = new LoginUser();
                     loginUser.setUserId(entity.getId());
                     loginUser.setUsername(entity.getUsername());
