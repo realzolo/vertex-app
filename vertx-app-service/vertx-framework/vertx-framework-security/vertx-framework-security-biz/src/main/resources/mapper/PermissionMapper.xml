@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onezol.vertx.framework.security.biz.mapper.PermissionMapper">
+
+    <select id="queryRolePermissions" resultType="com.onezol.vertx.framework.security.api.model.entity.PermissionEntity">
+        SELECT
+            p.*
+        FROM
+            app_role_permission rp
+                LEFT JOIN app_permission p ON p.id = rp.permission_id
+                LEFT JOIN app_role r ON r.id = rp.role_id
+        <where>
+            p.id IS NOT NULL AND r.id IS NOT NULL
+            <if test="roleIds != null and roleIds.size() > 0">
+                AND
+                <foreach collection="roleIds" item="roleId" open="(" close=")" separator="OR">
+                    rp.role_id = #{roleId}
+                </foreach>
+            </if>
+        </where>
+        GROUP BY
+            p.id
+    </select>
+
+</mapper>

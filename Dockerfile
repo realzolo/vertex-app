@@ -1,11 +1,10 @@
-FROM eclipse-temurin:21-jre
 
 # 设置工作目录
-RUN mkdir -p /vertex-app
-WORKDIR /vertex-app
+RUN mkdir -p /opt/vertx-app
+WORKDIR /opt/vertx-app
 
 # 复制Jar包到镜像中
-COPY vertex-application/target/*.jar app.jar
+COPY vertx-app/target/*.jar app.jar
 
 ## 设置 TZ 时区
 ENV TZ=Asia/Shanghai

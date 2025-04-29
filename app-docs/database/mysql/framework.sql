@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS vx_user
+CREATE TABLE IF NOT EXISTS app_user
 (
     id           BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
     -- 自定义字段开始 --
@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS vx_user
   DEFAULT CHARSET = utf8mb4
   COMMENT = '用户';
 
-CREATE TABLE IF NOT EXISTS vx_role
+CREATE TABLE IF NOT EXISTS app_role
 (
     id          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
     -- 自定义字段开始 --
@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS vx_role
   DEFAULT CHARSET = utf8mb4
   COMMENT = '用户角色';
 
-CREATE TABLE IF NOT EXISTS vx_permission
+CREATE TABLE IF NOT EXISTS app_permission
 (
     id          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
     -- 自定义字段开始 --
@@ -73,7 +73,7 @@ CREATE TABLE IF NOT EXISTS vx_permission
     DEFAULT CHARSET = utf8mb4
     COMMENT = '权限(菜单)';
 
-CREATE TABLE IF NOT EXISTS vx_user_role
+CREATE TABLE IF NOT EXISTS app_user_role
 (
     id          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
     -- 自定义字段开始 --
@@ -91,7 +91,7 @@ CREATE TABLE IF NOT EXISTS vx_user_role
     DEFAULT CHARSET = utf8mb4
     COMMENT = '用户-角色';
 
-CREATE TABLE IF NOT EXISTS vx_role_permission
+CREATE TABLE IF NOT EXISTS app_role_permission
 (
     id             BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
     -- 自定义字段开始 --
@@ -109,7 +109,7 @@ CREATE TABLE IF NOT EXISTS vx_role_permission
     DEFAULT CHARSET = utf8mb4
     COMMENT = '角色-权限';
 
-CREATE TABLE IF NOT EXISTS vx_exception_log
+CREATE TABLE IF NOT EXISTS app_exception_log
 (
     id                           BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
     -- 自定义字段开始 --
@@ -138,7 +138,7 @@ CREATE TABLE IF NOT EXISTS vx_exception_log
   DEFAULT CHARSET = utf8mb4
   COMMENT = 'API错误日志';
 
-CREATE TABLE IF NOT EXISTS vx_operation_log
+CREATE TABLE IF NOT EXISTS app_operation_log
 (
     id             BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
     -- 自定义字段开始 --
@@ -169,7 +169,7 @@ CREATE TABLE IF NOT EXISTS vx_operation_log
   DEFAULT CHARSET = utf8mb4
   COMMENT = '操作日志';
 
-CREATE TABLE IF NOT EXISTS vx_runtime_configuration
+CREATE TABLE IF NOT EXISTS app_runtime_configuration
 (
     id          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
     -- 自定义字段开始 --
@@ -189,7 +189,7 @@ CREATE TABLE IF NOT EXISTS vx_runtime_configuration
   DEFAULT CHARSET = utf8mb4
   COMMENT = '运行时配置';
 
-CREATE TABLE IF NOT EXISTS vx_dictionary
+CREATE TABLE IF NOT EXISTS app_dictionary
 (
     id          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
     -- 自定义字段开始 --
@@ -212,7 +212,7 @@ CREATE TABLE IF NOT EXISTS vx_dictionary
     DEFAULT CHARSET = utf8mb4
     COMMENT = '数据字典';
 
-CREATE TABLE IF NOT EXISTS vx_storage_strategy
+CREATE TABLE IF NOT EXISTS app_storage_strategy
 (
     id          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
     -- 自定义字段开始 --
@@ -239,7 +239,7 @@ CREATE TABLE IF NOT EXISTS vx_storage_strategy
     DEFAULT CHARSET = utf8mb4
     COMMENT = '存储策略';
 
-CREATE TABLE IF NOT EXISTS vx_file_record
+CREATE TABLE IF NOT EXISTS app_file_record
 (
     id          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
     -- 自定义字段开始 --
@@ -261,7 +261,7 @@ CREATE TABLE IF NOT EXISTS vx_file_record
     DEFAULT CHARSET = utf8mb4
     COMMENT = '文件记录';
 
-CREATE TABLE IF NOT EXISTS vx_department
+CREATE TABLE IF NOT EXISTS app_department
 (
     id          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
     -- 自定义字段开始 --
@@ -282,7 +282,7 @@ CREATE TABLE IF NOT EXISTS vx_department
     DEFAULT CHARSET = utf8mb4
     COMMENT = '部门';
 
-CREATE TABLE IF NOT EXISTS vx_user_department
+CREATE TABLE IF NOT EXISTS app_user_department
 (
     id          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
     -- 自定义字段开始 --
@@ -298,7 +298,7 @@ CREATE TABLE IF NOT EXISTS vx_user_department
     DEFAULT CHARSET = utf8mb4
     COMMENT = '用户-部门';
 
-CREATE TABLE IF NOT EXISTS vx_notice
+CREATE TABLE IF NOT EXISTS app_notice
 (
     id          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
     -- 自定义字段开始 --
@@ -320,7 +320,7 @@ CREATE TABLE IF NOT EXISTS vx_notice
     DEFAULT CHARSET = utf8mb4
     COMMENT = '通知公告';
 
-CREATE TABLE IF NOT EXISTS vx_login_history
+CREATE TABLE IF NOT EXISTS app_login_history
 (
     id          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
     -- 自定义字段开始 --
@@ -341,7 +341,7 @@ CREATE TABLE IF NOT EXISTS vx_login_history
     DEFAULT CHARSET = utf8mb4
     COMMENT = '用户登录历史';
 
-CREATE TABLE IF NOT EXISTS vx_approval_flow_template
+CREATE TABLE IF NOT EXISTS app_approval_flow_template
 (
     id          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
     -- 自定义字段开始 --
@@ -361,7 +361,7 @@ CREATE TABLE IF NOT EXISTS vx_approval_flow_template
     DEFAULT CHARSET = utf8mb4
     COMMENT = '审批流程模板';
 
-CREATE TABLE IF NOT EXISTS vx_approval_flow_binding_relation
+CREATE TABLE IF NOT EXISTS app_approval_flow_binding_relation
 (
     id          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
     -- 自定义字段开始 --
@@ -378,7 +378,7 @@ CREATE TABLE IF NOT EXISTS vx_approval_flow_binding_relation
     DEFAULT CHARSET = utf8mb4
     COMMENT = '业务流程关联';
 
-CREATE TABLE IF NOT EXISTS approval_flow_node_candidate
+CREATE TABLE IF NOT EXISTS app_approval_flow_node_candidate
 (
     id          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
     -- 自定义字段开始 --
@@ -400,7 +400,7 @@ CREATE TABLE IF NOT EXISTS approval_flow_node_candidate
     DEFAULT CHARSET = utf8mb4
     COMMENT = '审批节点候选人';
 
-CREATE TABLE IF NOT EXISTS approval_flow_node
+CREATE TABLE IF NOT EXISTS app_approval_flow_node
 (
     id          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
     -- 自定义字段开始 --

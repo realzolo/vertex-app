@@ -1,0 +1,27 @@
+package com.onezol.vertx.framework.common.model.payload;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import lombok.Data;
+
+import static com.onezol.vertx.framework.common.constant.DefaultPage.DEFAULT_PAGE_NUMBER;
+import static com.onezol.vertx.framework.common.constant.DefaultPage.DEFAULT_PAGE_SIZE;
+
+@Schema(name = "分页参数")
+@Data
+public class PagePayload implements Payload {
+
+    @Schema(name = "页码，从 1 开始", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
+    @NotNull(message = "页码不能为空")
+    @Min(value = 1, message = "页码最小值为 1")
+    private Long pageNumber = DEFAULT_PAGE_NUMBER;
+
+    @Schema(name = "每页条数，最大值为 100", requiredMode = Schema.RequiredMode.REQUIRED, example = "10")
+    @NotNull(message = "每页条数不能为空")
+    @Min(value = 1, message = "每页条数最小值为 1")
+    @Max(value = 100, message = "每页条数最大值为 100")
+    private Long pageSize = DEFAULT_PAGE_SIZE;
+
+}
