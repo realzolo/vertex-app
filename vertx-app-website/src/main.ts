@@ -13,6 +13,9 @@ import '@vue-flow/minimap/dist/style.css'
 // 使用动画库
 import 'animate.css/animate.min.css'
 
+// 自动修复滚动类事件警告
+import 'default-passive-events'
+
 // 额外引入 Arco Design Icon图标库
 import ArcoVueIcon from '@arco-design/web-vue/es/icon'
 
