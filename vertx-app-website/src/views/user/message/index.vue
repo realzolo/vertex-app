@@ -30,6 +30,7 @@ import MyMessage from './components/MyMessage.vue'
 import MyNotice from './components/MyNotice.vue'
 import { useDevice } from '@/hooks'
 import { type MessageResp, type NoticeResp, listMessage, listNotice } from '@/apis'
+import mittBus from '@/utils/mitt'
 
 defineOptions({ name: 'UserMessage' })
 
@@ -84,6 +85,9 @@ const getNoticeData = async () => {
 onMounted(() => {
   getMessageData()
   getNoticeData()
+  mittBus.on('count-refresh', () => {
+    getMessageData()
+  })
 })
 
 const menuList = [
@@ -151,8 +155,7 @@ const change = (key: string | number) => {
 }
 
 :deep(.arco-tabs .arco-tabs-nav-type-card-gutter .arco-tabs-tab-active) {
-  box-shadow: inset 0 2px 0 rgb(var(--primary-6)), inset -1px 0 0 var(--color-border-2),
-  inset 1px 0 0 var(--color-border-2);
+  box-shadow: inset 0 2px 0 rgb(var(--primary-6)), inset -1px 0 0 var(--color-border-2), inset 1px 0 0 var(--color-border-2);
   position: relative;
 }
 

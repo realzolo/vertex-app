@@ -26,6 +26,6 @@ export function updateClient(data: any, id: string) {
 }
 
 /** @desc 删除终端 */
-export function deleteClient(ids: string | Array<string>) {
-  return http.del(`${BASE_URL}/${ids}`)
+export function deleteClient(id: string) {
+  return http.del(`${BASE_URL}`, { ids: [id] })
 }

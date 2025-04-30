@@ -1,16 +1,16 @@
 <template>
   <GiTable
+    v-model:selected-keys="selectedKeys"
     row-key="id"
     :data="dataList"
     :columns="columns"
     :loading="loading"
-    :scroll="{ x: '100%', y: '100%', minWidth: 1000 }"
+    :scroll="{ x: '100%', y: '100%', minWidth: 800 }"
     :pagination="pagination"
     :disabled-tools="['size', 'setting']"
     :row-selection="{ type: 'checkbox', showCheckedAll: true }"
-    :selected-keys="selectedKeys"
-    @select-all="selectAll"
     @select="select"
+    @select-all="selectAll"
     @refresh="search"
   >
     <template #toolbar-left>
@@ -59,7 +59,7 @@
 <script setup lang="ts">
 import type { TableInstance } from '@arco-design/web-vue'
 import { Message, Modal } from '@arco-design/web-vue'
-import { type MessageQuery, deleteMessage, listMessage, readMessage } from '@/apis'
+import { type MessageQuery, deleteMessage, listMessage, readAllMessage, readMessage } from '@/apis'
 import { useTable } from '@/hooks'
 import { useDict } from '@/hooks/app'
 
@@ -90,7 +90,7 @@ const columns: TableInstance['columns'] = [
     render: ({ rowIndex }) => h('span', {}, rowIndex + 1 + (pagination.current - 1) * pagination.pageSize),
   },
   { title: '标题', dataIndex: 'title', slotName: 'title', minWidth: 100, ellipsis: true, tooltip: true },
-  { title: '状态', dataIndex: 'isRead', slotName: 'isRead', align: 'center' },
+  { title: '状态', dataIndex: 'isRead', slotName: 'isRead', minWidth: 100, align: 'center' },
   { title: '时间', dataIndex: 'createTime', width: 180 },
   { title: '类型', dataIndex: 'type', slotName: 'type', width: 180, ellipsis: true, tooltip: true },
 ]
@@ -108,7 +108,7 @@ const onDelete = () => {
   if (!selectedKeys.value.length) {
     return Message.warning('请选择数据')
   }
-  return handleDelete(() => deleteMessage(selectedKeys.value), { showModal: false, multiple: true })
+  return handleDelete(() => deleteMessage(selectedKeys.value), { showModal: true, content: `是否确定删除所选的${selectedKeys.value.length}条消息？`, multiple: true })
 }
 
 // 标记为已读
@@ -116,7 +116,7 @@ const onRead = async () => {
   if (!selectedKeys.value.length) {
     return Message.warning('请选择数据')
   }
-  await readMessage(selectedKeys.value)
+  await readAllMessage()
   Message.success('操作成功')
   search()
 }
