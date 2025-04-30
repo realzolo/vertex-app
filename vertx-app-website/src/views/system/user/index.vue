@@ -124,7 +124,7 @@ const queryFormColumns: ColumnItem[] = reactive([
     span: { xs: 24, sm: 6, xxl: 8 },
     props: {
       options: account_status,
-      placeholder: '全部状态',
+      placeholder: '请选择状态',
     },
   },
   // TODO: 重置对时间范围筛选失效
