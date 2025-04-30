@@ -1,6 +1,6 @@
 <template>
   <a-spin :loading="loading" style="width: 100%">
-    <a-card class="general-card" title="终端">
+    <a-card class="general-card" title="客户端">
       <div class="chart">
         <Chart v-if="!loading" :option="chartOption" style="height: 190px" />
       </div>

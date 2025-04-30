@@ -10,7 +10,7 @@
       <a-descriptions-item label="操作 IP"><a-typography-paragraph :copyable="!!dataDetail?.ip">{{ dataDetail?.ip }}</a-typography-paragraph></a-descriptions-item>
       <a-descriptions-item label="操作地点">{{ dataDetail?.address }}</a-descriptions-item>
       <a-descriptions-item label="浏览器">{{ dataDetail?.browser }}</a-descriptions-item>
-      <a-descriptions-item label="终端系统">{{ dataDetail?.os }}</a-descriptions-item>
+      <a-descriptions-item label="客户端系统">{{ dataDetail?.os }}</a-descriptions-item>
       <a-descriptions-item label="状态">
         <a-tag v-if="dataDetail?.status === 1" color="green">成功</a-tag>
         <a-tag v-else color="red">失败</a-tag>

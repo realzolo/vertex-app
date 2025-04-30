@@ -40,7 +40,7 @@ export function getAnalysisModule() {
   return http.get<T.DashboardChartCommonResp[]>(`${BASE_URL}/analysis/module`)
 }
 
-/** @desc 查询终端分析 */
+/** @desc 查询客户端分析 */
 export function getAnalysisOs() {
   return http.get<T.DashboardChartCommonResp[]>(`${BASE_URL}/analysis/os`)
 }

@@ -78,7 +78,7 @@ const columns: TableInstance['columns'] = [
   { title: '登录 IP', dataIndex: 'ip', ellipsis: true, tooltip: true },
   { title: '登录地点', dataIndex: 'location', ellipsis: true, tooltip: true },
   { title: '浏览器', dataIndex: 'browser', ellipsis: true, tooltip: true },
-  { title: '终端系统', dataIndex: 'os', ellipsis: true, tooltip: true },
+  { title: '客户端系统', dataIndex: 'os', ellipsis: true, tooltip: true },
   { title: '登录时间', dataIndex: 'loginTime' },
   { title: '在线时长', dataIndex: 'onlineTime' },
   {

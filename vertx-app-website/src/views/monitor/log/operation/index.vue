@@ -111,7 +111,7 @@ const columns: TableInstance['columns'] = [
   { title: '操作地点', dataIndex: 'address', ellipsis: true, tooltip: true },
   { title: '耗时', dataIndex: 'timeTaken', slotName: 'timeTaken', align: 'center' },
   { title: '浏览器', dataIndex: 'browser', ellipsis: true, tooltip: true },
-  { title: '终端系统', dataIndex: 'os', ellipsis: true, tooltip: true },
+  { title: '客户端系统', dataIndex: 'os', ellipsis: true, tooltip: true },
 ]
 
 // 重置
