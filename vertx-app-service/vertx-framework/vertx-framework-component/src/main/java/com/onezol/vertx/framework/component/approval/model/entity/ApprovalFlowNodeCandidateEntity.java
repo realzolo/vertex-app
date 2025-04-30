@@ -14,7 +14,7 @@ import java.util.List;
 @Schema(description = "审批流程节点候选人")
 @Data
 @EqualsAndHashCode(callSuper = true)
-@TableName("approval_flow_node_candidate")
+@TableName("app_approval_flow_node_candidate")
 public class ApprovalFlowNodeCandidateEntity extends BaseEntity {
 
     @Schema(description = "节点ID")

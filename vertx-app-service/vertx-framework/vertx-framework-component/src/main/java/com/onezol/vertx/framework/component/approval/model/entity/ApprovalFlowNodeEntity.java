@@ -10,7 +10,7 @@ import lombok.EqualsAndHashCode;
 @Schema(description = "审批流程节点")
 @Data
 @EqualsAndHashCode(callSuper = true)
-@TableName("approval_flow_node")
+@TableName("app_approval_flow_node")
 public class ApprovalFlowNodeEntity extends BaseEntity {
 
     @Schema(description = "流程模板ID")
