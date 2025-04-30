@@ -18,7 +18,6 @@ import { Message } from '@arco-design/web-vue'
 import { useWindowSize } from '@vueuse/core'
 import { addClient, getClient, updateClient } from '@/apis/system/client'
 import { type ColumnItem, GiForm } from '@/components/GiForm'
-import { DisEnableStatusList } from '@/constant/common'
 import { useResetReactive } from '@/hooks'
 import { useDict } from '@/hooks/app'
 
@@ -108,12 +107,14 @@ const columns: ColumnItem[] = reactive([
   {
     label: '状态',
     field: 'status',
-    type: 'radio-group',
-    required: true,
+    type: 'switch',
     span: 24,
     props: {
-      type: 'button',
-      options: DisEnableStatusList,
+      type: 'round',
+      checkedValue: 1,
+      uncheckedValue: 0,
+      checkedText: '启用',
+      uncheckedText: '禁用',
     },
   },
 ])

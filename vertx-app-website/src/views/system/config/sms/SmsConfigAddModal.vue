@@ -31,7 +31,7 @@ const visible = ref(false)
 const isUpdate = computed(() => !!dataId.value)
 const title = computed(() => (isUpdate.value ? '修改短信配置' : '新增短信配置'))
 const formRef = ref<InstanceType<typeof GiForm>>()
-const { dis_enable_status_enum, sms_supplier_type } = useDict('dis_enable_status_enum', 'sms_supplier_type')
+const { sms_supplier_type } = useDict('sms_supplier_type')
 
 const [form, resetForm] = useResetReactive({
   status: 1,
@@ -142,12 +142,14 @@ const columns: ColumnItem[] = reactive([
   {
     label: '状态',
     field: 'status',
-    type: 'radio-group',
-    required: true,
+    type: 'switch',
     span: 24,
     props: {
-      type: 'button',
-      options: dis_enable_status_enum,
+      type: 'round',
+      checkedValue: 1,
+      uncheckedValue: 0,
+      checkedText: '启用',
+      uncheckedText: '禁用',
     },
   },
 ])
