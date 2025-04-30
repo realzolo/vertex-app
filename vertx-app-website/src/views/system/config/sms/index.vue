@@ -16,7 +16,7 @@
         <a-input-search v-model="queryForm.accessKey" placeholder="搜索 Access Key" allow-clear @search="search" />
         <a-select
           v-model="queryForm.supplier"
-          :options="sms_supplier_type"
+          :options="sms_supplier"
           placeholder="请选择厂商"
           allow-clear
           style="width: 150px"
@@ -34,7 +34,7 @@
         </a-button>
       </template>
       <template #supplier="{ record }">
-        <GiCellTag :value="record.supplier" :dict="sms_supplier_type" />
+        <GiCellTag :value="record.supplier" :dict="sms_supplier" />
       </template>
       <template #accessKey="{ record }">
         <CellCopy :content="record.accessKey" />
@@ -72,7 +72,7 @@ import GiCellStatus from '@/components/GiCell/GiCellStatus.vue'
 
 defineOptions({ name: 'SystemSmsConfig' })
 
-const { sms_supplier_type } = useDict('sms_supplier_type')
+const { sms_supplier } = useDict('sms_supplier')
 
 const queryForm = reactive<SmsConfigQuery>({
   name: undefined,
@@ -103,7 +103,7 @@ const columns: TableInstance['columns'] = [
     slotName: 'supplier',
     width: 100,
     props: {
-      options: sms_supplier_type,
+      options: sms_supplier,
       placeholder: '请选择厂商',
     },
   },
