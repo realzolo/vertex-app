@@ -1,5 +1,5 @@
 <template>
-  <GiPageLayout>
+  <GiPageLayout :margin="false" :body-style="{ padding: 0 }">
     <GiTable
       row-key="id"
       :data="dataList"
@@ -169,7 +169,7 @@ const router = useRouter()
 // 发送记录
 const onLog = (record: SmsConfigResp) => {
   router.push({
-    path: '/system/sms/log',
+    path: 'SystemSmsLog',
     query: { configId: record.id },
   })
 }

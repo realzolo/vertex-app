@@ -1,6 +1,6 @@
 <template>
   <a-row align="stretch" :gutter="rowGutter" class="gi-page-layout" :class="getClass">
-    <a-col v-if="slots.left" v-show="!isCollapsed" v-bind="props.leftColProps" :sm="10" :md="7" :lg="6" :xl="5" :xxl="4">
+    <a-col v-if="slots.left" v-show="!isCollapsed" class="gi-page-col" v-bind="props.leftColProps" :sm="10" :md="7" :lg="6" :xl="5" :xxl="4">
       <div class="gi-page-layout__left" :style="props.leftStyle">
         <slot name="left"></slot>
       </div>
@@ -12,8 +12,8 @@
       </div>
     </div>
 
-    <a-col :sm="16" :md="17" :lg="18" :xl="19" :xxl="20" flex="1" v-bind="props.rightColProps">
-      <div v-if="slots.header" class="gi-page-layout__header" :style="{ ...props.headerStyle, display: !isDesktop && !isCollapsed ? 'none' : 'flex' }">
+    <a-col class="gi-page-col" :sm="16" :md="17" :lg="18" :xl="19" :xxl="20" flex="1" v-bind="props.rightColProps">
+      <div v-if="slots.header" class="gi-page-layout__header" :style="{ ...props.headerStyle, display: !isDesktop && !isCollapsed ? 'none' : '' }">
         <slot name="header"></slot>
       </div>
 
@@ -125,7 +125,7 @@ watch(() => breakpoint.value, (val) => {
     }
   }
 
-  :deep(.arco-col) {
+  .gi-page-col {
     height: 100%;
     display: flex;
     flex-direction: column;

@@ -89,12 +89,12 @@
         <a-input v-model.trim="form.SITE_BEIAN" placeholder="请输入备案号" :max-length="30" show-word-limit />
       </a-form-item>
       <a-space style="margin-top: 16px">
-        <a-button v-if="!isUpdate" v-permission="['system:config:update']" type="primary" @click="onUpdate">
+        <a-button v-if="!isUpdate" v-permission="['system:siteConfig:update']" type="primary" @click="onUpdate">
           <template #icon>
             <icon-edit />
           </template>修改
         </a-button>
-        <a-button v-if="!isUpdate" v-permission="['system:config:reset']" @click="onResetValue">
+        <a-button v-if="!isUpdate" v-permission="['system:siteConfig:update']" @click="onResetValue">
           <template #icon>
             <icon-undo />
           </template>恢复默认

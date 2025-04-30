@@ -25,10 +25,10 @@
         </a-switch>
       </a-form-item>
       <a-space style="margin-bottom: 16px">
-        <a-button v-if="!isUpdate" v-permission="['system:config:update']" type="primary" @click="onUpdate">
+        <a-button v-if="!isUpdate" v-permission="['system:loginConfig:update']" type="primary" @click="onUpdate">
           <template #icon><icon-edit /></template>修改
         </a-button>
-        <a-button v-if="!isUpdate" v-permission="['system:config:reset']" @click="onResetValue">
+        <a-button v-if="!isUpdate" v-permission="['system:loginConfig:update']" @click="onResetValue">
           <template #icon><icon-undo /></template>恢复默认
         </a-button>
         <a-button v-if="isUpdate" type="primary" @click="handleSave">
@@ -51,7 +51,7 @@ import { type FormInstance, Message, Modal } from '@arco-design/web-vue'
 import { type LoginConfig, type OptionResp, listOption, resetOptionValue, updateOption } from '@/apis/system'
 import { useResetReactive } from '@/hooks'
 
-defineOptions({ name: 'LoginSetting' })
+defineOptions({ name: 'SystemLoginConfig' })
 const { width } = useWindowSize()
 
 const loading = ref<boolean>(false)
