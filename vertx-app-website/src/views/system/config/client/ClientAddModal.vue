@@ -16,7 +16,6 @@
 <script setup lang="tsx">
 import { Message } from '@arco-design/web-vue'
 import { useWindowSize } from '@vueuse/core'
-import CryptoJS from 'crypto-js'
 import { addClient, getClient, updateClient } from '@/apis/system/client'
 import { type ColumnItem, GiForm } from '@/components/GiForm'
 import { DisEnableStatusList } from '@/constant/common'
@@ -43,39 +42,15 @@ const [form, resetForm] = useResetReactive({
   isShare: 1,
   status: 1,
 })
-const handleGenerate = () => {
-  const timestamp = Date.now()
-  form.clientSecret = CryptoJS.MD5(`${timestamp}`).toString(CryptoJS.enc.Hex)
-}
 
 const columns: ColumnItem[] = reactive([
   {
-    label: '终端 Key',
-    field: 'clientKey',
-    type: 'input',
-    span: 24,
-    required: true,
+    label: '终端类型',
+    field: 'clientType',
+    type: 'select',
+    span: 12,
     props: {
-      maxLength: 32,
-    },
-    disabled: () => isUpdate.value,
-  },
-  {
-    label: '终端秘钥',
-    field: 'clientSecret',
-    type: 'input',
-    span: 24,
-    required: true,
-    disabled: () => isUpdate.value,
-    slots: {
-      append: () => (
-        <a-button onClick={handleGenerate}>
-          {{
-            default: '随机生成',
-            icon: <icon-refresh />,
-          }}
-        </a-button>
-      ),
+      options: client_type,
     },
   },
   {
@@ -88,15 +63,6 @@ const columns: ColumnItem[] = reactive([
       options: auth_type_enum,
       multiple: true,
       maxTagCount: 2,
-    },
-  },
-  {
-    label: '终端类型',
-    field: 'clientType',
-    type: 'select',
-    span: 12,
-    props: {
-      options: client_type,
     },
   },
   {
