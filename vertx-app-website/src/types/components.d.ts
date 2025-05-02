@@ -54,6 +54,7 @@ declare module 'vue' {
     MinuteForm: typeof import('./../components/GenCron/CronForm/component/minute-form.vue')['default']
     MonthForm: typeof import('./../components/GenCron/CronForm/component/month-form.vue')['default']
     ParentView: typeof import('./../components/ParentView/index.vue')['default']
+    RecursiveComment: typeof import('./../components/RecursiveComment.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SecondForm: typeof import('./../components/GenCron/CronForm/component/second-form.vue')['default']
