@@ -1,8 +1,8 @@
 package com.onezol.vertx.framework.security.biz.controller;
 
-import cn.hutool.core.util.RandomUtil;
 import com.onezol.vertx.framework.common.constant.CacheKey;
 import com.onezol.vertx.framework.common.model.GenericResponse;
+import com.onezol.vertx.framework.common.util.RandomUtils;
 import com.onezol.vertx.framework.common.util.ValidationUtils;
 import com.onezol.vertx.framework.component.email.service.EmailSceneService;
 import com.onezol.vertx.framework.support.cache.RedisCache;
@@ -65,7 +65,7 @@ public class CaptchaController {
         }
 
         // 生成验证码
-        String verificationCode = RandomUtil.randomNumbers(6);
+        String verificationCode = RandomUtils.randomNumbers(6);
 
         // 存储到Redis
         String cacheKey = RedisKeyHelper.buildCacheKey(CacheKey.VC_EMAIL, email.toLowerCase());
