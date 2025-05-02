@@ -4,9 +4,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.onezol</groupId>
+        <groupId>com.onezol.vertx</groupId>
         <artifactId>vertx-framework-security</artifactId>
-        <version>1.0.0</version>
+        <version>${revision}</version>
     </parent>
 
     <artifactId>vertx-framework-security-biz</artifactId>
@@ -21,19 +21,19 @@
 
         <!-- Vertx Framework Dependencies -->
         <dependency>
-            <groupId>com.onezol</groupId>
+            <groupId>com.onezol.vertx</groupId>
             <artifactId>vertx-framework-security-api</artifactId>
-            <version>${application.version}</version>
+            <version>${revision}</version>
         </dependency>
         <dependency>
-            <groupId>com.onezol</groupId>
+            <groupId>com.onezol.vertx</groupId>
             <artifactId>vertx-framework-support</artifactId>
-            <version>${application.version}</version>
+            <version>${revision}</version>
         </dependency>
         <dependency>
-            <groupId>com.onezol</groupId>
+            <groupId>com.onezol.vertx</groupId>
             <artifactId>vertx-framework-component</artifactId>
-            <version>${application.version}</version>
+            <version>${revision}</version>
         </dependency>
     </dependencies>
 
