@@ -79,10 +79,10 @@
         <a-input-number v-model="form.MAIL_SSL_PORT" :min="0" />
       </a-form-item>
       <a-space style="margin-bottom: 16px">
-        <a-button v-if="!isUpdate" v-permission="['system:config:update']" type="primary" @click="onUpdate">
+        <a-button v-if="!isUpdate" v-permission="['system:mailConfig:update']" type="primary" @click="onUpdate">
           <template #icon><icon-edit /></template>修改
         </a-button>
-        <a-button v-if="!isUpdate" v-permission="['system:config:reset']" @click="onResetValue">
+        <a-button v-if="!isUpdate" v-permission="['system:mailConfig:update']" @click="onResetValue">
           <template #icon><icon-undo /></template>恢复默认
         </a-button>
         <a-button v-if="isUpdate" type="primary" @click="handleSave">
