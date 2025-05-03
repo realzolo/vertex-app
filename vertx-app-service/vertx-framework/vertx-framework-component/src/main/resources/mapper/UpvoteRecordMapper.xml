@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onezol.vertx.framework.component.upvote.mapper.UpvoteRecordMapper">
+
+    <insert id="batchInsertOrUpdate" parameterType="list">
+        INSERT INTO upvote_record
+        (user_id, object_id, object_type, status)
+        VALUES
+            <foreach collection="records" item="record" separator=",">
+                (#{item.userId}, #{record.objectId}, #{record.objectType},
+                IF(#{item.status} = 1, 1, 0))
+            </foreach>
+        ON DUPLICATE KEY UPDATE
+            status = IF(VALUES(status) = 1, 1, 0),
+            update_time = NOW()
+    </insert>
+
+</mapper>

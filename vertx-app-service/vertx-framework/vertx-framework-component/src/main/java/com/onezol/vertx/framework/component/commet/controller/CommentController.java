@@ -1,6 +1,7 @@
 package com.onezol.vertx.framework.component.commet.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.onezol.vertx.framework.common.annotation.TimeLog;
 import com.onezol.vertx.framework.common.model.GenericResponse;
 import com.onezol.vertx.framework.common.model.PagePack;
 import com.onezol.vertx.framework.common.mvc.controller.BaseController;
@@ -48,6 +49,13 @@ public class CommentController extends BaseController<CommentEntity> {
         Page<CommentEntity> queryPage = this.getPageObject(pageNumber, pageSize);
         PagePack<Comment> resultPage = commentService.listPage(queryPage, objectId);
         return ResponseHelper.buildSuccessfulResponse(resultPage);
+    }
+
+    @Operation(summary = "评论点赞/取消点赞")
+    @PostMapping("/{id}/upvote")
+    public GenericResponse<Void> upvoteComment(@PathVariable("id") Long id) {
+        commentService.toggleVote(id);
+        return ResponseHelper.buildSuccessfulResponse();
     }
 
 }

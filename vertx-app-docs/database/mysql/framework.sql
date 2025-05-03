@@ -440,3 +440,43 @@ CREATE TABLE IF NOT EXISTS app_comment
 ) ENGINE = InnoDB
     DEFAULT CHARSET = utf8mb4
     COMMENT = '评论';
+
+CREATE TABLE IF NOT EXISTS app_upvote_record
+(
+    id          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
+    -- 自定义字段开始 --
+    object_type   VARCHAR(50)  COMMENT '点赞对象类型',
+    object_id     BIGINT       COMMENT '点赞对象ID',
+    user_id       BIGINT       COMMENT '点赞用户ID',
+    -- 自定义字段结束 --
+    creator     BIGINT       DEFAULT NULL COMMENT '创建人',
+    create_time DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    updater     BIGINT       DEFAULT NULL COMMENT '更新人',
+    update_time DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+    version     INT UNSIGNED DEFAULT 0 COMMENT '版本号',
+    -- 索引 --
+    UNIQUE KEY uk_app_upvote_record(object_type, object_id, user_id),
+    KEY idx_user_id(user_id)
+) ENGINE = InnoDB
+    DEFAULT CHARSET = utf8mb4
+    COMMENT = '点赞明细';
+
+CREATE TABLE IF NOT EXISTS app_upvote_summary
+(
+    id          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
+    -- 自定义字段开始 --
+    object_type   VARCHAR(50)  COMMENT '点赞对象类型',
+    object_id     BIGINT       COMMENT '点赞对象ID',
+    count         BIGINT       COMMENT '点赞数量',
+    -- 自定义字段结束 --
+    creator     BIGINT       DEFAULT NULL COMMENT '创建人',
+    create_time DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    updater     BIGINT       DEFAULT NULL COMMENT '更新人',
+    update_time DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+    version     INT UNSIGNED DEFAULT 0 COMMENT '版本号',
+    -- 索引 --
+    UNIQUE KEY uk_app_upvote_summary(object_type, object_id),
+    CONSTRAINT count_non_negative CHECK (count >= 0)
+) ENGINE = InnoDB
+    DEFAULT CHARSET = utf8mb4
+    COMMENT = '点赞汇总';

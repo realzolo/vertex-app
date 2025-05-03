@@ -37,4 +37,15 @@ public final class CacheKey {
      * 字典
      */
     public static final String DICTIONARY = "dictionary";
+
+    /**
+     * 点赞状态
+     */
+    public static final String UPVOTE_STATUS = "upvote:status:{objectType}:{objectId}";
+
+    /**
+     * 点赞数
+     */
+    public static final String UPVOTE_COUNT = "upvote:count:{objectType}:{objectId}";
+
 }

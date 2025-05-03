@@ -32,7 +32,7 @@ public class Comment extends BaseDTO {
     private User author;
 
     @Schema(description = "点赞数")
-    private Integer upvotes;
+    private Long upvotes;
 
     @Schema(description = "是否点赞")
     private Boolean upvoted;

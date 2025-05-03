@@ -57,7 +57,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { Message } from '@arco-design/web-vue'
-import { type CommentReq, addComment } from '@/apis/preview/comment'
+import { type CommentReq, addComment, upvote } from '@/apis/preview/comment'
 import { useUserStore } from '@/stores'
 
 const props = defineProps({
@@ -110,8 +110,10 @@ const cancelReply = () => {
 }
 // 点赞
 const onUpvote = () => {
-  props.comment.upvoted = !props.comment.upvoted;
-  props.comment.upvote = props.comment.upvoted ? props.comment.upvotes + 1 : props.comment.upvotes - 1;
+  props.comment!.upvoted = !props.comment.upvoted
+  props.comment!.upvotes = props.comment.upvoted ? props.comment.upvotes + 1 : props.comment.upvotes - 1
+  upvote(props.comment.id)
+  Message.success('点赞成功')
 }
 </script>
 

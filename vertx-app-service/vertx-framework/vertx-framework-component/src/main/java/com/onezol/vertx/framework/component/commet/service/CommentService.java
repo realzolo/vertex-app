@@ -1,11 +1,10 @@
 package com.onezol.vertx.framework.component.commet.service;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.onezol.vertx.framework.common.constant.StringConstants;
+import com.onezol.vertx.framework.common.exception.InvalidParameterException;
 import com.onezol.vertx.framework.common.model.PagePack;
 import com.onezol.vertx.framework.common.mvc.service.BaseServiceImpl;
 import com.onezol.vertx.framework.common.util.BeanUtils;
@@ -16,6 +15,10 @@ import com.onezol.vertx.framework.component.commet.mapper.CommentMapper;
 import com.onezol.vertx.framework.component.commet.model.dto.Comment;
 import com.onezol.vertx.framework.component.commet.model.entity.CommentEntity;
 import com.onezol.vertx.framework.component.commet.model.payload.CommentPayload;
+import com.onezol.vertx.framework.component.upvote.constant.enumeration.UpvoteObjectType;
+import com.onezol.vertx.framework.component.upvote.service.UpvoteRecordService;
+import com.onezol.vertx.framework.security.api.context.AuthenticationContext;
+import com.onezol.vertx.framework.security.api.model.UserIdentity;
 import com.onezol.vertx.framework.security.api.model.dto.User;
 import com.onezol.vertx.framework.security.api.service.UserInfoService;
 import org.springframework.stereotype.Service;
@@ -26,9 +29,11 @@ import java.util.*;
 public class CommentService extends BaseServiceImpl<CommentMapper, CommentEntity> {
 
     private final UserInfoService userInfoService;
+    private final UpvoteRecordService upvoteRecordService;
 
-    public CommentService(UserInfoService userInfoService) {
+    public CommentService(UserInfoService userInfoService, UpvoteRecordService upvoteRecordService) {
         this.userInfoService = userInfoService;
+        this.upvoteRecordService = upvoteRecordService;
     }
 
     /**
@@ -125,15 +130,32 @@ public class CommentService extends BaseServiceImpl<CommentMapper, CommentEntity
             comment.setAuthor(userMap.get(comment.getCreator()));
             List<Comment> commentReplies = replies.stream()
                     .filter(reply -> comment.getId().equals(reply.getParentId()))
+                    .sorted(Comparator.comparing(Comment::getId).reversed())
                     .toList();
+            comment.setReplies(commentReplies);
+            comment.setUpvotes(upvoteRecordService.getVoteCount(UpvoteObjectType.COMMENT, comment.getId()));
+            comment.setUpvoted(upvoteRecordService.hasVoted(UpvoteObjectType.COMMENT, comment.getId(), AuthenticationContext.get().getUserId()));
             if (!commentReplies.isEmpty()) {
-                commentReplies = commentReplies.stream().sorted(Comparator.comparing(Comment::getId).reversed()).toList();
-                comment.setReplies(commentReplies);
-                commentReplies.forEach(reply -> {
-                    reply.setAuthor(comment.getAuthor());
-                });
                 assembleReplies(comment.getReplies(), replies, userMap);
             }
         }
     }
+
+    /**
+     * 点赞
+     *
+     * @param id 评论ID
+     */
+    public void toggleVote(Long id) {
+        CommentEntity entity = this.getById(id);
+        if (Objects.isNull(entity)) {
+            throw new InvalidParameterException("评论不存在");
+        }
+
+        UserIdentity userIdentity = AuthenticationContext.get();
+
+        upvoteRecordService.toggleVote(UpvoteObjectType.COMMENT, entity.getId(), userIdentity.getUserId());
+        this.updateById(entity);
+    }
+
 }

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onezol.vertx.framework.component.upvote.mapper.UpvoteSummaryMapper">
+
+    <update id="updateCount">
+        UPDATE app_upvote_summary
+        SET count = count + #{increment}
+        WHERE
+            object_type = #{objectType}
+            AND object_id = #{objectId}
+    </update>
+
+</mapper>
