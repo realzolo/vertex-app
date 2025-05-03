@@ -6,4 +6,4 @@
   \__/   '.__.'[___]   \__/[__]`\_]
 
 Spring Boot Version: ${spring-boot.version}
-Vertx App Version: ${application.version}
+Vertx App Version: ${project.version}

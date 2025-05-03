@@ -12,9 +12,6 @@ import org.springframework.beans.factory.annotation.Value;
 @SuppressWarnings("unused")
 public class NoNavigatedVariableProperties {
 
-    @Value("${application.version:null}")
-    private String version;
-
     @Value("${application.jwt.secret-key:null}")
     private String secretKey;
 
