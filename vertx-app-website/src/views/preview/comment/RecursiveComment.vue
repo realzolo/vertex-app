@@ -20,16 +20,26 @@
       <div class="comment-item-actions">
         <span key="heart" class="comment-item-action" @click="onUpvote">
           <span v-if="comment.upvoted">
-            <IconHeartFill :style="{ color: '#f53f3f' }" />
+            <icon-thumb-up-fill :style="{ color: 'rgb(var(--primary-6))' }" />
           </span>
           <span v-else>
-            <IconHeart />
+            <icon-thumb-up />
           </span>
           {{ comment.upvotes || 0 }}
         </span>
         <span class="comment-item-action" @click="onReply">
-          <IconMessage />
+          <icon-message />
           回复
+        </span>
+        <span class="comment-item-action">
+          <a-dropdown @select="handleSelect">
+            <icon-more />
+            <template #content>
+              <template v-for="item in MORE_OPTIONS" :key="item.value">
+                <a-doption :value="item.value" :disabled="item.disabled">{{ item.label }}</a-doption>
+              </template>
+            </template>
+          </a-dropdown>
         </span>
       </div>
     </div>
@@ -57,7 +67,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { Message } from '@arco-design/web-vue'
-import { type CommentReq, addComment, upvote } from '@/apis/preview/comment'
+import { type CommentReq, addComment, deleteComment, upvote } from '@/apis/preview/comment'
 import { useUserStore } from '@/stores'
 
 const props = defineProps({
@@ -79,6 +89,11 @@ const { id = 10000 } = route.query
 const showReplyContentInput = ref(false)
 const replyContent = ref('')
 
+const MORE_OPTIONS = [
+  { label: '删除', value: 'delete', disabled: userStore.userId !== props.comment.author.id && !userStore.permissions.includes('comment:delete') },
+  { label: '举报', value: 'report', disabled: true },
+]
+
 // 回复
 const onReply = () => {
   showReplyContentInput.value = !showReplyContentInput.value
@@ -94,7 +109,7 @@ const submitReply = async () => {
     }
     const resp = await addComment(replyComment)
     if (!resp.success) {
-      Message.error('添加评论失败')
+      Message.error('回复失败')
       return
     }
     Message.success('回复成功')
@@ -114,6 +129,18 @@ const onUpvote = () => {
   props.comment!.upvotes = props.comment.upvoted ? props.comment.upvotes + 1 : props.comment.upvotes - 1
   upvote(props.comment.id)
   Message.success('点赞成功')
+}
+// 下拉事件处理
+const handleSelect = async (key: string) => {
+  if (key === 'delete') {
+    const resp = await deleteComment(props.comment.id)
+    if (!resp.success) {
+      Message.error('删除失败')
+      return
+    }
+    Message.success('删除成功')
+    props.search()
+  }
 }
 </script>
 
@@ -154,12 +181,12 @@ const onUpvote = () => {
     }
 
     .author-tag {
-      color: #fff;
+      color: rgb(var(--primary-6));
       font-size: 12px;
       margin-left: 4px;
       padding: 2px 6px;
       border-radius: 6px;
-      background-color: rgb(254, 44, 85);
+      background-color: rgb(var(--primary-1));
     }
 
   }

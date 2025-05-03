@@ -34,7 +34,7 @@ public class CommentController extends BaseController<CommentEntity> {
 
     @Operation(summary = "删除评论")
     @DeleteMapping("/{id}")
-    public GenericResponse<Void> deleteComment(@PathVariable Long id) {
+    public GenericResponse<Void> deleteComment(@PathVariable("id") Long id) {
         commentService.delete(id);
         return ResponseHelper.buildSuccessfulResponse();
     }

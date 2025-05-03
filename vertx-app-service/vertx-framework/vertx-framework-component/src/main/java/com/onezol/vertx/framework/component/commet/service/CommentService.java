@@ -67,9 +67,10 @@ public class CommentService extends BaseServiceImpl<CommentMapper, CommentEntity
     public void delete(Long id) {
         CommentEntity entity = this.getById(id);
         // 删除评论、评论下的回复
+        String subPath = entity.getPath() + StringConstants.SLASH + entity.getId();
         this.remove(
                 Wrappers.lambdaQuery(CommentEntity.class)
-                        .like(Objects.nonNull(entity.getPath()), CommentEntity::getPath, entity.getPath())
+                        .like(CommentEntity::getPath, subPath)
                         .or()
                         .eq(CommentEntity::getId, id)
         );
@@ -168,6 +169,7 @@ public class CommentService extends BaseServiceImpl<CommentMapper, CommentEntity
 
     /**
      * 快速判断评论是否存在
+     *
      * @param id 评论ID
      */
     public boolean exists(Long id) {
