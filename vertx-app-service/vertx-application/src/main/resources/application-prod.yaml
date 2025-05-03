@@ -48,6 +48,4 @@ application:
 
 # 日志配置
 logging:
-  level:
-    root: info
-    com.onezol.vertx: debug
+  config: classpath:logback-spring.xml

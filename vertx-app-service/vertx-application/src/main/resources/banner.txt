@@ -1,3 +1,4 @@
+${AnsiColor.BRIGHT_GREEN}
                         _
                        / |_
  _   __  .---.  _ .--.`| |-'_   __
