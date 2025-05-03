@@ -10,7 +10,13 @@ spring:
       validation-query: SELECT 1
       pool-prepared-statements: true
       max-pool-prepared-statement-per-connection-size: 20
-      filters: stat,wall,slf4j
+      filter:
+        wall:
+          enabled: true
+          db-type: mysql
+        stat:
+          enabled: true
+          db-type: mysql
       connection-properties: druid.stat.mergeSql\=true;druid.stat.slowSqlMillis\=5000
       web-stat-filter:
         enabled: true
