@@ -1,7 +1,6 @@
 package com.onezol.vertx.framework.security.biz.controller;
 
 import com.onezol.vertx.framework.common.model.GenericResponse;
-import com.onezol.vertx.framework.security.api.annotation.RestrictAccess;
 import com.onezol.vertx.framework.security.api.enumeration.LoginType;
 import com.onezol.vertx.framework.security.api.model.AuthIdentity;
 import com.onezol.vertx.framework.security.api.model.payload.UserAccountLoginPayload;
@@ -11,6 +10,7 @@ import com.onezol.vertx.framework.support.support.ResponseHelper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -50,8 +50,8 @@ public class UserAuthController {
     }
 
     @Operation(summary = "用户登出", description = "用户登出")
-    @RestrictAccess
     @PostMapping("/logout")
+    @PreAuthorize("@Security.hasPermission('system:user:detail')")
     public GenericResponse<Void> logout() {
         userAuthService.logout();
         return ResponseHelper.buildSuccessfulResponse();

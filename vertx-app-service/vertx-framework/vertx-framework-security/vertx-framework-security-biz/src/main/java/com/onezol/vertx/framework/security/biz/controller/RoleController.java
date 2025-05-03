@@ -25,13 +25,13 @@ import com.onezol.vertx.framework.security.api.service.UserRoleService;
 import com.onezol.vertx.framework.support.support.ResponseHelper;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 
-@RestrictAccess
 @RestController
 @RequestMapping("/role")
 public class RoleController extends BaseController<RoleEntity> {
@@ -46,6 +46,7 @@ public class RoleController extends BaseController<RoleEntity> {
     private UserRoleService userRoleService;
 
     @GetMapping("/route")
+    @PreAuthorize("@Security.hasPermission('system:role:list')")
     public GenericResponse<List<TreeNode>> route() {
         UserIdentity userIdentity = AuthenticationContext.get();
         List<DataPairRecord> roles = userIdentity.getRoles();
@@ -78,6 +79,7 @@ public class RoleController extends BaseController<RoleEntity> {
     }
 
     @GetMapping("/page")
+    @PreAuthorize("@Security.hasPermission('system:role:list')")
     public GenericResponse<PagePack<RoleEntity>> getRolePage(
             @RequestParam(value = "page", required = false) Long pageNumber,
             @RequestParam(value = "size", required = false) Long pageSize
@@ -89,6 +91,7 @@ public class RoleController extends BaseController<RoleEntity> {
     }
 
     @GetMapping("/list")
+    @PreAuthorize("@Security.hasPermission('system:role:list')")
     public GenericResponse<List<Role>> getRoles() {
         List<RoleEntity> list = roleService.list();
         List<Role> roles = BeanUtils.toList(list, Role.class);
@@ -96,6 +99,7 @@ public class RoleController extends BaseController<RoleEntity> {
     }
 
     @GetMapping("/dict")
+    @PreAuthorize("@Security.hasPermission('system:role:list')")
     public GenericResponse<List<DictionaryEntry>> getRoleDict() {
         List<RoleEntity> roles = roleService.list();
         List<DictionaryEntry> options = new ArrayList<>(roles.size());
@@ -106,6 +110,7 @@ public class RoleController extends BaseController<RoleEntity> {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("@Security.hasPermission('system:role:detail')")
     public GenericResponse<Role> getRoleInfo(@PathVariable(value = "id") Long roleId) {
         RoleEntity entity = roleService.getById(roleId);
         Role role = BeanUtils.toBean(entity, Role.class);
@@ -115,6 +120,7 @@ public class RoleController extends BaseController<RoleEntity> {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("@Security.hasPermission('system:role:update')")
     public GenericResponse<Void> updateRole(@RequestBody Role role) {
         roleService.updateRole(role);
         return ResponseHelper.buildSuccessfulResponse();
@@ -122,6 +128,7 @@ public class RoleController extends BaseController<RoleEntity> {
 
     @Operation(summary = "绑定角色用户")
     @PostMapping("/bind-users/{roleId}")
+    @PreAuthorize("@Security.hasPermission('system:role:assign-user')")
     public GenericResponse<Void> assignToUsers(@PathVariable("roleId") Long roleId, @RequestBody List<Long> userIds) {
         userRoleService.assignToUsers(roleId, userIds);
         return ResponseHelper.buildSuccessfulResponse();
@@ -129,6 +136,7 @@ public class RoleController extends BaseController<RoleEntity> {
 
     @Operation(summary = "查询角色下的用户列表")
     @GetMapping("/users/{roleId}")
+    @PreAuthorize("@Security.hasPermission('system:role:list')")
     public GenericResponse<PagePack<User>> getRoleUsers(
             @RequestParam("pageNumber") Long pageNumber,
             @RequestParam("pageSize") Long pageSize,
@@ -141,6 +149,7 @@ public class RoleController extends BaseController<RoleEntity> {
 
     @Operation(summary = "删除用户-角色关系")
     @DeleteMapping("/unbind-users/{roleId}")
+    @PreAuthorize("@Security.hasPermission('system:role:delete')")
     public GenericResponse<Void> deleteUserRole(
             @PathVariable("roleId") Long roleId,
             @RequestBody List<Long> userIds
@@ -151,6 +160,7 @@ public class RoleController extends BaseController<RoleEntity> {
 
     @Operation(summary = "角色绑定权限")
     @PutMapping("/bind-permissions/{roleId}")
+    @PreAuthorize("@Security.hasPermission('system:role:update-permission')")
     public GenericResponse<Void> bindPermissions(
             @PathVariable("roleId") Long roleId,
             @RequestBody Map<String, Object> body

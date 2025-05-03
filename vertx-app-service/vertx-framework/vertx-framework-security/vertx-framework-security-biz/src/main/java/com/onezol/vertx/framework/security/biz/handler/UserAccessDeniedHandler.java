@@ -17,7 +17,7 @@ public class UserAccessDeniedHandler implements AccessDeniedHandler {
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) {
-        GenericResponse<Object> genericResponse = ResponseHelper.buildFailedResponse(new com.onezol.vertx.framework.security.api.exception.AccessDeniedException("访问受限, 您的权限不足"));
+        GenericResponse<Object> genericResponse = ResponseHelper.buildFailedResponse(new com.onezol.vertx.framework.security.api.exception.AccessDeniedException("操作受限, 您的权限不足"));
         ServletUtils.writeJSON(response, genericResponse);
     }
 

@@ -1,7 +1,7 @@
 <template>
   <a-menu class="right-menu">
     <a-menu-item
-      v-permission="['system:dict:update']"
+      v-permission="['system:dictionary:update']"
       :disabled="data.builtin && data.type === 1"
       title="修改"
       @click="onClick('update')"
@@ -9,7 +9,7 @@
       <span>修改</span>
     </a-menu-item>
     <a-menu-item
-      v-permission="['system:dict:delete']"
+      v-permission="['system:dictionary:delete']"
       class="danger"
       :disabled="data.builtin"
       :title="data.builtin ? '系统内置数据不能删除' : '删除'"

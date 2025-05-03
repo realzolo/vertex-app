@@ -13,6 +13,7 @@ import com.onezol.vertx.framework.component.notice.service.NoticeService;
 import com.onezol.vertx.framework.support.support.ResponseHelper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "通知公告")
@@ -28,6 +29,7 @@ public class NoticeController extends BaseController<NoticeEntity> {
 
     @Operation(summary = "新增通知公告")
     @PostMapping
+    @PreAuthorize("@Security.hasPermission('system:notice:create')")
     public GenericResponse<Void> create(@RequestBody NoticeSavePayload payload) {
         noticeService.createOrUpdate(payload);
         return ResponseHelper.buildSuccessfulResponse();
@@ -35,6 +37,7 @@ public class NoticeController extends BaseController<NoticeEntity> {
 
     @Operation(summary = "更新通知公告")
     @PutMapping
+    @PreAuthorize("@Security.hasPermission('system:notice:update')")
     public GenericResponse<Void> update(@RequestBody NoticeSavePayload payload) {
         Asserts.notNull(payload.getId(), "ID不能为空");
         noticeService.createOrUpdate(payload);
@@ -43,6 +46,7 @@ public class NoticeController extends BaseController<NoticeEntity> {
 
     @Operation(summary = "删除通知公告")
     @DeleteMapping("/{id}")
+    @PreAuthorize("@Security.hasPermission('system:notice:delete')")
     public GenericResponse<Void> delete(@PathVariable("id") Long id) {
         noticeService.deleteById(id);
         return ResponseHelper.buildSuccessfulResponse();
@@ -56,6 +60,7 @@ public class NoticeController extends BaseController<NoticeEntity> {
 
     @Operation(summary = "获取通知公告列表")
     @GetMapping("/page")
+    @PreAuthorize("@Security.hasPermission('system:notice:list')")
     public GenericResponse<PagePack<Notice>> page(
             @RequestParam("pageNumber") Long pageNumber,
             @RequestParam("pageSize") Long pageSize,

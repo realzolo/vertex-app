@@ -6,6 +6,7 @@ import com.onezol.vertx.framework.common.exception.InvalidParameterException;
 import com.onezol.vertx.framework.common.model.PagePack;
 import com.onezol.vertx.framework.common.mvc.service.BaseServiceImpl;
 import com.onezol.vertx.framework.common.util.Asserts;
+import com.onezol.vertx.framework.security.api.enumeration.BuiltinRole;
 import com.onezol.vertx.framework.security.api.model.dto.User;
 import com.onezol.vertx.framework.security.api.model.entity.RoleEntity;
 import com.onezol.vertx.framework.security.api.model.entity.RolePermissionEntity;
@@ -38,7 +39,6 @@ public class UserRoleServiceImpl extends BaseServiceImpl<UserRoleMapper, UserRol
         this.userInfoService = userInfoService;
         this.rolePermissionService = rolePermissionService;
     }
-
 
     /**
      * 获取用户的角色
@@ -255,4 +255,39 @@ public class UserRoleServiceImpl extends BaseServiceImpl<UserRoleMapper, UserRol
         }
         rolePermissionService.saveBatch(willCreateEntities);
     }
+
+    /**
+     * 判断用户是否是超级管理员
+     *
+     * @param userId 用户ID
+     */
+    @Override
+    public boolean hasAnySuperAdmin(Long userId) {
+        List<RoleEntity> userRoles = this.getUserRoles(userId);
+        if (Objects.isNull(userRoles) || userRoles.isEmpty()) {
+            return false;
+        }
+        for (RoleEntity roleEntity : userRoles) {
+            if (roleEntity.getCode().equals(BuiltinRole.SUPER.getValue())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 判断用户是否包含指定角色（任一一个即可）
+     *
+     * @param userId    用户ID
+     * @param roleCodes 角色编码
+     */
+    @Override
+    public boolean hasAnyRoles(Long userId, String[] roleCodes) {
+        if (Objects.isNull(userId) || Objects.isNull(roleCodes) || roleCodes.length == 0) {
+            return false;
+        }
+        List<RoleEntity> userRoles = this.getUserRoles(userId);
+        return userRoles.stream().anyMatch(role -> Arrays.asList(roleCodes).contains(role.getCode()));
+    }
+
 }

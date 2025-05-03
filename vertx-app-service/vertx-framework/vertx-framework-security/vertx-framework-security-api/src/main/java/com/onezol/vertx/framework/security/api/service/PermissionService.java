@@ -27,4 +27,12 @@ public interface PermissionService extends BaseService<PermissionEntity> {
      */
     boolean deletePermission(Long id);
 
+    /**
+     * 检查权限是否存在
+     *
+     * @param userId      用户ID
+     * @param permissions 权限标识符
+     */
+    boolean hasAnyPermissions(Long userId, String... permissions);
+
 }

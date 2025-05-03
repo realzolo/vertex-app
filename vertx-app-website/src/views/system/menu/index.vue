@@ -25,11 +25,11 @@
         </a-button>
       </template>
       <template #toolbar-right>
-        <a-button v-permission="['system:menu:create']" type="primary" @click="onAdd()">
+        <a-button v-permission="['system:permission:create']" type="primary" @click="onAdd()">
           <template #icon><icon-plus /></template>
           <template #default>新增</template>
         </a-button>
-        <a-button v-permission="['system:menu:clearCache']" type="outline" status="warning" @click="onClearCache">
+        <a-button v-permission="['system:permission:clear-cache']" type="outline" status="warning" @click="onClearCache">
           <template #icon><icon-delete /></template>
           <template #default>清除缓存</template>
         </a-button>
@@ -70,10 +70,10 @@
       </template>
       <template #action="{ record }">
         <a-space>
-          <a-link v-permission="['system:menu:update']" title="修改" @click="onUpdate(record)">修改</a-link>
-          <a-link v-permission="['system:menu:delete']" status="danger" title="删除" @click="onDelete(record)">删除</a-link>
+          <a-link v-permission="['system:permission:update']" title="修改" @click="onUpdate(record)">修改</a-link>
+          <a-link v-permission="['system:permission:delete']" status="danger" title="删除" @click="onDelete(record)">删除</a-link>
           <a-link
-            v-permission="['system:menu:create']"
+            v-permission="['system:permission:create']"
             :disabled="![1, 2].includes(record.data.type)"
             :title="![1, 2].includes(record.data.type) ? '不可添加下级菜单' : '新增'"
             @click="onAdd(record.data.id)"
@@ -160,7 +160,7 @@ const columns: TableInstance['columns'] = [
     width: 160,
     align: 'center',
     fixed: !isMobile() ? 'right' : undefined,
-    show: has.hasPermOr(['system:menu:update', 'system:menu:delete', 'system:menu:create']),
+    show: has.hasPermOr(['system:permission:update', 'system:permission:delete', 'system:permission:create']),
   },
 ]
 

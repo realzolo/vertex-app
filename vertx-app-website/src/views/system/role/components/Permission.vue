@@ -14,7 +14,7 @@
     @refresh="refresh"
   >
     <template #toolbar-left>
-      <a-button v-permission="['system:role:updatePermission']" type="primary" :disabled="disabled" @click="save">
+      <a-button v-permission="['system:role:update-permission']" type="primary" :disabled="disabled" @click="save">
         <template #icon><icon-save /></template>保存权限
       </a-button>
     </template>
@@ -297,11 +297,11 @@ const showCheckedAll = ref(true)
 const fetchRole = async (id: number) => {
   try {
     loading.value = true
-    disabled.value = !has.hasPermOr(['system:role:updatePermission'])
+    disabled.value = !has.hasPermOr(['system:role:update-permission'])
     // 查询角色详情
     const { data } = await getRole(id)
     if (!disabled.value) {
-      disabled.value = data.builtin && data.code === 'admin'
+      disabled.value = data.builtin && data.code === 'super'
     }
     isCascade.value = data.menuCheckStrictly
     // 更新选中键集合

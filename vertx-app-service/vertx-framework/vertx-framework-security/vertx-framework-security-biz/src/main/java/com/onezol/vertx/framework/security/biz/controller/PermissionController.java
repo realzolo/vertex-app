@@ -10,6 +10,7 @@ import com.onezol.vertx.framework.security.api.model.dto.Permission;
 import com.onezol.vertx.framework.security.api.model.entity.PermissionEntity;
 import com.onezol.vertx.framework.security.api.service.PermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -40,7 +41,9 @@ public class PermissionController {
         return treeNodes;
     }
 
+
     @GetMapping("/tree")
+    @PreAuthorize("@Security.hasPermission('system:permission:list')")
     public GenericResponse<List<TreeNode>> getPermissionTree() {
         List<PermissionEntity> list = permissionService.list();
         List<TreeNode> nodes = toTreeNodes(list);
@@ -49,6 +52,7 @@ public class PermissionController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("@Security.hasPermission('system:permission:detail')")
     public GenericResponse<Permission> getPermissionTree(@PathVariable("id") Long id) {
         PermissionEntity entity = permissionService.getById(id);
         Permission permission = BeanUtils.toBean(entity, Permission.class);
@@ -58,6 +62,7 @@ public class PermissionController {
     }
 
     @PostMapping("/add")
+    @PreAuthorize("@Security.hasPermission('system:permission:create')")
     public GenericResponse<Permission> addPermission(@RequestBody Permission permission) {
         PermissionEntity entity = BeanUtils.toBean(permission, PermissionEntity.class);
         boolean ok = permissionService.save(entity);
@@ -68,6 +73,7 @@ public class PermissionController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("@Security.hasPermission('system:permission:update')")
     public GenericResponse<Permission> updatePermission(@RequestBody Permission permission) {
         PermissionEntity entity = BeanUtils.toBean(permission, PermissionEntity.class);
         Long rootId = entity.getId();
@@ -83,6 +89,7 @@ public class PermissionController {
 
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("@Security.hasPermission('system:permission:delete')")
     public GenericResponse<Void> deletePermission(@PathVariable("id") Long id) {
         boolean ok = permissionService.deletePermission(id);
         if (!ok) {

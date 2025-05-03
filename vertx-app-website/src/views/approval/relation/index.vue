@@ -40,7 +40,7 @@
       </template>
       <template #action="{ record }">
         <a-space>
-          <a-link v-permission="['system:notice:get']" title="详情" @click="onDetail(record)">详情</a-link>
+          <a-link v-permission="['system:notice:detail']" title="详情" @click="onDetail(record)">详情</a-link>
           <a-link v-permission="['system:notice:update']" title="修改" @click="onUpdate(record)">修改</a-link>
           <a-link v-permission="['system:notice:delete']" status="danger" title="删除" @click="onDelete(record)"> 删除 </a-link>
         </a-space>
@@ -96,7 +96,7 @@ const columns: TableInstance['columns'] = [
     width: 160,
     align: 'center',
     fixed: !isMobile() ? 'right' : undefined,
-    show: has.hasPermOr(['system:notice:get', 'system:notice:update', 'system:notice:delete']),
+    show: has.hasPermOr(['system:notice:detail', 'system:notice:update', 'system:notice:delete']),
   },
 ]
 

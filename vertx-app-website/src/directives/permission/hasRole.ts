@@ -8,11 +8,11 @@ import { useUserStore } from '@/stores'
 function checkRole(el: HTMLElement, binding: DirectiveBinding) {
   const userStore = useUserStore()
   const { value } = binding
-  const super_admin = 'role_admin'
+  const superAdmin = 'super'
   if (value && Array.isArray(value) && value.length) {
     const roleValues: string[] = value
     const hasRole = userStore.roles.some((role) => {
-      return super_admin === role || roleValues.includes(role)
+      return superAdmin === role.value || roleValues.includes(role.value)
     })
     if (!hasRole) {
       el.parentNode && el.parentNode.removeChild(el)

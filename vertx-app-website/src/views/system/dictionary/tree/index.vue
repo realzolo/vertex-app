@@ -4,7 +4,7 @@
       <a-input v-model="searchKey" placeholder="搜索名称/编码" allow-clear>
         <template #prefix><icon-search /></template>
       </a-input>
-      <a-button v-permission="['system:dict:create']" type="primary" @click="onAdd">
+      <a-button v-permission="['system:dictionary:create']" type="primary" @click="onAdd">
         <template #icon><icon-plus /></template>
       </a-button>
     </div>
@@ -30,7 +30,7 @@
           </template>
           <template #extra="node">
             <a-trigger trigger="click" align-point animation-name="slide-dynamic-origin" auto-fit-transform-origin position="bl" scroll-to-close>
-              <icon-more v-if="has.hasPermOr(['system:dict:update', 'system:dict:delete'])" class="action" />
+              <icon-more v-if="has.hasPermOr(['system:dictionary:update', 'system:dictionary:delete'])" class="action" />
               <template #content>
                 <RightMenu :data="node" @on-menu-item-click="onMenuItemClick" />
               </template>

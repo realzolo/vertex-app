@@ -15,6 +15,7 @@ import com.onezol.vertx.framework.support.support.ResponseHelper;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.util.Assert;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -63,6 +64,15 @@ public class GlobalExceptionHandler {
     public GenericResponse<?> handleNullPointerException(HttpServletRequest req, MaxUploadSizeExceededException ex) {
         log.error(ex.getMessage(), ex);
         return ResponseHelper.buildFailedResponse(ServiceStatus.INTERNAL_SERVER_ERROR, "上传文件大小超限！");
+    }
+
+    /**
+     * AccessDeniedException 处理权限不足异常
+     */
+    @ExceptionHandler(value = AccessDeniedException.class)
+    public void handleAccessDeniedException(AccessDeniedException ex) {
+        // 此处不做处理，让 UserAccessDeniedHandler 处理
+        throw ex;
     }
 
     /**

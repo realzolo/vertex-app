@@ -67,4 +67,19 @@ public interface UserRoleService extends BaseService<UserRoleEntity> {
      */
     void bindRolePermissions(Long roleId, List<Long> permissionIds);
 
+    /**
+     * 判断用户是否是超级管理员
+     *
+     * @param userId 用户ID
+     */
+    boolean hasAnySuperAdmin(Long userId);
+
+    /**
+     * 判断用户是否包含指定角色（任一一个即可）
+     *
+     * @param userId    用户ID
+     * @param roleCodes 角色编码
+     */
+    boolean hasAnyRoles(Long userId, String[] roleCodes);
+
 }

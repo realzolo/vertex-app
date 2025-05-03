@@ -111,7 +111,7 @@ const columns: TableInstance['columns'] = [
     width: 130,
     align: 'center',
     fixed: !isMobile() ? 'right' : undefined,
-    show: has.hasPermOr(['schedule:log:get', 'schedule:log:stop', 'schedule:log:retry']),
+    show: has.hasPermOr(['schedule:log:detail', 'schedule:log:stop', 'schedule:log:retry']),
   },
 ]
 

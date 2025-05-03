@@ -32,11 +32,11 @@
         </a-button>
       </template>
       <template #toolbar-right>
-        <a-button v-permission="['system:dept:create']" type="primary" @click="onAdd()">
+        <a-button v-permission="['system:department:create']" type="primary" @click="onAdd()">
           <template #icon><icon-plus /></template>
           <template #default>新增</template>
         </a-button>
-        <a-button v-permission="['system:dept:export']" @click="onExport">
+        <a-button v-permission="['system:department:export']" @click="onExport">
           <template #icon><icon-download /></template>
           <template #default>导出</template>
         </a-button>
@@ -50,9 +50,9 @@
       </template>
       <template #action="{ record }">
         <a-space>
-          <a-link v-permission="['system:dept:update']" title="修改" @click="onUpdate(record)">修改</a-link>
+          <a-link v-permission="['system:department:update']" title="修改" @click="onUpdate(record)">修改</a-link>
           <a-link
-            v-permission="['system:dept:delete']"
+            v-permission="['system:department:delete']"
             status="danger"
             :disabled="record.data.builtin"
             :title="record.data.builtin ? '系统内置数据不能删除' : '删除'"
@@ -60,7 +60,7 @@
           >
             删除
           </a-link>
-          <a-link v-permission="['system:dept:create']" title="新增" @click="onAdd(record.id)">新增</a-link>
+          <a-link v-permission="['system:department:create']" title="新增" @click="onAdd(record.id)">新增</a-link>
         </a-space>
       </template>
     </GiTable>
@@ -174,7 +174,7 @@ const columns: TableInstance['columns'] = [
     width: 160,
     align: 'center',
     fixed: !isMobile() ? 'right' : undefined,
-    show: has.hasPermOr(['system:dept:update', 'system:dept:delete', 'system:dept:create']),
+    show: has.hasPermOr(['system:department:update', 'system:department:delete', 'system:department:create']),
   },
 ]
 

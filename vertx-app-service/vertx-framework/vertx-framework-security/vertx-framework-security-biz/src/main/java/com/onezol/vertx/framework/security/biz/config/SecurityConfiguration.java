@@ -1,18 +1,19 @@
 package com.onezol.vertx.framework.security.biz.config;
 
-import com.onezol.vertx.framework.security.api.annotation.RestrictAccess;
 import com.onezol.vertx.framework.security.biz.authentication.provider.EmailAuthenticationProvider;
-import com.onezol.vertx.framework.security.biz.interceptor.JwtAuthenticationTokenFilter;
 import com.onezol.vertx.framework.security.biz.handler.UserAccessDeniedHandler;
 import com.onezol.vertx.framework.security.biz.handler.UserAuthenticationHandler;
 import com.onezol.vertx.framework.security.biz.handler.UserLogoutSuccessHandler;
+import com.onezol.vertx.framework.security.biz.interceptor.JwtAuthenticationTokenFilter;
 import com.onezol.vertx.framework.support.support.RequestPathHelper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -20,31 +21,44 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.util.Set;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfiguration {
 
     /**
      * JWT认证过滤器
      */
     private final JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
+
     /**
      * 认证入口点处理器(认证失败处理器)
      */
     private final UserAuthenticationHandler userAuthenticationHandler;
+
     /**
      * 拒绝访问处理类(权限不足)
      */
-    private final UserAccessDeniedHandler userAccessDeniedHandler;
+    private final AccessDeniedHandler userAccessDeniedHandler;
+
     /**
      * 用户注销处理器
      */
     private final UserLogoutSuccessHandler userLogoutSuccessHandler;
+
+    /**
+     * 邮箱认证提供者
+     */
     private final EmailAuthenticationProvider emailAuthenticationProvider;
+
+    /**
+     * 用户信息服务
+     */
     private final UserDetailsService userDetailsService;
 
     public SecurityConfiguration(JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter, UserAuthenticationHandler userAuthenticationHandler, UserAccessDeniedHandler userAccessDeniedHandler, UserLogoutSuccessHandler userLogoutSuccessHandler, EmailAuthenticationProvider emailAuthenticationProvider, UserDetailsService userDetailsService) {
@@ -59,7 +73,7 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         // 获取限制访问路径并转换为 MvcMatchers
-        Set<String> restrictPathSet = RequestPathHelper.getControllerPaths(RestrictAccess.class);
+        Set<String> restrictPathSet = RequestPathHelper.getControllerPaths(PreAuthorize.class);
         Set<String> mvcMatchers = RequestPathHelper.convertPathToMvcMatcher(restrictPathSet);
         String[] restrictPaths = mvcMatchers.toArray(new String[0]);
 
@@ -119,11 +133,6 @@ public class SecurityConfiguration {
         return authProvider;
     }
 
-    /**
-     * 密码编码器
-     *
-     * @return 密码编码器
-     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
