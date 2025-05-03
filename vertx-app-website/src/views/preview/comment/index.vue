@@ -25,8 +25,8 @@
         </div>
         <div class="comment-content">
           <div class="content-actions">
-            <a-typography-text :type="sortType === 'latest' ? 'primary' : 'secondary'" @click="onSortType('latest')">最新</a-typography-text>
-            <a-typography-text :type="sortType === 'hottest' ? 'primary' : 'secondary'" @click="onSortType('hottest')">最热</a-typography-text>
+            <a-typography-text :type="sortType === 'time' ? 'primary' : 'secondary'" @click="onSortType('time')">最新</a-typography-text>
+            <a-typography-text :type="sortType === 'hot' ? 'primary' : 'secondary'" @click="onSortType('hot')">最热</a-typography-text>
           </div>
           <a-spin :loading="loading">
             <div class="comment-items">
@@ -40,7 +40,7 @@
       </div>
       <div class="comment-footer">
         <div v-if="pagination.current * pagination.pageSize < pagination.total" class="comment-more">
-          <a-button type="text" @click="loadMore">查看更多</a-button>
+          <a-button type="text" @click="loadMore" disabled>查看更多</a-button>
         </div>
       </div>
     </div>
@@ -52,33 +52,29 @@ import { ref } from 'vue'
 import { Message } from '@arco-design/web-vue'
 import RecursiveComment from './RecursiveComment.vue'
 import { useDevice, useResetReactive, useTable } from '@/hooks'
-import { type CommentReq, type CommentResp, addComment, listComment } from '@/apis/preview/comment'
+import { type CommentReq, addComment, listComment } from '@/apis/preview/comment'
 
 const route = useRoute()
 const { isDesktop } = useDevice()
 
 const { id = 10000 } = route.query
 
-// 初始化评论数据
-const comments = ref<CommentResp[]>([])
-
 // 评论输入框内容
 const commentContent = ref('')
 
-// 评论排序：最新(latest)、最热(hottest)
-const sortType = ref('latest')
+// 评论排序：最新(time)、最热(hot)
+const sortType = ref('time')
 
 const [queryForm] = useResetReactive({
   objectId: Number(id),
-  sortType: 'latest',
+  sortType: sortType.value,
 })
 
 const {
-  tableData,
+  tableData: comments,
   loading,
   pagination,
   search,
-  handleDelete,
 } = useTable((page) => listComment({ ...queryForm, ...page }), { immediate: true })
 
 // 提交评论
@@ -104,21 +100,13 @@ const submitComment = async () => {
 // 排序评论
 const onSortType = (type: string) => {
   sortType.value = type
-  if (type === 'latest') {
-    comments.value.sort((a, b) => b.createTime - a.createTime)
-  } else if (type === 'hottest') {
-    comments.value.sort((a, b) => b.upvotes - a.upvotes)
-  }
+  queryForm.sortType = type
+  search()
 }
 
 // 加载更多评论
 const loadMore = () => {
 }
-watch(() => tableData.value, (newValue: CommentResp[]) => {
-  comments.value = newValue
-})
-onMounted(() => {
-})
 </script>
 
 <style scoped lang="scss">

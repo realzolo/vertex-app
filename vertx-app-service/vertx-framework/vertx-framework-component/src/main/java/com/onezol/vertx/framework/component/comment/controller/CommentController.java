@@ -1,14 +1,13 @@
-package com.onezol.vertx.framework.component.commet.controller;
+package com.onezol.vertx.framework.component.comment.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.onezol.vertx.framework.common.annotation.TimeLog;
 import com.onezol.vertx.framework.common.model.GenericResponse;
 import com.onezol.vertx.framework.common.model.PagePack;
 import com.onezol.vertx.framework.common.mvc.controller.BaseController;
-import com.onezol.vertx.framework.component.commet.model.dto.Comment;
-import com.onezol.vertx.framework.component.commet.model.entity.CommentEntity;
-import com.onezol.vertx.framework.component.commet.model.payload.CommentPayload;
-import com.onezol.vertx.framework.component.commet.service.CommentService;
+import com.onezol.vertx.framework.component.comment.model.dto.Comment;
+import com.onezol.vertx.framework.component.comment.model.entity.CommentEntity;
+import com.onezol.vertx.framework.component.comment.model.payload.CommentPayload;
+import com.onezol.vertx.framework.component.comment.service.CommentService;
 import com.onezol.vertx.framework.support.support.ResponseHelper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -44,10 +43,11 @@ public class CommentController extends BaseController<CommentEntity> {
     public GenericResponse<PagePack<Comment>> pageComment(
             @RequestParam("pageNumber") Long pageNumber,
             @RequestParam("pageSize") Long pageSize,
-            @RequestParam("objectId") Long objectId
+            @RequestParam("objectId") Long objectId,
+            @RequestParam(value = "sortType", required = false) String sortType
     ) {
         Page<CommentEntity> queryPage = this.getPageObject(pageNumber, pageSize);
-        PagePack<Comment> resultPage = commentService.listPage(queryPage, objectId);
+        PagePack<Comment> resultPage = commentService.listPage(queryPage, objectId, sortType);
         return ResponseHelper.buildSuccessfulResponse(resultPage);
     }
 

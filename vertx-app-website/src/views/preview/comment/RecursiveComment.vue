@@ -107,15 +107,18 @@ const submitReply = async () => {
       parentId: props.comment.id,
       content: replyContent.value,
     }
-    const resp = await addComment(replyComment)
-    if (!resp.success) {
-      Message.error('回复失败')
-      return
+    try {
+      const resp = await addComment(replyComment)
+      if (!resp.success) {
+        Message.error('回复失败')
+        return
+      }
+      Message.success('回复成功')
+      replyContent.value = ''
+      showReplyContentInput.value = false
+    } finally {
+      props.search()
     }
-    Message.success('回复成功')
-    replyContent.value = ''
-    showReplyContentInput.value = false
-    props.search()
   }
 }
 // 取消回复

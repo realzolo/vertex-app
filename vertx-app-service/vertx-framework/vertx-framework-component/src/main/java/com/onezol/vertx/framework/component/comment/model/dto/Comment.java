@@ -1,4 +1,4 @@
-package com.onezol.vertx.framework.component.commet.model.dto;
+package com.onezol.vertx.framework.component.comment.model.dto;
 
 import com.onezol.vertx.framework.common.model.dto.BaseDTO;
 import com.onezol.vertx.framework.security.api.model.dto.User;

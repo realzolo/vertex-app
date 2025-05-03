@@ -1,4 +1,4 @@
-package com.onezol.vertx.framework.component.commet.model.entity;
+package com.onezol.vertx.framework.component.comment.model.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -30,16 +30,12 @@ public class CommentEntity extends LogicalBaseEntity {
     @TableField("content")
     private String content;
 
-    @Schema(description = "评论人IP地址")
+    @Schema(description = "评论人地址")
     @TableField("address")
     private String address;
 
     @Schema(description = "搜索路径")
     @TableField("path")
     private String path;
-
-    @Schema(description = "回复评论列表")
-    @TableField(exist = false)
-    private List<CommentEntity> replies;
 
 }

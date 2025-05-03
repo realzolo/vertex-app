@@ -1,4 +1,4 @@
-package com.onezol.vertx.framework.component.commet.service;
+package com.onezol.vertx.framework.component.comment.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -11,10 +11,10 @@ import com.onezol.vertx.framework.common.util.BeanUtils;
 import com.onezol.vertx.framework.common.util.MapUtils;
 import com.onezol.vertx.framework.common.util.NetworkUtils;
 import com.onezol.vertx.framework.common.util.ServletUtils;
-import com.onezol.vertx.framework.component.commet.mapper.CommentMapper;
-import com.onezol.vertx.framework.component.commet.model.dto.Comment;
-import com.onezol.vertx.framework.component.commet.model.entity.CommentEntity;
-import com.onezol.vertx.framework.component.commet.model.payload.CommentPayload;
+import com.onezol.vertx.framework.component.comment.mapper.CommentMapper;
+import com.onezol.vertx.framework.component.comment.model.dto.Comment;
+import com.onezol.vertx.framework.component.comment.model.entity.CommentEntity;
+import com.onezol.vertx.framework.component.comment.model.payload.CommentPayload;
 import com.onezol.vertx.framework.component.upvote.constant.enumeration.UpvoteObjectType;
 import com.onezol.vertx.framework.component.upvote.service.UpvoteRecordService;
 import com.onezol.vertx.framework.security.api.context.AuthenticationContext;
@@ -43,10 +43,14 @@ public class CommentService extends BaseServiceImpl<CommentMapper, CommentEntity
         CommentEntity parentComment = this.getById(payload.getParentId());
 
         String clientIP = ServletUtils.getClientIP();
-        // TODO: 根据IP获取地理位置信息
         CommentEntity entity = BeanUtils.toBean(payload, CommentEntity.class);
         entity.setAddress(NetworkUtils.getAddressByIP(clientIP));
         entity.setBusinessType("COMMON");
+
+        if (Objects.nonNull(payload.getParentId()) && Objects.isNull(parentComment)) {
+            throw new InvalidParameterException("此评论已被删除，无法创建回复");
+        }
+
         if (Objects.nonNull(parentComment)) {
             entity.setPath(parentComment.getPath() + StringConstants.SLASH + parentComment.getId());
         } else {
@@ -79,17 +83,12 @@ public class CommentService extends BaseServiceImpl<CommentMapper, CommentEntity
     /**
      * 获取评论列表
      *
-     * @param queryPage 分页参数
+     * @param page 分页参数
      * @param objectId  评论对象
+     * @param sortType  排序类型
      */
-    public PagePack<Comment> listPage(Page<CommentEntity> queryPage, Long objectId) {
-        Page<CommentEntity> resultPage = this.page(
-                queryPage,
-                Wrappers.<CommentEntity>lambdaQuery()
-                        .eq(CommentEntity::getPath, StringConstants.EMPTY)
-                        .eq(CommentEntity::getObjectId, objectId)
-                        .orderByDesc(CommentEntity::getId)
-        );
+    public PagePack<Comment> listPage(Page<CommentEntity> page, Long objectId, String sortType) {
+        Page<CommentEntity> resultPage = this.baseMapper.queryTopLevelCommentPage(page, UpvoteObjectType.COMMENT.getValue(), objectId, sortType);
 
         PagePack<Comment> pagePack = PagePack.from(resultPage, Comment.class);
         List<Comment> comments = pagePack.getItems();

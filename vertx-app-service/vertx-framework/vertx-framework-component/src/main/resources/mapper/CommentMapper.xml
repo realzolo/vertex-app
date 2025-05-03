@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onezol.vertx.framework.component.comment.mapper.CommentMapper">
+
+    <select id="queryTopLevelCommentPage" resultType="com.onezol.vertx.framework.component.comment.model.entity.CommentEntity">
+        SELECT
+            mt.*
+        FROM
+            app_comment mt
+            LEFT JOIN app_upvote_summary t ON mt.id = t.object_id AND t.object_type = #{objectType}
+        WHERE
+            mt.deleted = FALSE
+            AND mt.parent_id IS NULL
+       ORDER BY
+            <if test="sortType != null">
+                <if test="sortType == 'time'">
+                    mt.create_time DESC
+                </if>
+                <if test="sortType == 'hot'">
+                    t.count DESC
+                </if>
+            </if>
+            <if test="sortType == null">
+                mt.create_time DESC
+            </if>
+    </select>
+
+</mapper>

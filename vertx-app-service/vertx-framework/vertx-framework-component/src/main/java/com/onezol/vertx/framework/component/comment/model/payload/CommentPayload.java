@@ -1,4 +1,4 @@
-package com.onezol.vertx.framework.component.commet.model.payload;
+package com.onezol.vertx.framework.component.comment.model.payload;
 
 import com.onezol.vertx.framework.common.model.payload.BasePayload;
 import io.swagger.v3.oas.annotations.media.Schema;
