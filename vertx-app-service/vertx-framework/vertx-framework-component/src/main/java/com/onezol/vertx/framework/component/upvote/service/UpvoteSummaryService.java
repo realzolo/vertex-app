@@ -40,9 +40,19 @@ public class UpvoteSummaryService extends BaseServiceImpl<UpvoteSummaryMapper, U
      *
      * @param objectType 点赞对象类型
      * @param objectId   点赞对象ID
-     * @param count      数量
+     * @param delta      +1为点赞，-1为取消点赞
      */
-    public void updateCount(UpvoteObjectType objectType, Long objectId, int count) {
-        this.baseMapper.updateCount(objectType.getValue(), objectId, count);
+    public void updateCount(UpvoteObjectType objectType, Long objectId, int delta) {
+        UpvoteSummaryEntity entity = this.getOne(objectType, objectId);
+        if (entity == null) {
+            entity = new UpvoteSummaryEntity();
+            entity.setObjectType(objectType);
+            entity.setObjectId(objectId);
+            entity.setCount(Long.parseLong(String.valueOf(delta)));
+            this.save(entity);
+        } else {
+            entity.setCount(entity.getCount() + delta);
+            this.updateById(entity);
+        }
     }
 }

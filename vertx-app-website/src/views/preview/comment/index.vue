@@ -28,13 +28,14 @@
             <a-typography-text :type="sortType === 'latest' ? 'primary' : 'secondary'" @click="onSortType('latest')">最新</a-typography-text>
             <a-typography-text :type="sortType === 'hottest' ? 'primary' : 'secondary'" @click="onSortType('hottest')">最热</a-typography-text>
           </div>
-          <div class="comment-items">
-            <RecursiveComment v-for="comment in comments" :key="comment.id" :comment="comment" :search="search" />
-          </div>
-          <div v-if="!comments.length" class="content-empty">
-            <icon-empty size="20" />
-            <p>暂无评论</p>
-          </div>
+          <a-spin :loading="loading">
+            <div class="comment-items">
+              <RecursiveComment v-for="comment in comments" :key="comment.id" :comment="comment" :search="search" />
+            </div>
+            <div v-if="!comments.length" class="content-empty">
+              <a-empty />
+            </div>
+          </a-spin>
         </div>
       </div>
       <div class="comment-footer">

@@ -15,6 +15,7 @@ public interface UpvoteSummaryMapper extends BaseMapper<UpvoteSummaryEntity> {
      * @param objectId   对象ID
      * @param increment  增加的数量
      */
+    @Deprecated
     int updateCount(@Param("objectType") String objectType, @Param("objectId") Long objectId, @Param("increment") int increment);
 
 }
