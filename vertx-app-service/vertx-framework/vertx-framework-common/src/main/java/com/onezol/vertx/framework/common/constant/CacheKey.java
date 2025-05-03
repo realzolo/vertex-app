@@ -39,6 +39,11 @@ public final class CacheKey {
     public static final String DICTIONARY = "dictionary";
 
     /**
+     * 点赞锁
+     */
+    public static final String UPVOTE_LOCK = "upvote:lock:{objectType}:{objectId}";
+
+    /**
      * 点赞状态
      */
     public static final String UPVOTE_STATUS = "upvote:status:{objectType}:{objectId}";

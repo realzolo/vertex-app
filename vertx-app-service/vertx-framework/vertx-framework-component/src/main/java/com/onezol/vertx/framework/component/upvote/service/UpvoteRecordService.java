@@ -1,6 +1,7 @@
 package com.onezol.vertx.framework.component.upvote.service;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.onezol.vertx.framework.common.constant.CacheKey;
 import com.onezol.vertx.framework.common.mvc.service.BaseServiceImpl;
 import com.onezol.vertx.framework.component.upvote.constant.enumeration.UpvoteObjectType;
 import com.onezol.vertx.framework.component.upvote.mapper.UpvoteRecordMapper;
@@ -8,23 +9,29 @@ import com.onezol.vertx.framework.component.upvote.model.dto.UpvoteCount;
 import com.onezol.vertx.framework.component.upvote.model.dto.UpvoteStatus;
 import com.onezol.vertx.framework.component.upvote.model.entity.UpvoteRecordEntity;
 import com.onezol.vertx.framework.component.upvote.model.entity.UpvoteSummaryEntity;
+import com.onezol.vertx.framework.support.support.RedisKeyHelper;
+import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RAtomicLong;
 import org.redisson.api.RLock;
 import org.redisson.api.RMap;
 import org.redisson.api.RedissonClient;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+@Slf4j
 @Service
 public class UpvoteRecordService extends BaseServiceImpl<UpvoteRecordMapper, UpvoteRecordEntity> {
 
+    private static final int LOCK_TIMEOUT = 5;                  // 锁超时时间
+    private static final int CACHE_BASE_EXPIRE_TIME = 30;       // 缓存过期时间（分钟）
+    private static final int CACHE_RANDOM_EXPIRE_TIME = 10;     // 缓存随机过期时间（分钟）
     private final RedissonClient redissonClient;
     private final UpvoteSummaryService upvoteSummaryService;
 
@@ -42,11 +49,11 @@ public class UpvoteRecordService extends BaseServiceImpl<UpvoteRecordMapper, Upv
      */
     @Transactional
     public void toggleVote(UpvoteObjectType objectType, Long objectId, Long userId) {
-        final String lockKey = "upvote:lock:" + objectType.getValue() + ":" + objectId;
+        String lockKey = RedisKeyHelper.buildCacheKey(CacheKey.UPVOTE_LOCK, objectType.getValue(), objectId.toString());
         RLock lock = redissonClient.getLock(lockKey);
 
         try {
-            lock.lock(3, TimeUnit.SECONDS);
+            lock.lock(LOCK_TIMEOUT, TimeUnit.SECONDS);
 
             boolean hasVoted = this.hasVoted(objectType, objectId, userId);
             int delta = hasVoted ? -1 : 1;
@@ -55,7 +62,14 @@ public class UpvoteRecordService extends BaseServiceImpl<UpvoteRecordMapper, Upv
             this.doToggleVote(objectType, objectId, userId, hasVoted);
 
             // 更新缓存
-            this.updateCacheAsync(objectType, objectId, userId, delta);
+            this.updateCache(objectType, objectId, userId, delta);
+        } catch (Exception e) {
+            log.error("[点赞] 点赞异常", e);
+            // 处理异常，避免锁未释放
+            if (lock.isHeldByCurrentThread()) {
+                lock.unlock();
+            }
+            throw e;
         } finally {
             if (lock.isHeldByCurrentThread()) {
                 lock.unlock();
@@ -71,19 +85,27 @@ public class UpvoteRecordService extends BaseServiceImpl<UpvoteRecordMapper, Upv
      */
     public long getVoteCount(UpvoteObjectType objectType, Long objectId) {
         // 先查缓存
-        RAtomicLong countCache = redissonClient.getAtomicLong("upvote:count:" + objectType.getValue() + ":" + objectId);
+        String cacheKey = RedisKeyHelper.buildCacheKey(CacheKey.UPVOTE_COUNT, objectType.getValue(), objectId.toString());
+        RAtomicLong countCache = redissonClient.getAtomicLong(cacheKey);
 
         // 缓存命中
         if (countCache.get() > 0) {
-            return (int) countCache.get();
+            return countCache.get();
         }
 
         // 缓存未命中查DB
         UpvoteSummaryEntity summary = upvoteSummaryService.getOne(objectType, objectId);
 
         // 回写缓存
-        long count = summary != null ? summary.getCount() : 0;
+        long count = 0;
+        if (summary != null) {
+            count = summary.getCount();
+        }
         countCache.set(count);
+
+        // 设置随机缓存过期时间，避免缓存雪崩
+        long randomExpireTime = CACHE_BASE_EXPIRE_TIME + (long) (Math.random() * CACHE_RANDOM_EXPIRE_TIME);
+        countCache.expire(Duration.ofMinutes(randomExpireTime));
 
         return count;
     }
@@ -97,7 +119,8 @@ public class UpvoteRecordService extends BaseServiceImpl<UpvoteRecordMapper, Upv
      */
     public boolean hasVoted(UpvoteObjectType objectType, Long objectId, Long userId) {
         // 先查缓存
-        RMap<Long, Integer> statusMap = redissonClient.getMap("upvote:status:" + objectType.getValue() + ":" + objectId);
+        String cacheKey = RedisKeyHelper.buildCacheKey(CacheKey.UPVOTE_STATUS, objectType.getValue(), objectId.toString());
+        RMap<Long, Integer> statusMap = redissonClient.getMap(cacheKey);
 
         // 缓存命中
         if (statusMap.containsKey(userId)) {
@@ -181,25 +204,25 @@ public class UpvoteRecordService extends BaseServiceImpl<UpvoteRecordMapper, Upv
         upvoteSummaryService.updateCount(objectType, objectId, delta);
     }
 
-    @Async
-    public void updateCacheAsync(UpvoteObjectType objectType, Long objectId, Long userId, int delta) {
+    public void updateCache(UpvoteObjectType objectType, Long objectId, Long userId, int delta) {
+        String statusKey = RedisKeyHelper.buildCacheKey(CacheKey.UPVOTE_STATUS, objectType.getValue(), objectId.toString());
+        String countKey = RedisKeyHelper.buildCacheKey(CacheKey.UPVOTE_COUNT, objectType.getValue(), objectId.toString());
+        int statusValue = delta > 0 ? 1 : 0;
+
         // 更新状态缓存
-        RMap<Long, Integer> statusMap = redissonClient.getMap(
-                "upvote:status:" + objectType.getValue() + ":" + objectId);
-        statusMap.put(userId, delta > 0 ? 1 : 0);
+        RMap<Long, Integer> statusMap = redissonClient.getMap(statusKey);
+        statusMap.put(userId, statusValue);
 
         // 更新计数缓存
-        RAtomicLong countCache = redissonClient.getAtomicLong(
-                "upvote:count:" + objectType.getValue() + ":" + objectId);
+        RAtomicLong countCache = redissonClient.getAtomicLong(countKey);
         countCache.addAndGet(delta);
-
-        // 防止计数出现负数
         if (countCache.get() < 0) {
             countCache.set(0);
         }
 
         // 设置缓存过期时间
-        countCache.expire(30, TimeUnit.MINUTES);
+        long randomExpireTime = CACHE_BASE_EXPIRE_TIME + (long) (Math.random() * CACHE_RANDOM_EXPIRE_TIME);
+        countCache.expire(Duration.ofMinutes(randomExpireTime));
     }
 
 }
