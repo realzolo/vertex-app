@@ -138,6 +138,10 @@ public class UpvoteRecordService extends BaseServiceImpl<UpvoteRecordMapper, Upv
         // 回写缓存
         statusMap.put(userId, count > 0 ? 1 : 0);
 
+        // 设置缓存过期时间
+        long randomExpireTime = CACHE_BASE_EXPIRE_TIME + (long) (Math.random() * CACHE_RANDOM_EXPIRE_TIME);
+        statusMap.expire(Duration.ofMinutes(randomExpireTime));
+
         return count > 0;
     }
 
@@ -222,6 +226,7 @@ public class UpvoteRecordService extends BaseServiceImpl<UpvoteRecordMapper, Upv
 
         // 设置缓存过期时间
         long randomExpireTime = CACHE_BASE_EXPIRE_TIME + (long) (Math.random() * CACHE_RANDOM_EXPIRE_TIME);
+        statusMap.expire(Duration.ofMinutes(randomExpireTime));
         countCache.expire(Duration.ofMinutes(randomExpireTime));
     }
 
