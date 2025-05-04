@@ -9,7 +9,6 @@ import com.onezol.vertx.framework.common.util.BeanUtils;
 import com.onezol.vertx.framework.security.api.context.AuthenticationContext;
 import com.onezol.vertx.framework.security.api.enumeration.LoginType;
 import com.onezol.vertx.framework.security.api.model.AuthIdentity;
-import com.onezol.vertx.framework.security.api.model.LoginUserDetails;
 import com.onezol.vertx.framework.security.api.model.UserIdentity;
 import com.onezol.vertx.framework.security.api.model.dto.User;
 import com.onezol.vertx.framework.security.api.model.dto.UserPassword;
@@ -22,7 +21,7 @@ import com.onezol.vertx.framework.security.biz.mapper.UserMapper;
 import com.onezol.vertx.framework.security.biz.strategy.LoginStrategy;
 import com.onezol.vertx.framework.security.biz.strategy.LoginStrategyFactory;
 import com.onezol.vertx.framework.support.cache.RedisCache;
-import com.onezol.vertx.framework.support.support.JWTHelper;
+import com.onezol.vertx.framework.support.support.JwtHelper;
 import com.onezol.vertx.framework.support.support.RedisKeyHelper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
@@ -97,7 +96,7 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
 
         // 构建返回结果
         User user = BeanUtils.toBean(entity, User.class);
-        String token = JWTHelper.generateToken(String.valueOf(user.getId()));
+        String token = JwtHelper.createJwt(String.valueOf(user.getId()));
         return AuthIdentity.builder()
                 .user(user)
                 .jwt(
@@ -147,34 +146,6 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
     public UserPassword getPassword(Long userId) {
         UserEntity entity = this.getById(userId);
         return new UserPassword(entity.getPassword(), entity.getPwdExpDate());
-    }
-
-    /**
-     * 登录成功后的处理
-     *
-     * @param loginUserDetails 登录用户身份信息
-     * @return 登录成功后的处理结果
-     */
-    private AuthIdentity afterLoginSuccess(LoginUserDetails loginUserDetails, final LoginType loginType) {
-        // 生成token
-        String token = JWTHelper.generateToken(loginUserDetails.getId().toString());
-
-        // 缓存用户数据
-        loginUserService.addLoginUser(loginUserDetails, token);
-
-        // 存储登录日志
-        loginHistoryService.createLoginRecord(loginUserDetails, loginType);
-
-        // 返回结果
-        return AuthIdentity.builder()
-                .user(loginUserDetails)
-                .jwt(
-                        AuthIdentity.Ticket.builder()
-                                .token(token)
-                                .expire(Long.valueOf(expirationTime))
-                                .build()
-                )
-                .build();
     }
 
     /**

@@ -16,7 +16,7 @@ import com.onezol.vertx.framework.security.api.service.LoginHistoryService;
 import com.onezol.vertx.framework.security.api.service.LoginUserService;
 import com.onezol.vertx.framework.security.api.service.UserInfoService;
 import com.onezol.vertx.framework.support.cache.RedisCache;
-import com.onezol.vertx.framework.support.support.JWTHelper;
+import com.onezol.vertx.framework.support.support.JwtHelper;
 import com.onezol.vertx.framework.support.support.RedisKeyHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -60,7 +60,7 @@ public class LoginUserServiceImpl implements LoginUserService {
      */
     @Override
     public void addLoginUser(LoginUserDetails loginUserDetails, String token) {
-        String subject = JWTHelper.getSubjectFromToken(token);
+        String subject = JwtHelper.extractSubjectFromJwt(token);
 
         // 存储用户Token
         String redisTokenKey = RedisKeyHelper.buildCacheKey(CacheKey.USER_TOKEN, subject);

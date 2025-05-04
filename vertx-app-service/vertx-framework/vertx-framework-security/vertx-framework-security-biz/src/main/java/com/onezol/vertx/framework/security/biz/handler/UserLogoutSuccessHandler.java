@@ -5,7 +5,7 @@ import com.onezol.vertx.framework.common.util.JsonUtils;
 import com.onezol.vertx.framework.common.util.ServletUtils;
 import com.onezol.vertx.framework.common.util.StringUtils;
 import com.onezol.vertx.framework.security.api.service.LoginUserService;
-import com.onezol.vertx.framework.support.support.JWTHelper;
+import com.onezol.vertx.framework.support.support.JwtHelper;
 import com.onezol.vertx.framework.support.support.ResponseHelper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -36,7 +36,7 @@ public class UserLogoutSuccessHandler implements LogoutSuccessHandler {
         String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (StringUtils.isNotBlank(authorizationHeader) && authorizationHeader.startsWith(AUTHORIZATION_HEADER)) {
             String token = authorizationHeader.substring(AUTHORIZATION_HEADER.length());
-            String subject = JWTHelper.getSubjectFromToken(token);
+            String subject = JwtHelper.extractSubjectFromJwt(token);
             assert subject != null;
             Long userId = Long.valueOf(CodecUtils.decodeBase64(subject));
 

@@ -5,7 +5,7 @@ import com.onezol.vertx.framework.security.api.model.AuthIdentity;
 import com.onezol.vertx.framework.security.api.model.LoginUserDetails;
 import com.onezol.vertx.framework.security.api.service.LoginHistoryService;
 import com.onezol.vertx.framework.security.api.service.LoginUserService;
-import com.onezol.vertx.framework.support.support.JWTHelper;
+import com.onezol.vertx.framework.support.support.JwtHelper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -31,7 +31,7 @@ public class LoginSupport {
      */
     public AuthIdentity afterLoginSuccess(LoginUserDetails loginUserDetails, final LoginType loginType) {
         // 生成token
-        String token = JWTHelper.generateToken(loginUserDetails.getId().toString());
+        String token = JwtHelper.createJwt(loginUserDetails.getId().toString());
 
         // 缓存用户数据
         loginUserService.addLoginUser(loginUserDetails, token);

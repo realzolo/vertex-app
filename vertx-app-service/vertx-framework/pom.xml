@@ -23,7 +23,7 @@
         <mybatis-plus.version>3.5.5</mybatis-plus.version>
         <redisson.version>3.45.1</redisson.version>
         <knife4j.version>4.4.0</knife4j.version>
-        <jjwt.version>0.9.1</jjwt.version>
+        <jjwt.version>0.12.6</jjwt.version>
         <fastjson2.version>2.0.34</fastjson2.version>
         <druid.version>1.2.21</druid.version>
         <p6spy.version>3.9.1</p6spy.version>

@@ -4,7 +4,7 @@ import com.onezol.vertx.framework.security.biz.authentication.provider.EmailAuth
 import com.onezol.vertx.framework.security.biz.handler.UserAccessDeniedHandler;
 import com.onezol.vertx.framework.security.biz.handler.UserAuthenticationHandler;
 import com.onezol.vertx.framework.security.biz.handler.UserLogoutSuccessHandler;
-import com.onezol.vertx.framework.security.biz.interceptor.JwtAuthenticationTokenFilter;
+import com.onezol.vertx.framework.security.biz.interceptor.JwtValidationFilter;
 import com.onezol.vertx.framework.support.support.RequestPathHelper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,9 +32,9 @@ import java.util.Set;
 public class SecurityConfiguration {
 
     /**
-     * JWT认证过滤器
+     * JWT验证过滤器
      */
-    private final JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
+    private final JwtValidationFilter jwtValidationFilter;
 
     /**
      * 认证入口点处理器(认证失败处理器)
@@ -61,8 +61,8 @@ public class SecurityConfiguration {
      */
     private final UserDetailsService userDetailsService;
 
-    public SecurityConfiguration(JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter, UserAuthenticationHandler userAuthenticationHandler, UserAccessDeniedHandler userAccessDeniedHandler, UserLogoutSuccessHandler userLogoutSuccessHandler, EmailAuthenticationProvider emailAuthenticationProvider, UserDetailsService userDetailsService) {
-        this.jwtAuthenticationTokenFilter = jwtAuthenticationTokenFilter;
+    public SecurityConfiguration(JwtValidationFilter jwtValidationFilter, UserAuthenticationHandler userAuthenticationHandler, UserAccessDeniedHandler userAccessDeniedHandler, UserLogoutSuccessHandler userLogoutSuccessHandler, EmailAuthenticationProvider emailAuthenticationProvider, UserDetailsService userDetailsService) {
+        this.jwtValidationFilter = jwtValidationFilter;
         this.userAuthenticationHandler = userAuthenticationHandler;
         this.userAccessDeniedHandler = userAccessDeniedHandler;
         this.userLogoutSuccessHandler = userLogoutSuccessHandler;
@@ -96,8 +96,8 @@ public class SecurityConfiguration {
                                 // 其他请求放行
                                 .anyRequest().permitAll()
                 )
-                // JWT 认证过滤器
-                .addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class)
+                // JWT 验证过滤器
+                .addFilterBefore(jwtValidationFilter, UsernamePasswordAuthenticationFilter.class)
                 // 认证失败处理器
                 .exceptionHandling(httpSecurityExceptionHandlingConfigurer ->
                         httpSecurityExceptionHandlingConfigurer
