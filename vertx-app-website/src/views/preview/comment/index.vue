@@ -81,6 +81,7 @@ const {
 const submitComment = async () => {
   if (!commentContent.value.trim()) {
     Message.warning('请输入评论内容')
+    return
   }
   const comment: CommentReq = {
     objectId: Number(id),

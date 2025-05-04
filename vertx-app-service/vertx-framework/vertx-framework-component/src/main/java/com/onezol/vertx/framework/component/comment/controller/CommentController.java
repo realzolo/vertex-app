@@ -11,6 +11,7 @@ import com.onezol.vertx.framework.component.comment.service.CommentService;
 import com.onezol.vertx.framework.support.support.ResponseHelper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "评论")
@@ -26,7 +27,7 @@ public class CommentController extends BaseController<CommentEntity> {
 
     @Operation(summary = "创建评论")
     @PostMapping
-    public GenericResponse<Comment> createComment(@RequestBody CommentPayload payload) {
+    public GenericResponse<Comment> createComment(@RequestBody @Valid CommentPayload payload) {
         Comment comment = commentService.create(payload);
         return ResponseHelper.buildSuccessfulResponse(comment);
     }
