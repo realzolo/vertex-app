@@ -18,4 +18,111 @@
         <module>vertx-framework-component</module>
         <module>vertx-framework-security</module>
     </modules>
+
+    <properties>
+        <mybatis-plus.version>3.5.5</mybatis-plus.version>
+        <redisson.version>3.45.1</redisson.version>
+        <knife4j.version>4.4.0</knife4j.version>
+        <jjwt.version>0.9.1</jjwt.version>
+        <fastjson2.version>2.0.34</fastjson2.version>
+        <druid.version>1.2.21</druid.version>
+        <p6spy.version>3.9.1</p6spy.version>
+        <jaxb-api.version>2.3.1</jaxb-api.version>
+        <liquibase.version>4.25.1</liquibase.version>
+        <user-agent-utils.version>1.21</user-agent-utils.version>
+        <x-file-storage.version>2.2.1</x-file-storage.version>
+        <aws-sdk-s3.version>1.12.777</aws-sdk-s3.version>
+        <minio.version>8.5.13</minio.version>
+        <easy-captcha.version>1.6.2</easy-captcha.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- https://mvnrepository.com/artifact/com.baomidou/mybatis-plus-spring-boot3-starter -->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/org.redisson/redisson-spring-boot-starter -->
+            <dependency>
+                <groupId>org.redisson</groupId>
+                <artifactId>redisson-spring-boot-starter</artifactId>
+                <version>${redisson.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/com.github.xiaoymin/knife4j-openapi3-jakarta-spring-boot-starter -->
+            <dependency>
+                <groupId>com.github.xiaoymin</groupId>
+                <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
+                <version>${knife4j.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/com.alibaba/druid-spring-boot-3-starter -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-3-starter</artifactId>
+                <version>${druid.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/p6spy/p6spy -->
+            <dependency>
+                <groupId>p6spy</groupId>
+                <artifactId>p6spy</artifactId>
+                <version>${p6spy.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/com.alibaba.fastjson2/fastjson2 -->
+            <dependency>
+                <groupId>com.alibaba.fastjson2</groupId>
+                <artifactId>fastjson2</artifactId>
+                <version>${fastjson2.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt -->
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api -->
+            <dependency>
+                <groupId>javax.xml.bind</groupId>
+                <artifactId>jaxb-api</artifactId>
+                <version>${jaxb-api.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/org.liquibase/liquibase-core -->
+            <dependency>
+                <groupId>org.liquibase</groupId>
+                <artifactId>liquibase-core</artifactId>
+                <version>${liquibase.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/eu.bitwalker/UserAgentUtils -->
+            <dependency>
+                <groupId>eu.bitwalker</groupId>
+                <artifactId>UserAgentUtils</artifactId>
+                <version>${user-agent-utils.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/org.dromara.x-file-storage/x-file-storage-spring -->
+            <dependency>
+                <groupId>org.dromara.x-file-storage</groupId>
+                <artifactId>x-file-storage-spring</artifactId>
+                <version>${x-file-storage.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-s3 -->
+            <dependency>
+                <groupId>com.amazonaws</groupId>
+                <artifactId>aws-java-sdk-s3</artifactId>
+                <version>${aws-sdk-s3.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/io.minio/minio -->
+            <dependency>
+                <groupId>io.minio</groupId>
+                <artifactId>minio</artifactId>
+                <version>${minio.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/com.github.whvcse/easy-captcha -->
+            <dependency>
+                <groupId>com.github.whvcse</groupId>
+                <artifactId>easy-captcha</artifactId>
+                <version>${easy-captcha.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
 </project>

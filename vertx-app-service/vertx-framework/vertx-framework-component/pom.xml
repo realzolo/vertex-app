@@ -37,11 +37,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
+
         <!-- Vertx Framework Dependencies -->
         <dependency>
             <groupId>com.onezol.vertx</groupId>
             <artifactId>vertx-framework-support</artifactId>
-            <version>${revision}</version>
         </dependency>
     </dependencies>
 

@@ -23,104 +23,41 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <revision>1.0.0</revision>
         <java.version>21</java.version>
-        <springboot.version>3.2.2</springboot.version>
-        <mybatis-plus.version>3.5.5</mybatis-plus.version>
-        <redisson.version>3.45.1</redisson.version>
-        <knife4j.version>4.4.0</knife4j.version>
-        <jjwt.version>0.9.1</jjwt.version>
-        <fastjson2.version>2.0.34</fastjson2.version>
-        <druid.version>1.2.21</druid.version>
-        <p6spy.version>3.9.1</p6spy.version>
-        <jaxb-api.version>2.3.1</jaxb-api.version>
-        <liquibase.version>4.25.1</liquibase.version>
-        <user-agent-utils.version>1.21</user-agent-utils.version>
-        <x-file-storage.version>2.2.1</x-file-storage.version>
-        <aws-sdk-s3.version>1.12.777</aws-sdk-s3.version>
-        <minio.version>8.5.13</minio.version>
-        <easy-captcha.version>1.6.2</easy-captcha.version>
+        <revision>1.0.0</revision>
     </properties>
 
     <dependencyManagement>
         <dependencies>
-            <!-- https://mvnrepository.com/artifact/com.baomidou/mybatis-plus-spring-boot3-starter -->
+            <!-- Vertx Framework Common 公共模块(工具类、通用模型、通用枚举等) -->
             <dependency>
-                <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
-                <version>${mybatis-plus.version}</version>
+                <groupId>com.onezol.vertx</groupId>
+                <artifactId>vertx-framework-common</artifactId>
+                <version>${revision}</version>
             </dependency>
-            <!-- https://mvnrepository.com/artifact/org.redisson/redisson-spring-boot-starter -->
+            <!-- Vertx Framework Component 功能组件模块(字典、文件存储、邮件等) -->
             <dependency>
-                <groupId>org.redisson</groupId>
-                <artifactId>redisson-spring-boot-starter</artifactId>
-                <version>${redisson.version}</version>
+                <groupId>com.onezol.vertx</groupId>
+                <artifactId>vertx-framework-component</artifactId>
+                <version>${revision}</version>
             </dependency>
-            <!-- https://mvnrepository.com/artifact/com.github.xiaoymin/knife4j-openapi3-jakarta-spring-boot-starter -->
+            <!-- Vertx Framework Security API 安全模块接口(用户、权限、认证等) -->
             <dependency>
-                <groupId>com.github.xiaoymin</groupId>
-                <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
-                <version>${knife4j.version}</version>
+                <groupId>com.onezol.vertx</groupId>
+                <artifactId>vertx-framework-security-api</artifactId>
+                <version>${revision}</version>
             </dependency>
-            <!-- https://mvnrepository.com/artifact/com.alibaba/druid-spring-boot-3-starter -->
+            <!-- Vertx Framework Security BIZ 安全模块实现(用户、权限、认证等) -->
             <dependency>
-                <groupId>com.alibaba</groupId>
-                <artifactId>druid-spring-boot-3-starter</artifactId>
-                <version>${druid.version}</version>
+                <groupId>com.onezol.vertx</groupId>
+                <artifactId>vertx-framework-security-biz</artifactId>
+                <version>${revision}</version>
             </dependency>
-            <!-- https://mvnrepository.com/artifact/p6spy/p6spy -->
+            <!-- Vertx Framework Support 功能支持模块(配置类、缓存、AOP、拦截器等) -->
             <dependency>
-                <groupId>p6spy</groupId>
-                <artifactId>p6spy</artifactId>
-                <version>${p6spy.version}</version>
-            </dependency>
-            <!-- https://mvnrepository.com/artifact/com.alibaba.fastjson2/fastjson2 -->
-            <dependency>
-                <groupId>com.alibaba.fastjson2</groupId>
-                <artifactId>fastjson2</artifactId>
-                <version>${fastjson2.version}</version>
-            </dependency>
-            <!-- https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt -->
-            <dependency>
-                <groupId>io.jsonwebtoken</groupId>
-                <artifactId>jjwt</artifactId>
-                <version>${jjwt.version}</version>
-            </dependency>
-            <!-- https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api -->
-            <dependency>
-                <groupId>javax.xml.bind</groupId>
-                <artifactId>jaxb-api</artifactId>
-                <version>${jaxb-api.version}</version>
-            </dependency>
-            <!-- https://mvnrepository.com/artifact/org.liquibase/liquibase-core -->
-            <dependency>
-                <groupId>org.liquibase</groupId>
-                <artifactId>liquibase-core</artifactId>
-                <version>${liquibase.version}</version>
-            </dependency>
-            <!-- https://mvnrepository.com/artifact/eu.bitwalker/UserAgentUtils -->
-            <dependency>
-                <groupId>eu.bitwalker</groupId>
-                <artifactId>UserAgentUtils</artifactId>
-                <version>${user-agent-utils.version}</version>
-            </dependency>
-            <!-- https://mvnrepository.com/artifact/org.dromara.x-file-storage/x-file-storage-spring -->
-            <dependency>
-                <groupId>org.dromara.x-file-storage</groupId>
-                <artifactId>x-file-storage-spring</artifactId>
-                <version>${x-file-storage.version}</version>
-            </dependency>
-            <!-- https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-s3 -->
-            <dependency>
-                <groupId>com.amazonaws</groupId>
-                <artifactId>aws-java-sdk-s3</artifactId>
-                <version>${aws-sdk-s3.version}</version>
-            </dependency>
-            <!-- https://mvnrepository.com/artifact/io.minio/minio -->
-            <dependency>
-                <groupId>io.minio</groupId>
-                <artifactId>minio</artifactId>
-                <version>${minio.version}</version>
+                <groupId>com.onezol.vertx</groupId>
+                <artifactId>vertx-framework-support</artifactId>
+                <version>${revision}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

@@ -16,24 +16,16 @@
         <dependency>
             <groupId>com.github.whvcse</groupId>
             <artifactId>easy-captcha</artifactId>
-            <version>${easy-captcha.version}</version>
         </dependency>
 
         <!-- Vertx Framework Dependencies -->
         <dependency>
             <groupId>com.onezol.vertx</groupId>
             <artifactId>vertx-framework-security-api</artifactId>
-            <version>${revision}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.onezol.vertx</groupId>
-            <artifactId>vertx-framework-support</artifactId>
-            <version>${revision}</version>
         </dependency>
         <dependency>
             <groupId>com.onezol.vertx</groupId>
             <artifactId>vertx-framework-component</artifactId>
-            <version>${revision}</version>
         </dependency>
     </dependencies>
 

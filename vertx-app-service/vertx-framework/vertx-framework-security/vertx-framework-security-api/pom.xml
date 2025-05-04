@@ -22,7 +22,6 @@
         <dependency>
             <groupId>com.onezol.vertx</groupId>
             <artifactId>vertx-framework-common</artifactId>
-            <version>${revision}</version>
         </dependency>
     </dependencies>
 
