@@ -17,7 +17,7 @@ public class P6spySqlFormatter implements MessageFormattingStrategy {
     public String formatMessage(int connectionId, String now, long elapsed, String category, String prepared, String sql, String url) {
         if (StringUtils.isNotBlank(sql)) {
             String timestamp = formatFullTime(LocalDateTime.now(), DATE_TIME_FORMATTER);
-            return "\n" + timestamp +
+            return timestamp +
                    " | 连接ID: " + connectionId +
                    " | 类别: " + category + 
                    " | 耗时: " + elapsed + " ms" + 
