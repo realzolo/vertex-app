@@ -53,4 +53,9 @@ public final class CacheKey {
      */
     public static final String UPVOTE_COUNT = "upvote:count:{objectType}:{objectId}";
 
+    /**
+     * Snail Job Auth Token
+     */
+    public static final String SNAIL_JOB_AUTH_TOKEN = "snail_job_auth_token";
+
 }

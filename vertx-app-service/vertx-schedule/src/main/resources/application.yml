@@ -1,0 +1,16 @@
+server:
+  port: 20480
+  servlet:
+    context-path: /snail-job
+
+### Spring 配置
+spring:
+  application:
+    name: vertx-schedule-app
+  profiles:
+    active: dev
+#    active: prod
+
+### 日志配置
+logging:
+  config: classpath:logback-spring.xml

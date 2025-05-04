@@ -43,6 +43,10 @@
             <groupId>com.onezol.vertx</groupId>
             <artifactId>vertx-framework-security-biz</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.onezol.vertx</groupId>
+            <artifactId>vertx-framework-extension-schedule</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

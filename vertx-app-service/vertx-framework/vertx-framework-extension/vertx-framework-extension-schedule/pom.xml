@@ -1,0 +1,33 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.onezol.vertx</groupId>
+        <artifactId>vertx-framework-extension</artifactId>
+        <version>${revision}</version>
+    </parent>
+
+    <artifactId>vertx-framework-extension-schedule</artifactId>
+
+    <dependencies>
+        <!-- SnailJob -->
+        <dependency>
+            <groupId>com.aizuda</groupId>
+            <artifactId>snail-job-client-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.aizuda</groupId>
+            <artifactId>snail-job-client-retry-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.aizuda</groupId>
+            <artifactId>snail-job-client-job-core</artifactId>
+        </dependency>
+
+        <!-- Vertx Framework Dependencies -->
+        <dependency>
+            <groupId>com.onezol.vertx</groupId>
+            <artifactId>vertx-framework-support</artifactId>
+        </dependency>
+    </dependencies>
+</project>

@@ -17,6 +17,7 @@
         <module>vertx-framework-support</module>
         <module>vertx-framework-component</module>
         <module>vertx-framework-security</module>
+        <module>vertx-framework-extension</module>
     </modules>
 
     <properties>
@@ -34,6 +35,7 @@
         <aws-sdk-s3.version>1.12.777</aws-sdk-s3.version>
         <minio.version>8.5.13</minio.version>
         <easy-captcha.version>1.6.2</easy-captcha.version>
+        <snail-job.version>1.4.0</snail-job.version>
     </properties>
 
     <dependencyManagement>
@@ -122,7 +124,22 @@
                 <artifactId>easy-captcha</artifactId>
                 <version>${easy-captcha.version}</version>
             </dependency>
+            <!-- https://mvnrepository.com/artifact/com.aizuda/snail-job-client-starter -->
+            <dependency>
+                <groupId>com.aizuda</groupId>
+                <artifactId>snail-job-client-starter</artifactId>
+                <version>${snail-job.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.aizuda</groupId>
+                <artifactId>snail-job-client-retry-core</artifactId>
+                <version>${snail-job.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.aizuda</groupId>
+                <artifactId>snail-job-client-job-core</artifactId>
+                <version>${snail-job.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
-
 </project>

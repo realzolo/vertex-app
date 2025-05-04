@@ -42,7 +42,7 @@
               <a-select
                 v-model="form.triggerType"
                 placeholder="请选择触发类型"
-                :options="job_trigger_type_enum"
+                :options="job_trigger_type"
                 @change="triggerTypeChange"
               />
             </a-form-item>
@@ -95,7 +95,7 @@
         <a-row>
           <a-col v-bind="colProps">
             <a-form-item label="任务类型" field="taskType">
-              <a-select v-model="form.taskType" :options="job_task_type_enum" placeholder="请选择任务类型" />
+              <a-select v-model="form.taskType" :options="job_task_type" placeholder="请选择任务类型" />
             </a-form-item>
           </a-col>
           <a-col v-bind="colProps">
@@ -135,12 +135,12 @@
         <a-row>
           <a-col v-bind="colProps">
             <a-form-item label="路由策略" field="routeKey">
-              <a-select v-model.trim="form.routeKey" placeholder="请选择路由策略" :options="job_route_strategy_enum" />
+              <a-select v-model.trim="form.routeKey" placeholder="请选择路由策略" :options="job_route_strategy" />
             </a-form-item>
           </a-col>
           <a-col v-bind="colProps">
             <a-form-item label="阻塞策略" field="blockStrategy">
-              <a-select v-model.trim="form.blockStrategy" placeholder="请选择阻塞策略" :options="job_block_strategy_enum" />
+              <a-select v-model.trim="form.blockStrategy" placeholder="请选择阻塞策略" :options="job_block_strategy" />
             </a-form-item>
           </a-col>
           <a-col v-bind="colProps">
@@ -235,11 +235,11 @@ const isUpdate = computed(() => !!dataId.value)
 const title = computed(() => (isUpdate.value ? '修改任务' : '新增任务'))
 const formRef = ref<FormInstance>()
 const groupList = ref<DictionaryEntry[]>([])
-const { job_trigger_type_enum, job_task_type_enum, job_route_strategy_enum, job_block_strategy_enum } = useDict(
-  'job_trigger_type_enum',
-  'job_task_type_enum',
-  'job_route_strategy_enum',
-  'job_block_strategy_enum',
+const { job_trigger_type, job_task_type, job_route_strategy, job_block_strategy } = useDict(
+  'job_trigger_type',
+  'job_task_type',
+  'job_route_strategy',
+  'job_block_strategy',
 )
 
 const rules: FormInstance['rules'] = {

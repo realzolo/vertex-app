@@ -46,6 +46,20 @@ application:
     secret-key: C61270901C4A455A89A0196CBCED9803
     expiration-time: 3600
 
+# Snail Job 配置
+snail-job:
+  enabled: true
+  namespace: 764d604ec6fc45f68cd92514c40e9e1a
+  group: vertx-app
+  token: SJ_Wyz3dmsdbDOkDujOTSSoBjGQP1BMsVnj
+  server:
+    host: 127.0.0.1
+    port: 17888
+    api:
+      url: http://127.0.0.1:20480/snail-job
+      username: admin
+      password: admin
+
 # 日志配置
 logging:
   config: classpath:logback-spring.xml

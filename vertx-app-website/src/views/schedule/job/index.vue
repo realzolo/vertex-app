@@ -20,7 +20,7 @@
           @change="search"
         />
         <a-input-search v-model="queryForm.jobName" placeholder="搜索任务名称" allow-clear @search="search" />
-        <a-select v-model="queryForm.jobStatus" placeholder="请选择任务状态" :options="job_status_enum" allow-clear style="width: 150px" @change="search" />
+        <a-select v-model="queryForm.jobStatus" placeholder="请选择任务状态" :options="job_status" allow-clear style="width: 150px" @change="search" />
         <a-button @click="reset">
           <template #icon><icon-refresh /></template>
           <template #default>重置</template>
@@ -36,7 +36,7 @@
         <a-link @click="onDetail(record)">{{ record.jobName }}</a-link>
       </template>
       <template #triggerType="{ record }">
-        <GiCellTag :value="record.triggerType" :dict="job_trigger_type_enum" />:&nbsp;
+        <GiCellTag :value="record.triggerType" :dict="job_trigger_type" />:&nbsp;
         <span v-if="record.triggerType === 2">{{ record.triggerInterval }} 秒</span>
         <span v-else>
           <a-popover title="最近5次运行时间" position="bottom">
@@ -48,7 +48,7 @@
         </span>
       </template>
       <template #taskType="{ record }">
-        <GiCellTag :value="record.taskType" :dict="job_task_type_enum" />
+        <GiCellTag :value="record.taskType" :dict="job_task_type" />
         {{ record.executorInfo }}
       </template>
       <template #jobStatus="{ record }">
@@ -56,7 +56,7 @@
           v-model="record.jobStatus"
           :checked-value="1"
           :unchecked-value="0"
-          :disabled="!has.hasPerm('tool:job:update')"
+          :disabled="!has.hasPerm('schedule:job:update')"
           @change="onUpdateStatus(record)"
         />
       </template>
@@ -91,7 +91,7 @@ import has from '@/utils/has'
 
 defineOptions({ name: 'ScheduleJob' })
 
-const { job_status_enum, job_trigger_type_enum, job_task_type_enum } = useDict('job_status_enum', 'job_trigger_type_enum', 'job_task_type_enum')
+const { job_status, job_trigger_type, job_task_type } = useDict('job_status', 'job_trigger_type', 'job_task_type')
 
 const queryForm = reactive<JobQuery>({
   groupName: '',

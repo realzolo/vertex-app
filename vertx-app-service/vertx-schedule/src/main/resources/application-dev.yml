@@ -1,0 +1,36 @@
+### 数据源配置
+spring.datasource:
+  url: jdbc:mysql://127.0.0.1:3306/vertx-app-job?serverTimezone=Asia/Shanghai&useSSL=true&useUnicode=true&characterEncoding=utf8&rewriteBatchedStatements=true&autoReconnect=true&allowPublicKeyRetrieval=true&nullCatalogMeansCurrent=true
+  username: root
+  password: 123456
+  driver-class-name: com.mysql.cj.jdbc.Driver
+
+## Liquibase 配置
+spring.liquibase:
+  enabled: true
+  change-log: classpath:/db.changelog/db.changelog-master.yaml
+
+### Snail Job 服务端配置
+snail-job:
+  # 合并日志默认保存天数
+  merge-Log-days: 1
+  # 合并日志默认的条数
+  merge-Log-num: 500
+  # 配置日志保存时间（单位：天）
+  log-storage: 90
+  # 配置每批次拉取重试数据的大小
+  retry-pull-page-size: 100
+  # bucket 的总数量
+  bucket-total: 128
+  # Dashboard 任务容错天数
+  summary-day: 7
+  # 配置负载均衡周期时间
+  load-balance-cycle-time: 10
+
+
+### 日志配置
+logging:
+  level:
+    com.aizuda.snailjob: DEBUG
+  file:
+    path: ./logs

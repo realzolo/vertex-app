@@ -18,5 +18,8 @@ public class NoNavigatedVariableProperties {
     @Value("${application.jwt.expiration-time:null}")
     private String expirationTime;
 
+    @Value("${snail-job.enabled:null}")
+    private String snailJobEnabled;
+
 }
 

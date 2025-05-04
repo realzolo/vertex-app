@@ -22,7 +22,7 @@
         <a-select
           v-model="queryForm.taskBatchStatus"
           placeholder="请选择状态"
-          :options="job_execute_status_enum"
+          :options="job_execute_status"
           allow-clear
           style="width: 150px"
           @change="search"
@@ -34,10 +34,10 @@
         </a-button>
       </template>
       <template #taskBatchStatus="{ record }">
-        <GiCellTag :value="record.taskBatchStatus" :dict="job_execute_status_enum" />
+        <GiCellTag :value="record.taskBatchStatus" :dict="job_execute_status" />
       </template>
       <template #operationReason="{ record }">
-        <GiCellTag :value="record.operationReason" :dict="job_execute_reason_enum" />
+        <GiCellTag :value="record.operationReason" :dict="job_execute_reason" />
       </template>
       <template #action="{ record }">
         <a-space>
@@ -77,7 +77,7 @@ import has from '@/utils/has'
 
 defineOptions({ name: 'ScheduleLog' })
 
-const { job_execute_reason_enum, job_execute_status_enum } = useDict('job_execute_reason_enum', 'job_execute_status_enum')
+const { job_execute_reason, job_execute_status } = useDict('job_execute_reason', 'job_execute_status')
 
 const queryForm = reactive<JobLogQuery>({
   datetimeRange: [
@@ -159,8 +159,8 @@ const route = useRoute()
 onMounted(() => {
   if (route.query) {
     queryForm.jobId = route.query.jobId ? Number.parseInt(route.query.jobId as string, 10) : undefined
-    queryForm.groupName = route.query.groupName ? route.query.groupName : undefined
-    queryForm.jobName = route.query.jobName ? route.query.jobName : undefined
+    queryForm.groupName = route.query.groupName ? route.query.groupName as string : undefined
+    queryForm.jobName = route.query.jobName ? route.query.jobName as string : undefined
   }
   getGroupList()
   search()
