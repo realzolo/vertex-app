@@ -17,7 +17,7 @@ import com.onezol.vertx.framework.component.comment.model.entity.CommentEntity;
 import com.onezol.vertx.framework.component.comment.model.payload.CommentPayload;
 import com.onezol.vertx.framework.component.upvote.constant.enumeration.UpvoteObjectType;
 import com.onezol.vertx.framework.component.upvote.service.UpvoteRecordService;
-import com.onezol.vertx.framework.security.api.context.AuthenticationContext;
+import com.onezol.vertx.framework.security.api.context.UserIdentityContext;
 import com.onezol.vertx.framework.security.api.model.UserIdentity;
 import com.onezol.vertx.framework.security.api.model.dto.User;
 import com.onezol.vertx.framework.security.api.service.UserInfoService;
@@ -118,7 +118,7 @@ public class CommentService extends BaseServiceImpl<CommentMapper, CommentEntity
 
         // 获取所有评论点赞数
         Map<Long, Long> voteCounts = upvoteRecordService.getVoteCounts(UpvoteObjectType.COMMENT, fullCommentIds.stream().toList());
-        Map<Long, Boolean> votedStatus = upvoteRecordService.hasVotedBatch(UpvoteObjectType.COMMENT, fullCommentIds.stream().toList(), AuthenticationContext.get().getUserId());
+        Map<Long, Boolean> votedStatus = upvoteRecordService.hasVotedBatch(UpvoteObjectType.COMMENT, fullCommentIds.stream().toList(), UserIdentityContext.get().getUserId());
 
         // 组装数据
         assembleReplies(comments, replies, userMap, voteCounts, votedStatus);
@@ -161,7 +161,7 @@ public class CommentService extends BaseServiceImpl<CommentMapper, CommentEntity
             throw new InvalidParameterException("点赞失败，评论不存在");
         }
 
-        UserIdentity userIdentity = AuthenticationContext.get();
+        UserIdentity userIdentity = UserIdentityContext.get();
 
         upvoteRecordService.toggleVote(UpvoteObjectType.COMMENT, id, userIdentity.getUserId());
     }

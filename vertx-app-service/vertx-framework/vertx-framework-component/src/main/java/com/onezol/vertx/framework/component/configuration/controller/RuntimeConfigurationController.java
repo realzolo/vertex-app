@@ -6,7 +6,7 @@ import com.onezol.vertx.framework.common.model.DictionaryEntry;
 import com.onezol.vertx.framework.common.model.GenericResponse;
 import com.onezol.vertx.framework.component.configuration.model.RuntimeConfiguration;
 import com.onezol.vertx.framework.component.configuration.service.RuntimeConfigurationService;
-import com.onezol.vertx.framework.security.api.context.AuthenticationContext;
+import com.onezol.vertx.framework.security.api.context.UserIdentityContext;
 import com.onezol.vertx.framework.support.support.ResponseHelper;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
@@ -34,7 +34,7 @@ public class RuntimeConfigurationController {
     @GetMapping("/{subject}/dict")
     public GenericResponse<List<DictionaryEntry>> getListAsLabelValue(@PathVariable("subject") String subject) {
         if (!WITHOUT_AUTH_CONFIGURATION_SUBJECTS.contains(subject.toUpperCase(Locale.ROOT))) {
-            if (Objects.isNull(AuthenticationContext.get())) {
+            if (Objects.isNull(UserIdentityContext.get())) {
                 return ResponseHelper.buildFailedResponse(ServiceStatus.UNAUTHORIZED);
             }
         }

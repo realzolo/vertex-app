@@ -8,7 +8,7 @@ import com.onezol.vertx.framework.common.model.GenericResponse;
 import com.onezol.vertx.framework.common.model.SharedHttpServletRequest;
 import com.onezol.vertx.framework.common.model.entity.ExceptionLogEntity;
 import com.onezol.vertx.framework.common.util.JsonUtils;
-import com.onezol.vertx.framework.security.api.context.AuthenticationContext;
+import com.onezol.vertx.framework.security.api.context.UserIdentityContext;
 import com.onezol.vertx.framework.security.api.model.UserIdentity;
 import com.onezol.vertx.framework.support.manager.async.AsyncTaskManager;
 import com.onezol.vertx.framework.support.support.ResponseHelper;
@@ -116,7 +116,7 @@ public class GlobalExceptionHandler {
     private ExceptionLogEntity newExceptionLog(SharedHttpServletRequest request, Throwable ex) {
         ExceptionLogEntity exLog = new ExceptionLogEntity();
         // 处理用户信息
-        UserIdentity userIdentity = AuthenticationContext.get();
+        UserIdentity userIdentity = UserIdentityContext.get();
         if (Objects.nonNull(userIdentity)) {
             exLog.setUserId(userIdentity.getUserId());
             exLog.setCreator(userIdentity.getUserId());

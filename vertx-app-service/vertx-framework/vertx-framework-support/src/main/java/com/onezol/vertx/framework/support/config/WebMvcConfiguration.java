@@ -19,9 +19,9 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         // 认证上下文拦截器
-        Class<?> clazz = ReflectionUtils.getClass("com.onezol.vertx.framework.security.biz.interceptor.AuthenticationContextInterceptor");
-        WebRequestInterceptor authenticationContextInterceptor = (WebRequestInterceptor) ReflectionUtils.newInstance(clazz);
-        registry.addWebRequestInterceptor(authenticationContextInterceptor)
+        Class<?> clazz = ReflectionUtils.getClass("com.onezol.vertx.framework.security.biz.interceptor.UserIdentityContextInterceptor");
+        WebRequestInterceptor userIdentityContextInterceptor = (WebRequestInterceptor) ReflectionUtils.newInstance(clazz);
+        registry.addWebRequestInterceptor(userIdentityContextInterceptor)
                 .addPathPatterns("/**")
                 .excludePathPatterns("/auth/register", "/auth/login");
     }

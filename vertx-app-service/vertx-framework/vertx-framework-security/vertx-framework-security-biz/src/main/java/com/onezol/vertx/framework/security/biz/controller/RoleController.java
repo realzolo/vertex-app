@@ -7,7 +7,7 @@ import com.onezol.vertx.framework.common.model.*;
 import com.onezol.vertx.framework.common.mvc.controller.BaseController;
 import com.onezol.vertx.framework.common.util.BeanUtils;
 import com.onezol.vertx.framework.common.util.TreeUtils;
-import com.onezol.vertx.framework.security.api.context.AuthenticationContext;
+import com.onezol.vertx.framework.security.api.context.UserIdentityContext;
 import com.onezol.vertx.framework.security.api.enumeration.PermissionTypeEnum;
 import com.onezol.vertx.framework.security.api.model.UserIdentity;
 import com.onezol.vertx.framework.security.api.model.dto.Permission;
@@ -47,7 +47,7 @@ public class RoleController extends BaseController<RoleEntity> {
     @GetMapping("/route")
     @PreAuthorize("@Security.hasPermission('system:role:list')")
     public GenericResponse<List<TreeNode>> route() {
-        UserIdentity userIdentity = AuthenticationContext.get();
+        UserIdentity userIdentity = UserIdentityContext.get();
         List<DataPairRecord> roles = userIdentity.getRoles();
         Set<Long> roleIds = roles.stream().map(DataPairRecord::getId).collect(Collectors.toSet());
         Set<Long> permissionIds = rolePermissionService.list(

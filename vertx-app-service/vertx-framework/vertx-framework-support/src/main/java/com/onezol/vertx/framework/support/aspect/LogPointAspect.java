@@ -10,7 +10,7 @@ import com.onezol.vertx.framework.common.util.EnumUtils;
 import com.onezol.vertx.framework.common.util.JsonUtils;
 import com.onezol.vertx.framework.common.util.NetworkUtils;
 import com.onezol.vertx.framework.common.util.ServletUtils;
-import com.onezol.vertx.framework.security.api.context.AuthenticationContext;
+import com.onezol.vertx.framework.security.api.context.UserIdentityContext;
 import com.onezol.vertx.framework.security.api.model.UserIdentity;
 import com.onezol.vertx.framework.support.manager.async.AsyncTaskManager;
 import eu.bitwalker.useragentutils.UserAgent;
@@ -100,7 +100,7 @@ public class LogPointAspect {
      * @param ex                       异常
      */
     private void submitLog(final JoinPoint joinPoint, final SharedHttpServletRequest sharedHttpServletRequest, final Object result, final long time, final Exception ex) {
-        UserIdentity user = AuthenticationContext.get();
+        UserIdentity user = UserIdentityContext.get();
 
         // 请求参数
         Object[] args = joinPoint.getArgs();

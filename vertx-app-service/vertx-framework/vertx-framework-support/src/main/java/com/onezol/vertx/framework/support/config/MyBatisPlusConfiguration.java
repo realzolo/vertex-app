@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.extension.plugins.inner.BlockAttackInnerIntercep
 import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import com.baomidou.mybatisplus.extension.toolkit.JdbcUtils;
-import com.onezol.vertx.framework.security.api.context.AuthenticationContext;
+import com.onezol.vertx.framework.security.api.context.UserIdentityContext;
 import com.onezol.vertx.framework.security.api.model.UserIdentity;
 import com.onezol.vertx.framework.support.support.CompactSnowflakeIdGenerator;
 import org.apache.ibatis.reflection.MetaObject;
@@ -64,7 +64,7 @@ public class MyBatisPlusConfiguration {
     public static class MetaObjectHandler implements com.baomidou.mybatisplus.core.handlers.MetaObjectHandler {
         @Override
         public void insertFill(MetaObject metaObject) {
-            UserIdentity userIdentity = AuthenticationContext.get();
+            UserIdentity userIdentity = UserIdentityContext.get();
             this.strictInsertFill(metaObject, "creator", Long.class, Objects.nonNull(userIdentity) ? userIdentity.getUserId() : null);
             this.strictInsertFill(metaObject, "createTime", LocalDateTime.class, LocalDateTime.now());
             this.strictInsertFill(metaObject, "updater", Long.class, Objects.nonNull(userIdentity) ? userIdentity.getUserId() : null);
@@ -74,7 +74,7 @@ public class MyBatisPlusConfiguration {
 
         @Override
         public void updateFill(MetaObject metaObject) {
-            UserIdentity userIdentity = AuthenticationContext.get();
+            UserIdentity userIdentity = UserIdentityContext.get();
             this.strictUpdateFill(metaObject, "updater", Long.class, Objects.nonNull(userIdentity) ? userIdentity.getUserId() : null);
             this.strictUpdateFill(metaObject, "updateTime", LocalDateTime.class, LocalDateTime.now());
         }

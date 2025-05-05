@@ -1,6 +1,6 @@
 package com.onezol.vertx.framework.security.biz.access;
 
-import com.onezol.vertx.framework.security.api.context.AuthenticationContext;
+import com.onezol.vertx.framework.security.api.context.UserIdentityContext;
 import com.onezol.vertx.framework.security.api.model.UserIdentity;
 import com.onezol.vertx.framework.security.api.service.PermissionService;
 import com.onezol.vertx.framework.security.api.service.RoleService;
@@ -26,7 +26,7 @@ public class SecurityPermissionEvaluator {
      * @param permission 权限
      */
     public boolean hasPermission(String permission) {
-        UserIdentity identity = AuthenticationContext.get();
+        UserIdentity identity = UserIdentityContext.get();
         return permissionService.hasAnyPermissions(identity.getUserId(), permission);
     }
 
@@ -36,7 +36,7 @@ public class SecurityPermissionEvaluator {
      * @param permissions 权限
      */
     public boolean hasAnyPermissions(String... permissions) {
-        UserIdentity identity = AuthenticationContext.get();
+        UserIdentity identity = UserIdentityContext.get();
         return permissionService.hasAnyPermissions(identity.getUserId(), permissions);
     }
 
@@ -46,7 +46,7 @@ public class SecurityPermissionEvaluator {
      * @param role 角色编码, 如admin、Super
      */
     public boolean hasRole(String role) {
-        UserIdentity identity = AuthenticationContext.get();
+        UserIdentity identity = UserIdentityContext.get();
         return roleService.hasAnyRoles(identity.getUserId(), role);
     }
 
@@ -56,7 +56,7 @@ public class SecurityPermissionEvaluator {
      * @param roles 角色数组
      */
     public boolean hasAnyRoles(String... roles) {
-        UserIdentity identity = AuthenticationContext.get();
+        UserIdentity identity = UserIdentityContext.get();
         return roleService.hasAnyRoles(identity.getUserId(), roles);
     }
 

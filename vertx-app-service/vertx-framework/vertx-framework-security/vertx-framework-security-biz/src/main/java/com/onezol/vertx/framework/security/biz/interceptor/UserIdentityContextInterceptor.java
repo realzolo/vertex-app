@@ -1,6 +1,6 @@
 package com.onezol.vertx.framework.security.biz.interceptor;
 
-import com.onezol.vertx.framework.security.api.context.AuthenticationContext;
+import com.onezol.vertx.framework.security.api.context.UserIdentityContext;
 import com.onezol.vertx.framework.security.api.model.LoginUserDetails;
 import com.onezol.vertx.framework.security.api.model.UserIdentity;
 import lombok.NonNull;
@@ -12,15 +12,15 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.context.request.WebRequestInterceptor;
 
-import static com.onezol.vertx.framework.support.interceptor.RequestInterceptionOrder.AUTHENTICATION_CONTEXT_INTERCEPTOR_ORDER;
+import static com.onezol.vertx.framework.support.interceptor.RequestInterceptionOrder.USER_IDENTITY_CONTEXT_INTERCEPTOR_ORDER;
 
 /**
- * 认证上下文拦截器<br>
+ * 用户身份上下文拦截器</br>
  * 用于将当前登录用户信息放入上下文中
  */
 @Component
-@Order(AUTHENTICATION_CONTEXT_INTERCEPTOR_ORDER)
-public class AuthenticationContextInterceptor implements WebRequestInterceptor {
+@Order(USER_IDENTITY_CONTEXT_INTERCEPTOR_ORDER)
+public class UserIdentityContextInterceptor implements WebRequestInterceptor {
 
     @Override
     public void preHandle(@NonNull WebRequest request) {
@@ -35,7 +35,7 @@ public class AuthenticationContextInterceptor implements WebRequestInterceptor {
                     .roles(loginUserDetails.getRoles())
                     .permissions(loginUserDetails.getPermissions())
                     .build();
-            AuthenticationContext.set(identity);
+            UserIdentityContext.set(identity);
         }
     }
 
@@ -45,7 +45,7 @@ public class AuthenticationContextInterceptor implements WebRequestInterceptor {
 
     @Override
     public void afterCompletion(@NonNull WebRequest request, Exception ex) {
-        AuthenticationContext.clear();
+        UserIdentityContext.clear();
     }
 
 }

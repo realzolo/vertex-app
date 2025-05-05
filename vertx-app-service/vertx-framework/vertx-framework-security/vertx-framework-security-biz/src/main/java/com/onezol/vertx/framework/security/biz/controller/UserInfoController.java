@@ -5,7 +5,7 @@ import com.onezol.vertx.framework.common.model.DictionaryEntry;
 import com.onezol.vertx.framework.common.model.GenericResponse;
 import com.onezol.vertx.framework.common.model.PagePack;
 import com.onezol.vertx.framework.common.mvc.controller.BaseController;
-import com.onezol.vertx.framework.security.api.context.AuthenticationContext;
+import com.onezol.vertx.framework.security.api.context.UserIdentityContext;
 import com.onezol.vertx.framework.security.api.model.UserIdentity;
 import com.onezol.vertx.framework.security.api.model.dto.User;
 import com.onezol.vertx.framework.security.api.model.entity.UserEntity;
@@ -39,7 +39,7 @@ public class UserInfoController extends BaseController<UserEntity> {
     @GetMapping("/me")
     @PreAuthorize("@Security.hasPermission('system:user:detail')")
     public GenericResponse<User> me() {
-        UserIdentity userIdentity = AuthenticationContext.get();
+        UserIdentity userIdentity = UserIdentityContext.get();
         User user = userInfoService.getUserById(userIdentity.getUserId());
         return ResponseHelper.buildSuccessfulResponse(user);
     }

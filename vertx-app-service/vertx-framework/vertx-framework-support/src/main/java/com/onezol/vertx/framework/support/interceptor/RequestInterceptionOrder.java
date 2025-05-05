@@ -17,9 +17,9 @@ public final class RequestInterceptionOrder {
 
     // -------------------------👇拦截器👇-------------------------
     /**
-     * 认证上下文拦截器
+     * 用户身份上下文拦截器
      */
-    public static final int AUTHENTICATION_CONTEXT_INTERCEPTOR_ORDER = 101;
+    public static final int USER_IDENTITY_CONTEXT_INTERCEPTOR_ORDER = 101;
     // -------------------------👆拦截器👆-------------------------
 
 }

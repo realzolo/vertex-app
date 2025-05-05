@@ -6,7 +6,7 @@ import com.onezol.vertx.framework.common.constant.enumeration.Gender;
 import com.onezol.vertx.framework.common.exception.InvalidParameterException;
 import com.onezol.vertx.framework.common.mvc.service.BaseServiceImpl;
 import com.onezol.vertx.framework.common.util.BeanUtils;
-import com.onezol.vertx.framework.security.api.context.AuthenticationContext;
+import com.onezol.vertx.framework.security.api.context.UserIdentityContext;
 import com.onezol.vertx.framework.security.api.enumeration.LoginType;
 import com.onezol.vertx.framework.security.api.model.AuthIdentity;
 import com.onezol.vertx.framework.security.api.model.UserIdentity;
@@ -128,7 +128,7 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
      */
     @Override
     public void logout() {
-        UserIdentity userIdentity = AuthenticationContext.get();
+        UserIdentity userIdentity = UserIdentityContext.get();
         // 移除用户Token
         String tokenKey = RedisKeyHelper.buildCacheKey(CacheKey.USER_TOKEN, String.valueOf(userIdentity.getUserId()));
         redisCache.deleteObject(tokenKey);
