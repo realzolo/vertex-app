@@ -27,7 +27,7 @@ public class JobLogService {
     }
 
     public PagePack<JobLog> page(JobLogQuery query) {
-        JobPageResult<List<JobLog>> page = jobBatchHttpService.page(query.getPage(), query.getSize(), query.getJobId(), query.getGroupName(), query.getJobName(), query.getTaskBatchStatus(), query.getDatetimeRange());
+        JobPageResult<List<JobLog>> page = jobBatchHttpService.page(query.getPageNumber(), query.getPageSize(), query.getJobId(), query.getGroupName(), query.getJobName(), query.getTaskBatchStatus(), null);
         return PagePack.of(page.getData(), page.getTotal(), page.getPage(), page.getSize());
     }
 

@@ -1,13 +1,14 @@
 package com.onezol.vertx.framework.extension.schedule.model.query;
 
+import com.onezol.vertx.framework.common.model.PageQuery;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-@Data
 @Schema(description = "任务查询条件")
+@Data
 @EqualsAndHashCode(callSuper = true)
-public class JobQuery extends JobPageQuery {
+public class JobQuery extends PageQuery {
 
     @Schema(description = "任务组", example = "vertx-app")
     private String groupName;

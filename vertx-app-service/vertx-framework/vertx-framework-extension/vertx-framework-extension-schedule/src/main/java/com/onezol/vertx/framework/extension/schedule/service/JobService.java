@@ -27,7 +27,7 @@ public class JobService {
     }
 
     public PagePack<Job> page(JobQuery query) {
-        JobPageResult<List<Job>> page = jobHttpService.page(query.getPage(), query.getSize(), query.getGroupName(), query.getJobName(), query.getJobStatus());
+        JobPageResult<List<Job>> page = jobHttpService.page(query.getPageNumber(), query.getPageSize(), query.getGroupName(), query.getJobName(), query.getJobStatus());
         return PagePack.of(page.getData(), page.getTotal(), page.getPage(), page.getSize());
     }
 

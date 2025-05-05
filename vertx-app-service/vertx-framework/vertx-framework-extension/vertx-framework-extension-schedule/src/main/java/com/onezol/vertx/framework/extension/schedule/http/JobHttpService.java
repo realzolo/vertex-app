@@ -25,8 +25,8 @@ public interface JobHttpService {
      */
     @GetExchange("/page/list")
     JobPageResult<List<Job>> page(
-            @RequestParam("page") Integer page,
-            @RequestParam("size") Integer size,
+            @RequestParam("page") Long page,
+            @RequestParam("size") Long size,
             @RequestParam(value = "groupName", required = false) String groupName,
             @RequestParam(value = "jobName", required = false) String jobName,
             @RequestParam(value = "jobStatus", required = false) Integer jobStatus

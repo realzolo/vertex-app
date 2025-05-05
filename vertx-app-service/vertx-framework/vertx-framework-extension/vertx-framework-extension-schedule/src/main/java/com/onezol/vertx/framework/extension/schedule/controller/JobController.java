@@ -19,34 +19,22 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Tag(name = " 任务 API")
+@Tag(name = "任务 API")
 @RestController
 @RequestMapping("/schedule/job")
 public class JobController {
 
-    private final JobService baseService;
+    private final JobService jobService;
 
-    public JobController(JobService baseService) {
-        this.baseService = baseService;
+    public JobController(JobService jobService) {
+        this.jobService = jobService;
     }
 
     @Operation(summary = "分页查询任务列表", description = "分页查询任务列表")
     @GetMapping("/page")
     @PreAuthorize("@Security.hasPermission('schedule:job:list')")
-    public GenericResponse<PagePack<Job>> page(
-            @RequestParam("pageNumber") Long pageNumber,
-            @RequestParam("pageSize") Long pageSize,
-            @RequestParam(value = "groupName",required = false) String groupName,
-            @RequestParam(value = "jobName",required = false) String jobName,
-            @RequestParam(value = "jobStatus",required = false) Integer jobStatus
-    ) {
-        JobQuery query = new JobQuery();
-        query.setPage(Math.toIntExact(pageNumber));
-        query.setSize(Math.toIntExact(pageSize));
-        query.setGroupName(groupName);
-        query.setJobName(jobName);
-        query.setJobStatus(jobStatus);
-        PagePack<Job> pack = baseService.page(query);
+    public GenericResponse<PagePack<Job>> page(JobQuery query) {
+        PagePack<Job> pack = jobService.page(query);
         return ResponseHelper.buildSuccessfulResponse(pack);
     }
 
@@ -54,7 +42,7 @@ public class JobController {
     @PostMapping
     @PreAuthorize("@Security.hasPermission('schedule:job:create')")
     public GenericResponse<Boolean> create(@RequestBody JobSavePayload payload) {
-        boolean ok = baseService.create(payload);
+        boolean ok = jobService.create(payload);
         return ResponseHelper.buildSuccessfulResponse(ok);
     }
 
@@ -63,7 +51,7 @@ public class JobController {
     @PutMapping("/{id}")
     @PreAuthorize("@Security.hasPermission('schedule:job:update')")
     public GenericResponse<Boolean> update(@PathVariable("id") Long id, @RequestBody JobSavePayload payload) {
-        boolean ok = baseService.update(payload, id);
+        boolean ok = jobService.update(payload, id);
         return ResponseHelper.buildSuccessfulResponse(ok);
     }
 
@@ -71,7 +59,7 @@ public class JobController {
     @PatchMapping("/{id}/status")
     @PreAuthorize("@Security.hasPermission('schedule:job:update')")
     public GenericResponse<Boolean> updateStatus(@PathVariable("id") Long id, @Validated @RequestBody JobStatusSavePayload payload) {
-        boolean ok = baseService.updateStatus(payload, id);
+        boolean ok = jobService.updateStatus(payload, id);
         return ResponseHelper.buildSuccessfulResponse(ok);
     }
 
@@ -80,7 +68,7 @@ public class JobController {
     @DeleteMapping("/{id}")
     @PreAuthorize("@Security.hasPermission('schedule:job:delete')")
     public GenericResponse<Boolean> delete(@PathVariable("id") Long id) {
-        boolean ok = baseService.delete(id);
+        boolean ok = jobService.delete(id);
         return ResponseHelper.buildSuccessfulResponse(ok);
     }
 
@@ -91,7 +79,7 @@ public class JobController {
     public GenericResponse<Boolean> trigger(@PathVariable("id") Long id) {
         JobTriggerPayload payload = new JobTriggerPayload();
         payload.setJobId(id);
-        boolean ok = baseService.trigger(payload);
+        boolean ok = jobService.trigger(payload);
         return ResponseHelper.buildSuccessfulResponse(ok);
     }
 
@@ -99,7 +87,7 @@ public class JobController {
     @GetMapping("/group")
     @PreAuthorize("@Security.hasPermission('schedule:job:list')")
     public GenericResponse<List<String>> listGroup() {
-        List<String> groups = baseService.listGroup();
+        List<String> groups = jobService.listGroup();
         return ResponseHelper.buildSuccessfulResponse(groups);
     }
 

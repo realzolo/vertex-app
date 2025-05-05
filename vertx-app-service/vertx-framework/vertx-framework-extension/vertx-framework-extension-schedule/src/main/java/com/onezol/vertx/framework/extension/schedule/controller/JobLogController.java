@@ -24,29 +24,17 @@ import java.util.List;
 @RequestMapping("/schedule/log")
 public class JobLogController {
 
-    private final JobLogService baseService;
+    private final JobLogService jobLogService;
 
-    public JobLogController(JobLogService baseService) {
-        this.baseService = baseService;
+    public JobLogController(JobLogService jobLogService) {
+        this.jobLogService = jobLogService;
     }
 
     @Operation(summary = "分页查询任务日志列表", description = "分页查询任务日志列表")
     @GetMapping
     @PreAuthorize("@Security.hasPermission('schedule:log:list')")
-    public GenericResponse<PagePack<JobLog>> page(
-            @RequestParam(value = "jobId", required = false) Long jobId,
-            @RequestParam(value = "groupName", required = false) String groupName,
-            @RequestParam(value = "jobName", required = false) String jobName,
-            @RequestParam(value = "taskBatchStatus", required = false) Integer taskBatchStatus
-//            @RequestParam(value = "datetimeRange", required = false) LocalDateTime[] datetimeRange
-    ) {
-        JobLogQuery query = new JobLogQuery();
-        query.setJobId(jobId);
-        query.setGroupName(groupName);
-        query.setJobName(jobName);
-        query.setTaskBatchStatus(taskBatchStatus);
-//        query.setDatetimeRange(datetimeRange);
-        PagePack<JobLog> pack = baseService.page(query);
+    public GenericResponse<PagePack<JobLog>> page(JobLogQuery query) {
+        PagePack<JobLog> pack = jobLogService.page(query);
         return ResponseHelper.buildSuccessfulResponse(pack);
     }
 
@@ -55,7 +43,7 @@ public class JobLogController {
     @PostMapping("/stop/{id}")
     @PreAuthorize("@Security.hasPermission('schedule:log:stop')")
     public GenericResponse<Boolean> stop(@PathVariable("id") Long id) {
-        boolean ok = baseService.stop(id);
+        boolean ok = jobLogService.stop(id);
         return ResponseHelper.buildSuccessfulResponse(ok);
     }
 
@@ -64,7 +52,7 @@ public class JobLogController {
     @PostMapping("/retry/{id}")
     @PreAuthorize("@Security.hasPermission('schedule:log:retry')")
     public GenericResponse<Boolean> retry(@PathVariable("id") Long id) {
-        boolean ok = baseService.retry(id);
+        boolean ok = jobLogService.retry(id);
         return ResponseHelper.buildSuccessfulResponse(ok);
     }
 
@@ -78,28 +66,15 @@ public class JobLogController {
         JobInstanceQuery query = new JobInstanceQuery();
         query.setJobId(jobId);
         query.setTaskBatchId(taskBatchId);
-        List<JobInstance> instances = baseService.listInstance(query);
+        List<JobInstance> instances = jobLogService.listInstance(query);
         return ResponseHelper.buildSuccessfulResponse(instances);
     }
 
     @Operation(summary = "分页查询任务实例日志列表", description = "分页查询任务实例日志列表")
     @GetMapping("/instance/log")
     @PreAuthorize("@Security.hasPermission('schedule:log:list')")
-    public GenericResponse<JobInstanceLogPageResult> pageInstanceLog(
-            @RequestParam(value = "jobId", required = false) Long jobId,
-            @RequestParam(value = "taskBatchId", required = false) Long taskBatchId,
-            @RequestParam(value = "taskId", required = false) Long taskId,
-            @RequestParam(value = "startId", required = false) Integer startId,
-            @RequestParam(value = "fromIndex", required = false) Integer fromIndex,
-            @RequestParam(value = "size", required = false) Integer size
-    ) {
-        JobInstanceLogQuery query = new JobInstanceLogQuery();
-        query.setJobId(jobId);
-        query.setTaskBatchId(taskBatchId);
-        query.setTaskId(taskId);
-        query.setStartId(startId);
-        query.setFromIndex(fromIndex);
-        JobInstanceLogPageResult result = baseService.pageInstanceLog(query);
+    public GenericResponse<JobInstanceLogPageResult> pageInstanceLog(JobInstanceLogQuery query) {
+        JobInstanceLogPageResult result = jobLogService.pageInstanceLog(query);
         return ResponseHelper.buildSuccessfulResponse(result);
     }
 

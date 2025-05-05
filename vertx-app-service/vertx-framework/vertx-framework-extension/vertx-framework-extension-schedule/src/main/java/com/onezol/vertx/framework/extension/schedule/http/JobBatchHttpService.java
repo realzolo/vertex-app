@@ -26,8 +26,8 @@ public interface JobBatchHttpService {
      */
     @GetExchange("/batch/list")
     JobPageResult<List<JobLog>> page(
-            @RequestParam("page") Integer page,
-            @RequestParam("size") Integer size,
+            @RequestParam("page") Long page,
+            @RequestParam("size") Long size,
             @RequestParam(value = "jobId", required = false) Long jobId,
             @RequestParam(value = "groupName", required = false) String groupName,
             @RequestParam(value = "jobName", required = false) String jobName,
