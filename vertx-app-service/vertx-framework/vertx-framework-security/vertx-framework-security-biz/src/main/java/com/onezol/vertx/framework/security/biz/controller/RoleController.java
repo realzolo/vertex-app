@@ -7,7 +7,6 @@ import com.onezol.vertx.framework.common.model.*;
 import com.onezol.vertx.framework.common.mvc.controller.BaseController;
 import com.onezol.vertx.framework.common.util.BeanUtils;
 import com.onezol.vertx.framework.common.util.TreeUtils;
-import com.onezol.vertx.framework.security.api.annotation.RestrictAccess;
 import com.onezol.vertx.framework.security.api.context.AuthenticationContext;
 import com.onezol.vertx.framework.security.api.enumeration.PermissionTypeEnum;
 import com.onezol.vertx.framework.security.api.model.UserIdentity;

@@ -6,7 +6,6 @@ import com.onezol.vertx.framework.common.model.DictionaryEntry;
 import com.onezol.vertx.framework.common.model.GenericResponse;
 import com.onezol.vertx.framework.component.configuration.model.RuntimeConfiguration;
 import com.onezol.vertx.framework.component.configuration.service.RuntimeConfigurationService;
-import com.onezol.vertx.framework.security.api.annotation.RestrictAccess;
 import com.onezol.vertx.framework.security.api.context.AuthenticationContext;
 import com.onezol.vertx.framework.support.support.ResponseHelper;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -43,7 +42,6 @@ public class RuntimeConfigurationController {
         return ResponseHelper.buildSuccessfulResponse(options);
     }
 
-    @RestrictAccess
     @GetMapping("/list/{subject}")
     public GenericResponse<List<DataPairRecord>> getList(@PathVariable("subject") String subject) {
         List<DataPairRecord> configurations = runtimeConfigurationService.listConfigurations(subject);
@@ -51,7 +49,6 @@ public class RuntimeConfigurationController {
     }
 
 
-    @RestrictAccess
     @PutMapping
     public GenericResponse<Void> update(@RequestBody List<RuntimeConfiguration> runtimeConfigurations) {
         if (runtimeConfigurations.isEmpty()) {
@@ -61,7 +58,6 @@ public class RuntimeConfigurationController {
         return ResponseHelper.buildSuccessfulResponse();
     }
 
-    @RestrictAccess
     @PatchMapping("/reset/{subject}")
     public GenericResponse<Void> update(@PathVariable("subject") String subject) {
         runtimeConfigurationService.reset(subject);

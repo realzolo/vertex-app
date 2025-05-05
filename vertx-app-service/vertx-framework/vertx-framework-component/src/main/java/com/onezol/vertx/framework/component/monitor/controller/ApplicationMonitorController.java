@@ -4,7 +4,6 @@ import com.alibaba.fastjson2.JSONObject;
 import com.onezol.vertx.framework.support.support.ResponseHelper;
 import com.onezol.vertx.framework.common.model.GenericResponse;
 import com.onezol.vertx.framework.common.util.StringUtils;
-import com.onezol.vertx.framework.security.api.annotation.RestrictAccess;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
@@ -35,7 +34,6 @@ public class ApplicationMonitorController {
     }
 
     @Operation(summary = "获取应用信息", description = "获取应用监控信息，数据来源于Spring Boot Actuator")
-    @RestrictAccess
     @GetMapping("/**")
     public GenericResponse<JSONObject> info(HttpServletRequest request, @RequestParam(value = "tag", required = false) String tag) {
         String requestURI = request.getRequestURI();
