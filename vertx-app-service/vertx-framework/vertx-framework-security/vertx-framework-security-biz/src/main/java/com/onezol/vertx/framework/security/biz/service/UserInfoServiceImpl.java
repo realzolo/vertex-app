@@ -14,6 +14,7 @@ import com.onezol.vertx.framework.common.mvc.service.BaseServiceImpl;
 import com.onezol.vertx.framework.common.util.BeanUtils;
 import com.onezol.vertx.framework.common.util.StringUtils;
 import com.onezol.vertx.framework.security.api.model.dto.Department;
+import com.onezol.vertx.framework.security.api.model.dto.Role;
 import com.onezol.vertx.framework.security.api.model.dto.User;
 import com.onezol.vertx.framework.security.api.model.entity.*;
 import com.onezol.vertx.framework.security.api.model.payload.UserQueryPayload;
@@ -184,9 +185,9 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
         List<String> roleCodes = payload.getRoleCodes();
 
         // 解绑用户角色
-        userRoleService.unbindUserAllRoles(payload.getId());
+        userRoleService.unassignAllRolesFromUser(payload.getId());
         // 绑定用户角色
-        userRoleService.updateUserRoles(payload.getId(), roleCodes);
+        userRoleService.assignRolesForUser(payload.getId(), roleCodes);
 
         return this.getUserById(payload.getId());
     }
@@ -210,7 +211,7 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
         // ...
 
         // 解绑用户角色
-        userRoleService.unbindUserAllRoles(userId);
+        userRoleService.unassignAllRolesFromUser(userId);
 
         // 删除Redis相关缓存
         // 1. 删除用户Token缓存
@@ -242,11 +243,11 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
         Collection<User> users = pack.getItems();
 
         for (User user : users) {
-            List<RoleEntity> userRoles = userRoleService.getUserRoles(user.getId());
+            List<Role> userRoles = userRoleService.getUserRoles(user.getId());
             if (userRoles != null && !userRoles.isEmpty()) {
                 List<DataPairRecord> roles = new ArrayList<>();
-                for (RoleEntity roleEntity : userRoles) {
-                    DataPairRecord roleRecord = new DataPairRecord(roleEntity.getId(), roleEntity.getName(), roleEntity.getCode());
+                for (Role role : userRoles) {
+                    DataPairRecord roleRecord = new DataPairRecord(role.getId(), role.getName(), role.getCode());
                     roles.add(roleRecord);
                 }
                 user.setRoles(roles);
@@ -271,11 +272,11 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
         Collection<User> users = pack.getItems();
 
         for (User user : users) {
-            List<RoleEntity> userRoles = userRoleService.getUserRoles(user.getId());
+            List<Role> userRoles = userRoleService.getUserRoles(user.getId());
             if (userRoles != null && !userRoles.isEmpty()) {
                 List<DataPairRecord> roles = new ArrayList<>();
-                for (RoleEntity roleEntity : userRoles) {
-                    DataPairRecord roleRecord = new DataPairRecord(roleEntity.getId(), roleEntity.getName(), roleEntity.getCode());
+                for (Role role : userRoles) {
+                    DataPairRecord roleRecord = new DataPairRecord(role.getId(), role.getName(), role.getCode());
                     roles.add(roleRecord);
                 }
                 user.setRoles(roles);
@@ -301,20 +302,20 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
             user.setDepartment(departmentRecord);
         }
         // 获取用户角色
-        List<RoleEntity> roleEntities = userRoleService.getUserRoles(user.getId());
+        List<Role> userRoles = userRoleService.getUserRoles(user.getId());
         List<DataPairRecord> roles = new ArrayList<>();
-        for (RoleEntity roleEntity : roleEntities) {
-            DataPairRecord roleRecord = new DataPairRecord(roleEntity.getId(), roleEntity.getName(), roleEntity.getCode());
+        for (Role role : userRoles) {
+            DataPairRecord roleRecord = new DataPairRecord(role.getId(), role.getName(), role.getCode());
             roles.add(roleRecord);
         }
         user.setRoles(roles);
         // 获取用户权限
-        Set<String> roleCodes = roleEntities.stream().map(RoleEntity::getCode).collect(Collectors.toSet());
+        Set<String> roleCodes = userRoles.stream().map(Role::getCode).collect(Collectors.toSet());
         if (roleCodes.contains(SystemRoleType.SUPER.getValue())) {
             user.setPermissions(List.of("*:*:*"));
         } else {
-            List<Long> roleIds = roleEntities.stream().map(RoleEntity::getId).toList();
-            Set<String> rolePermissionKeys = permissionService.getRolePermissionKeys(roleIds);
+            List<Long> roleIds = userRoles.stream().map(Role::getId).toList();
+            List<String> rolePermissionKeys = permissionService.getRolePermissionKeys(roleIds);
             List<String> permissions = List.copyOf(rolePermissionKeys);
             user.setPermissions(permissions);
         }

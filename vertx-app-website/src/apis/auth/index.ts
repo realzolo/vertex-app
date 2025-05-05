@@ -40,5 +40,5 @@ export const getUserInfo = () => {
 
 /** @desc 获取路由信息 */
 export const getUserRoute = () => {
-  return http.get<T.RouteItem[]>(`/role/route`)
+  return http.get<T.RouteItem[]>(`/role/tree`)
 }

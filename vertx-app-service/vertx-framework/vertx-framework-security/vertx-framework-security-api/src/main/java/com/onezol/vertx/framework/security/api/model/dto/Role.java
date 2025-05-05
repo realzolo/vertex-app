@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.util.Set;
+import java.util.List;
 
 @Schema(name = "角色")
 @Data
@@ -19,7 +19,7 @@ public class Role extends BaseDTO {
     private String code;
 
     @Schema(name = "角色列表")
-    private Set<Long> permissionIds;
+    private List<Long> permissionIds;
 
     @Schema(name = "排序号")
     private Integer sort;

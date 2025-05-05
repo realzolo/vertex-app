@@ -2,11 +2,18 @@ package com.onezol.vertx.framework.security.biz.service;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.onezol.vertx.framework.common.exception.RuntimeServiceException;
+import com.onezol.vertx.framework.common.model.DataPairRecord;
+import com.onezol.vertx.framework.common.model.TreeNode;
 import com.onezol.vertx.framework.common.mvc.service.BaseServiceImpl;
 import com.onezol.vertx.framework.common.util.BeanUtils;
+import com.onezol.vertx.framework.common.util.TreeUtils;
+import com.onezol.vertx.framework.security.api.context.UserIdentityContext;
+import com.onezol.vertx.framework.security.api.model.UserIdentity;
+import com.onezol.vertx.framework.security.api.model.dto.Permission;
 import com.onezol.vertx.framework.security.api.model.dto.Role;
 import com.onezol.vertx.framework.security.api.model.entity.RoleEntity;
 import com.onezol.vertx.framework.security.api.model.entity.RolePermissionEntity;
+import com.onezol.vertx.framework.security.api.service.PermissionService;
 import com.onezol.vertx.framework.security.api.service.RolePermissionService;
 import com.onezol.vertx.framework.security.api.service.RoleService;
 import com.onezol.vertx.framework.security.api.service.UserRoleService;
@@ -16,26 +23,52 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Slf4j
 @Service
 public class RoleServiceImpl extends BaseServiceImpl<RoleMapper, RoleEntity> implements RoleService {
 
     private final UserRoleService userRoleService;
+    private final PermissionService permissionService;
     private final RolePermissionService rolePermissionService;
 
-    public RoleServiceImpl(UserRoleService userRoleService, RolePermissionService rolePermissionService) {
+    public RoleServiceImpl(UserRoleService userRoleService, PermissionService permissionService, RolePermissionService rolePermissionService) {
         this.userRoleService = userRoleService;
+        this.permissionService = permissionService;
         this.rolePermissionService = rolePermissionService;
     }
 
+    /**
+     * 获取角色树形结构。
+     *
+     * @return 角色树形结构
+     */
+    @Override
+    public List<TreeNode> tree() {
+        UserIdentity userIdentity = UserIdentityContext.get();
+        List<DataPairRecord> roles = userIdentity.getRoles();
+        List<Long> roleIds = roles.stream().map(DataPairRecord::getId).toList();
+        List<Long> permissionIds = permissionService.getRolePermissionIds(roleIds);
+        List<Permission> permissions = permissionService.listEnabledButtons(permissionIds);
+        List<TreeNode> nodes = new ArrayList<>(permissions.size());
+        for (Permission permission : permissions) {
+            TreeNode node = new TreeNode();
+            node.setId(permission.getId());
+            node.setParentId(permission.getParentId());
+            node.setTitle(permission.getTitle());
+            node.setIcon(permission.getIcon());
+            node.setDisabled(false);
+            node.setData(permission);
+            nodes.add(node);
+        }
+        return TreeUtils.buildTree(nodes, 0L);
+    }
 
     /**
      * @param role 角色
      */
     @Override
-    public void updateRole(Role role) {
+    public Role updateRole(Role role) {
         RoleEntity entity = BeanUtils.toBean(role, RoleEntity.class);
         if (!updateById(entity)) {
             throw new RuntimeServiceException("更新角色失败");
@@ -48,7 +81,7 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleMapper, RoleEntity> imp
         ).stream().map(RolePermissionEntity::getPermissionId).toList();
 
         // 当前角色权限列表
-        Set<Long> newPermissionIds = role.getPermissionIds();
+        List<Long> newPermissionIds = role.getPermissionIds();
 
         // 计算待删除的权限ID列表
         List<Long> removePermissionIds = new ArrayList<>(oldPermissionIds);
@@ -79,20 +112,22 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleMapper, RoleEntity> imp
             rolePermissionService.saveBatch(rolePermissions);
         }
         log.info("更新角色 '{}' 权限完成", role.getName());
+
+        return role;
     }
 
     /**
-     * 获取用户角色
+     * 获取用户角色列表
      *
      * @param userId 用户ID
      */
     @Override
     public List<Role> getUserRoles(Long userId) {
-        return userRoleService.getUserRoles(userId).stream().map(role -> BeanUtils.toBean(role, Role.class)).toList();
+        return userRoleService.getUserRoles(userId);
     }
 
     /**
-     * 判断用户是否是超级管理员/管理员
+     * 判断用户是否是超级管理员
      *
      * @param userId 用户ID
      */

@@ -30,7 +30,7 @@ export function deleteRole(ids: number | Array<number>) {
 
 /** @desc 修改角色权限 */
 export function updateRolePermission(id: number, data: any) {
-  return http.put(`/role/bind-permissions/${id}`, data)
+  return http.put(`/role/assign-permissions/${id}`, data)
 }
 
 /** @desc 查询角色关联用户 */
@@ -40,12 +40,12 @@ export function listRoleUser(id: number, query: T.RoleUserPageQuery) {
 
 /** @desc 分配角色给用户 */
 export function assignToUsers(id: number, userIds: Array<string>) {
-  return http.post(`/role/bind-users/${id}`, userIds)
+  return http.post(`/role/assign-role/${id}`, userIds)
 }
 
 /** @desc 取消分配角色给用户 */
 export function unassignFromUsers(roleId: number, userIds: Array<number>) {
-  return http.del(`/role/unbind-users/${roleId}`, userIds)
+  return http.del(`/role/unassign-role/${roleId}`, userIds)
 }
 
 /** @desc 查询角色关联用户 ID */

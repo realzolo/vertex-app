@@ -1,15 +1,13 @@
 package com.onezol.vertx.framework.security.biz.controller;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.onezol.vertx.framework.support.support.ResponseHelper;
 import com.onezol.vertx.framework.common.model.GenericResponse;
 import com.onezol.vertx.framework.common.model.TreeNode;
 import com.onezol.vertx.framework.common.util.BeanUtils;
-import com.onezol.vertx.framework.common.util.TreeUtils;
 import com.onezol.vertx.framework.security.api.model.dto.Permission;
 import com.onezol.vertx.framework.security.api.model.entity.PermissionEntity;
 import com.onezol.vertx.framework.security.api.service.PermissionService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.onezol.vertx.framework.support.support.ResponseHelper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,34 +18,16 @@ import java.util.List;
 @RequestMapping("/permission")
 public class PermissionController {
 
-    @Autowired
-    private PermissionService permissionService;
+    private final PermissionService permissionService;
 
-    public static List<TreeNode> toTreeNodes(List<PermissionEntity> list) {
-        List<TreeNode> treeNodes = new ArrayList<>();
-        for (PermissionEntity entity : list) {
-            TreeNode treeNode = new TreeNode();
-            treeNode.setId(entity.getId());
-            treeNode.setParentId(entity.getParentId());
-            treeNode.setTitle(entity.getTitle());
-            treeNode.setIcon(entity.getIcon());
-            treeNode.setDisabled(false);
-            Permission permission = BeanUtils.toBean(entity, Permission.class);
-            permission.setType(entity.getType().getValue());
-            permission.setStatus(entity.getStatus().getValue());
-            treeNode.setData(permission);
-            treeNodes.add(treeNode);
-        }
-        return treeNodes;
+    public PermissionController(PermissionService permissionService) {
+        this.permissionService = permissionService;
     }
-
 
     @GetMapping("/tree")
     @PreAuthorize("@Security.hasPermission('system:permission:list')")
     public GenericResponse<List<TreeNode>> getPermissionTree() {
-        List<PermissionEntity> list = permissionService.list();
-        List<TreeNode> nodes = toTreeNodes(list);
-        List<TreeNode> treeNodes = TreeUtils.buildTree(nodes, 0L);
+        List<TreeNode> treeNodes = permissionService.tree();
         return ResponseHelper.buildSuccessfulResponse(treeNodes);
     }
 
@@ -102,7 +82,7 @@ public class PermissionController {
     private List<PermissionEntity> findSubPermissions(List<PermissionEntity> list, Long parentId) {
         List<PermissionEntity> sublist = permissionService.list(Wrappers.<PermissionEntity>lambdaQuery().eq(PermissionEntity::getParentId, parentId));
         for (PermissionEntity permission : sublist) {
-           this.findSubPermissions(list, permission.getId());
+            this.findSubPermissions(list, permission.getId());
         }
         list.addAll(sublist);
         return list;

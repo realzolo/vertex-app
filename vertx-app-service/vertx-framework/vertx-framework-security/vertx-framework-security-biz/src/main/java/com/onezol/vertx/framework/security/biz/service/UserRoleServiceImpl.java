@@ -5,8 +5,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.onezol.vertx.framework.common.exception.InvalidParameterException;
 import com.onezol.vertx.framework.common.model.PagePack;
 import com.onezol.vertx.framework.common.mvc.service.BaseServiceImpl;
-import com.onezol.vertx.framework.common.util.Asserts;
+import com.onezol.vertx.framework.common.util.BeanUtils;
 import com.onezol.vertx.framework.security.api.enumeration.BuiltinRole;
+import com.onezol.vertx.framework.security.api.model.dto.Role;
 import com.onezol.vertx.framework.security.api.model.dto.User;
 import com.onezol.vertx.framework.security.api.model.entity.RoleEntity;
 import com.onezol.vertx.framework.security.api.model.entity.RolePermissionEntity;
@@ -41,27 +42,31 @@ public class UserRoleServiceImpl extends BaseServiceImpl<UserRoleMapper, UserRol
     }
 
     /**
-     * 获取用户的角色
+     * 根据用户 ID 获取该用户所拥有的角色列表。
      *
-     * @param userId 用户ID
+     * @param userId 用户的唯一标识符，用于指定要查询角色的用户。
+     * @return 返回一个包含用户角色信息的列表，如果用户没有角色则返回空列表。
      */
     @Override
-    public List<RoleEntity> getUserRoles(Long userId) {
+    public List<Role> getUserRoles(Long userId) {
         if (userId == null) {
             return null;
         }
-        return this.baseMapper.queryUserRoles(userId);
+        List<RoleEntity> entities = this.baseMapper.queryUserRoles(userId);
+        List<Long> roleIds = entities.stream().map(RoleEntity::getId).toList();
+        Map<Long, List<Long>> permissionIdsByRoleIds = rolePermissionService.getPermissionIdsByRoleIds(roleIds);
+        return BeanUtils.toList(entities, Role.class);
     }
 
     /**
-     * 更新用户角色
+     * 将指定角色分配给多个用户。
      *
-     * @param roleId  角色ID
-     * @param userIds 用户ID列表
+     * @param roleId  要分配的角色的唯一标识符。
+     * @param userIds 要分配角色的用户 ID 列表。
      */
     @Override
     @Transactional
-    public void assignToUsers(Long roleId, List<Long> userIds) {
+    public void assignRoleToUsers(Long roleId, List<Long> userIds) {
         if (Objects.isNull(roleId) || Objects.isNull(userIds) || userIds.isEmpty()) {
             throw new InvalidParameterException("角色ID或用户ID列表不能为空");
         }
@@ -103,12 +108,12 @@ public class UserRoleServiceImpl extends BaseServiceImpl<UserRoleMapper, UserRol
     }
 
     /**
-     * 解绑用户所有角色
+     * 解除指定用户与所有角色的分配关系。
      *
-     * @param userId 用户ID
+     * @param userId 用户的唯一标识符，用于指定要解除角色分配的用户。
      */
     @Override
-    public void unbindUserAllRoles(Long userId) {
+    public void unassignAllRolesFromUser(Long userId) {
         this.remove(
                 Wrappers.<UserRoleEntity>lambdaQuery()
                         .eq(UserRoleEntity::getUserId, userId)
@@ -116,14 +121,15 @@ public class UserRoleServiceImpl extends BaseServiceImpl<UserRoleMapper, UserRol
     }
 
     /**
-     * 更新用户角色
+     * 更新指定用户的角色列表。
+     * 该方法会先解除用户与所有现有角色的分配关系，然后将新的角色分配给用户。
      *
-     * @param userId    用户ID
-     * @param roleCodes 角色编码列表
+     * @param userId    用户的唯一标识符，用于指定要更新角色的用户。
+     * @param roleCodes 新的角色编码列表，用于指定要分配给用户的角色。
      */
     @Override
     @Transactional
-    public void updateUserRoles(Long userId, List<String> roleCodes) {
+    public void assignRolesForUser(Long userId, List<String> roleCodes) {
         if (Objects.isNull(userId) || Objects.isNull(roleCodes) || roleCodes.isEmpty()) {
             throw new InvalidParameterException("用户ID或用户角色编码列表不能为空");
         }
@@ -162,11 +168,11 @@ public class UserRoleServiceImpl extends BaseServiceImpl<UserRoleMapper, UserRol
     }
 
     /**
-     * 获取角色下的用户列表
+     * 根据分页信息和角色 ID 获取该角色下的用户列表。
      *
-     * @param page   分页对象
-     * @param roleId 角色ID
-     * @return 用户列表
+     * @param page   分页对象，用于指定查询的页码和每页记录数。
+     * @param roleId 角色的唯一标识符，用于指定要查询用户的角色。
+     * @return 返回一个包含用户信息的分页包装对象。
      */
     @Override
     public PagePack<User> getRoleUsers(Page<UserRoleEntity> page, Long roleId) {
@@ -189,17 +195,15 @@ public class UserRoleServiceImpl extends BaseServiceImpl<UserRoleMapper, UserRol
     }
 
     /**
-     * 解绑用户角色
+     * 解除指定用户与指定角色的分配关系。
      *
-     * @param roleId  角色ID
-     * @param userIds 用户ID列表
+     * @param roleId  要解除分配的角色的唯一标识符。
+     * @param userIds 要解除角色分配的用户 ID 列表。
      */
     @Override
     @Transactional
-    public void unbindUserRole(Long roleId, List<Long> userIds) {
-        Asserts.notNull(roleId, "角色ID不能为空");
-        Asserts.notEmpty(userIds, "用户ID不能为空");
-
+    public void unassignRoleFromUsers(Long roleId, List<Long> userIds) {
+        // TODO: 默认管理员不可解除
         this.remove(
                 Wrappers.<UserRoleEntity>lambdaQuery()
                         .eq(UserRoleEntity::getRoleId, roleId)
@@ -208,14 +212,14 @@ public class UserRoleServiceImpl extends BaseServiceImpl<UserRoleMapper, UserRol
     }
 
     /**
-     * 角色绑定权限
+     * 为指定角色分配多个权限。
      *
-     * @param roleId        角色ID
-     * @param permissionIds 权限ID列表
+     * @param roleId        要分配权限的角色的唯一标识符。
+     * @param permissionIds 要分配给角色的权限 ID 列表。
      */
     @Override
     @Transactional
-    public void bindRolePermissions(Long roleId, List<Long> permissionIds) {
+    public void assignPermissionsToRole(Long roleId, List<Long> permissionIds) {
         if (Objects.isNull(roleId) || Objects.isNull(permissionIds) || permissionIds.isEmpty()) {
             throw new InvalidParameterException("角色ID或权限ID列表不能为空");
         }
@@ -257,18 +261,19 @@ public class UserRoleServiceImpl extends BaseServiceImpl<UserRoleMapper, UserRol
     }
 
     /**
-     * 判断用户是否是超级管理员
+     * 检查指定用户是否为超级管理员。
      *
-     * @param userId 用户ID
+     * @param userId 用户的唯一标识符，用于指定要检查的用户。
+     * @return 如果用户是超级管理员则返回 true，否则返回 false。
      */
     @Override
     public boolean hasAnySuperAdmin(Long userId) {
-        List<RoleEntity> userRoles = this.getUserRoles(userId);
+        List<Role> userRoles = this.getUserRoles(userId);
         if (Objects.isNull(userRoles) || userRoles.isEmpty()) {
             return false;
         }
-        for (RoleEntity roleEntity : userRoles) {
-            if (roleEntity.getCode().equals(BuiltinRole.SUPER.getValue())) {
+        for (Role role : userRoles) {
+            if (role.getCode().equals(BuiltinRole.SUPER.getValue())) {
                 return true;
             }
         }
@@ -276,17 +281,18 @@ public class UserRoleServiceImpl extends BaseServiceImpl<UserRoleMapper, UserRol
     }
 
     /**
-     * 判断用户是否包含指定角色（任一一个即可）
+     * 检查指定用户是否拥有任意一个指定的角色。
      *
-     * @param userId    用户ID
-     * @param roleCodes 角色编码
+     * @param userId    用户的唯一标识符，用于指定要检查的用户。
+     * @param roleCodes 角色编码数组，用于指定要检查的角色。
+     * @return 如果用户拥有任意一个指定的角色则返回 true，否则返回 false。
      */
     @Override
     public boolean hasAnyRoles(Long userId, String[] roleCodes) {
         if (Objects.isNull(userId) || Objects.isNull(roleCodes) || roleCodes.length == 0) {
             return false;
         }
-        List<RoleEntity> userRoles = this.getUserRoles(userId);
+        List<Role> userRoles = this.getUserRoles(userId);
         return userRoles.stream().anyMatch(role -> Arrays.asList(roleCodes).contains(role.getCode()));
     }
 
