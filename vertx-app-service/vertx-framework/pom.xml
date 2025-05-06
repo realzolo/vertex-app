@@ -17,7 +17,7 @@
         <module>vertx-framework-support</module>
         <module>vertx-framework-component</module>
         <module>vertx-framework-security</module>
-        <module>vertx-framework-extension</module>
+        <module>vertx-framework-schedule</module>
     </modules>
 
     <properties>

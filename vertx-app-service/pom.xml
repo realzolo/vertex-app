@@ -17,7 +17,7 @@
     <modules>
         <module>vertx-application</module>
         <module>vertx-framework</module>
-        <module>vertx-schedule</module>
+        <module>vertx-extensions</module>
     </modules>
 
     <properties>
@@ -60,10 +60,10 @@
                 <artifactId>vertx-framework-support</artifactId>
                 <version>${revision}</version>
             </dependency>
-            <!-- Vertx Framework Extension Schedule 任务调度(扩展功能) -->
+            <!-- Vertx Framework Schedule 任务调度 -->
             <dependency>
                 <groupId>com.onezol.vertx</groupId>
-                <artifactId>vertx-framework-extension-schedule</artifactId>
+                <artifactId>vertx-framework-schedule</artifactId>
                 <version>${revision}</version>
             </dependency>
         </dependencies>

@@ -45,7 +45,7 @@
         </dependency>
         <dependency>
             <groupId>com.onezol.vertx</groupId>
-            <artifactId>vertx-framework-extension-schedule</artifactId>
+            <artifactId>vertx-framework-schedule</artifactId>
         </dependency>
     </dependencies>
 
