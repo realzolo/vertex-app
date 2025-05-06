@@ -59,11 +59,12 @@ snail-job:
   namespace: 764d604ec6fc45f68cd92514c40e9e1a
   group: vertx-app
   token: SJ_Wyz3dmsdbDOkDujOTSSoBjGQP1BMsVnj
+  rpc-type: grpc
   server:
-    host: 110.42.33.103
+    host: 127.0.0.1
     port: 17888
     api:
-      url: http://110.42.33.103:20480/snail-job
+      url: http://127.0.0.1:20480/snail-job
       username: admin
       password: admin
 
