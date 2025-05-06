@@ -220,6 +220,9 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserMapper, UserEntityS
         // 2. 删除用户信息缓存
         String userInfoRedisKey = RedisKeyHelper.buildCacheKey(CacheKey.USER_INFO, String.valueOf(userId));
         redisCache.deleteObject(userInfoRedisKey);
+
+        // 删除用户
+        this.removeById(userId);
     }
 
     @Override
