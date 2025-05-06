@@ -6,6 +6,7 @@ import com.onezol.vertx.framework.extension.schedule.http.JobGroupHttpService;
 import com.onezol.vertx.framework.extension.schedule.http.JobHttpService;
 import com.onezol.vertx.framework.extension.schedule.support.SnailJobAuthenticator;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,15 +25,15 @@ import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 @ConditionalOnProperty(prefix = "snail-job", value = "enabled", havingValue = "true", matchIfMissing = true)
 public class SnailJobHttpExchangeConfiguration {
 
+    private final ConfigurableBeanFactory configurableBeanFactory;
+
     private final SnailJobAuthenticator snailJobAuthenticator;
 
     @Value("${snail-job.namespace}")
     private String namespace;
 
-    @Value("${snail-job.server.api.url}")
-    private String url;
-
-    public SnailJobHttpExchangeConfiguration(SnailJobAuthenticator snailJobAuthenticator) {
+    public SnailJobHttpExchangeConfiguration(ConfigurableBeanFactory configurableBeanFactory, SnailJobAuthenticator snailJobAuthenticator) {
+        this.configurableBeanFactory = configurableBeanFactory;
         this.snailJobAuthenticator = snailJobAuthenticator;
     }
 
@@ -45,7 +46,9 @@ public class SnailJobHttpExchangeConfiguration {
     @Bean
     public JobHttpService jobHttpService(WebClient.Builder webClientBuilder) {
         WebClient webClient = createWebClient(webClientBuilder);
-        return HttpServiceProxyFactory.builderFor(WebClientAdapter.create(webClient))
+        return HttpServiceProxyFactory
+                .builderFor(WebClientAdapter.create(webClient))
+                .embeddedValueResolver(configurableBeanFactory::resolveEmbeddedValue)
                 .build()
                 .createClient(JobHttpService.class);
     }
@@ -59,7 +62,9 @@ public class SnailJobHttpExchangeConfiguration {
     @Bean
     public JobBatchHttpService jobBatchHttpService(WebClient.Builder webClientBuilder) {
         WebClient webClient = createWebClient(webClientBuilder);
-        return HttpServiceProxyFactory.builderFor(WebClientAdapter.create(webClient))
+        return HttpServiceProxyFactory
+                .builderFor(WebClientAdapter.create(webClient))
+                .embeddedValueResolver(configurableBeanFactory::resolveEmbeddedValue)
                 .build()
                 .createClient(JobBatchHttpService.class);
     }
@@ -73,7 +78,9 @@ public class SnailJobHttpExchangeConfiguration {
     @Bean
     public JobGroupHttpService jobGroupHttpService(WebClient.Builder webClientBuilder) {
         WebClient webClient = createWebClient(webClientBuilder);
-        return HttpServiceProxyFactory.builderFor(WebClientAdapter.create(webClient))
+        return HttpServiceProxyFactory
+                .builderFor(WebClientAdapter.create(webClient))
+                .embeddedValueResolver(configurableBeanFactory::resolveEmbeddedValue)
                 .build()
                 .createClient(JobGroupHttpService.class);
     }

@@ -9,8 +9,7 @@ import java.util.List;
 /**
  * 任务组 REST API
  */
-//@HttpExchange(url = "${snail-job.server.api.url}/group", accept = "application/json")
-@HttpExchange(url = "http://127.0.0.1:20480/snail-job/group", accept = "application/json")
+@HttpExchange(url = "${snail-job.server.api.url}/group", accept = "application/json")
 public interface JobGroupHttpService {
 
     /**

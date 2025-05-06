@@ -17,8 +17,7 @@ import java.util.List;
 /**
  * 任务批次 REST API
  */
-//@HttpExchange(url = "${snail-job.server.api.url}/job", accept = "application/json")
-@HttpExchange(url = "http://127.0.0.1:20480/snail-job/job", accept = "application/json")
+@HttpExchange(url = "${snail-job.server.api.url}/job", accept = "application/json")
 public interface JobBatchHttpService {
 
     /**
