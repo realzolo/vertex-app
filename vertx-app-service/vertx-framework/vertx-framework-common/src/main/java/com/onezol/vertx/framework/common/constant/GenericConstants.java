@@ -27,4 +27,6 @@ public final class GenericConstants {
     /** 根级对象父级ID */
     public static Long ROOT_OBJECT_PARENT_ID = 0L;
 
+    /** 默认时区  */
+    public static String DEFAULT_TIME_ZONE = "Asia/Shanghai";
 }

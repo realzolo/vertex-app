@@ -1,6 +1,6 @@
 spring:
   jackson:
-    time-zone: GMT+8
+    time-zone: Asia/Shanghai
   servlet:
     multipart:
       max-file-size: 256MB
