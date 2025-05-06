@@ -1,6 +1,6 @@
 package com.onezol.vertx.framework.common.skeleton.mapper;
 
-import com.onezol.vertx.framework.common.skeleton.model.DataEntity;
+import com.onezol.vertx.framework.common.skeleton.model.BaseEntity;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -9,5 +9,5 @@ import org.apache.ibatis.annotations.Mapper;
  * @param <T> BaseEntity的子类
  */
 @Mapper
-public interface BaseMapper<T extends DataEntity> extends com.baomidou.mybatisplus.core.mapper.BaseMapper<T> {
+public interface BaseMapper<T extends BaseEntity> extends com.baomidou.mybatisplus.core.mapper.BaseMapper<T> {
 }

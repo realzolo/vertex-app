@@ -1,7 +1,7 @@
 package com.onezol.vertx.framework.common.skeleton.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.onezol.vertx.framework.common.skeleton.model.DataEntity;
+import com.onezol.vertx.framework.common.skeleton.model.BaseEntity;
 
 import java.util.Objects;
 
@@ -13,7 +13,7 @@ import static com.onezol.vertx.framework.common.constant.DefaultPage.*;
  *
  * @param <T>
  */
-public abstract class BaseController<T extends DataEntity> {
+public abstract class BaseController<T extends BaseEntity> {
 
     /**
      * 获取分页对象

@@ -9,11 +9,12 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Schema(name = "基础实体类", description = "基于MyBatis-Plus的基础实体类")
 @Data
-public abstract class BaseEntity implements DataEntity {
+public abstract class BaseEntity implements Serializable {
 
     @Schema(name = "主键")
     @TableId(value = "id", type = IdType.ASSIGN_ID)
