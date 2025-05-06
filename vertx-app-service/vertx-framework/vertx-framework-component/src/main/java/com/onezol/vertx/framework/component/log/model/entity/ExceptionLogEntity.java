@@ -1,4 +1,4 @@
-package com.onezol.vertx.framework.common.model;
+package com.onezol.vertx.framework.component.log.model.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;

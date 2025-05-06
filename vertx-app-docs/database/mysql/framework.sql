@@ -116,7 +116,7 @@ CREATE TABLE IF NOT EXISTS app_exception_log
     user_id                      BIGINT       DEFAULT NULL COMMENT '用户ID',
     request_method               VARCHAR(50)  DEFAULT '' COMMENT '请求方法名',
     request_url                  VARCHAR(255) DEFAULT '' COMMENT '访问地址',
-    request_params               VARCHAR(255) DEFAULT '' COMMENT '请求参数',
+    request_params               TEXT COMMENT '请求参数',
     user_ip                      VARCHAR(50)  DEFAULT '' COMMENT '用户IP',
     user_agent                   VARCHAR(255) DEFAULT '' COMMENT '浏览器UA',
     exception_name               VARCHAR(255) DEFAULT '' COMMENT '异常名',

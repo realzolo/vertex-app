@@ -3,6 +3,7 @@ package com.onezol.vertx.framework.common.skeleton.service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.onezol.vertx.framework.common.skeleton.model.BaseEntity;
 import com.onezol.vertx.framework.common.skeleton.mapper.BaseMapper;
+import com.onezol.vertx.framework.common.skeleton.model.DataEntity;
 
 /**
  * 基础服务实现类

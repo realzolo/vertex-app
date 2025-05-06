@@ -48,7 +48,7 @@ public class SharedHttpServletRequest {
         this.remoteAddr = NetworkUtils.getIpAddr(request);
     }
 
-    public static SharedHttpServletRequest of(HttpServletRequest request) {
+    public static SharedHttpServletRequest from(HttpServletRequest request) {
         return new SharedHttpServletRequest(request);
     }
 
