@@ -2,7 +2,7 @@ package com.onezol.vertx.framework.security.biz.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.onezol.vertx.framework.common.model.PagePack;
-import com.onezol.vertx.framework.common.mvc.service.BaseServiceImpl;
+import com.onezol.vertx.framework.common.skeleton.service.BaseServiceImpl;
 import com.onezol.vertx.framework.common.util.BeanUtils;
 import com.onezol.vertx.framework.common.util.NetworkUtils;
 import com.onezol.vertx.framework.common.util.ServletUtils;

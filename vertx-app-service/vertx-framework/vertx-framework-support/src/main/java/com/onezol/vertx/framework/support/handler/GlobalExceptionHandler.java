@@ -6,7 +6,7 @@ import com.onezol.vertx.framework.common.constant.enumeration.ServiceStatus;
 import com.onezol.vertx.framework.common.exception.ServiceException;
 import com.onezol.vertx.framework.common.model.GenericResponse;
 import com.onezol.vertx.framework.common.model.SharedHttpServletRequest;
-import com.onezol.vertx.framework.common.model.entity.ExceptionLogEntity;
+import com.onezol.vertx.framework.common.model.ExceptionLogEntity;
 import com.onezol.vertx.framework.common.util.JsonUtils;
 import com.onezol.vertx.framework.security.api.context.UserIdentityContext;
 import com.onezol.vertx.framework.security.api.model.UserIdentity;

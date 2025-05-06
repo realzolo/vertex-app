@@ -1,7 +1,7 @@
 package com.onezol.vertx.framework.support.mapper;
 
-import com.onezol.vertx.framework.common.model.entity.ExceptionLogEntity;
-import com.onezol.vertx.framework.common.mvc.mapper.BaseMapper;
+import com.onezol.vertx.framework.common.model.ExceptionLogEntity;
+import com.onezol.vertx.framework.common.skeleton.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper

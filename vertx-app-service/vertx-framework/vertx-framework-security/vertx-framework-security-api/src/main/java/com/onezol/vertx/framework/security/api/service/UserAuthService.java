@@ -1,13 +1,13 @@
 package com.onezol.vertx.framework.security.api.service;
 
-import com.onezol.vertx.framework.common.mvc.service.BaseService;
+import com.onezol.vertx.framework.common.skeleton.service.BaseService;
 import com.onezol.vertx.framework.security.api.enumeration.LoginType;
 import com.onezol.vertx.framework.security.api.model.AuthIdentity;
 import com.onezol.vertx.framework.security.api.model.dto.UserPassword;
-import com.onezol.vertx.framework.security.api.model.entity.UserEntity;
+import com.onezol.vertx.framework.security.api.model.entity.UserEntitySoft;
 import com.onezol.vertx.framework.security.api.model.payload.UserSavePayload;
 
-public interface UserAuthService extends BaseService<UserEntity> {
+public interface UserAuthService extends BaseService<UserEntitySoft> {
 
     /**
      * 用户注册

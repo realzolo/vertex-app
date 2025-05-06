@@ -2,7 +2,7 @@ package com.onezol.vertx.framework.security.biz.service;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.onezol.vertx.framework.common.exception.InvalidParameterException;
-import com.onezol.vertx.framework.common.mvc.service.BaseServiceImpl;
+import com.onezol.vertx.framework.common.skeleton.service.BaseServiceImpl;
 import com.onezol.vertx.framework.security.api.model.entity.RolePermissionEntity;
 import com.onezol.vertx.framework.security.api.service.RolePermissionService;
 import com.onezol.vertx.framework.security.biz.mapper.RolePermissionMapper;

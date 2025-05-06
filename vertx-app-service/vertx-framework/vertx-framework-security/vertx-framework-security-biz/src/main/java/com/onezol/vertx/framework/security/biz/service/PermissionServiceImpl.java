@@ -3,7 +3,7 @@ package com.onezol.vertx.framework.security.biz.service;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.onezol.vertx.framework.common.constant.enumeration.DisEnableStatus;
 import com.onezol.vertx.framework.common.model.TreeNode;
-import com.onezol.vertx.framework.common.mvc.service.BaseServiceImpl;
+import com.onezol.vertx.framework.common.skeleton.service.BaseServiceImpl;
 import com.onezol.vertx.framework.common.util.BeanUtils;
 import com.onezol.vertx.framework.common.util.StringUtils;
 import com.onezol.vertx.framework.common.util.TreeUtils;

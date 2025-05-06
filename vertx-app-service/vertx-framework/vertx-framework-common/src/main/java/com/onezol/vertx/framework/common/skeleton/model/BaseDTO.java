@@ -1,12 +1,13 @@
-package com.onezol.vertx.framework.common.model.dto;
+package com.onezol.vertx.framework.common.skeleton.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
-public abstract class BaseDTO implements DTO {
+public abstract class BaseDTO implements Serializable {
 
     @Schema(name = "主键ID")
     private Long id;

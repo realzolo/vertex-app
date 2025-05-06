@@ -1,18 +1,20 @@
 package com.onezol.vertx.framework.schedule.model.payload;
 
-import com.onezol.vertx.framework.common.model.payload.BasePayload;
 import com.onezol.vertx.framework.schedule.enums.JobStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.hibernate.validator.constraints.Length;
+
+import java.io.Serializable;
 
 @Schema(description = "创建或修改任务参数")
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class JobSavePayload extends BasePayload {
+public class JobSavePayload implements Serializable {
+
+    @Schema(description = "任务ID", example = "1")
+    private Long id;
 
     @Schema(description = "任务组", example = "vertx-app")
     @NotBlank(message = "任务组不能为空")

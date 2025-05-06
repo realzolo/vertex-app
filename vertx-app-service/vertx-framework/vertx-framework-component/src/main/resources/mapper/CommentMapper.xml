@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.onezol.vertx.framework.component.comment.mapper.CommentMapper">
 
-    <select id="queryTopLevelCommentPage" resultType="com.onezol.vertx.framework.component.comment.model.entity.CommentEntity">
+    <select id="queryTopLevelCommentPage" resultType="com.onezol.vertx.framework.component.comment.model.entity.CommentEntitySoft">
         SELECT
             mt.*
         FROM

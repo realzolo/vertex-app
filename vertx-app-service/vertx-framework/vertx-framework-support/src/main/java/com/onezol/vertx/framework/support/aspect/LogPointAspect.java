@@ -5,7 +5,7 @@ import com.onezol.vertx.framework.common.annotation.LogPoint;
 import com.onezol.vertx.framework.common.constant.StringConstants;
 import com.onezol.vertx.framework.common.constant.enumeration.SuccessFailureStatus;
 import com.onezol.vertx.framework.common.model.SharedHttpServletRequest;
-import com.onezol.vertx.framework.common.model.entity.OperationLogEntity;
+import com.onezol.vertx.framework.common.model.OperationLogEntity;
 import com.onezol.vertx.framework.common.util.EnumUtils;
 import com.onezol.vertx.framework.common.util.JsonUtils;
 import com.onezol.vertx.framework.common.util.NetworkUtils;

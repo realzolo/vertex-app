@@ -1,7 +1,7 @@
 package com.onezol.vertx.framework.component.approval.model.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.onezol.vertx.framework.common.model.entity.BaseEntity;
+import com.onezol.vertx.framework.common.skeleton.model.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

@@ -2,17 +2,15 @@ package com.onezol.vertx.framework.component.comment.model.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.onezol.vertx.framework.common.model.entity.LogicalBaseEntity;
+import com.onezol.vertx.framework.common.skeleton.model.SoftDeletableEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.util.List;
-
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName(value = "app_comment", autoResultMap = true)
-public class CommentEntity extends LogicalBaseEntity {
+public class CommentEntitySoft extends SoftDeletableEntity {
 
     @Schema(description = "父级ID")
     @TableField("parent_id")

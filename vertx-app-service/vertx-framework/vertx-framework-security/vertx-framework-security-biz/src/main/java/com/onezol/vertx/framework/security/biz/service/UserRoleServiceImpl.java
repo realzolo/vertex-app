@@ -4,14 +4,14 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.onezol.vertx.framework.common.exception.InvalidParameterException;
 import com.onezol.vertx.framework.common.model.PagePack;
-import com.onezol.vertx.framework.common.mvc.service.BaseServiceImpl;
+import com.onezol.vertx.framework.common.skeleton.service.BaseServiceImpl;
 import com.onezol.vertx.framework.common.util.BeanUtils;
 import com.onezol.vertx.framework.security.api.enumeration.BuiltinRole;
 import com.onezol.vertx.framework.security.api.model.dto.Role;
 import com.onezol.vertx.framework.security.api.model.dto.User;
 import com.onezol.vertx.framework.security.api.model.entity.RoleEntity;
 import com.onezol.vertx.framework.security.api.model.entity.RolePermissionEntity;
-import com.onezol.vertx.framework.security.api.model.entity.UserEntity;
+import com.onezol.vertx.framework.security.api.model.entity.UserEntitySoft;
 import com.onezol.vertx.framework.security.api.model.entity.UserRoleEntity;
 import com.onezol.vertx.framework.security.api.service.RolePermissionService;
 import com.onezol.vertx.framework.security.api.service.RoleService;
@@ -79,8 +79,8 @@ public class UserRoleServiceImpl extends BaseServiceImpl<UserRoleMapper, UserRol
 
         // 用户校验
         long count = userInfoService.count(
-                Wrappers.<UserEntity>lambdaQuery()
-                        .in(UserEntity::getId, userIds)
+                Wrappers.<UserEntitySoft>lambdaQuery()
+                        .in(UserEntitySoft::getId, userIds)
         );
         if (count != userIds.size()) {
             throw new InvalidParameterException("部分用户不存在, 无法绑定角色");
@@ -135,7 +135,7 @@ public class UserRoleServiceImpl extends BaseServiceImpl<UserRoleMapper, UserRol
         }
 
         // 用户校验
-        UserEntity user = userInfoService.getById(userId);
+        UserEntitySoft user = userInfoService.getById(userId);
         if (Objects.isNull(user)) {
             throw new InvalidParameterException("用户不存在");
         }

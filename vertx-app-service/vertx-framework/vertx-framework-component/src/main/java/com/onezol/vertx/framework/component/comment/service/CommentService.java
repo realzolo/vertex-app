@@ -6,14 +6,14 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.onezol.vertx.framework.common.constant.StringConstants;
 import com.onezol.vertx.framework.common.exception.InvalidParameterException;
 import com.onezol.vertx.framework.common.model.PagePack;
-import com.onezol.vertx.framework.common.mvc.service.BaseServiceImpl;
+import com.onezol.vertx.framework.common.skeleton.service.BaseServiceImpl;
 import com.onezol.vertx.framework.common.util.BeanUtils;
 import com.onezol.vertx.framework.common.util.MapUtils;
 import com.onezol.vertx.framework.common.util.NetworkUtils;
 import com.onezol.vertx.framework.common.util.ServletUtils;
 import com.onezol.vertx.framework.component.comment.mapper.CommentMapper;
 import com.onezol.vertx.framework.component.comment.model.dto.Comment;
-import com.onezol.vertx.framework.component.comment.model.entity.CommentEntity;
+import com.onezol.vertx.framework.component.comment.model.entity.CommentEntitySoft;
 import com.onezol.vertx.framework.component.comment.model.payload.CommentPayload;
 import com.onezol.vertx.framework.component.upvote.constant.enumeration.UpvoteObjectType;
 import com.onezol.vertx.framework.component.upvote.service.UpvoteRecordService;
@@ -26,7 +26,7 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 @Service
-public class CommentService extends BaseServiceImpl<CommentMapper, CommentEntity> {
+public class CommentService extends BaseServiceImpl<CommentMapper, CommentEntitySoft> {
 
     private final UserInfoService userInfoService;
     private final UpvoteRecordService upvoteRecordService;
@@ -40,10 +40,10 @@ public class CommentService extends BaseServiceImpl<CommentMapper, CommentEntity
      * 创建评论
      */
     public Comment create(CommentPayload payload) {
-        CommentEntity parentComment = this.getById(payload.getParentId());
+        CommentEntitySoft parentComment = this.getById(payload.getParentId());
 
         String clientIP = ServletUtils.getClientIP();
-        CommentEntity entity = BeanUtils.toBean(payload, CommentEntity.class);
+        CommentEntitySoft entity = BeanUtils.toBean(payload, CommentEntitySoft.class);
         entity.setAddress(NetworkUtils.getAddressByIP(clientIP));
         entity.setBusinessType("COMMON");
 
@@ -69,14 +69,14 @@ public class CommentService extends BaseServiceImpl<CommentMapper, CommentEntity
      * @param id 评论ID
      */
     public void delete(Long id) {
-        CommentEntity entity = this.getById(id);
+        CommentEntitySoft entity = this.getById(id);
         // 删除评论、评论下的回复
         String subPath = entity.getPath() + StringConstants.SLASH + entity.getId();
         this.remove(
-                Wrappers.lambdaQuery(CommentEntity.class)
-                        .like(CommentEntity::getPath, subPath)
+                Wrappers.lambdaQuery(CommentEntitySoft.class)
+                        .like(CommentEntitySoft::getPath, subPath)
                         .or()
-                        .eq(CommentEntity::getId, id)
+                        .eq(CommentEntitySoft::getId, id)
         );
     }
 
@@ -87,8 +87,8 @@ public class CommentService extends BaseServiceImpl<CommentMapper, CommentEntity
      * @param objectId  评论对象
      * @param sortType  排序类型
      */
-    public PagePack<Comment> listPage(Page<CommentEntity> page, Long objectId, String sortType) {
-        Page<CommentEntity> resultPage = this.baseMapper.queryTopLevelCommentPage(page, UpvoteObjectType.COMMENT.getValue(), objectId, sortType);
+    public PagePack<Comment> listPage(Page<CommentEntitySoft> page, Long objectId, String sortType) {
+        Page<CommentEntitySoft> resultPage = this.baseMapper.queryTopLevelCommentPage(page, UpvoteObjectType.COMMENT.getValue(), objectId, sortType);
 
         PagePack<Comment> pagePack = PagePack.from(resultPage, Comment.class);
         List<Comment> comments = pagePack.getItems();
@@ -96,9 +96,9 @@ public class CommentService extends BaseServiceImpl<CommentMapper, CommentEntity
         // 获取评论下的回复
         List<Long> ids = comments.stream().map(Comment::getId).toList();
         List<String> paths = ids.stream().map(id -> StringConstants.SLASH + id).toList();
-        QueryWrapper<CommentEntity> replyQueryWrapper = new QueryWrapper<>();
+        QueryWrapper<CommentEntitySoft> replyQueryWrapper = new QueryWrapper<>();
         paths.forEach(path -> replyQueryWrapper.or().like("path", path));
-        List<CommentEntity> resultReplies = this.list(replyQueryWrapper);
+        List<CommentEntitySoft> resultReplies = this.list(replyQueryWrapper);
         List<Comment> replies = BeanUtils.toList(resultReplies, Comment.class);
 
         // 获取所有用户ID列表与评论ID列表
@@ -172,7 +172,7 @@ public class CommentService extends BaseServiceImpl<CommentMapper, CommentEntity
      * @param id 评论ID
      */
     public boolean exists(Long id) {
-        return this.count(Wrappers.lambdaQuery(CommentEntity.class).eq(CommentEntity::getId, id)) > 0;
+        return this.count(Wrappers.lambdaQuery(CommentEntitySoft.class).eq(CommentEntitySoft::getId, id)) > 0;
     }
 
 }

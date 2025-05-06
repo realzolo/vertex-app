@@ -1,4 +1,4 @@
-package com.onezol.vertx.framework.common.model.entity;
+package com.onezol.vertx.framework.common.skeleton.model;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 
 @Schema(name = "基础实体类", description = "基于MyBatis-Plus的基础实体类")
 @Data
-public abstract class BaseEntity implements Entity {
+public abstract class BaseEntity implements DataEntity {
 
     @Schema(name = "主键")
     @TableId(value = "id", type = IdType.ASSIGN_ID)
@@ -28,7 +28,7 @@ public abstract class BaseEntity implements Entity {
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @TableField(value = "create_time", fill = FieldFill.INSERT)
-    private LocalDateTime createTime = LocalDateTime.now();
+    private LocalDateTime createTime;
 
     @Schema(name = "更新人ID")
     @TableField(value = "updater", fill = FieldFill.INSERT_UPDATE)
@@ -39,7 +39,7 @@ public abstract class BaseEntity implements Entity {
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
-    private LocalDateTime updateTime = LocalDateTime.now();
+    private LocalDateTime updateTime;
 
     @Schema(name = "版本号")
     @Version

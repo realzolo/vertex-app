@@ -5,7 +5,7 @@ import com.onezol.vertx.framework.common.model.DictionaryEntry;
 import com.onezol.vertx.framework.common.model.GenericResponse;
 import com.onezol.vertx.framework.common.model.PagePack;
 import com.onezol.vertx.framework.common.model.TreeNode;
-import com.onezol.vertx.framework.common.mvc.controller.BaseController;
+import com.onezol.vertx.framework.common.skeleton.controller.BaseController;
 import com.onezol.vertx.framework.common.util.BeanUtils;
 import com.onezol.vertx.framework.security.api.model.dto.Role;
 import com.onezol.vertx.framework.security.api.model.dto.User;

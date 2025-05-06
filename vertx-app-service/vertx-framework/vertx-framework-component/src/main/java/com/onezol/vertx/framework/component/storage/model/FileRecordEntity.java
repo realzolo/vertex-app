@@ -4,7 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.onezol.vertx.framework.common.constant.StringConstants;
 import com.onezol.vertx.framework.common.constant.enumeration.FileType;
-import com.onezol.vertx.framework.common.model.entity.BaseEntity;
+import com.onezol.vertx.framework.common.skeleton.model.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

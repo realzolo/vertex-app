@@ -3,10 +3,10 @@ package com.onezol.vertx.framework.component.notice.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.onezol.vertx.framework.common.model.GenericResponse;
 import com.onezol.vertx.framework.common.model.PagePack;
-import com.onezol.vertx.framework.common.mvc.controller.BaseController;
+import com.onezol.vertx.framework.common.skeleton.controller.BaseController;
 import com.onezol.vertx.framework.common.util.Asserts;
 import com.onezol.vertx.framework.component.notice.model.Notice;
-import com.onezol.vertx.framework.component.notice.model.NoticeEntity;
+import com.onezol.vertx.framework.component.notice.model.NoticeEntitySoft;
 import com.onezol.vertx.framework.component.notice.model.NoticeQueryPayload;
 import com.onezol.vertx.framework.component.notice.model.NoticeSavePayload;
 import com.onezol.vertx.framework.component.notice.service.NoticeService;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "通知公告")
 @RestController
 @RequestMapping("/notice")
-public class NoticeController extends BaseController<NoticeEntity> {
+public class NoticeController extends BaseController<NoticeEntitySoft> {
 
     private final NoticeService noticeService;
 
@@ -71,7 +71,7 @@ public class NoticeController extends BaseController<NoticeEntity> {
         queryPayload.setTitle(title);
         queryPayload.setType(type);
 
-        Page<NoticeEntity> page = this.getPageObject(pageNumber, pageSize);
+        Page<NoticeEntitySoft> page = this.getPageObject(pageNumber, pageSize);
 
         PagePack<Notice> pack = noticeService.getPage(page, queryPayload);
         return ResponseHelper.buildSuccessfulResponse(pack);

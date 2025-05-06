@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.onezol.vertx.framework.common.constant.enumeration.DictionaryType;
 import com.onezol.vertx.framework.common.constant.enumeration.DisEnableStatus;
-import com.onezol.vertx.framework.common.model.entity.BaseEntity;
+import com.onezol.vertx.framework.common.skeleton.model.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

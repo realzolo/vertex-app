@@ -16,7 +16,7 @@ import com.onezol.vertx.framework.component.approval.model.dto.ApprovalFlowBindi
 import com.onezol.vertx.framework.component.approval.model.dto.ApprovalFlowTemplate;
 import com.onezol.vertx.framework.component.approval.model.entity.ApprovalFlowBindingRelationEntity;
 import com.onezol.vertx.framework.component.approval.model.entity.ApprovalFlowNodeCandidateEntity;
-import com.onezol.vertx.framework.component.approval.model.entity.ApprovalFlowTemplateEntity;
+import com.onezol.vertx.framework.component.approval.model.entity.ApprovalFlowTemplateEntitySoft;
 import com.onezol.vertx.framework.component.approval.model.payload.ApprovalFlowBindingRelationPayload;
 import com.onezol.vertx.framework.component.approval.model.payload.ApprovalFlowNodeCandidatePayload;
 import com.onezol.vertx.framework.component.approval.model.payload.ApprovalFlowTemplateSavePayload;
@@ -47,7 +47,7 @@ public class ApprovalFlowService {
      * 创建流程模板
      */
     public ApprovalFlowTemplate createFlowTemplate(ApprovalFlowTemplateSavePayload payload) {
-        ApprovalFlowTemplateEntity flowTemplate = BeanUtils.toBean(payload, ApprovalFlowTemplateEntity.class);
+        ApprovalFlowTemplateEntitySoft flowTemplate = BeanUtils.toBean(payload, ApprovalFlowTemplateEntitySoft.class);
         approvalFlowTemplateMapper.insert(flowTemplate);
         return BeanUtils.toBean(flowTemplate, ApprovalFlowTemplate.class);
     }
@@ -57,7 +57,7 @@ public class ApprovalFlowService {
      */
     @Transactional
     public ApprovalFlowTemplate updateFlowTemplate(ApprovalFlowTemplateSavePayload payload) {
-        ApprovalFlowTemplateEntity flowTemplate = BeanUtils.toBean(payload, ApprovalFlowTemplateEntity.class);
+        ApprovalFlowTemplateEntitySoft flowTemplate = BeanUtils.toBean(payload, ApprovalFlowTemplateEntitySoft.class);
 
         approvalFlowTemplateMapper.updateById(flowTemplate);
 
@@ -71,7 +71,7 @@ public class ApprovalFlowService {
      */
     public ApprovalFlowTemplate getFlowTemplate(Long id) {
         if (id == null) return null;
-        ApprovalFlowTemplateEntity flowTemplate = approvalFlowTemplateMapper.selectById(id);
+        ApprovalFlowTemplateEntitySoft flowTemplate = approvalFlowTemplateMapper.selectById(id);
         return BeanUtils.toBean(flowTemplate, ApprovalFlowTemplate.class);
     }
 
@@ -85,8 +85,8 @@ public class ApprovalFlowService {
     /**
      * 分页获取流程模板
      */
-    public PagePack<ApprovalFlowTemplate> getFlowTemplatePage(Page<ApprovalFlowTemplateEntity> page) {
-        Page<ApprovalFlowTemplateEntity> flowTemplatePage = approvalFlowTemplateMapper.selectPage(page, null);
+    public PagePack<ApprovalFlowTemplate> getFlowTemplatePage(Page<ApprovalFlowTemplateEntitySoft> page) {
+        Page<ApprovalFlowTemplateEntitySoft> flowTemplatePage = approvalFlowTemplateMapper.selectPage(page, null);
         return PagePack.from(flowTemplatePage, ApprovalFlowTemplate.class);
     }
 
@@ -94,7 +94,7 @@ public class ApprovalFlowService {
      * 绑定业务到流程模板
      */
     public void bindFlowToBusinessType(ApprovalFlowBindingRelationPayload payload) {
-        ApprovalFlowTemplateEntity flowTemplate = approvalFlowTemplateMapper.selectById(payload.getFlowTemplateId());
+        ApprovalFlowTemplateEntitySoft flowTemplate = approvalFlowTemplateMapper.selectById(payload.getFlowTemplateId());
         if (flowTemplate == null) {
             throw new InvalidParameterException("流程模板不存在");
         }
@@ -128,16 +128,16 @@ public class ApprovalFlowService {
      * 分页获取业务流程模板绑定关系
      */
     public PagePack<ApprovalFlowBindingRelation> getFlowBindingRelation(Page<ApprovalFlowBindingRelationEntity> page) {
-        List<ApprovalFlowTemplateEntity> approvalFlowTemplateEntities = approvalFlowTemplateMapper.selectList(
-                Wrappers.<ApprovalFlowTemplateEntity>lambdaQuery()
-                        .select(ApprovalFlowTemplateEntity::getId, ApprovalFlowTemplateEntity::getName)
+        List<ApprovalFlowTemplateEntitySoft> approvalFlowTemplateEntities = approvalFlowTemplateMapper.selectList(
+                Wrappers.<ApprovalFlowTemplateEntitySoft>lambdaQuery()
+                        .select(ApprovalFlowTemplateEntitySoft::getId, ApprovalFlowTemplateEntitySoft::getName)
         );
-        Map<Long, ApprovalFlowTemplateEntity> flowTemplateMap = MapUtils.list2Map(approvalFlowTemplateEntities, ApprovalFlowTemplateEntity::getId);
+        Map<Long, ApprovalFlowTemplateEntitySoft> flowTemplateMap = MapUtils.list2Map(approvalFlowTemplateEntities, ApprovalFlowTemplateEntitySoft::getId);
 
         Page<ApprovalFlowBindingRelationEntity> relationPage = approvalFlowBindingRelationMapper.selectPage(page, null);
         PagePack<ApprovalFlowBindingRelation> pageModel = PagePack.from(relationPage, ApprovalFlowBindingRelation.class);
         pageModel.getItems().forEach(item -> {
-            ApprovalFlowTemplateEntity flowTemplate = flowTemplateMap.get(item.getFlowTemplateId());
+            ApprovalFlowTemplateEntitySoft flowTemplate = flowTemplateMap.get(item.getFlowTemplateId());
             if (flowTemplate != null) {
                 item.setFlowTemplateName(flowTemplate.getName());
             }
@@ -150,7 +150,7 @@ public class ApprovalFlowService {
     }
 
     public List<DictionaryEntry> getFlowTemplateDict() {
-        List<ApprovalFlowTemplateEntity> entities = approvalFlowTemplateMapper.selectList(null);
+        List<ApprovalFlowTemplateEntitySoft> entities = approvalFlowTemplateMapper.selectList(null);
         return entities.stream().map(entity -> DictionaryEntry.of(entity.getName(), entity.getId())).collect(Collectors.toList());
     }
 

@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.onezol.vertx.framework.common.constant.enumeration.AccountStatus;
 import com.onezol.vertx.framework.common.constant.enumeration.Gender;
-import com.onezol.vertx.framework.common.model.entity.LogicalBaseEntity;
+import com.onezol.vertx.framework.common.skeleton.model.SoftDeletableEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName("app_user")
-public class UserEntity extends LogicalBaseEntity {
+public class UserEntitySoft extends SoftDeletableEntity {
 
     @Schema(name = "用户名")
     @TableField("username")

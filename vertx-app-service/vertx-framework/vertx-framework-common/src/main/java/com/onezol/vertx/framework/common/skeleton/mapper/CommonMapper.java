@@ -1,6 +1,6 @@
-package com.onezol.vertx.framework.common.mvc.mapper;
+package com.onezol.vertx.framework.common.skeleton.mapper;
 
-import com.onezol.vertx.framework.common.model.entity.BaseEntity;
+import com.onezol.vertx.framework.common.skeleton.model.BaseEntity;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;

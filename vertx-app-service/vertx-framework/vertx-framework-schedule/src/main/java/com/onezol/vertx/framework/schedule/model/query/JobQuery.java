@@ -1,6 +1,6 @@
 package com.onezol.vertx.framework.schedule.model.query;
 
-import com.onezol.vertx.framework.common.model.PageQuery;
+import com.onezol.vertx.framework.common.skeleton.model.PageQuery;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

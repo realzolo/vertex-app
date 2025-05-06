@@ -2,7 +2,7 @@ package com.onezol.vertx.framework.component.upvote.model.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.onezol.vertx.framework.common.model.entity.BaseEntity;
+import com.onezol.vertx.framework.common.skeleton.model.BaseEntity;
 import com.onezol.vertx.framework.component.upvote.constant.enumeration.UpvoteObjectType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;

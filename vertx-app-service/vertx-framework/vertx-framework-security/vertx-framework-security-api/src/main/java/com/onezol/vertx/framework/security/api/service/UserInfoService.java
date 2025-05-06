@@ -3,15 +3,15 @@ package com.onezol.vertx.framework.security.api.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.onezol.vertx.framework.common.model.DictionaryEntry;
 import com.onezol.vertx.framework.common.model.PagePack;
-import com.onezol.vertx.framework.common.mvc.service.BaseService;
+import com.onezol.vertx.framework.common.skeleton.service.BaseService;
 import com.onezol.vertx.framework.security.api.model.dto.User;
-import com.onezol.vertx.framework.security.api.model.entity.UserEntity;
+import com.onezol.vertx.framework.security.api.model.entity.UserEntitySoft;
 import com.onezol.vertx.framework.security.api.model.payload.UserQueryPayload;
 import com.onezol.vertx.framework.security.api.model.payload.UserSavePayload;
 
 import java.util.List;
 
-public interface UserInfoService extends BaseService<UserEntity> {
+public interface UserInfoService extends BaseService<UserEntitySoft> {
 
     /**
      * 根据用户ID取用户信息
@@ -69,11 +69,11 @@ public interface UserInfoService extends BaseService<UserEntity> {
     /**
      * 获取用户列表
      */
-    PagePack<User> getUserPage(Page<UserEntity> page, UserQueryPayload payload);
+    PagePack<User> getUserPage(Page<UserEntitySoft> page, UserQueryPayload payload);
 
     /**
      * 获取未绑定角色的用户列表
      */
-    PagePack<User> getUnboundRoleUserPage(Page<UserEntity> page, UserQueryPayload payload);
+    PagePack<User> getUnboundRoleUserPage(Page<UserEntitySoft> page, UserQueryPayload payload);
 
 }

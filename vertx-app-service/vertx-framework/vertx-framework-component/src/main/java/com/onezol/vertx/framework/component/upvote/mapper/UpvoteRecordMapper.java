@@ -1,6 +1,6 @@
 package com.onezol.vertx.framework.component.upvote.mapper;
 
-import com.onezol.vertx.framework.common.mvc.mapper.BaseMapper;
+import com.onezol.vertx.framework.common.skeleton.mapper.BaseMapper;
 import com.onezol.vertx.framework.component.upvote.constant.enumeration.UpvoteObjectType;
 import com.onezol.vertx.framework.component.upvote.model.dto.UpvoteCount;
 import com.onezol.vertx.framework.component.upvote.model.dto.UpvoteStatus;

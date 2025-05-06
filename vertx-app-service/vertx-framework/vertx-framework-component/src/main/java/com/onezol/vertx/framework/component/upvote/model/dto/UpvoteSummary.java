@@ -1,9 +1,6 @@
 package com.onezol.vertx.framework.component.upvote.model.dto;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.onezol.vertx.framework.common.model.dto.BaseDTO;
-import com.onezol.vertx.framework.common.model.entity.BaseEntity;
+import com.onezol.vertx.framework.common.skeleton.model.BaseDTO;
 import com.onezol.vertx.framework.component.upvote.constant.enumeration.UpvoteObjectType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;

@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.onezol.vertx.framework.common.constant.CacheKey;
 import com.onezol.vertx.framework.common.constant.enumeration.Gender;
 import com.onezol.vertx.framework.common.exception.InvalidParameterException;
-import com.onezol.vertx.framework.common.mvc.service.BaseServiceImpl;
+import com.onezol.vertx.framework.common.skeleton.service.BaseServiceImpl;
 import com.onezol.vertx.framework.common.util.BeanUtils;
 import com.onezol.vertx.framework.security.api.context.UserIdentityContext;
 import com.onezol.vertx.framework.security.api.enumeration.LoginType;
@@ -12,7 +12,7 @@ import com.onezol.vertx.framework.security.api.model.AuthIdentity;
 import com.onezol.vertx.framework.security.api.model.UserIdentity;
 import com.onezol.vertx.framework.security.api.model.dto.User;
 import com.onezol.vertx.framework.security.api.model.dto.UserPassword;
-import com.onezol.vertx.framework.security.api.model.entity.UserEntity;
+import com.onezol.vertx.framework.security.api.model.entity.UserEntitySoft;
 import com.onezol.vertx.framework.security.api.model.payload.UserSavePayload;
 import com.onezol.vertx.framework.security.api.service.LoginHistoryService;
 import com.onezol.vertx.framework.security.api.service.LoginUserService;
@@ -33,7 +33,7 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 @Service
-public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity> implements UserAuthService {
+public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntitySoft> implements UserAuthService {
 
     private final ApplicationContext applicationContext;
     private final PasswordEncoder passwordEncoder;
@@ -71,17 +71,17 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
 //            throw new InvalidParameterException("验证码错误");
 //        }
 
-        UserEntity entity = this.newBlankUser();
+        UserEntitySoft entity = this.newBlankUser();
         entity.setUsername(payload.getUsername());
         entity.setPassword(passwordEncoder.encode(payload.getPassword()));
         entity.setEmail(payload.getEmail());
 
         // 唯一性校验
-        UserEntity entityFromDB = this.getOne(
-                Wrappers.<UserEntity>lambdaQuery()
-                        .eq(UserEntity::getUsername, payload.getUsername())
+        UserEntitySoft entityFromDB = this.getOne(
+                Wrappers.<UserEntitySoft>lambdaQuery()
+                        .eq(UserEntitySoft::getUsername, payload.getUsername())
                         .or()
-                        .eq(UserEntity::getEmail, entity.getEmail())
+                        .eq(UserEntitySoft::getEmail, entity.getEmail())
         );
         if (Objects.nonNull(entityFromDB)) {
             if (Objects.equals(entityFromDB.getUsername(), entity.getUsername())) {
@@ -144,7 +144,7 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
      */
     @Override
     public UserPassword getPassword(Long userId) {
-        UserEntity entity = this.getById(userId);
+        UserEntitySoft entity = this.getById(userId);
         return new UserPassword(entity.getPassword(), entity.getPwdExpDate());
     }
 
@@ -153,8 +153,8 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
      *
      * @return UserEntity
      */
-    private UserEntity newBlankUser() {
-        UserEntity entity = new UserEntity();
+    private UserEntitySoft newBlankUser() {
+        UserEntitySoft entity = new UserEntitySoft();
         entity.setUsername("");
         entity.setPassword("");
         entity.setNickname("");

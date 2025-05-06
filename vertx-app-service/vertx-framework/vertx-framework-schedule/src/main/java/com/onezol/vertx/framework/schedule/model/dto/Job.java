@@ -1,7 +1,7 @@
 package com.onezol.vertx.framework.schedule.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.onezol.vertx.framework.common.model.dto.BaseDTO;
+import com.onezol.vertx.framework.common.skeleton.model.BaseDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

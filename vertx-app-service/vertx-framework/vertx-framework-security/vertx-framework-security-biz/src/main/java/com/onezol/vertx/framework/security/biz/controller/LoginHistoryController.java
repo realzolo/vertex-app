@@ -3,7 +3,7 @@ package com.onezol.vertx.framework.security.biz.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.onezol.vertx.framework.common.model.GenericResponse;
 import com.onezol.vertx.framework.common.model.PagePack;
-import com.onezol.vertx.framework.common.mvc.controller.BaseController;
+import com.onezol.vertx.framework.common.skeleton.controller.BaseController;
 import com.onezol.vertx.framework.security.api.model.dto.LoginUser;
 import com.onezol.vertx.framework.security.api.model.entity.LoginHistoryEntity;
 import com.onezol.vertx.framework.security.api.service.LoginHistoryService;

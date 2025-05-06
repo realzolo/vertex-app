@@ -1,8 +1,9 @@
-package com.onezol.vertx.framework.common.model.entity;
+package com.onezol.vertx.framework.common.model;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.onezol.vertx.framework.common.constant.enumeration.SuccessFailureStatus;
+import com.onezol.vertx.framework.common.skeleton.model.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;

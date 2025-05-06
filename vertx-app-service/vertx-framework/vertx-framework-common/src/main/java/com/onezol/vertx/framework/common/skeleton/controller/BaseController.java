@@ -1,7 +1,7 @@
-package com.onezol.vertx.framework.common.mvc.controller;
+package com.onezol.vertx.framework.common.skeleton.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.onezol.vertx.framework.common.model.entity.Entity;
+import com.onezol.vertx.framework.common.skeleton.model.DataEntity;
 
 import java.util.Objects;
 
@@ -13,7 +13,7 @@ import static com.onezol.vertx.framework.common.constant.DefaultPage.*;
  *
  * @param <T>
  */
-public abstract class BaseController<T extends Entity> {
+public abstract class BaseController<T extends DataEntity> {
 
     /**
      * 获取分页对象
@@ -22,6 +22,7 @@ public abstract class BaseController<T extends Entity> {
      * @param pageSize   每页显示条数
      * @return 分页对象
      */
+    @Deprecated
     protected Page<T> getPageObject(Long pageNumber, Long pageSize) {
         if (Objects.isNull(pageNumber)) {
             pageNumber = DEFAULT_PAGE_NUMBER;

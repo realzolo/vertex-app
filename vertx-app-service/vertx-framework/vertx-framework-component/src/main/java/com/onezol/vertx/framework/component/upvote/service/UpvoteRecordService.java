@@ -2,7 +2,7 @@ package com.onezol.vertx.framework.component.upvote.service;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.onezol.vertx.framework.common.constant.CacheKey;
-import com.onezol.vertx.framework.common.mvc.service.BaseServiceImpl;
+import com.onezol.vertx.framework.common.skeleton.service.BaseServiceImpl;
 import com.onezol.vertx.framework.component.upvote.constant.enumeration.UpvoteObjectType;
 import com.onezol.vertx.framework.component.upvote.mapper.UpvoteRecordMapper;
 import com.onezol.vertx.framework.component.upvote.model.dto.UpvoteCount;

@@ -1,6 +1,6 @@
 package com.onezol.vertx.framework.security.api.service;
 
-import com.onezol.vertx.framework.common.mvc.service.BaseService;
+import com.onezol.vertx.framework.common.skeleton.service.BaseService;
 import com.onezol.vertx.framework.security.api.model.dto.Department;
 import com.onezol.vertx.framework.security.api.model.entity.UserDepartmentEntity;
 

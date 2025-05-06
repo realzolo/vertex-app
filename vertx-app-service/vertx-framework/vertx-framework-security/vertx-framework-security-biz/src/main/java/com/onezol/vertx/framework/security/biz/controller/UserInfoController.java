@@ -4,11 +4,11 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.onezol.vertx.framework.common.model.DictionaryEntry;
 import com.onezol.vertx.framework.common.model.GenericResponse;
 import com.onezol.vertx.framework.common.model.PagePack;
-import com.onezol.vertx.framework.common.mvc.controller.BaseController;
+import com.onezol.vertx.framework.common.skeleton.controller.BaseController;
 import com.onezol.vertx.framework.security.api.context.UserIdentityContext;
 import com.onezol.vertx.framework.security.api.model.UserIdentity;
 import com.onezol.vertx.framework.security.api.model.dto.User;
-import com.onezol.vertx.framework.security.api.model.entity.UserEntity;
+import com.onezol.vertx.framework.security.api.model.entity.UserEntitySoft;
 import com.onezol.vertx.framework.security.api.model.payload.UserQueryPayload;
 import com.onezol.vertx.framework.security.api.model.payload.UserSavePayload;
 import com.onezol.vertx.framework.security.api.service.UserInfoService;
@@ -27,7 +27,7 @@ import java.util.Objects;
 @Validated
 @RestController
 @RequestMapping("/user")
-public class UserInfoController extends BaseController<UserEntity> {
+public class UserInfoController extends BaseController<UserEntitySoft> {
 
     private final UserInfoService userInfoService;
 
@@ -67,7 +67,7 @@ public class UserInfoController extends BaseController<UserEntity> {
             @PathVariable(value = "id") Long userId,
             @RequestBody UserSavePayload payload
     ) {
-        UserEntity userEntity = userInfoService.getById(userId);
+        UserEntitySoft userEntity = userInfoService.getById(userId);
         if (Objects.isNull(userEntity)) {
             ResponseHelper.buildFailedResponse("用户不存在");
         }
@@ -109,7 +109,7 @@ public class UserInfoController extends BaseController<UserEntity> {
         payload.setStartTime(startTime);
         payload.setEndTime(endTime);
 
-        Page<UserEntity> page = this.getPageObject(pageNumber, pageSize);
+        Page<UserEntitySoft> page = this.getPageObject(pageNumber, pageSize);
         PagePack<User> pack = userInfoService.getUserPage(page, payload);
         return ResponseHelper.buildSuccessfulResponse(pack);
     }
@@ -125,7 +125,7 @@ public class UserInfoController extends BaseController<UserEntity> {
     ) {
         UserQueryPayload payload = new UserQueryPayload();
 
-        Page<UserEntity> page = this.getPageObject(pageNumber, pageSize);
+        Page<UserEntitySoft> page = this.getPageObject(pageNumber, pageSize);
         payload.setDepartmentId(departmentId);
         payload.setRoleId(roleId);
         return ResponseHelper.buildSuccessfulResponse(userInfoService.getUnboundRoleUserPage(page, payload));

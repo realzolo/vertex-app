@@ -1,13 +1,14 @@
 package com.onezol.vertx.framework.security.api.model.payload;
 
-import com.onezol.vertx.framework.common.model.payload.Payload;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+
+import java.io.Serializable;
 
 
 @Schema(name = "用户查询参数")
 @Data
-public class UserQueryPayload implements Payload {
+public class UserQueryPayload implements Serializable {
 
     @Schema(name = "用户ID")
     private Long id;

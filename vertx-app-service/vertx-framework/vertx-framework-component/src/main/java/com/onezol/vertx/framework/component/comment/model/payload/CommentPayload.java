@@ -1,15 +1,17 @@
 package com.onezol.vertx.framework.component.comment.model.payload;
 
-import com.onezol.vertx.framework.common.model.payload.BasePayload;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
+
+import java.io.Serializable;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class CommentPayload extends BasePayload {
+public class CommentPayload implements Serializable {
+
+    @Schema(description = "评论ID")
+    private Long id;
 
     @Schema(description = "父级ID")
     private Long parentId;

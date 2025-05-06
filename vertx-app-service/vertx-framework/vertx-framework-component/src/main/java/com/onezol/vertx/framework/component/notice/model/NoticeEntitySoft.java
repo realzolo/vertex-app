@@ -3,7 +3,7 @@ package com.onezol.vertx.framework.component.notice.model;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
-import com.onezol.vertx.framework.common.model.entity.LogicalBaseEntity;
+import com.onezol.vertx.framework.common.skeleton.model.SoftDeletableEntity;
 import com.onezol.vertx.framework.component.notice.enumeration.NoticeScope;
 import com.onezol.vertx.framework.component.notice.enumeration.NoticeType;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -16,7 +16,7 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName(value = "app_notice", autoResultMap = true)
-public class NoticeEntity extends LogicalBaseEntity {
+public class NoticeEntitySoft extends SoftDeletableEntity {
 
     @Schema(name = "标题")
     @TableField("title")

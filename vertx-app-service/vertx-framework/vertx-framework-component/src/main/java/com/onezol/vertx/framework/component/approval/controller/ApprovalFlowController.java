@@ -8,7 +8,7 @@ import com.onezol.vertx.framework.component.approval.model.dto.ApprovalFlowBindi
 import com.onezol.vertx.framework.component.approval.model.dto.ApprovalFlowNode;
 import com.onezol.vertx.framework.component.approval.model.dto.ApprovalFlowTemplate;
 import com.onezol.vertx.framework.component.approval.model.entity.ApprovalFlowBindingRelationEntity;
-import com.onezol.vertx.framework.component.approval.model.entity.ApprovalFlowTemplateEntity;
+import com.onezol.vertx.framework.component.approval.model.entity.ApprovalFlowTemplateEntitySoft;
 import com.onezol.vertx.framework.component.approval.model.payload.ApprovalFlowBindingRelationPayload;
 import com.onezol.vertx.framework.component.approval.model.payload.ApprovalFlowNodeCandidatePayload;
 import com.onezol.vertx.framework.component.approval.model.payload.ApprovalFlowTemplateSavePayload;
@@ -65,7 +65,7 @@ public class ApprovalFlowController {
             @RequestParam("pageNumber") Long pageNumber,
             @RequestParam("pageSize") Long pageSize
     ) {
-        Page<ApprovalFlowTemplateEntity> page = new Page<>(pageNumber, pageSize);
+        Page<ApprovalFlowTemplateEntitySoft> page = new Page<>(pageNumber, pageSize);
         return ResponseHelper.buildSuccessfulResponse(approvalFlowService.getFlowTemplatePage(page));
     }
 

@@ -1,6 +1,6 @@
 //package com.onezol.vertx.framework.support.processor;
 //
-//import com.onezol.vertx.framework.common.mvc.mapper.CommonMapper;
+//import com.onezol.vertx.framework.common.skeleton.mapper.CommonMapper;
 //import com.onezol.vertx.framework.common.util.ResourceUtils;
 //import com.onezol.vertx.framework.common.util.StringUtils;
 //import liquibase.integration.spring.SpringLiquibase;

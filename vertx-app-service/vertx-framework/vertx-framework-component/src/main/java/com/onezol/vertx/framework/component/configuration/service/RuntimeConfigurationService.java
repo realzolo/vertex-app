@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.onezol.vertx.framework.common.exception.InvalidParameterException;
 import com.onezol.vertx.framework.common.model.DataPairRecord;
 import com.onezol.vertx.framework.common.model.DictionaryEntry;
-import com.onezol.vertx.framework.common.mvc.service.BaseServiceImpl;
+import com.onezol.vertx.framework.common.skeleton.service.BaseServiceImpl;
 import com.onezol.vertx.framework.common.util.BeanUtils;
 import com.onezol.vertx.framework.component.configuration.mapper.RuntimeConfigurationMapper;
 import com.onezol.vertx.framework.component.configuration.model.RuntimeConfiguration;

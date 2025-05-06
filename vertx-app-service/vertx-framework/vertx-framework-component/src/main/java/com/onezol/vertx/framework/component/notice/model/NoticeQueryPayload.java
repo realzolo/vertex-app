@@ -1,12 +1,13 @@
 package com.onezol.vertx.framework.component.notice.model;
 
-import com.onezol.vertx.framework.common.model.payload.Payload;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
 @Schema(name = "通知公告c参数")
-public class NoticeQueryPayload implements Payload {
+public class NoticeQueryPayload implements Serializable {
 
     @Schema(name = "ID")
     private Long id;

@@ -10,7 +10,7 @@ import com.onezol.vertx.framework.common.util.StringUtils;
 import com.onezol.vertx.framework.component.notice.enumeration.NoticeStatus;
 import com.onezol.vertx.framework.component.notice.mapper.NoticeMapper;
 import com.onezol.vertx.framework.component.notice.model.Notice;
-import com.onezol.vertx.framework.component.notice.model.NoticeEntity;
+import com.onezol.vertx.framework.component.notice.model.NoticeEntitySoft;
 import com.onezol.vertx.framework.component.notice.model.NoticeQueryPayload;
 import com.onezol.vertx.framework.component.notice.model.NoticeSavePayload;
 import com.onezol.vertx.framework.security.api.model.dto.User;
@@ -44,7 +44,7 @@ public class NoticeService {
         if (effectiveTime != null && terminateTime != null && effectiveTime.isAfter(terminateTime)) {
             throw new InvalidParameterException("生效时间不能大于终止时间");
         }
-        NoticeEntity entity = BeanUtils.toBean(payload, NoticeEntity.class);
+        NoticeEntitySoft entity = BeanUtils.toBean(payload, NoticeEntitySoft.class);
         if (entity.getId() == null) {
             noticeMapper.insert(entity);
         } else {
@@ -67,7 +67,7 @@ public class NoticeService {
      * @param id 通知公告ID
      */
     public Notice getById(Long id) {
-        NoticeEntity entity = noticeMapper.selectById(id);
+        NoticeEntitySoft entity = noticeMapper.selectById(id);
         Notice notice = BeanUtils.toBean(entity, Notice.class);
         Long creatorId = entity.getCreator();
         User user = userInfoService.getUserById(creatorId);
@@ -79,13 +79,13 @@ public class NoticeService {
     /**
      * 获取通知公告列表
      */
-    public PagePack<Notice> getPage(Page<NoticeEntity> page, NoticeQueryPayload queryPayload) {
-        Page<NoticeEntity> quriedPage = noticeMapper.selectPage(
+    public PagePack<Notice> getPage(Page<NoticeEntitySoft> page, NoticeQueryPayload queryPayload) {
+        Page<NoticeEntitySoft> quriedPage = noticeMapper.selectPage(
                 page,
-                Wrappers.<NoticeEntity>lambdaQuery()
-                        .eq(queryPayload.getId() != null, NoticeEntity::getId, queryPayload.getId())
-                        .like(StringUtils.isNotBlank(queryPayload.getTitle()), NoticeEntity::getTitle, queryPayload.getTitle())
-                        .eq(Objects.nonNull(queryPayload.getType()), NoticeEntity::getType, queryPayload.getType())
+                Wrappers.<NoticeEntitySoft>lambdaQuery()
+                        .eq(queryPayload.getId() != null, NoticeEntitySoft::getId, queryPayload.getId())
+                        .like(StringUtils.isNotBlank(queryPayload.getTitle()), NoticeEntitySoft::getTitle, queryPayload.getTitle())
+                        .eq(Objects.nonNull(queryPayload.getType()), NoticeEntitySoft::getType, queryPayload.getType())
         );
         PagePack<Notice> pack = PagePack.from(quriedPage, Notice.class);
         Collection<Notice> items = pack.getItems();

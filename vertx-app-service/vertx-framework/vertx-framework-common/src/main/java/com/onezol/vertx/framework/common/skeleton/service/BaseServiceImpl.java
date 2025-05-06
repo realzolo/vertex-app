@@ -1,8 +1,8 @@
-package com.onezol.vertx.framework.common.mvc.service;
+package com.onezol.vertx.framework.common.skeleton.service;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.onezol.vertx.framework.common.model.entity.BaseEntity;
-import com.onezol.vertx.framework.common.mvc.mapper.BaseMapper;
+import com.onezol.vertx.framework.common.skeleton.model.BaseEntity;
+import com.onezol.vertx.framework.common.skeleton.mapper.BaseMapper;
 
 /**
  * 基础服务实现类

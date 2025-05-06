@@ -3,9 +3,9 @@ package com.onezol.vertx.framework.component.comment.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.onezol.vertx.framework.common.model.GenericResponse;
 import com.onezol.vertx.framework.common.model.PagePack;
-import com.onezol.vertx.framework.common.mvc.controller.BaseController;
+import com.onezol.vertx.framework.common.skeleton.controller.BaseController;
 import com.onezol.vertx.framework.component.comment.model.dto.Comment;
-import com.onezol.vertx.framework.component.comment.model.entity.CommentEntity;
+import com.onezol.vertx.framework.component.comment.model.entity.CommentEntitySoft;
 import com.onezol.vertx.framework.component.comment.model.payload.CommentPayload;
 import com.onezol.vertx.framework.component.comment.service.CommentService;
 import com.onezol.vertx.framework.support.support.ResponseHelper;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "评论")
 @RestController
 @RequestMapping("/comment")
-public class CommentController extends BaseController<CommentEntity> {
+public class CommentController extends BaseController<CommentEntitySoft> {
 
     private final CommentService commentService;
 
@@ -47,7 +47,7 @@ public class CommentController extends BaseController<CommentEntity> {
             @RequestParam("objectId") Long objectId,
             @RequestParam(value = "sortType", required = false) String sortType
     ) {
-        Page<CommentEntity> queryPage = this.getPageObject(pageNumber, pageSize);
+        Page<CommentEntitySoft> queryPage = this.getPageObject(pageNumber, pageSize);
         PagePack<Comment> resultPage = commentService.listPage(queryPage, objectId, sortType);
         return ResponseHelper.buildSuccessfulResponse(resultPage);
     }

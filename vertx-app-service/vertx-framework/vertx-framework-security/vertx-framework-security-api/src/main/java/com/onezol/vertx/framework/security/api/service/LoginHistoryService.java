@@ -2,7 +2,7 @@ package com.onezol.vertx.framework.security.api.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.onezol.vertx.framework.common.model.PagePack;
-import com.onezol.vertx.framework.common.mvc.service.BaseService;
+import com.onezol.vertx.framework.common.skeleton.service.BaseService;
 import com.onezol.vertx.framework.security.api.enumeration.LoginType;
 import com.onezol.vertx.framework.security.api.model.dto.LoginUser;
 import com.onezol.vertx.framework.security.api.model.dto.User;

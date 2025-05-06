@@ -1,7 +1,7 @@
 package com.onezol.vertx.framework.security.api.model.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.onezol.vertx.framework.common.model.entity.BaseEntity;
+import com.onezol.vertx.framework.common.skeleton.model.BaseEntity;
 import com.onezol.vertx.framework.security.api.enumeration.LoginType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;

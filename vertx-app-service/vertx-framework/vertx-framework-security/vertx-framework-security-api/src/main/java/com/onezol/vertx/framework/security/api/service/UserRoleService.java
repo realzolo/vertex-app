@@ -2,10 +2,9 @@ package com.onezol.vertx.framework.security.api.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.onezol.vertx.framework.common.model.PagePack;
-import com.onezol.vertx.framework.common.mvc.service.BaseService;
+import com.onezol.vertx.framework.common.skeleton.service.BaseService;
 import com.onezol.vertx.framework.security.api.model.dto.Role;
 import com.onezol.vertx.framework.security.api.model.dto.User;
-import com.onezol.vertx.framework.security.api.model.entity.RoleEntity;
 import com.onezol.vertx.framework.security.api.model.entity.UserRoleEntity;
 
 import java.util.List;

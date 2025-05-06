@@ -1,14 +1,16 @@
 package com.onezol.vertx.framework.component.approval.model.payload;
 
-import com.onezol.vertx.framework.common.model.payload.BasePayload;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
-@Data
-@EqualsAndHashCode(callSuper = true)
+import java.io.Serializable;
+
 @Schema(name = "流程模板保存参数")
-public class ApprovalFlowTemplateSavePayload extends BasePayload {
+@Data
+public class ApprovalFlowTemplateSavePayload implements Serializable {
+
+    @Schema(name = "主键")
+    private Long id;
 
     @Schema(name = "流程名称")
     private String name;

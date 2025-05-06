@@ -3,7 +3,7 @@ package com.onezol.vertx.framework.component.storage.model;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.onezol.vertx.framework.common.constant.enumeration.DisEnableStatus;
-import com.onezol.vertx.framework.common.model.entity.BaseEntity;
+import com.onezol.vertx.framework.common.skeleton.model.BaseEntity;
 import com.onezol.vertx.framework.component.storage.annotation.StorageType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

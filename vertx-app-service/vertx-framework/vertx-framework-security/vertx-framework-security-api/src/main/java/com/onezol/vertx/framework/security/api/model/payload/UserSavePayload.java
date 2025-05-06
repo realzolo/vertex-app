@@ -1,6 +1,5 @@
 package com.onezol.vertx.framework.security.api.model.payload;
 
-import com.onezol.vertx.framework.common.model.payload.Payload;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -10,7 +9,7 @@ import java.util.List;
 
 @Schema(name = "用户创建参数")
 @Data
-public class UserSavePayload implements Payload {
+public class UserSavePayload {
 
     @Schema(name = "用户ID")
     private Long id;

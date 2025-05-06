@@ -1,4 +1,4 @@
-package com.onezol.vertx.framework.common.model;
+package com.onezol.vertx.framework.common.skeleton.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Max;

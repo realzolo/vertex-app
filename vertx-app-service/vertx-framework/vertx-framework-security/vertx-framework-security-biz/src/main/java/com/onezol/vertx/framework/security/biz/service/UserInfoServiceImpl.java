@@ -10,7 +10,7 @@ import com.onezol.vertx.framework.common.exception.RuntimeServiceException;
 import com.onezol.vertx.framework.common.model.DataPairRecord;
 import com.onezol.vertx.framework.common.model.DictionaryEntry;
 import com.onezol.vertx.framework.common.model.PagePack;
-import com.onezol.vertx.framework.common.mvc.service.BaseServiceImpl;
+import com.onezol.vertx.framework.common.skeleton.service.BaseServiceImpl;
 import com.onezol.vertx.framework.common.util.BeanUtils;
 import com.onezol.vertx.framework.common.util.StringUtils;
 import com.onezol.vertx.framework.security.api.model.dto.Department;
@@ -31,7 +31,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class UserInfoServiceImpl extends BaseServiceImpl<UserMapper, UserEntity> implements UserInfoService {
+public class UserInfoServiceImpl extends BaseServiceImpl<UserMapper, UserEntitySoft> implements UserInfoService {
 
     private final PasswordEncoder passwordEncoder;
     private final RedisCache redisCache;
@@ -59,7 +59,7 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
      */
     @Override
     public User getUserById(long userId) {
-        UserEntity entity = this.getById(userId);
+        UserEntitySoft entity = this.getById(userId);
         if (Objects.isNull(entity)) return null;
         User user = BeanUtils.toBean(entity, User.class);
         this.fillUserIdentity(user);
@@ -76,9 +76,9 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
         if (StringUtils.isBlank(username)) {
             throw new InvalidParameterException("用户名不可为空");
         }
-        UserEntity entity = this.getOne(
-                Wrappers.<UserEntity>lambdaQuery()
-                        .eq(UserEntity::getUsername, username)
+        UserEntitySoft entity = this.getOne(
+                Wrappers.<UserEntitySoft>lambdaQuery()
+                        .eq(UserEntitySoft::getUsername, username)
         );
         if (Objects.isNull(entity)) return null;
         User user = BeanUtils.toBean(entity, User.class);
@@ -97,9 +97,9 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
         if (StringUtils.isBlank(email)) {
             throw new InvalidParameterException("邮箱不可为空");
         }
-        UserEntity entity = this.getOne(
-                Wrappers.<UserEntity>lambdaQuery()
-                        .eq(UserEntity::getEmail, email)
+        UserEntitySoft entity = this.getOne(
+                Wrappers.<UserEntitySoft>lambdaQuery()
+                        .eq(UserEntitySoft::getEmail, email)
         );
         if (Objects.isNull(entity)) return null;
         User user = BeanUtils.toBean(entity, User.class);
@@ -133,7 +133,7 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
     @Override
     @Transactional
     public void createOrUpdateUser(UserSavePayload payload) {
-        UserEntity userEntity = BeanUtils.toBean(payload, UserEntity.class);
+        UserEntitySoft userEntity = BeanUtils.toBean(payload, UserEntitySoft.class);
         userEntity.setPassword(passwordEncoder.encode(payload.getPassword()));
         userEntity.setEmail(Objects.nonNull(payload.getEmail()) ? payload.getEmail().toLowerCase() : null);
 
@@ -177,7 +177,7 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
         if (Objects.isNull(payload) || Objects.isNull(payload.getId())) {
             throw new InvalidParameterException("用户信息不可为空");
         }
-        UserEntity entity = BeanUtils.toBean(payload, UserEntity.class);
+        UserEntitySoft entity = BeanUtils.toBean(payload, UserEntitySoft.class);
         boolean ok = this.updateById(entity);
         if (!ok) {
             throw new RuntimeServiceException("修改用户信息失败");
@@ -202,7 +202,7 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
         if (Objects.isNull(userId)) {
             throw new InvalidParameterException("用户ID不可为空");
         }
-        UserEntity user = this.getById(userId);
+        UserEntitySoft user = this.getById(userId);
         if (Objects.isNull(user)) {
             throw new InvalidParameterException("用户不存在");
         }
@@ -224,9 +224,9 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
 
     @Override
     public List<DictionaryEntry> getUserDict() {
-        List<UserEntity> userEntities = this.list(
-                Wrappers.<UserEntity>lambdaQuery()
-                        .eq(UserEntity::getStatus, AccountStatus.ACTIVE)
+        List<UserEntitySoft> userEntities = this.list(
+                Wrappers.<UserEntitySoft>lambdaQuery()
+                        .eq(UserEntitySoft::getStatus, AccountStatus.ACTIVE)
         );
         return userEntities.stream()
                 .map(entity -> DictionaryEntry.of(entity.getNickname(), entity.getId()))
@@ -237,8 +237,8 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
      * 获取用户列表
      */
     @Override
-    public PagePack<User> getUserPage(Page<UserEntity> page, UserQueryPayload payload) {
-        Page<UserEntity> userPage = this.baseMapper.queryUserPage(page, payload);
+    public PagePack<User> getUserPage(Page<UserEntitySoft> page, UserQueryPayload payload) {
+        Page<UserEntitySoft> userPage = this.baseMapper.queryUserPage(page, payload);
         PagePack<User> pack = PagePack.from(userPage, User.class);
         Collection<User> users = pack.getItems();
 
@@ -266,8 +266,8 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserMapper, UserEntity>
      * 获取未绑定角色的用户列表
      */
     @Override
-    public PagePack<User> getUnboundRoleUserPage(Page<UserEntity> page, UserQueryPayload payload) {
-        Page<UserEntity> userPage = this.baseMapper.queryUnboundRoleUserPage(page, payload);
+    public PagePack<User> getUnboundRoleUserPage(Page<UserEntitySoft> page, UserQueryPayload payload) {
+        Page<UserEntitySoft> userPage = this.baseMapper.queryUnboundRoleUserPage(page, payload);
         PagePack<User> pack = PagePack.from(userPage, User.class);
         Collection<User> users = pack.getItems();
 

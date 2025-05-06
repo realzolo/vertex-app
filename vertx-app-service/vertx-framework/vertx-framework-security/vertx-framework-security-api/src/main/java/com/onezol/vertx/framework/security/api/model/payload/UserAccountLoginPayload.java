@@ -1,14 +1,14 @@
 package com.onezol.vertx.framework.security.api.model.payload;
 
-
-import com.onezol.vertx.framework.common.model.payload.Payload;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
 @Schema(name = "用户登录参数", description = "用户名密码登录参数")
-public class UserAccountLoginPayload implements Payload {
+public class UserAccountLoginPayload implements Serializable {
 
     @Schema(name = "用户名")
     @NotBlank(message = "用户名不能为空")

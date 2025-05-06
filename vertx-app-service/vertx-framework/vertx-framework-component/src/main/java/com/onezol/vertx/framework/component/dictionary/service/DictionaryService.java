@@ -5,7 +5,7 @@ import com.onezol.vertx.framework.common.constant.CacheKey;
 import com.onezol.vertx.framework.common.constant.enumeration.DictionaryType;
 import com.onezol.vertx.framework.common.exception.InvalidParameterException;
 import com.onezol.vertx.framework.common.model.DictionaryEntry;
-import com.onezol.vertx.framework.common.mvc.service.BaseServiceImpl;
+import com.onezol.vertx.framework.common.skeleton.service.BaseServiceImpl;
 import com.onezol.vertx.framework.common.util.BeanUtils;
 import com.onezol.vertx.framework.component.dictionary.mapper.DictionaryMapper;
 import com.onezol.vertx.framework.component.dictionary.model.Dictionary;
