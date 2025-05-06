@@ -1,43 +1,50 @@
 # Develop Environment Configurations
+### 数据源配置
+spring.datasource:
+  driver-class-name: com.p6spy.engine.spy.P6SpyDriver
+  type: com.alibaba.druid.pool.DruidDataSource
+  url: jdbc:p6spy:mysql://127.0.0.1:3306/vertx-app?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true&nullCatalogMeansCurrent=true
+  username: root
+  password: 123456
+  druid:
+    initial-size: 5
+    min-idle: 5
+    max-active: 20
+    max-wait: 60000
 
-spring:
-  # 数据源配置
-  datasource:
-    driver-class-name: com.p6spy.engine.spy.P6SpyDriver
-    type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:p6spy:mysql://127.0.0.1:3306/vertx?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true&nullCatalogMeansCurrent=true
-    username: root
-    password: 123456
-    druid:
-      initial-size: 5
-      min-idle: 5
-      max-active: 20
-      max-wait: 60000
-  # Redis配置
-  data.redis:
-    host: 127.0.0.1
-    port: 6379
-    password: 123456
-    database: 5
-    timeout: 3s
-    connect-timeout: 5s
-    lettuce:
-      pool:
-        max-active: 16
-        max-idle: 8
-        min-idle: 4
-        max-wait: 500ms
-        time-between-eviction-runs: 30s
-      shutdown-timeout: 100ms
-  # MQTT配置
-  mqtt:
-    enabled: true
-    broker-url: tcp://onezol.com:1883
-    client-id: ${spring.application.name}-${spring.profiles.active}-${application.snowflake.machine-id}
-    username: admin
-    password: public
+### Redis配置
+spring.data.redis:
+  host: 127.0.0.1
+  port: 6379
+  password: 123456
+  database: 5
+  timeout: 3s
+  connect-timeout: 5s
+  lettuce:
+    pool:
+      max-active: 16
+      max-idle: 8
+      min-idle: 4
+      max-wait: 500ms
+      time-between-eviction-runs: 30s
+    shutdown-timeout: 100ms
 
-# 应用配置
+### Liquibase 配置
+spring.liquibase:
+  enabled: false
+  change-log: classpath:changelog/mysql/changelog-application.xml
+  database-change-log-table: xv_database_changelog
+  database-change-log-lock-table: app_database_changelog_lock
+
+### MQTT配置
+spring.mqtt:
+  enabled: true
+  broker-url: tcp://onezol.com:1883
+  client-id: ${spring.application.name}-${spring.profiles.active}-${application.snowflake.machine-id}
+  username: admin
+  password: public
+
+### Vertx App 应用配置
 application:
   name: Vertx App
   snowflake:
@@ -46,20 +53,20 @@ application:
     secret-key: C61270901C4A455A89A0196CBCED9803
     expiration-time: 3600
 
-# Snail Job 配置
+### Snail Job 配置
 snail-job:
   enabled: true
   namespace: 764d604ec6fc45f68cd92514c40e9e1a
   group: vertx-app
   token: SJ_Wyz3dmsdbDOkDujOTSSoBjGQP1BMsVnj
   server:
-    host: 127.0.0.1
+    host: 110.42.33.103
     port: 17888
     api:
-      url: http://127.0.0.1:20480/snail-job
+      url: http://110.42.33.103:20480/snail-job
       username: admin
       password: admin
 
-# 日志配置
+### 日志配置
 logging:
   config: classpath:logback-spring.xml

@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration debug="false" scan="true" scanPeriod="30 seconds">
-
-    <!-- 关闭 Logback 的状态监听器（通过更换默认状态监听器实现） -->
-    <statusListener class="ch.qos.logback.core.status.NopStatusListener"/>
-
     <!-- 应用名 -->
     <springProperty name="APP_NAME" source="spring.application.name" scope="context"/>
     <!-- 保存路径 -->
-    <property name="LOG_PATH" value="${LOG_PATH:-./logs/job-server}"/>
+    <property name="LOG_PATH" value="${LOG_PATH:-./logs}"/>
     <!-- 字符集 -->
     <property name="LOG_CHARSET" value="utf-8"/>
     <!-- 格式化输出：%d 表示日期；%thread 表示线程名；%-5level：级别从左显示 5 个字符宽度；%msg：日志消息；%n 是换行符 -->
@@ -82,7 +78,7 @@
             <appender-ref ref="ASYNC_FILE"/>
             <appender-ref ref="JOB_SERVER"/>
         </root>
-        <!-- 日志保留天数（根据国家法律，网络运行状态、网络安全事件、个人敏感信息操作等相关记录，留存的日志不少于六个月，并且进行网络多机备份。） -->
+        <!-- 日志保留天数 -->
         <property name="FILE_MAX_HISTORY" value="180"/>
     </springProfile>
 </configuration>

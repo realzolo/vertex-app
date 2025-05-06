@@ -5,7 +5,9 @@ spring:
     multipart:
       max-file-size: 256MB
       max-request-size: 512MB
-  datasource:
+
+### Druid 配置
+spring.datasource:
     druid:
       validation-query: SELECT 1
       pool-prepared-statements: true
@@ -27,25 +29,13 @@ spring:
         url-pattern: /druid/*
         login-username: admin
         login-password: admin
-  liquibase:
-    enabled: false
-    change-log: classpath:changelog/mysql/changelog-application.xml
-    database-change-log-table: xv_database_changelog
-    database-change-log-lock-table: app_database_changelog_lock
-  mail:
-    default-encoding: UTF-8
-    properties:
-      mail:
-        smtp:
-          socketFactory:
-            class: javax.net.ssl.SSLSocketFactory
 
-# MyBatis Plus 配置
+### MyBatis Plus 配置
 mybatis-plus:
   global-config:
     banner: off
 
-# Spring Boot Actuator 配置
+### Actuator 配置
 management:
   endpoints:
     web:
