@@ -1,3 +1,4 @@
+FROM eclipse-temurin:21-jre-jammy
 
 # 设置工作目录
 RUN mkdir -p /opt/vertx-app
@@ -7,9 +8,9 @@ WORKDIR /opt/vertx-app
 COPY vertx-app/target/*.jar app.jar
 
 ## 设置 TZ 时区
-ENV TZ=Asia/Shanghai
+RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo "Asia/Shanghai" > /etc/timezone
 ## 设置 JAVA_OPTS 环境变量
-ENV JAVA_OPTS="-Xms512m -Xmx512m"
+ENV JAVA_OPTS="-Xms512m -Xmx2048m"
 ## 应用参数
 ENV ARGS="--spring.profiles.active=prod"
 
