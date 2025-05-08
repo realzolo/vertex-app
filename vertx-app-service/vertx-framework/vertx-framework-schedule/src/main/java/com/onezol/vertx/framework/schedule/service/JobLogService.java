@@ -7,9 +7,9 @@ import com.onezol.vertx.framework.schedule.model.JobInstanceLogPageResult;
 import com.onezol.vertx.framework.schedule.model.JobPageResult;
 import com.onezol.vertx.framework.schedule.model.dto.JobInstance;
 import com.onezol.vertx.framework.schedule.model.dto.JobLog;
-import com.onezol.vertx.framework.schedule.model.query.JobInstanceLogQuery;
-import com.onezol.vertx.framework.schedule.model.query.JobInstanceQuery;
-import com.onezol.vertx.framework.schedule.model.query.JobLogQuery;
+import com.onezol.vertx.framework.schedule.model.input.JobInstanceLogQuery;
+import com.onezol.vertx.framework.schedule.model.input.JobInstanceQuery;
+import com.onezol.vertx.framework.schedule.model.input.JobLogQuery;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

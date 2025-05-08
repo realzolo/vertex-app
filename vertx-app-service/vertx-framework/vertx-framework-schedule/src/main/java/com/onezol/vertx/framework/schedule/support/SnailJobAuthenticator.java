@@ -9,6 +9,7 @@ import com.aizuda.snailjob.common.core.model.Result;
 import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.fastjson2.JSONObject;
 import com.onezol.vertx.framework.common.constant.CacheKey;
+import com.onezol.vertx.framework.common.util.CodecUtils;
 import com.onezol.vertx.framework.common.util.EncryptUtils;
 import com.onezol.vertx.framework.common.util.JsonUtils;
 import com.onezol.vertx.framework.support.cache.RedisCache;
@@ -67,17 +68,16 @@ public class SnailJobAuthenticator {
     public String getToken() {
         String token = redisCache.getCacheObject(CacheKey.SNAIL_JOB_AUTH_TOKEN);
         if (StrUtil.isBlank(token)) {
-            token = authenticate();
+            token = this.authenticate();
             try {
-                // 不验证签名解析 Token
                 String[] parts = token.split("\\.");
                 if (parts.length != 3) {
-                    throw new IllegalArgumentException("无效的 JWT 令牌");
+                    throw new IllegalArgumentException("[SnailJobAuthenticator] 无效的 JWT 令牌");
                 }
                 String payloadBase64 = parts[1];
-                String payloadJson = new String(java.util.Base64.getUrlDecoder().decode(payloadBase64));
+                String payloadJson = new String(CodecUtils.decodeBase64(payloadBase64));
                 JSONObject payload = JSONObject.parseObject(payloadJson);
-                long expiresAt = payload.getLongValue("exp") * 1000; // 转换为毫秒
+                long expiresAt = payload.getLongValue("exp") * 1000;
                 long currentTime = System.currentTimeMillis();
                 long ttl = (expiresAt - currentTime) / 1000 - 60; // 剩余时间（秒）（提前 1 分钟）
 
@@ -85,7 +85,7 @@ public class SnailJobAuthenticator {
                     redisCache.setCacheObject(CacheKey.SNAIL_JOB_AUTH_TOKEN, token, (int) ttl, java.util.concurrent.TimeUnit.SECONDS);
                 }
             } catch (Exception e) {
-                log.error("[SnailJobAuthenticator][获取 Token] 解析 Token 失败", e);
+                log.error("[SnailJobAuthenticator] 解析 Token 失败", e);
             }
         }
         return token;
@@ -108,13 +108,13 @@ public class SnailJobAuthenticator {
         Result<?> result;
         try (HttpResponse response = httpRequest.execute()) {
             if (!response.isOk() || response.body() == null) {
-                throw new IllegalStateException("连接任务调度中心异常");
+                throw new IllegalStateException("[SnailJobAuthenticator] 连接任务调度中心异常");
             }
             result = JsonUtils.parseObject(response.body(), Result.class);
         }
 
         if (!STATUS_SUCCESS.equals(result.getStatus())) {
-            log.warn("密码认证失败，预期返回成功响应。错误信息：{}", result.getMessage());
+            log.warn("[SnailJobAuthenticator] 密码认证失败, 请检查配置信息。");
             throw new IllegalStateException(result.getMessage());
         }
 

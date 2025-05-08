@@ -5,9 +5,9 @@ import com.onezol.vertx.framework.common.model.PagePack;
 import com.onezol.vertx.framework.schedule.model.JobInstanceLogPageResult;
 import com.onezol.vertx.framework.schedule.model.dto.JobInstance;
 import com.onezol.vertx.framework.schedule.model.dto.JobLog;
-import com.onezol.vertx.framework.schedule.model.query.JobInstanceLogQuery;
-import com.onezol.vertx.framework.schedule.model.query.JobInstanceQuery;
-import com.onezol.vertx.framework.schedule.model.query.JobLogQuery;
+import com.onezol.vertx.framework.schedule.model.input.JobInstanceLogQuery;
+import com.onezol.vertx.framework.schedule.model.input.JobInstanceQuery;
+import com.onezol.vertx.framework.schedule.model.input.JobLogQuery;
 import com.onezol.vertx.framework.schedule.service.JobLogService;
 import com.onezol.vertx.framework.support.support.ResponseHelper;
 import io.swagger.v3.oas.annotations.Operation;
@@ -39,7 +39,7 @@ public class JobLogController {
     }
 
     @Operation(summary = "停止任务", description = "停止任务")
-    @Parameter(name = "id", description = "ID", example = "1", in = ParameterIn.PATH)
+    @Parameter(name = "id", description = "ID", in = ParameterIn.PATH)
     @PostMapping("/stop/{id}")
     @PreAuthorize("@Security.hasPermission('schedule:log:stop')")
     public GenericResponse<Boolean> stop(@PathVariable("id") Long id) {
@@ -48,7 +48,7 @@ public class JobLogController {
     }
 
     @Operation(summary = "重试任务", description = "重试任务")
-    @Parameter(name = "id", description = "ID", example = "1", in = ParameterIn.PATH)
+    @Parameter(name = "id", description = "ID", in = ParameterIn.PATH)
     @PostMapping("/retry/{id}")
     @PreAuthorize("@Security.hasPermission('schedule:log:retry')")
     public GenericResponse<Boolean> retry(@PathVariable("id") Long id) {

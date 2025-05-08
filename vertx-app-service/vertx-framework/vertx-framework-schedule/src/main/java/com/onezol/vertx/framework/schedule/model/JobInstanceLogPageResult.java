@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 public class JobInstanceLogPageResult implements Serializable {
 
-    @Schema(description = "ID", example = "1")
+    @Schema(description = "ID")
     private Long id;
 
     @Schema(description = "日志详情")
@@ -19,13 +19,13 @@ public class JobInstanceLogPageResult implements Serializable {
     @Schema(description = "异常信息")
     private String throwable;
 
-    @Schema(description = "是否结束", example = "true")
+    @Schema(description = "是否结束")
     private boolean isFinished;
 
-    @Schema(description = "起始索引", example = "0")
+    @Schema(description = "起始索引")
     private Integer fromIndex;
 
-    @Schema(description = "下一个开始ID", example = "9")
+    @Schema(description = "下一个开始ID")
     private Long nextStartId;
 
 }

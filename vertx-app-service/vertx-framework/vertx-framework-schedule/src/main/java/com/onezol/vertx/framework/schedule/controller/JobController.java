@@ -3,10 +3,10 @@ package com.onezol.vertx.framework.schedule.controller;
 import com.onezol.vertx.framework.common.model.GenericResponse;
 import com.onezol.vertx.framework.common.model.PagePack;
 import com.onezol.vertx.framework.schedule.model.dto.Job;
-import com.onezol.vertx.framework.schedule.model.payload.JobSavePayload;
-import com.onezol.vertx.framework.schedule.model.payload.JobStatusSavePayload;
-import com.onezol.vertx.framework.schedule.model.payload.JobTriggerPayload;
-import com.onezol.vertx.framework.schedule.model.query.JobQuery;
+import com.onezol.vertx.framework.schedule.model.input.JobSavePayload;
+import com.onezol.vertx.framework.schedule.model.input.JobStatusSavePayload;
+import com.onezol.vertx.framework.schedule.model.input.JobTriggerPayload;
+import com.onezol.vertx.framework.schedule.model.input.JobQuery;
 import com.onezol.vertx.framework.schedule.service.JobService;
 import com.onezol.vertx.framework.support.support.ResponseHelper;
 import io.swagger.v3.oas.annotations.Operation;
@@ -47,7 +47,7 @@ public class JobController {
     }
 
     @Operation(summary = "修改任务", description = "修改任务")
-    @Parameter(name = "id", description = "ID", example = "1", in = ParameterIn.PATH)
+    @Parameter(name = "id", description = "ID", in = ParameterIn.PATH)
     @PutMapping("/{id}")
     @PreAuthorize("@Security.hasPermission('schedule:job:update')")
     public GenericResponse<Boolean> update(@PathVariable("id") Long id, @RequestBody JobSavePayload payload) {
@@ -64,7 +64,7 @@ public class JobController {
     }
 
     @Operation(summary = "删除任务", description = "删除任务")
-    @Parameter(name = "id", description = "ID", example = "1", in = ParameterIn.PATH)
+    @Parameter(name = "id", description = "ID", in = ParameterIn.PATH)
     @DeleteMapping("/{id}")
     @PreAuthorize("@Security.hasPermission('schedule:job:delete')")
     public GenericResponse<Boolean> delete(@PathVariable("id") Long id) {
@@ -73,7 +73,7 @@ public class JobController {
     }
 
     @Operation(summary = "执行任务", description = "执行任务")
-    @Parameter(name = "id", description = "ID", example = "1", in = ParameterIn.PATH)
+    @Parameter(name = "id", description = "ID", in = ParameterIn.PATH)
     @PostMapping("/trigger/{id}")
     @PreAuthorize("@Security.hasPermission('schedule:job:trigger')")
     public GenericResponse<Boolean> trigger(@PathVariable("id") Long id) {

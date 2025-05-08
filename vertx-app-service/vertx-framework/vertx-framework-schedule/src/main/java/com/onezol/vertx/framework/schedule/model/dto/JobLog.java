@@ -13,32 +13,32 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper = true)
 public class JobLog extends BaseDTO {
 
-    @Schema(description = "任务组", example = "continew-admin")
+    @Schema(description = "任务组")
     private String groupName;
 
-    @Schema(description = "任务名称", example = "定时任务1")
+    @Schema(description = "任务名称")
     private String jobName;
 
-    @Schema(description = "任务ID", example = "1")
+    @Schema(description = "任务ID")
     private Long jobId;
 
-    @Schema(description = "任务状态", example = "3")
+    @Schema(description = "任务状态")
     private Integer taskBatchStatus;
 
-    @Schema(description = "操作原因", example = "0")
+    @Schema(description = "操作原因")
     private Integer operationReason;
 
-    @Schema(description = "执行器类型", example = "1")
+    @Schema(description = "执行器类型")
     private Integer executorType;
 
-    @Schema(description = "执行器名称", example = "test")
+    @Schema(description = "执行器名称")
     private String executorInfo;
 
-    @Schema(description = "执行时间", example = "2023-08-08 08:08:08", type = "string")
+    @Schema(description = "执行时间", type = "string")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime executionAt;
 
-    @Schema(description = "创建时间", example = "2023-08-08 08:08:08", type = "string")
+    @Schema(description = "创建时间", type = "string")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime createDt;
 

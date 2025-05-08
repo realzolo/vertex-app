@@ -6,10 +6,10 @@ import com.onezol.vertx.framework.schedule.http.JobGroupHttpService;
 import com.onezol.vertx.framework.schedule.http.JobHttpService;
 import com.onezol.vertx.framework.schedule.model.JobPageResult;
 import com.onezol.vertx.framework.schedule.model.dto.Job;
-import com.onezol.vertx.framework.schedule.model.payload.JobSavePayload;
-import com.onezol.vertx.framework.schedule.model.payload.JobStatusSavePayload;
-import com.onezol.vertx.framework.schedule.model.payload.JobTriggerPayload;
-import com.onezol.vertx.framework.schedule.model.query.JobQuery;
+import com.onezol.vertx.framework.schedule.model.input.JobSavePayload;
+import com.onezol.vertx.framework.schedule.model.input.JobStatusSavePayload;
+import com.onezol.vertx.framework.schedule.model.input.JobTriggerPayload;
+import com.onezol.vertx.framework.schedule.model.input.JobQuery;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;

@@ -1,4 +1,4 @@
-package com.onezol.vertx.framework.schedule.model.payload;
+package com.onezol.vertx.framework.schedule.model.input;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
@@ -10,7 +10,7 @@ import java.io.Serializable;
 @Data
 public class JobTriggerPayload implements Serializable {
 
-    @Schema(description = "ID", example = "1")
+    @Schema(description = "ID")
     @NotNull(message = "ID不能为空")
     private Long jobId;
 

@@ -10,13 +10,13 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class JobPageResult<T> extends Result<T> {
 
-    @Schema(description = "页码", example = "1")
+    @Schema(description = "页码")
     private long page;
 
-    @Schema(description = "每页条数", example = "10")
+    @Schema(description = "每页条数")
     private long size;
 
-    @Schema(description = "总条数", example = "100")
+    @Schema(description = "总条数")
     private long total;
 
 }

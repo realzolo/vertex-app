@@ -1,7 +1,6 @@
-package com.onezol.vertx.framework.schedule.model.query;
+package com.onezol.vertx.framework.schedule.model.input;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -10,16 +9,16 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class JobLogQuery extends JobQuery {
 
-    @Schema(description = "任务ID", example = "1")
+    @Schema(description = "任务ID")
     private Long jobId;
 
-    @Schema(description = "任务组", example = "vertx-app")
+    @Schema(description = "任务组")
     private String groupName;
 
-    @Schema(description = "任务名称", example = "定时任务1")
+    @Schema(description = "任务名称")
     private String jobName;
 
-    @Schema(description = "任务批次状态", example = "1")
+    @Schema(description = "任务批次状态")
     private Integer taskBatchStatus;
 
 //    @Schema(description = "创建时间", example = "2023-08-08 00:00:00,2023-08-08 23:59:59")
