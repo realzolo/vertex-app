@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.onezol.vertx.framework.security.biz.mapper.UserMapper">
 
-    <select id="queryUserPage" resultType="com.onezol.vertx.framework.security.api.model.entity.UserEntitySoft">
+    <select id="queryUserPage" resultType="com.onezol.vertx.framework.security.api.model.entity.UserEntity">
         SELECT
             u.*
         FROM
@@ -57,7 +57,7 @@
         </where>
     </select>
 
-    <select id="queryUnboundRoleUserPage" resultType="com.onezol.vertx.framework.security.api.model.entity.UserEntitySoft">
+    <select id="queryUnboundRoleUserPage" resultType="com.onezol.vertx.framework.security.api.model.entity.UserEntity">
         SELECT
             u.*
         FROM

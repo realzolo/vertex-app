@@ -166,7 +166,8 @@ const save = async () => {
     const isInvalid = await formRef.value?.formRef?.validate()
     if (isInvalid) return false
     if (isUpdate.value) {
-      await updateUser(form, dataId.value)
+      form.id = dataId.value
+      await updateUser(form)
       Message.success('修改成功')
     } else {
       if (rawPassword) {

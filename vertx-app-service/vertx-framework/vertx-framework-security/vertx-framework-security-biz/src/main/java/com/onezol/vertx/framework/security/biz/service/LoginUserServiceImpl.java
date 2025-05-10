@@ -11,7 +11,7 @@ import com.onezol.vertx.framework.security.api.enumeration.LoginType;
 import com.onezol.vertx.framework.security.api.model.LoginUserDetails;
 import com.onezol.vertx.framework.security.api.model.dto.LoginUser;
 import com.onezol.vertx.framework.security.api.model.entity.LoginHistoryEntity;
-import com.onezol.vertx.framework.security.api.model.entity.UserEntitySoft;
+import com.onezol.vertx.framework.security.api.model.entity.UserEntity;
 import com.onezol.vertx.framework.security.api.service.LoginHistoryService;
 import com.onezol.vertx.framework.security.api.service.LoginUserService;
 import com.onezol.vertx.framework.security.api.service.UserInfoService;
@@ -107,7 +107,7 @@ public class LoginUserServiceImpl implements LoginUserService {
      */
     @Override
     public PagePack<LoginUser> getLoginUserPage(long pageNumber, long pageSize) {
-        Page<UserEntitySoft> page = new Page<>(pageNumber, pageSize);
+        Page<UserEntity> page = new Page<>(pageNumber, pageSize);
 
         // 查询在线用户
         Map<String, Object> cacheMap = redisCache.getCacheMap(CacheKey.ONLINE_USER);
@@ -125,12 +125,12 @@ public class LoginUserServiceImpl implements LoginUserService {
         }
 
         // 查询用户信息
-        Page<UserEntitySoft> userEntityPage = userInfoService.page(
+        Page<UserEntity> userEntityPage = userInfoService.page(
                 page,
-                Wrappers.<UserEntitySoft>lambdaQuery()
-                        .select(UserEntitySoft::getId, UserEntitySoft::getUsername, UserEntitySoft::getNickname, UserEntitySoft::getAvatar, UserEntitySoft::getStatus)
-                        .in(UserEntitySoft::getId, userIds)
-                        .orderByDesc(UserEntitySoft::getUpdateTime)
+                Wrappers.<UserEntity>lambdaQuery()
+                        .select(UserEntity::getId, UserEntity::getUsername, UserEntity::getNickname, UserEntity::getAvatar, UserEntity::getStatus)
+                        .in(UserEntity::getId, userIds)
+                        .orderByDesc(UserEntity::getUpdateTime)
         );
 
         // 查询登录记录

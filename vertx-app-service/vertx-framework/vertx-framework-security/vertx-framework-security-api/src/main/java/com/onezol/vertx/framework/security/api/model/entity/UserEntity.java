@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName("app_user")
-public class UserEntitySoft extends SoftDeletableEntity {
+public class UserEntity extends SoftDeletableEntity {
 
     @Schema(name = "用户名")
     @TableField("username")

@@ -11,7 +11,7 @@ import com.onezol.vertx.framework.security.api.model.dto.Role;
 import com.onezol.vertx.framework.security.api.model.dto.User;
 import com.onezol.vertx.framework.security.api.model.entity.RoleEntity;
 import com.onezol.vertx.framework.security.api.model.entity.RolePermissionEntity;
-import com.onezol.vertx.framework.security.api.model.entity.UserEntitySoft;
+import com.onezol.vertx.framework.security.api.model.entity.UserEntity;
 import com.onezol.vertx.framework.security.api.model.entity.UserRoleEntity;
 import com.onezol.vertx.framework.security.api.service.RolePermissionService;
 import com.onezol.vertx.framework.security.api.service.RoleService;
@@ -79,8 +79,8 @@ public class UserRoleServiceImpl extends BaseServiceImpl<UserRoleMapper, UserRol
 
         // 用户校验
         long count = userInfoService.count(
-                Wrappers.<UserEntitySoft>lambdaQuery()
-                        .in(UserEntitySoft::getId, userIds)
+                Wrappers.<UserEntity>lambdaQuery()
+                        .in(UserEntity::getId, userIds)
         );
         if (count != userIds.size()) {
             throw new InvalidParameterException("部分用户不存在, 无法绑定角色");
@@ -135,7 +135,7 @@ public class UserRoleServiceImpl extends BaseServiceImpl<UserRoleMapper, UserRol
         }
 
         // 用户校验
-        UserEntitySoft user = userInfoService.getById(userId);
+        UserEntity user = userInfoService.getById(userId);
         if (Objects.isNull(user)) {
             throw new InvalidParameterException("用户不存在");
         }

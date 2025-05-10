@@ -8,7 +8,7 @@ import com.onezol.vertx.framework.common.skeleton.controller.BaseController;
 import com.onezol.vertx.framework.security.api.context.UserIdentityContext;
 import com.onezol.vertx.framework.security.api.model.UserIdentity;
 import com.onezol.vertx.framework.security.api.model.dto.User;
-import com.onezol.vertx.framework.security.api.model.entity.UserEntitySoft;
+import com.onezol.vertx.framework.security.api.model.entity.UserEntity;
 import com.onezol.vertx.framework.security.api.model.payload.UserQueryPayload;
 import com.onezol.vertx.framework.security.api.model.payload.UserSavePayload;
 import com.onezol.vertx.framework.security.api.service.UserInfoService;
@@ -21,13 +21,12 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Objects;
 
 @Tag(name = "用户信息")
 @Validated
 @RestController
 @RequestMapping("/user")
-public class UserInfoController extends BaseController<UserEntitySoft> {
+public class UserInfoController extends BaseController<UserEntity> {
 
     private final UserInfoService userInfoService;
 
@@ -67,10 +66,6 @@ public class UserInfoController extends BaseController<UserEntitySoft> {
             @PathVariable(value = "id") Long userId,
             @RequestBody UserSavePayload payload
     ) {
-        UserEntitySoft userEntity = userInfoService.getById(userId);
-        if (Objects.isNull(userEntity)) {
-            ResponseHelper.buildFailedResponse("用户不存在");
-        }
         return ResponseHelper.buildSuccessfulResponse(userInfoService.updateUserInfo(payload));
     }
 
@@ -109,7 +104,7 @@ public class UserInfoController extends BaseController<UserEntitySoft> {
         payload.setStartTime(startTime);
         payload.setEndTime(endTime);
 
-        Page<UserEntitySoft> page = this.getPageObject(pageNumber, pageSize);
+        Page<UserEntity> page = this.getPageObject(pageNumber, pageSize);
         PagePack<User> pack = userInfoService.getUserPage(page, payload);
         return ResponseHelper.buildSuccessfulResponse(pack);
     }
@@ -125,7 +120,7 @@ public class UserInfoController extends BaseController<UserEntitySoft> {
     ) {
         UserQueryPayload payload = new UserQueryPayload();
 
-        Page<UserEntitySoft> page = this.getPageObject(pageNumber, pageSize);
+        Page<UserEntity> page = this.getPageObject(pageNumber, pageSize);
         payload.setDepartmentId(departmentId);
         payload.setRoleId(roleId);
         return ResponseHelper.buildSuccessfulResponse(userInfoService.getUnboundRoleUserPage(page, payload));

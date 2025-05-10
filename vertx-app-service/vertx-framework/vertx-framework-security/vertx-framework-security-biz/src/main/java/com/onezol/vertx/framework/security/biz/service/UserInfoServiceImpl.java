@@ -31,7 +31,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class UserInfoServiceImpl extends BaseServiceImpl<UserMapper, UserEntitySoft> implements UserInfoService {
+public class UserInfoServiceImpl extends BaseServiceImpl<UserMapper, UserEntity> implements UserInfoService {
 
     private final PasswordEncoder passwordEncoder;
     private final RedisCache redisCache;
@@ -59,7 +59,7 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserMapper, UserEntityS
      */
     @Override
     public User getUserById(long userId) {
-        UserEntitySoft entity = this.getById(userId);
+        UserEntity entity = this.getById(userId);
         if (Objects.isNull(entity)) return null;
         User user = BeanUtils.toBean(entity, User.class);
         this.fillUserIdentity(user);
@@ -76,9 +76,9 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserMapper, UserEntityS
         if (StringUtils.isBlank(username)) {
             throw new InvalidParameterException("用户名不可为空");
         }
-        UserEntitySoft entity = this.getOne(
-                Wrappers.<UserEntitySoft>lambdaQuery()
-                        .eq(UserEntitySoft::getUsername, username)
+        UserEntity entity = this.getOne(
+                Wrappers.<UserEntity>lambdaQuery()
+                        .eq(UserEntity::getUsername, username)
         );
         if (Objects.isNull(entity)) return null;
         User user = BeanUtils.toBean(entity, User.class);
@@ -97,9 +97,9 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserMapper, UserEntityS
         if (StringUtils.isBlank(email)) {
             throw new InvalidParameterException("邮箱不可为空");
         }
-        UserEntitySoft entity = this.getOne(
-                Wrappers.<UserEntitySoft>lambdaQuery()
-                        .eq(UserEntitySoft::getEmail, email)
+        UserEntity entity = this.getOne(
+                Wrappers.<UserEntity>lambdaQuery()
+                        .eq(UserEntity::getEmail, email)
         );
         if (Objects.isNull(entity)) return null;
         User user = BeanUtils.toBean(entity, User.class);
@@ -133,7 +133,7 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserMapper, UserEntityS
     @Override
     @Transactional
     public void createOrUpdateUser(UserSavePayload payload) {
-        UserEntitySoft userEntity = BeanUtils.toBean(payload, UserEntitySoft.class);
+        UserEntity userEntity = BeanUtils.toBean(payload, UserEntity.class);
         userEntity.setPassword(passwordEncoder.encode(payload.getPassword()));
         userEntity.setEmail(Objects.nonNull(payload.getEmail()) ? payload.getEmail().toLowerCase() : null);
 
@@ -177,7 +177,7 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserMapper, UserEntityS
         if (Objects.isNull(payload) || Objects.isNull(payload.getId())) {
             throw new InvalidParameterException("用户信息不可为空");
         }
-        UserEntitySoft entity = BeanUtils.toBean(payload, UserEntitySoft.class);
+        UserEntity entity = BeanUtils.toBean(payload, UserEntity.class);
         boolean ok = this.updateById(entity);
         if (!ok) {
             throw new RuntimeServiceException("修改用户信息失败");
@@ -202,7 +202,7 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserMapper, UserEntityS
         if (Objects.isNull(userId)) {
             throw new InvalidParameterException("用户ID不可为空");
         }
-        UserEntitySoft user = this.getById(userId);
+        UserEntity user = this.getById(userId);
         if (Objects.isNull(user)) {
             throw new InvalidParameterException("用户不存在");
         }
@@ -227,9 +227,9 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserMapper, UserEntityS
 
     @Override
     public List<DictionaryEntry> getUserDict() {
-        List<UserEntitySoft> userEntities = this.list(
-                Wrappers.<UserEntitySoft>lambdaQuery()
-                        .eq(UserEntitySoft::getStatus, AccountStatus.ACTIVE)
+        List<UserEntity> userEntities = this.list(
+                Wrappers.<UserEntity>lambdaQuery()
+                        .eq(UserEntity::getStatus, AccountStatus.ACTIVE)
         );
         return userEntities.stream()
                 .map(entity -> DictionaryEntry.of(entity.getNickname(), entity.getId()))
@@ -240,8 +240,8 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserMapper, UserEntityS
      * 获取用户列表
      */
     @Override
-    public PagePack<User> getUserPage(Page<UserEntitySoft> page, UserQueryPayload payload) {
-        Page<UserEntitySoft> userPage = this.baseMapper.queryUserPage(page, payload);
+    public PagePack<User> getUserPage(Page<UserEntity> page, UserQueryPayload payload) {
+        Page<UserEntity> userPage = this.baseMapper.queryUserPage(page, payload);
         PagePack<User> pack = PagePack.from(userPage, User.class);
         Collection<User> users = pack.getItems();
 
@@ -269,8 +269,8 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserMapper, UserEntityS
      * 获取未绑定角色的用户列表
      */
     @Override
-    public PagePack<User> getUnboundRoleUserPage(Page<UserEntitySoft> page, UserQueryPayload payload) {
-        Page<UserEntitySoft> userPage = this.baseMapper.queryUnboundRoleUserPage(page, payload);
+    public PagePack<User> getUnboundRoleUserPage(Page<UserEntity> page, UserQueryPayload payload) {
+        Page<UserEntity> userPage = this.baseMapper.queryUnboundRoleUserPage(page, payload);
         PagePack<User> pack = PagePack.from(userPage, User.class);
         Collection<User> users = pack.getItems();
 

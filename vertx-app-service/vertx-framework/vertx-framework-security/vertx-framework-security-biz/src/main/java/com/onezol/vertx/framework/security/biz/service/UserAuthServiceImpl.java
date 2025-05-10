@@ -12,7 +12,8 @@ import com.onezol.vertx.framework.security.api.model.AuthIdentity;
 import com.onezol.vertx.framework.security.api.model.UserIdentity;
 import com.onezol.vertx.framework.security.api.model.dto.User;
 import com.onezol.vertx.framework.security.api.model.dto.UserPassword;
-import com.onezol.vertx.framework.security.api.model.entity.UserEntitySoft;
+import com.onezol.vertx.framework.security.api.model.entity.UserEntity;
+import com.onezol.vertx.framework.security.api.model.entity.UserEntity;
 import com.onezol.vertx.framework.security.api.model.payload.UserSavePayload;
 import com.onezol.vertx.framework.security.api.service.LoginHistoryService;
 import com.onezol.vertx.framework.security.api.service.LoginUserService;
@@ -33,7 +34,7 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 @Service
-public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntitySoft> implements UserAuthService {
+public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntity> implements UserAuthService {
 
     private final ApplicationContext applicationContext;
     private final PasswordEncoder passwordEncoder;
@@ -71,17 +72,17 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntityS
 //            throw new InvalidParameterException("验证码错误");
 //        }
 
-        UserEntitySoft entity = this.newBlankUser();
+        UserEntity entity = this.newBlankUser();
         entity.setUsername(payload.getUsername());
         entity.setPassword(passwordEncoder.encode(payload.getPassword()));
         entity.setEmail(payload.getEmail());
 
         // 唯一性校验
-        UserEntitySoft entityFromDB = this.getOne(
-                Wrappers.<UserEntitySoft>lambdaQuery()
-                        .eq(UserEntitySoft::getUsername, payload.getUsername())
+        UserEntity entityFromDB = this.getOne(
+                Wrappers.<UserEntity>lambdaQuery()
+                        .eq(UserEntity::getUsername, payload.getUsername())
                         .or()
-                        .eq(UserEntitySoft::getEmail, entity.getEmail())
+                        .eq(UserEntity::getEmail, entity.getEmail())
         );
         if (Objects.nonNull(entityFromDB)) {
             if (Objects.equals(entityFromDB.getUsername(), entity.getUsername())) {
@@ -144,7 +145,7 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntityS
      */
     @Override
     public UserPassword getPassword(Long userId) {
-        UserEntitySoft entity = this.getById(userId);
+        UserEntity entity = this.getById(userId);
         return new UserPassword(entity.getPassword(), entity.getPwdExpDate());
     }
 
@@ -153,8 +154,8 @@ public class UserAuthServiceImpl extends BaseServiceImpl<UserMapper, UserEntityS
      *
      * @return UserEntity
      */
-    private UserEntitySoft newBlankUser() {
-        UserEntitySoft entity = new UserEntitySoft();
+    private UserEntity newBlankUser() {
+        UserEntity entity = new UserEntity();
         entity.setUsername("");
         entity.setPassword("");
         entity.setNickname("");
