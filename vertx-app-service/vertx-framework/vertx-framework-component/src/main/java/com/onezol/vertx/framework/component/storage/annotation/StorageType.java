@@ -15,7 +15,7 @@ public enum StorageType implements StandardEnumeration<Integer> {
 
     LOCAL("本地存储", 1),
 
-    S3("S3协议存储", 2);
+    OSS("对象存储", 2);
 
     private final String name;
 

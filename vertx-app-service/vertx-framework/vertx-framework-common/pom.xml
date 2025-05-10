@@ -60,6 +60,11 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-core</artifactId>
+            <version>5.8.36</version>
+        </dependency>
 
         <!-- Localized Dependencies -->
         <!-- Spring Web -->

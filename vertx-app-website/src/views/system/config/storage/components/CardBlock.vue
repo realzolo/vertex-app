@@ -52,23 +52,13 @@
       </div>
       <div class="time">{{ data.createTime }}</div>
     </template>
-    <div :class="data.type === 1 ? 'content' : 'content-large'">
+    <div :class="data.type === 'LOCAL' ? 'content' : 'content-large'">
       <slot name="content"></slot>
     </div>
     <div class="extra">
       <a-skeleton v-if="loading" :animation="true">
         <a-skeleton-line :rows="2" />
       </a-skeleton>
-      <a-switch
-        v-else
-        v-model="status"
-        :disabled="!has.hasPermOr(['system:storage:updateStatus']) || data.isDefault"
-        :title="data.isDefault ? '不允许禁用默认存储' : ''"
-        :loading="switchLoading"
-        :checked-value="1"
-        :unchecked-value="2"
-        :before-change="onUpdateStatus"
-      />
     </div>
   </a-card>
 

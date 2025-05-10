@@ -5,19 +5,19 @@
         <a-tab-pane key="all">
           <template #title>全部</template>
           <a-card title="本地存储" :bordered="false" class="gi_card_title">
-            <StorageLocal :data="dataMap['1']" :loading="loading" @save-success="getDataList" />
+            <StorageLocal :data="dataMap.LOCAL" :loading="loading" @save-success="getDataList" />
           </a-card>
           <a-card title="对象存储" :bordered="false" class="gi_card_title">
-            <StorageOss :data="dataMap['2']" :loading="loading" @save-success="getDataList" />
+            <StorageOss :data="dataMap.OSS" :loading="loading" @save-success="getDataList" />
           </a-card>
         </a-tab-pane>
-        <a-tab-pane key="1">
+        <a-tab-pane key="LOCAL">
           <template #title>本地存储</template>
-          <StorageLocal :data="dataMap['1']" :loading="loading" @save-success="getDataList" />
+          <StorageLocal :data="dataMap.LOCAL" :loading="loading" @save-success="getDataList" />
         </a-tab-pane>
-        <a-tab-pane key="2">
+        <a-tab-pane key="OSS">
           <template #title>对象存储</template>
-          <StorageOss :data="dataMap['2']" :loading="loading" @save-success="getDataList" />
+          <StorageOss :data="dataMap.OSS" :loading="loading" @save-success="getDataList" />
         </a-tab-pane>
         <template #extra>
           <a-input-search
@@ -59,7 +59,7 @@ const getDataList = async () => {
 }
 
 const activeKey = ref('all')
-const change = (key: string | number) => {
+const change = (key: string) => {
   activeKey.value = key as string
   queryForm.type = key === 'all' ? undefined : key
   getDataList()

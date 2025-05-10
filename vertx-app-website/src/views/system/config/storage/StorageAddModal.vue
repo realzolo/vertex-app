@@ -36,7 +36,7 @@ const formRef = ref<InstanceType<typeof GiForm>>()
 const { storage_type_enum } = useDict('storage_type_enum')
 
 const [form, resetForm] = useResetReactive({
-  type: 2,
+  type: 'OSS',
   isDefault: false,
   sort: 999,
   status: 2,
@@ -70,7 +70,7 @@ const columns: ColumnItem[] = reactive([
     type: 'input',
     span: 24,
     required: true,
-    show: () => form.type === 2,
+    show: () => form.type === 'OSS',
   },
   {
     label: 'Secret Key',
@@ -78,7 +78,7 @@ const columns: ColumnItem[] = reactive([
     type: 'input',
     span: 24,
     required: true,
-    show: () => form.type === 2,
+    show: () => form.type === 'OSS',
   },
   {
     label: 'Endpoint',
@@ -86,7 +86,7 @@ const columns: ColumnItem[] = reactive([
     type: 'input',
     span: 24,
     required: true,
-    show: () => form.type === 2,
+    show: () => form.type === 'OSS',
   },
   {
     label: 'Bucket',
@@ -94,7 +94,7 @@ const columns: ColumnItem[] = reactive([
     type: 'input',
     span: 24,
     required: true,
-    show: () => form.type === 2,
+    show: () => form.type === 'OSS',
   },
   {
     label: '域名',
@@ -102,7 +102,7 @@ const columns: ColumnItem[] = reactive([
     type: 'input',
     span: 24,
     required: true,
-    show: () => form.type === 2,
+    show: () => form.type === 'OSS',
   },
   {
     label: '存储路径',
@@ -110,7 +110,7 @@ const columns: ColumnItem[] = reactive([
     type: 'input',
     span: 24,
     required: true,
-    show: () => form.type === 1,
+    show: () => form.type === 'LOCAL',
   },
   {
     label: '访问路径',
@@ -118,7 +118,7 @@ const columns: ColumnItem[] = reactive([
     type: 'input',
     span: 24,
     required: true,
-    show: () => form.type === 1,
+    show: () => form.type === 'LOCAL',
   },
   {
     label: '排序',
@@ -132,22 +132,9 @@ const columns: ColumnItem[] = reactive([
   },
   {
     label: '描述',
-    field: 'description',
+    field: 'remark',
     type: 'textarea',
     span: 24,
-  },
-  {
-    label: '状态',
-    field: 'status',
-    type: 'switch',
-    span: 24,
-    props: {
-      type: 'round',
-      checkedValue: 1,
-      uncheckedValue: 0,
-      checkedText: '启用',
-      uncheckedText: '禁用',
-    },
   },
 ])
 
@@ -165,13 +152,13 @@ const save = async () => {
     if (isUpdate.value) {
       await updateStorage({
         ...form,
-        secretKey: form.type === 2 && !form.secretKey.includes('*') ? encryptByRsa(form.secretKey) || '' : null,
+        // secretKey: form.type === 'OSS' && !form.secretKey.includes('*') ? encryptByRsa(form.secretKey) || '' : null,
       }, dataId.value)
       Message.success('修改成功')
     } else {
       await addStorage({
         ...form,
-        secretKey: form.type === 2 ? encryptByRsa(form.secretKey) || '' : form.secretKey,
+        // secretKey: form.type === 'OSS' ? encryptByRsa(form.secretKey) || '' : form.secretKey,
       })
       Message.success('新增成功')
     }
@@ -183,7 +170,7 @@ const save = async () => {
 }
 
 // 新增
-const onAdd = (type: number) => {
+const onAdd = (type: string) => {
   reset()
   dataId.value = ''
   form.type = type

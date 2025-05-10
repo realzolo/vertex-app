@@ -1,4 +1,4 @@
-package com.onezol.vertx.framework.component.storage.model;
+package com.onezol.vertx.framework.component.storage.model.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -10,8 +10,8 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-@TableName("app_storage_strategy")
-public class StorageStrategyEntity extends BaseEntity {
+@TableName("app_storage_platform")
+public class StoragePlatformEntity extends BaseEntity {
 
     @TableField("name")
     private String name;
@@ -34,9 +34,6 @@ public class StorageStrategyEntity extends BaseEntity {
     @TableField("bucket_name")
     private String bucketName;
 
-    @TableField("root_path")
-    private String rootPath;
-
     @TableField("domain")
     private String domain;
 
@@ -48,8 +45,5 @@ public class StorageStrategyEntity extends BaseEntity {
 
     @TableField("remark")
     private String remark;
-
-    @TableField("status")
-    private DisEnableStatus status;
 
 }

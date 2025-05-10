@@ -1,15 +1,21 @@
 package com.onezol.vertx.framework.component.storage.helper;
 
 import com.onezol.vertx.framework.common.constant.DatePattern;
+import com.onezol.vertx.framework.common.constant.GenericConstants;
 import com.onezol.vertx.framework.common.constant.StringConstants;
 import com.onezol.vertx.framework.common.util.DateUtils;
+import com.onezol.vertx.framework.common.util.StringUtils;
+import lombok.extern.slf4j.Slf4j;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.Objects;
 
+@Slf4j
 public final class StorageHelper {
 
     /**
@@ -52,34 +58,63 @@ public final class StorageHelper {
     }
 
     /**
-     * 修复根路径
+     * 修复本地路径
      *
-     * @param rootPath 根路径
-     * @return 修复后的根路径
+     * @param localPath 本地路径
+     * @return 修复后的本地路径
      */
-    public static String fixRootPath(String rootPath) {
-        if (rootPath == null || Objects.equals(rootPath, StringConstants.SLASH)) {
-            return StringConstants.EMPTY;
+    public static String fixLocalPath(String localPath) {
+        if (StringUtils.isBlank(localPath) || Objects.equals(localPath, StringConstants.SLASH)) {
+            return StringConstants.SLASH;
         }
-        if (!rootPath.startsWith(StringConstants.SLASH)) {
-            rootPath = StringConstants.SLASH + rootPath;
+        // 将路径中的反斜杠替换为正斜杠
+        localPath = localPath.replaceAll("\\\\", StringConstants.SLASH);
+        if (!localPath.endsWith(StringConstants.SLASH)) {
+            localPath = localPath + StringConstants.SLASH;
         }
-        return rootPath;
+        return localPath;
     }
 
     /**
-     * 获取缩略图路径
-     * @param filePath 文件路径
+     * 获取缩略图名称
+     *
+     * @param thumbnailUrl 缩略图地址
      */
-    public static String getThumbnailPath(String filePath) {
-        if (filePath == null) {
+    public static String getThumbnailName(String thumbnailUrl) {
+        if (StringUtils.isBlank(thumbnailUrl)) {
             return StringConstants.EMPTY;
         }
-        int index = filePath.lastIndexOf(StringConstants.DOT);
-        if (index > 0) {
-            return filePath.substring(0, index) + ".min" + filePath.substring(index);
+        int index = thumbnailUrl.lastIndexOf(StringConstants.SLASH);
+        if (index == -1) {
+            return StringConstants.EMPTY;
         }
-        return filePath;
+        return thumbnailUrl.substring(index + 1);
+    }
+
+    /**
+     * 获取本地文件API访问前缀
+     * @param domain 域名
+     */
+    public static String getLocalFileApiPrefix(String domain) {
+        if (StringUtils.isBlank(domain)) {
+            return StringConstants.EMPTY;
+        }
+        if (domain.startsWith(GenericConstants.PROTOCOL_HTTP) || domain.startsWith(GenericConstants.PROTOCOL_HTTPS)) {
+            try {
+                URI uri = new URI(domain);
+                String path = uri.getPath();
+                if (path == null || path.isEmpty()) {
+                    return StringConstants.EMPTY;
+                } else {
+                    return path;
+                }
+            } catch (URISyntaxException e) {
+                log.error("[StorageHelper] 获取本地文件API访问前缀失败", e);
+                return StringConstants.EMPTY;
+            }
+        } else {
+            return domain;
+        }
     }
 
 }

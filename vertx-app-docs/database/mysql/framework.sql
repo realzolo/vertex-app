@@ -212,18 +212,17 @@ CREATE TABLE IF NOT EXISTS app_dictionary
     DEFAULT CHARSET = utf8mb4
     COMMENT = '数据字典';
 
-CREATE TABLE IF NOT EXISTS app_storage_strategy
+CREATE TABLE IF NOT EXISTS app_storage_platform
 (
     id          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
     -- 自定义字段开始 --
-    name        VARCHAR(25)   COMMENT '存储策略名称',
-    code        VARCHAR(25)   COMMENT '存储策略Code',
-    type        VARCHAR(25)   COMMENT '存储策略类型',
+    name        VARCHAR(25)   COMMENT '存储名称',
+    code        VARCHAR(25)   COMMENT '存储Code',
+    type        VARCHAR(25)   COMMENT '存储类型',
     access_key  VARCHAR(255)  COMMENT 'accessKey',
     secret_key  VARCHAR(255)  COMMENT 'secretKey',
     endpoint    VARCHAR(100)  COMMENT '端点',
     bucket_name VARCHAR(100)  COMMENT '存储桶',
-    root_path   VARCHAR(255)  COMMENT '根路径',
     domain      VARCHAR(100)  COMMENT '域名',
     is_default     BIT           DEFAULT b'0' COMMENT '是否默认(1: 默认，0: 非默认)',
     remark      VARCHAR(255)  COMMENT '字典备注',
@@ -237,20 +236,23 @@ CREATE TABLE IF NOT EXISTS app_storage_strategy
     version     INT UNSIGNED DEFAULT 0 COMMENT '版本号'
 ) ENGINE = InnoDB
     DEFAULT CHARSET = utf8mb4
-    COMMENT = '存储策略';
+    COMMENT = '存储平台';
 
 CREATE TABLE IF NOT EXISTS app_file_record
 (
     id          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
     -- 自定义字段开始 --
     name                VARCHAR(255)  COMMENT '文件名称',
+    original_name       VARCHAR(255)  COMMENT '原始文件名称',
     size                BIGINT        COMMENT '文件大小（字节)',
+    path                VARCHAR(512)  COMMENT '路径',
     url                 VARCHAR(512)  COMMENT 'URL',
     extension           VARCHAR(25)   COMMENT '文件后缀',
     type                VARCHAR(25)   COMMENT '文件类型',
+    thumbnail_name      VARCHAR(255)  COMMENT '缩略图文件名称',
     thumbnail_size      BIGINT        COMMENT '缩略图大小（字节)',
     thumbnail_url       VARCHAR(512)  COMMENT '缩略图URL',
-    storage_strategy_id BIGINT        COMMENT '存储策略 ID',
+    storage_platform_id BIGINT        COMMENT '存储平台 ID',
     -- 自定义字段结束 --
     creator     BIGINT       DEFAULT NULL COMMENT '创建人',
     create_time DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',

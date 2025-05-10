@@ -3,14 +3,14 @@
     :bordered="true"
     size="small"
     class="card-block add-card"
-    :class="{ 'card-large': type === 2 }"
+    :class="{ 'card-large': type === 'OSS' }"
     @click="onAdd"
   >
     <div class="content">
       <div class="add-icon">
         <icon-plus />
       </div>
-      <div class="description">点击创建{{ type === 1 ? '本地存储' : '对象存储' }}</div>
+      <div class="description">点击创建{{ type === 'LOCAL' ? '本地存储' : '对象存储' }}</div>
     </div>
   </a-card>
 
@@ -22,8 +22,8 @@ import StorageAddModal from '../StorageAddModal.vue'
 
 const props = defineProps({
   type: {
-    type: Number,
-    default: 1,
+    type: String,
+    default: 'LOCAL',
   },
 })
 
@@ -72,21 +72,21 @@ const onAdd = () => {
   }
 
   .description {
-    margin-top: 16px;
+    margin-top: 6px;
     color: var(--color-text-3);
     font-weight: 400;
   }
 
   :deep(.arco-card-body) {
     padding-top: 45px;
-    padding-bottom: 63px;
+    padding-bottom: 39px;
   }
 }
 
 .card-large {
   :deep(.arco-card-body) {
     padding-top: 65px;
-    padding-bottom: 73px;
+    padding-bottom: 49px;
   }
 }
 </style>

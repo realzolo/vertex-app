@@ -12,7 +12,7 @@
         class="list-col"
         style="min-height: 162px"
       >
-        <CardAdd :type="1" @save-success="search" />
+        <CardAdd type="LOCAL" @save-success="search" />
       </a-col>
       <a-empty v-if="!data.length && !has.hasPermOr(['system:storage:create'])" />
       <a-col

@@ -3,6 +3,7 @@ package com.onezol.vertx.framework.common.util;
 import com.onezol.vertx.framework.common.constant.enumeration.StandardEnumeration;
 import org.springframework.cglib.beans.BeanCopier;
 
+import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
@@ -26,29 +27,43 @@ public final class BeanUtils extends org.springframework.beans.BeanUtils {
      * @return 转后的目标对象
      */
     public static <S, T> T toBean(S source, Class<T> targetType) {
+        if (source == null || targetType == null) {
+            return null;
+        }
         BeanCopier copier = BeanCopier.create(source.getClass(), targetType, true);
         try {
             Constructor<T> constructor = targetType.getDeclaredConstructor();
             T newInstance = constructor.newInstance();
-            copier.copy(source, newInstance, (value, target, context) -> {
-                if (value instanceof StandardEnumeration<?> && target.getSuperclass() != StandardEnumeration.class) {
-                    return ((StandardEnumeration<?>) value).getValue();
-                }
-                if (Arrays.stream(target.getInterfaces()).toList().contains(StandardEnumeration.class) && !(value instanceof StandardEnumeration<?>)) {
+            copier.copy(source, newInstance, (sourceObject, target, context) -> {
+                List<Class> targetTypes = Arrays.stream(target.getInterfaces()).toList();
+                if (sourceObject instanceof StandardEnumeration<?>) {
+                    // 如果目标类型和源类型相同，则直接返回源对象
+                    if (sourceObject.getClass() == target) {
+                        return sourceObject;
+                    }
+                    // 目标类型与枚举value的类型相同，则直接返回枚举value
+                    Serializable value = ((StandardEnumeration<?>) sourceObject).getValue();
+                    if (value.getClass() == target) {
+                        return value;
+                    }
+                    // 无法转换，返回null
+                    return null;
+                } else if (targetTypes.contains(StandardEnumeration.class)) {
                     Object[] enumConstants = target.getEnumConstants();
                     for (Object enumConstant : enumConstants) {
                         StandardEnumeration<?> aEnum = (StandardEnumeration<?>) enumConstant;
-                        if (aEnum.getValue().equals(value)) {
+                        if (aEnum.getValue().equals(sourceObject)) {
                             return aEnum;
                         }
                     }
+                    throw new RuntimeException("无法转换的枚举类型！");
                 }
-                return value;
+                return sourceObject;
             });
             return newInstance;
         } catch (NoSuchMethodException | InstantiationException | IllegalAccessException |
                  InvocationTargetException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("类型转换失败！" + e.getMessage());
         }
     }
 

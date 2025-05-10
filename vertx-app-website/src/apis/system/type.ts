@@ -248,7 +248,7 @@ export interface StorageResp {
   id: string
   name: string
   code: string
-  type: number
+  type: string
   accessKey: string
   secretKey: string
   endpoint: string
@@ -266,7 +266,7 @@ export interface StorageResp {
 
 export interface StorageQuery {
   description?: string
-  type?: number
+  type?: string
   sort: Array<string>
 }
 

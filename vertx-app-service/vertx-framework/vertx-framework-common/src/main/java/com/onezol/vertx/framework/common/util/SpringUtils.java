@@ -1,5 +1,6 @@
 package com.onezol.vertx.framework.common.util;
 
+import lombok.Getter;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class SpringUtils implements BeanFactoryPostProcessor, ApplicationContextAware {
 
+    @Getter
     private static ApplicationContext applicationContext;
 
     private static ConfigurableListableBeanFactory beanFactory;
@@ -108,6 +110,27 @@ public final class SpringUtils implements BeanFactoryPostProcessor, ApplicationC
      */
     public static String getRequiredProperty(String key) {
         return applicationContext.getEnvironment().getRequiredProperty(key);
+    }
+
+    /**
+     * 获取配置文件中的值
+     *
+     * @param key 配置文件的key
+     * @return 当前的配置文件的值
+     */
+    public static String getProperty(String key) {
+        return applicationContext.getEnvironment().getProperty(key);
+    }
+
+    /**
+     * 获取配置文件中的值
+     *
+     * @param key          配置文件的key
+     * @param defaultValue 默认值
+     * @return 当前的配置文件的值
+     */
+    public static String getProperty(String key, String defaultValue) {
+        return applicationContext.getEnvironment().getProperty(key, defaultValue);
     }
 
     @Override

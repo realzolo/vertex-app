@@ -15,39 +15,24 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @EnumDictionary(name = "文件类型", value = "file_type")
-public enum FileType implements StandardEnumeration<Integer> {
+public enum FileType implements StandardEnumeration<String> {
 
-    /**
-     * 其他
-     */
-    UNKNOWN("其他", 0, Collections.emptyList()),
+    OTHER("其它", "OTHER", Collections.emptyList()),
 
-    /**
-     * 图片
-     */
-    IMAGE("图片", 1, List
-            .of("jpg", "jpeg", "png", "gif", "bmp", "webp", "ico", "psd", "tiff", "dwg", "jxr", "apng", "xcf")),
+    IMAGE("图片", "IMAGE", List.of("jpg", "jpeg", "png", "gif", "bmp", "webp", "ico", "psd", "tiff", "dwg", "jxr", "apng", "xcf")),
 
-    /**
-     * 文档
-     */
-    DOC("文档", 2, List.of("txt", "pdf", "doc", "xls", "ppt", "docx", "xlsx", "pptx")),
+    DOC("文档", "DOC", List.of("txt", "pdf", "doc", "xls", "ppt", "docx", "xlsx", "pptx")),
 
-    /**
-     * 视频
-     */
-    VIDEO("视频", 3, List.of("mp4", "avi", "mkv", "flv", "webm", "wmv", "m4v", "mov", "mpg", "rmvb", "3gp")),
+    VIDEO("视频", "VIDEO", List.of("mp4", "avi", "mkv", "flv", "webm", "wmv", "m4v", "mov", "mpg", "rmvb", "3gp")),
 
-    /**
-     * 音频
-     */
-    AUDIO("音频", 4, List.of("mp3", "flac", "wav", "ogg", "midi", "m4a", "aac", "amr", "ac3", "aiff"));
+    AUDIO("音频", "AUDIO", List.of("mp3", "flac", "wav", "ogg", "midi", "m4a", "aac", "amr", "ac3", "aiff")),
 
+    ZIP("压缩包", "ZIP", List.of("zip", "rar", "7z", "tar", "gz", "bz2", "xz", "lz", "lzma", "lzo", "ar", "iso", "dmg"));
 
     private final String name;
 
     @EnumValue
-    private final Integer value;
+    private final String value;
 
     private final List<String> extensions;
 
@@ -59,12 +44,12 @@ public enum FileType implements StandardEnumeration<Integer> {
      */
     public static FileType getByExtension(String extension) {
         if (StringUtils.isBlank(extension)) {
-            return UNKNOWN;
+            return OTHER;
         }
         return Arrays.stream(FileType.values())
                 .filter(t -> t.getExtensions().contains(extension.toLowerCase()))
                 .findFirst()
-                .orElse(FileType.UNKNOWN);
+                .orElse(FileType.OTHER);
     }
 
 }
