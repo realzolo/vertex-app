@@ -13,6 +13,7 @@ export interface UserInfo {
   department: DataPairRecord | null
   roles: Array<DataPairRecord>
   permissions: string[]
+  createTime: string
 }
 
 /** 路由类型 */

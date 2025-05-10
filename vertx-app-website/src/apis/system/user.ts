@@ -25,12 +25,12 @@ export function getUser(id: number) {
 
 /** @desc 新增用户 */
 export function addUser(data: any) {
-  return http.post(`/user/create`, data)
+  return http.post(`/user`, data)
 }
 
 /** @desc 修改用户 */
-export function updateUser(data: any, id: number) {
-  return http.put(`${BASE_URL}/${id}`, data)
+export function updateUser(data: any) {
+  return http.put(`${BASE_URL}`, data)
 }
 
 /** @desc 删除用户 */

@@ -67,4 +67,19 @@ public final class StorageHelper {
         return rootPath;
     }
 
+    /**
+     * 获取缩略图路径
+     * @param filePath 文件路径
+     */
+    public static String getThumbnailPath(String filePath) {
+        if (filePath == null) {
+            return StringConstants.EMPTY;
+        }
+        int index = filePath.lastIndexOf(StringConstants.DOT);
+        if (index > 0) {
+            return filePath.substring(0, index) + ".min" + filePath.substring(index);
+        }
+        return filePath;
+    }
+
 }

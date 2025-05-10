@@ -13,6 +13,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.Objects;
 
+import static com.onezol.vertx.framework.component.storage.constant.StorageConstants.LOCAL_FILE_STORAGE_PREFIX;
+
 @Configuration
 @EnableFileStorage
 public class FileStorageConfiguration {
@@ -33,7 +35,7 @@ public class FileStorageConfiguration {
         return new WebMvcConfigurer() {
             @Override
             public void addResourceHandlers(@NonNull ResourceHandlerRegistry registry) {
-                registry.addResourceHandler("/storage/**")
+                registry.addResourceHandler(LOCAL_FILE_STORAGE_PREFIX + "/**")
                         .addResourceLocations(String.format("file:%s/", localStorageStrategy.getRootPath()));
             }
         };

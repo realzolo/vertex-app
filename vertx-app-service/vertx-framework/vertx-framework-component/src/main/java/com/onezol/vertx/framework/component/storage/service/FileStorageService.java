@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.onezol.vertx.framework.common.constant.StringConstants;
 import com.onezol.vertx.framework.common.constant.enumeration.FileType;
 import com.onezol.vertx.framework.common.exception.RuntimeServiceException;
+import com.onezol.vertx.framework.common.util.StringUtils;
 import com.onezol.vertx.framework.component.storage.annotation.StorageType;
 import com.onezol.vertx.framework.component.storage.mapper.FileRecordMapper;
 import com.onezol.vertx.framework.component.storage.mapper.StorageStrategyMapper;
@@ -27,6 +28,7 @@ import java.util.Collections;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import static com.onezol.vertx.framework.component.storage.constant.StorageConstants.LOCAL_FILE_STORAGE_PREFIX;
 import static com.onezol.vertx.framework.component.storage.helper.StorageHelper.*;
 
 @Slf4j
@@ -91,10 +93,21 @@ public class FileStorageService {
             throw new RuntimeServiceException("文件上传失败");
         }
 
-        if (Objects.equals(storageStrategy.getType(), StorageType.S3)) {
-            return String.format("%s/%s%s%s%s%s", fixDomain(storageStrategy.getDomain()), storageStrategy.getBucketName(), fixRootPath(storageStrategy.getRootPath()), filePath, fileName, extSuffix);
+        return this.buildAccessPath(filePath, fileName, extSuffix);
+    }
+
+
+    /**
+     * 删除文件
+     *
+     * @param path 文件路径
+     */
+    public boolean delete(String path) {
+        path = path.startsWith(LOCAL_FILE_STORAGE_PREFIX) ? path.substring(LOCAL_FILE_STORAGE_PREFIX.length()) : path;
+        if (Objects.isNull(storageStrategy)) {
+            throw new RuntimeServiceException("未配置默认存储策略，文件存储服务不可用");
         }
-        return String.format("%s%s%s%s", fixDomain(storageStrategy.getDomain()), filePath, fileName, extSuffix);
+        return fileStorageService.delete(path);
     }
 
 
@@ -145,6 +158,15 @@ public class FileStorageService {
             );
         }
         return strategy;
+    }
+
+    private String buildAccessPath(String filePath, String fileName, String extSuffix) {
+        return switch (storageStrategy.getType()) {
+            case StorageType.LOCAL ->
+                    String.format("%s%s%s%s%s", LOCAL_FILE_STORAGE_PREFIX, fixDomain(storageStrategy.getDomain()), filePath, fileName, extSuffix);
+            case StorageType.S3 ->
+                    String.format("%s/%s%s%s%s%s", fixDomain(storageStrategy.getDomain()), storageStrategy.getBucketName(), fixRootPath(storageStrategy.getRootPath()), filePath, fileName, extSuffix);
+        };
     }
 
     /**
@@ -210,6 +232,10 @@ public class FileStorageService {
                     Wrappers.<FileRecordEntity>lambdaQuery()
                             .eq(FileRecordEntity::getUrl, url)
             );
+            if (Objects.isNull(fileRecord)) {
+                log.error("文件记录不存在");
+                return null;
+            }
             StorageStrategyEntity storageStrategy = storageStrategyMapper.selectOne(
                     Wrappers.<StorageStrategyEntity>lambdaQuery()
                             .eq(StorageStrategyEntity::getId, fileRecord.getStorageStrategyId())

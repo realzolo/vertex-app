@@ -5,6 +5,7 @@ import com.onezol.vertx.framework.common.model.DictionaryEntry;
 import com.onezol.vertx.framework.common.model.GenericResponse;
 import com.onezol.vertx.framework.common.model.PagePack;
 import com.onezol.vertx.framework.common.skeleton.controller.BaseController;
+import com.onezol.vertx.framework.common.util.Asserts;
 import com.onezol.vertx.framework.security.api.context.UserIdentityContext;
 import com.onezol.vertx.framework.security.api.model.UserIdentity;
 import com.onezol.vertx.framework.security.api.model.dto.User;
@@ -52,7 +53,7 @@ public class UserInfoController extends BaseController<UserEntity> {
     }
 
     @Operation(summary = "创建用户", description = "创建用户")
-    @PostMapping("/create")
+    @PostMapping
     @PreAuthorize("@Security.hasPermission('system:user:create')")
     public GenericResponse<Void> create(@RequestBody @Valid UserSavePayload payload) {
         userInfoService.createOrUpdateUser(payload);
@@ -60,12 +61,10 @@ public class UserInfoController extends BaseController<UserEntity> {
     }
 
     @Operation(summary = "修改用户信息", description = "修改用户信息")
-    @PutMapping("/{id}")
+    @PutMapping
     @PreAuthorize("@Security.hasPermission('system:user:update')")
-    public GenericResponse<User> updateUserInfo(
-            @PathVariable(value = "id") Long userId,
-            @RequestBody UserSavePayload payload
-    ) {
+    public GenericResponse<User> updateUserInfo(@RequestBody @Valid UserSavePayload payload) {
+        Asserts.notNull(payload.getId(), "用户ID不能为空");
         return ResponseHelper.buildSuccessfulResponse(userInfoService.updateUserInfo(payload));
     }
 

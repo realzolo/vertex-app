@@ -67,7 +67,7 @@ modeList.value = [
   {
     title: '登录密码',
     icon: 'password-color',
-    subtitle: userInfo.value.pwdResetTime ? `为了您的账号安全，建议定期修改密码` : '请设置密码，可通过账号+密码登录',
+    subtitle: userInfo.value.pwdResetTime ? `为了您的账号安全，建议定期修改密码` : '可通过账号+密码登录',
     type: 'password',
     jumpMode: 'modal',
     status: !!userInfo.value.pwdResetTime,

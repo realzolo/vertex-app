@@ -11,7 +11,7 @@
           :on-before-upload="onBeforeUpload"
         >
           <template #upload-button>
-            <Avatar :src="avatarList[0].url" :name="userStore.nickname" :size="100" trigger>
+            <Avatar :src="appendApiPrefix(avatarList[0].url)" :name="userStore.nickname" :size="100" trigger>
               <template #trigger-icon><icon-camera /></template>
             </Avatar>
           </template>
@@ -43,16 +43,16 @@
           </a-descriptions-item>
           <a-descriptions-item :span="4">
             <template #label> <icon-mind-mapping /><span style="margin-left: 5px">部门</span></template>
-            {{ userInfo.deptName }}
+            {{ userInfo.department?.name }}
           </a-descriptions-item>
           <a-descriptions-item :span="4">
             <template #label> <icon-user-group /><span style="margin-left: 5px">角色</span></template>
-            {{ userInfo.roles.join('，') }}
+            {{ userInfo.roles.map(role => role.name).join('、') }}
           </a-descriptions-item>
         </a-descriptions>
       </footer>
     </div>
-    <div class="footer">注册于 {{ userInfo.registrationDate }}</div>
+    <div class="footer">注册于 {{ userInfo.createTime.substring(0, 10) }}</div>
   </a-card>
 
   <a-modal v-model:visible="visible" title="上传头像" :width="width >= 400 ? 400 : '100%'" :footer="false" draggable @close="reset">
@@ -102,6 +102,7 @@ import { uploadAvatar } from '@/apis/system'
 import 'vue-cropper/dist/index.css'
 import { useUserStore } from '@/stores'
 import getAvatar from '@/utils/avatar'
+import { appendApiPrefix } from '@/utils/file'
 
 const { width } = useWindowSize()
 const userStore = useUserStore()
@@ -167,7 +168,7 @@ const cropperRef = ref()
 const handleUpload = async () => {
   cropperRef.value.getCropBlob((data: any) => {
     const formData = new FormData()
-    formData.append('avatarFile', data, fileRef.value?.name)
+    formData.append('file', data, fileRef.value?.name)
     uploadAvatar(formData).then((res) => {
       userInfo.value.avatar = res.data.avatar
       avatarList.value[0].url = getAvatar(res.data.avatar, undefined)
