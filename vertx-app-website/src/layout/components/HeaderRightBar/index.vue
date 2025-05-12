@@ -84,7 +84,7 @@ import { getUnreadMessageCount } from '@/apis'
 import { useUserStore } from '@/stores'
 import { getToken } from '@/utils/auth'
 import { useBreakpoint, useDevice } from '@/hooks'
-import { appendApiPrefix } from '@/utils/file';
+import { appendApiPrefix } from '@/utils'
 
 defineOptions({ name: 'HeaderRight' })
 

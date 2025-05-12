@@ -34,7 +34,7 @@
         </a-button>
       </template>
       <template #nickname="{ record }">
-        <GiCellAvatar :avatar="record.avatar" :name="record.nickname" />
+        <GiCellAvatar :avatar="appendApiPrefix(record.avatar)" :name="record.nickname" />
       </template>
       <template #gender="{ record }">
         <GiCellGender :gender="record.gender" />
@@ -97,7 +97,7 @@ import { useDict } from '@/hooks/app'
 import { deleteUser, exportUser, listUser } from '@/apis/system/user'
 import type { UserResp } from '@/apis/system/type'
 import { useDownload, useResetReactive, useTable } from '@/hooks'
-import { isMobile } from '@/utils'
+import { appendApiPrefix, isMobile } from '@/utils'
 import has from '@/utils/has'
 import type { ColumnItem } from '@/components/GiForm'
 

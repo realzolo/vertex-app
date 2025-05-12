@@ -102,7 +102,7 @@ import { uploadAvatar } from '@/apis/system'
 import 'vue-cropper/dist/index.css'
 import { useUserStore } from '@/stores'
 import getAvatar from '@/utils/avatar'
-import { appendApiPrefix } from '@/utils/file'
+import { appendApiPrefix } from '@/utils'
 
 const { width } = useWindowSize()
 const userStore = useUserStore()

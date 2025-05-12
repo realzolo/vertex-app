@@ -2,7 +2,7 @@ import { browse, mapTree } from 'xe-utils'
 import { camelCase, upperFirst } from 'lodash-es'
 import { Message } from '@arco-design/web-vue'
 import CronParser from 'cron-parser'
-import { isExternal } from '@/utils/validate'
+import { isExternal, isHttp } from '@/utils/validate'
 
 export function getProperty<T, K extends keyof T>(obj: T, key: K): T[K] {
   return obj[key]
@@ -355,4 +355,18 @@ export function parseCron(cron: string) {
   } catch (e) {
     return '表达式错误'
   }
+}
+
+/**
+ * 文件地址拼接
+ * @param fileUrl 文件地址
+ */
+export function appendApiPrefix(fileUrl: string) {
+  if (!fileUrl) {
+    return ''
+  }
+  if (isHttp(fileUrl)) {
+    return fileUrl
+  }
+  return (import.meta.env.VITE_API_PREFIX ?? import.meta.env.VITE_API_BASE_URL ?? '') + fileUrl
 }

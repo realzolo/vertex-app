@@ -14,8 +14,7 @@
 
 <script setup lang="ts">
 import { useUserStore } from '@/stores'
-import { goodTimeText } from '@/utils'
-import { appendApiPrefix } from '@/utils/file'
+import { appendApiPrefix, goodTimeText } from '@/utils'
 
 const userStore = useUserStore()
 </script>

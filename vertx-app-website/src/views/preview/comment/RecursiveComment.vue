@@ -4,7 +4,7 @@
     class="comment-item"
   >
     <template #avatar>
-      <Avatar :src="comment.author.avatar" :name="comment.author.nickname" :size="32" />
+      <Avatar :src="appendApiPrefix(comment.author.avatar)" :name="comment.author.nickname" :size="32" />
     </template>
     <template #author>
       <div class="comment-item-author">
@@ -69,6 +69,7 @@ import { ref } from 'vue'
 import { Message } from '@arco-design/web-vue'
 import { type CommentReq, addComment, deleteComment, upvote } from '@/apis/preview/comment'
 import { useUserStore } from '@/stores'
+import { appendApiPrefix } from '@/utils'
 
 const props = defineProps({
   comment: {
