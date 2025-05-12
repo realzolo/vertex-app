@@ -11,7 +11,6 @@ import com.onezol.vertx.framework.component.storage.model.dto.StoragePlatform;
 import com.onezol.vertx.framework.component.storage.model.entity.StoragePlatformEntity;
 import com.onezol.vertx.framework.component.storage.model.input.StoragePayload;
 import jakarta.annotation.PostConstruct;
-import jakarta.annotation.PreDestroy;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.x.file.storage.core.FileStorageProperties;
 import org.dromara.x.file.storage.core.FileStorageService;
@@ -35,8 +34,6 @@ public class StoragePlatformService extends BaseServiceImpl<StorageMapper, Stora
 
     private final FileStorageService fileStorageService;
 
-    private StoragePlatform storagePlatform;
-
     public StoragePlatformService(FileStorageService fileStorageService) {
         this.fileStorageService = fileStorageService;
     }
@@ -48,7 +45,7 @@ public class StoragePlatformService extends BaseServiceImpl<StorageMapper, Stora
             log.warn("[StorageService] 未配置默认存储平台，文件存储服务不可用");
             return;
         }
-        storagePlatform = this.load(storage);
+        this.load(storage);
     }
 
     /**
@@ -71,7 +68,7 @@ public class StoragePlatformService extends BaseServiceImpl<StorageMapper, Stora
         StoragePlatformEntity shouldLoadPlatformEntity = null;
         StoragePlatformEntity shouldUnloadPlatformEntity = null;
         for (StoragePlatformEntity entity : entities) {
-            if (!entity.getId().equals(id) &&entity.getIsDefault()) {
+            if (!entity.getId().equals(id) && entity.getIsDefault()) {
                 entity.setIsDefault(false);
                 shouldUnloadPlatformEntity = entity;
             }
@@ -83,7 +80,7 @@ public class StoragePlatformService extends BaseServiceImpl<StorageMapper, Stora
             }
         }
 
-        if (shouldLoadPlatformEntity== null) {
+        if (shouldLoadPlatformEntity == null) {
             throw new InvalidParameterException("未找到指定存储平台");
         }
 
@@ -91,8 +88,8 @@ public class StoragePlatformService extends BaseServiceImpl<StorageMapper, Stora
 
         StoragePlatform shouldLoadPlatform = BeanUtils.toBean(shouldLoadPlatformEntity, StoragePlatform.class);
         StoragePlatform shouldUnloadPlatform = BeanUtils.toBean(shouldUnloadPlatformEntity, StoragePlatform.class);
-        this.storagePlatform = this.load(shouldLoadPlatform);
         this.unload(shouldUnloadPlatform);
+        this.load(shouldLoadPlatform);
     }
 
     /**
@@ -133,7 +130,8 @@ public class StoragePlatformService extends BaseServiceImpl<StorageMapper, Stora
 
         StoragePlatform storagePlatform = this.getStoragePlatform(payload.getId());
         if (platformEntity.getIsDefault()) {
-            this.storagePlatform = this.load(storagePlatform);
+            this.unload(storagePlatform);
+            this.load(storagePlatform);
         }
 
         return storagePlatform;
@@ -144,7 +142,7 @@ public class StoragePlatformService extends BaseServiceImpl<StorageMapper, Stora
      *
      * @param platform 存储平台
      */
-    private StoragePlatform load(StoragePlatform platform) {
+    private void load(StoragePlatform platform) {
         CopyOnWriteArrayList<FileStorage> fileStorages = fileStorageService.getFileStorageList();
         if (StorageType.LOCAL.equals(platform.getType())) {
             FileStorageProperties.LocalPlusConfig config = new FileStorageProperties.LocalPlusConfig();
@@ -169,8 +167,7 @@ public class StoragePlatformService extends BaseServiceImpl<StorageMapper, Stora
                     FileStorageServiceBuilder.buildAmazonS3FileStorage(Collections.singletonList(config), null)
             );
         }
-        log.info("[StorageService] 加载存储平台成功，存储编码：{}", platform.getCode());
-        return platform;
+        log.info("[StorageService] 加载存储平台 {} 成功", platform.getCode());
     }
 
     /**
@@ -189,6 +186,7 @@ public class StoragePlatformService extends BaseServiceImpl<StorageMapper, Stora
                     Map.of(getLocalFileApiPrefix(platform.getDomain()), platform.getBucketName())
             );
         }
+        log.info("[StorageService] 卸载存储平台 {} 成功", platform.getCode());
     }
 
 }
