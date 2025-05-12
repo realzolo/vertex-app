@@ -69,7 +69,7 @@ public class DepartmentController extends BaseController<DepartmentEntity> {
     @PreAuthorize("@Security.hasPermission('system:department:list')")
     public GenericResponse<List<Department>> getDepartmentList() {
         List<DepartmentEntity> list = departmentService.list();
-        List<Department> departments = BeanUtils.toList(list, Department.class);
+        List<Department> departments = BeanUtils.copyToList(list, Department.class);
         return ResponseHelper.buildSuccessfulResponse(departments);
     }
 
@@ -79,7 +79,7 @@ public class DepartmentController extends BaseController<DepartmentEntity> {
     public GenericResponse<List<TreeNode>> getDepartmentTree() {
         List<DepartmentEntity> list = departmentService.list();
         list.sort(Comparator.comparing(DepartmentEntity::getSort));
-        List<Department> departments = BeanUtils.toList(list, Department.class);
+        List<Department> departments = BeanUtils.copyToList(list, Department.class);
         List<TreeNode> nodes = departments.stream().map(department -> {
             TreeNode treeNode = new TreeNode();
             treeNode.setId(department.getId());
@@ -101,7 +101,7 @@ public class DepartmentController extends BaseController<DepartmentEntity> {
                         .eq(DepartmentEntity::getStatus, DisEnableStatus.ENABLE.getValue())
         );
         list.sort(Comparator.comparing(DepartmentEntity::getSort));
-        List<Department> departments = BeanUtils.toList(list, Department.class);
+        List<Department> departments = BeanUtils.copyToList(list, Department.class);
         List<TreeNode> nodes = departments.stream().map(department -> {
             TreeNode treeNode = new TreeNode();
             treeNode.setId(department.getId());

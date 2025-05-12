@@ -71,7 +71,7 @@ public class PagePack<T> {
 
     public static <T> PagePack<T> from(IPage<?> page, Class<T> targetClass) {
         List<?> records = page.getRecords();
-        List<T> objects = BeanUtils.toList(records, targetClass);
+        List<T> objects = BeanUtils.copyToList(records, targetClass);
         return new PagePack<>(objects, page.getTotal(), page.getCurrent(), page.getSize());
     }
 }

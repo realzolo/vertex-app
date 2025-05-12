@@ -99,7 +99,7 @@ public class CommentService extends BaseServiceImpl<CommentMapper, CommentEntity
         QueryWrapper<CommentEntitySoft> replyQueryWrapper = new QueryWrapper<>();
         paths.forEach(path -> replyQueryWrapper.or().like("path", path));
         List<CommentEntitySoft> resultReplies = this.list(replyQueryWrapper);
-        List<Comment> replies = BeanUtils.toList(resultReplies, Comment.class);
+        List<Comment> replies = BeanUtils.copyToList(resultReplies, Comment.class);
 
         // 获取所有用户ID列表与评论ID列表
         Set<Long> fullUserIds = new HashSet<>();

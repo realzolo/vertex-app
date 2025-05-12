@@ -55,7 +55,7 @@ public class UserRoleServiceImpl extends BaseServiceImpl<UserRoleMapper, UserRol
         List<RoleEntity> entities = this.baseMapper.queryUserRoles(userId);
         List<Long> roleIds = entities.stream().map(RoleEntity::getId).toList();
         Map<Long, List<Long>> permissionIdsByRoleIds = rolePermissionService.getPermissionIdsByRoleIds(roleIds);
-        return BeanUtils.toList(entities, Role.class);
+        return BeanUtils.copyToList(entities, Role.class);
     }
 
     /**

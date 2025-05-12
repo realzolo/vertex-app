@@ -149,14 +149,14 @@ public class PermissionServiceImpl extends BaseServiceImpl<PermissionMapper, Per
                         .ne(PermissionEntity::getType, PermissionTypeEnum.BUTTON)
                         .in(!permissionIds.isEmpty(), PermissionEntity::getId, permissionIds)
         );
-        return BeanUtils.toList(permissions, Permission.class);
+        return BeanUtils.copyToList(permissions, Permission.class);
     }
 
     private List<Permission> listEnabledPermissions() {
         List<PermissionEntity> permissions = this.list(
                 Wrappers.<PermissionEntity>lambdaQuery().eq(PermissionEntity::getStatus, DisEnableStatus.ENABLE)
         );
-        return BeanUtils.toList(permissions, Permission.class);
+        return BeanUtils.copyToList(permissions, Permission.class);
     }
 
     private List<TreeNode> toTreeNodes(List<Permission> permissions) {

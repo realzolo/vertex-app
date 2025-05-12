@@ -53,7 +53,7 @@ public class StoragePlatformService extends BaseServiceImpl<StorageMapper, Stora
      */
     public List<StoragePlatform> listPlatforms() {
         List<StoragePlatformEntity> entities = this.list();
-        return BeanUtils.toList(entities, StoragePlatform.class);
+        return BeanUtils.copyToList(entities, StoragePlatform.class);
     }
 
     /**

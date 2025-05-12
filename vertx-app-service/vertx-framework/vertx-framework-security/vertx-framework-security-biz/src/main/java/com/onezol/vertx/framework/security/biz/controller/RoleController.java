@@ -68,7 +68,7 @@ public class RoleController extends BaseController<RoleEntity> {
     @PreAuthorize("@Security.hasPermission('system:role:list')")
     public GenericResponse<List<Role>> getRoles() {
         List<RoleEntity> list = roleService.list();
-        List<Role> roles = BeanUtils.toList(list, Role.class);
+        List<Role> roles = BeanUtils.copyToList(list, Role.class);
         return ResponseHelper.buildSuccessfulResponse(roles);
     }
 

@@ -80,7 +80,7 @@ public class RuntimeConfigurationService extends BaseServiceImpl<RuntimeConfigur
         if (Objects.isNull(runtimeConfigurations)) {
             throw new InvalidParameterException("配置列表不能为空");
         }
-        List<RuntimeConfigurationEntity> entities = BeanUtils.toList(runtimeConfigurations, RuntimeConfigurationEntity.class);
+        List<RuntimeConfigurationEntity> entities = BeanUtils.copyToList(runtimeConfigurations, RuntimeConfigurationEntity.class);
         boolean ok = this.updateBatchById(entities);
         if (!ok) {
             throw new InvalidParameterException("更新配置失败");
