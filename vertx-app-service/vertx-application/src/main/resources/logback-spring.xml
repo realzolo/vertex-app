@@ -45,7 +45,7 @@
             <!-- 日志文件大小（超过指定大小后，会切分新文件，从索引 0 开始计数，例如：app.2024-01-01.1.log.gz ） -->
             <maxFileSize>${FILE_MAX_SIZE}</maxFileSize>
             <!-- 日志保留天数 -->
-            <maxHistory>${FILE_MAX_HISTORY}</maxHistory>
+            <maxHistory>${FILE_MAX_HISTORY:-30}</maxHistory>
         </rollingPolicy>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>${FILE_LOG_PATTERN}</pattern>
